@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata xmlns="http://schemas.bingosoft.net/metabase/metadata"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://schemas.bingosoft.net/metabase/metadata http://schemas.bingosoft.net/metabase/1.0/metadata.xsd">
+
+	<class-scan>
+		<!--<add package="bingo.cboss.model.metadata" table-prefix="metaui"/> -->
+		<!-- <add package="bingo.cboss.model.portal" table-prefix="portal"/> -->
+	</class-scan>
+	
+	<functions>
+		<!--  <add name="Now" class="bingo.boss.web.common.variables.Dates" method="now"/>-->
+		<add name="Today" class="bingo.metaui.core.variables.Dates" method="today"/>
+		<add name="DateFormat" class="bingo.metaui.core.variables.Dates" method="getDateFormat"/>
+		<add name="DateAdd" class="bingo.metaui.core.variables.Dates" method="add"/>
+		<add name="DateAddTimestamp" class="bingo.metaui.core.variables.Dates" method="addTimestamp"/>
+		<add name="DateDiff" class="bingo.metaui.core.variables.Dates" method="dateDiff"/>
+		<add name="FirstDayOfWeek" class="bingo.metaui.core.variables.Dates" method="getFirstDayOfWeek"/>
+		<add name="LastDayOfWeek" class="bingo.metaui.core.variables.Dates" method="getLastDayOfWeek"/>
+		<add name="FirstDayOfMonth" class="bingo.metaui.core.variables.Dates" method="getFirstDayOfMonth"/>
+		<add name="LastDayOfMonth" class="bingo.metaui.core.variables.Dates" method="getLastDayOfMonth"/>
+		<add name="Request" class="bingo.metaui.core.variables.Requests" method="getParameter"/>
+		<add name="GridAttr" class="bingo.metaui.core.variables.Requests" method="getGridAttr"/>
+		<add name="I18N" class="bingo.metaapp.web.common.I18N" method="t"/>
+		<add name="getEntity" class="bingo.metaapp.web.variables.EntityStaticMethod" method="getEntity"/>
+		<add name="isSomeOrgNamesUser" class="bingo.metaapp.web.workflow.funcs.OrgFunc" method="isSomeOrgNamesUser"/>
+		<add name="isHeaderCompany" class="bingo.metaapp.web.workflow.funcs.OrgFunc" method="isHeaderCompany"/>
+	</functions>
+</metadata>

@@ -1,0 +1,95 @@
+<div th:id="${viewId}" class="container-fluid">
+	<style type="text/css">
+		.bdata-header{
+			padding-left: 15px;
+			padding-top: 5px;
+			padding-bottom:5px;
+			height:30px;
+			line-height:30px;
+			background-color:#F8F8F8;
+			-webkit-box-shadow: 0 2px 0 0 #789EEB;
+			box-shadow: 0 2px 0 0 #789EEB;
+		}
+		.bdata-grid-con .page-title{
+			display:none;
+		}
+		.bdata-header .h-desc{
+			margin-left:15px;
+			color:#A75B09;
+		}
+		.bdata-header .h-desc .h-desc-detail{
+			margin-left:5px;
+		}
+		.bdata-grid-con{
+			margin-top:2px;
+		}
+		.bdata-grid-con .well{
+			color:#3262C7;
+		}
+	</style>
+	<div class="bdata-header">
+		<i class="icon-hand-right">选择服务：</i>
+		<select class="proc-select">
+			<option th:each="p:${managedProcs}" th:value="${p[entityName]}" th:text="${p[procName]}" th:attr="data-procid=${p[procId]}"></option>
+		</select>
+		<span class="h-desc"><i class="icon-hand-up"></i><i class="h-desc-detail">请选择一个服务，即可查看服务对应业务表单的所有数据</i></span>
+	</div>
+	<div class="bdata-grid-con">
+		<div class="well hide">亲，没有任何服务可供选择哦</div>
+	</div>
+<script th:inline="javascript">
+//<![CDATA[
+;(function($){
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+	   	var context=/*[['#'+${viewId}]]*/;
+	   	function bdataGridUrl(entityName,procId){
+	   		var bdataGridUrl=Global.contextPath+"/entities/";
+	   		return bdataGridUrl+entityName+"/list?view=workflow&procId="+procId;
+	   	};
+	   	$(".proc-select",context).change(function(){
+	   		var entityName=$(this).val();
+	   		if(!entityName){
+	   			$(".bdata-grid-con .well",context).show();
+	   			return false;
+	   		}
+	   		var procId=$(".proc-select option:selected",context).data("procid");
+	   		CommonLoader.loadData($(".bdata-grid-con",context),bdataGridUrl(entityName,procId),null,function(){
+	   			var $jqGrid=$(".ui-jqgrid-btable",context);
+
+	   			$jqGrid.jqGrid("setGridParam",{
+	   				deleteConfirm:"记录删除后不可被恢复,关联的流程及审批记录<br/>同时被删除,是否继续？",
+	   				onAfterDelete:function($grid){
+	   					var selectIds=$grid.jqGrid('getGridParam','selarrrow');
+	   					if (selectIds.length==0){
+	   						var _selectIdArray=[];
+	   						var _selectId = $grid.jqGrid('getGridParam','selrow');
+	   						if(!_selectId){
+	   							return;
+	   						}
+	   						_selectIdArray.push(_selectId);
+	   						selectIds=_selectIdArray;
+	   					}
+	   					$.each(selectIds,function(i,item){
+	   						var row=$grid.getRowData(item);
+	   						var flowId=row["WfProcInst.id"];
+	   						if(flowId){
+	   							delWorkflow(flowId);
+	   						}
+	   					});
+	   				}
+	   			});
+	   		});
+	   	});
+
+	   	function delWorkflow(flowId){
+	   		var url=Global.contextPath+"/workflow/process/delete?instId="+flowId;
+	   		jQuery.formPost(url);
+	   	}
+
+	   	$(".proc-select",context).trigger("change");
+	});
+}(jQuery));
+//]]>
+</script>
+</div>

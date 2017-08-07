@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div class="panel apply-panel" style="min-width:850px;height: 480px;" th:id="${viewId}">
+  <form class="form-horizontal ajaxpost" data-widget="validator" id="entityForm" method="post" th:action="${requestUrl}"  >
+    <div class="table-dialog">
+      <div class="ui-dialog-title" th:text="#{tool.import.dataImport}"></div>
+      <div class="ui-dialog-content container-fluid">
+        <div class="row-fluid">
+           <table class="form-section form-table col2-fluid">
+                <tr>
+                  <th th:text="#{tool.import.dataFile}+':'"></th>
+                  <td>
+	                 <div>
+						<div data-widget="upload" data-maxSize="10" data-fileSuffix="*" class="input-prepend input-append" style="line-height: 25px;height: 25px;">
+							<div class="input-append">
+							  	<div class="add-on progress progress-info progress-striped" style="width: 456px;margin-bottom:0px;float:left;">
+								  <div class="bar" style="width: 0%;height:18px;line-height: 18px;position:relative;"></div>
+								</div>
+								<span class="uploadfile add-on">
+									<i class="icon-plus-sign"></i>
+									<span th:text="#{common.browse}"></span>
+								</span>
+							</div>
+							<input type="hidden" name="filePath" id="filePath" />
+						</div>
+						<div>
+							<i class='icon-info-sign'></i> 
+							<span th:text="#{tool.import.dataFileDesc}"></span>
+						</div>
+					</div>
+                  </td>
+                </tr>
+              </table>
+        </div>
+        <div class="row-fluid" id="mapping" style="height:400px;overflow: auto;">
+        	<div class="alert alert-info" style="margin: 10px">
+					<a class="close" data-dismiss="alert">×</a>
+					<h4 class="alert-heading" style="margin-bottom: 10px">
+					<span th:text="${#messages.msg('tool.importRecord.descTitle',metaEntity.displayName)}"></span></h4>
+					<p th:text="#{tool.importRecord.step1}"></p>
+					<p th:text="#{tool.importRecord.step2}"></p>
+			</div>
+			<div class="alert alert-block" style="margin: 10px">
+				<i class='icon-info-sign'></i> 
+				<span th:text="#{tool.importRecord.mappingDesc}"></span>
+			</div>
+        </div>
+      </div>
+      <div class="ui-dialog-buttonset">
+        <button class="btn btn-primary" id="import" name="import" type="button" th:text="#{common.import}">
+					</button>
+        <button class="btn closeBtn" name="close" type="button" th:text="#{common.cancel}">
+					</button>
+      </div>
+    </div>
+  </form>
+  <script th:inline="javascript" type="text/javascript">
+//<![CDATA[ 
+    $(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var context = "#" + viewId;
+		var entityName=/*[[${metaEntity.name}]]*/;
+		Form.init("#"+viewId,"#entityForm");
+		Page.init("#"+viewId,{isInitFormNav:true});
+		$("#filePath",context).bind("FileUploaded",function(event,up, file,resp,container){
+			var mappingContainer=$("#mapping",context);
+			var url= Global.contextPath+'/entities/'+entityName+'/import-mapping?filepath='+resp.filePath;
+			CommonLoader.loadData(mappingContainer,url,function(){
+				
+			});
+		});
+		$("#import",context).click(function(){
+			var filePath=$("#filePath",context).val();
+			if(filePath==null || filePath.length==0){
+				$.messageBox.warning({message:i18n.t("tool.importRecord.selectInfo")});
+				return false;
+			}
+			$.messageBox.confirm({
+				message:i18n.t("tool.importRecord.confirmInfo"),
+				callback:function(result){
+					
+						if(result){
+							$("#entityForm",context).submit();
+						}
+					}
+			});
+		});
+    });
+//]]>
+</script>
+</div>

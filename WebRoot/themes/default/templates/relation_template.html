@@ -1,0 +1,16 @@
+<div class="dialog-menu-exp" th:if="${relationCtx.isEdit}">
+	<h2 th:text="#{form.relation.associateInfo}"></h2>
+	<ul>
+		<li th:each="relationLink:${relationCtx.relationLinks}">
+			<a th:href="${relationLink.url}" th:target="${relationLink.target}">- <span th:text="${relationLink.text}"></span></a>
+		</li>
+	</ul>
+<script lang="javascript" th:inline="javascript">
+//<![CDATA[ 
+$(function(){
+	var viewId=/*[[${viewId}]]*/;
+	Page.init("#"+viewId,{isInitRelation:true});
+});
+//]]> 
+</script>
+</div>

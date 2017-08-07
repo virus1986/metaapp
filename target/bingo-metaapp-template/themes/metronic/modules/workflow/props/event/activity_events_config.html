@@ -1,0 +1,109 @@
+<div th:id="${viewId}" class="panel apply-panel">
+	<div class="portlet box slave tea-green">
+					<div class="portlet-title">
+						<div class="caption">
+							<i class="icon-reorder"></i>环节事件配置
+						</div>
+						<div class="actions">
+							<a href="#" class="btn addRow green"><i class="icon-plus"></i> 添加</a>
+						</div>
+					</div>
+					<div class="portlet-body">
+						<div class="dataTables_wrapper form-inline">
+						<table class="table table-striped table-hover table-bordered events-table" data-options="{wrapper:'portlet',genRow:'add-row-templateprocesseventsconfig'}">
+							<thead>
+								<tr class="nodrop nodrag">
+									<th style="display:none;"></th>
+									<th style="width: 35%;">事件类型</th>
+									<th>处理操作</th>
+									<th style="width:100px;">操作列</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item,status:${activityEventList}">
+									<td style="display: none">
+										<input name="id" type="hidden" th:value="${item.id}"/>
+										<input name="procId" type="hidden" th:value="${item.procId}"/>
+										<input name="actName" type="hidden" th:value="${item.actName}"/>
+									</td>
+									<td>
+										<input name="eventType" type="hidden" th:value="${item.eventType}"/>
+										<span th:text="${item.eventType}"></span>
+									</td> 
+									<td>
+										<input name="eventOperation" type="hidden" th:value="${item.eventOperation}"/>
+										<span th:text="${item.eventOperation}"></span>
+									</td>
+									<td class="operation-col">
+										<a href="javascript://" class="btn mini yellow delRow" title="删除"><i class="icon-trash"></i></a>
+										<a href="javascript://" class="btn mini yellow editRow" title="编辑"><i class="icon-edit"></i></a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						</div>
+					</div>
+	<script type="text/x-jsrender"  id="add-row-templateactivityeventsconfig">
+	<tr>
+		<td style="display:none">
+			<input name="id" type="hidden"/>
+			<input name="procId" type="hidden"/>
+			<input name="actName" type="hidden"/>
+		</td>
+		<td>
+			<input name="eventType" type="hidden" value="{{:eName}}"/>
+			<span>{{>eName}}</span>
+		</td>
+		<td>
+			<input name="eventOperation" type="hidden" value="{{:eOperation}}"/>
+		<span>{{>eOperation}}</span>
+		</td>
+		<td class="operation-col">
+			<a href="javascript://" class="btn mini yellow delRow" title="删除"><i class="icon-trash"></i></a>
+			<a href="javascript://" class="btn mini yellow editRow" title="编辑"><i class="icon-edit"></i></a>
+		</td>
+	</tr>
+	</script>
+	</div>
+
+	<script th:inline="javascript">
+	//<![CDATA[
+;(function($){
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;
+		$(context).uiwidget();
+		$(".addRow",context).click(function(){
+			var url=Global.contextPath+"/processConfig/event/activityEventCreate";
+			$.openLink(url,function(res){
+				if(res){
+					var $tr=$($("#add-row-templateactivityeventsconfig",context).render(res));
+					$tr.data("businessData",res.businessData);
+					$("table.events-table tbody",context).append($tr);
+				}
+			});
+		});
+		$(context).on("click",".delRow",function(){
+			$(this).closest("tr").remove();
+		});
+		$(context).on("click",".editRow",function(){
+			var url=Global.contextPath+"/processConfig/event/activityEventCreate?action=EDIT";
+			var $tr=$(this).closest("tr");
+			var id=$tr.find("[name=id]").val();
+			var eventConfig=null;
+			if(!id){
+				var eventType=$tr.find("[name=eventType]").val();
+				var eventOperation=$tr.find("[name=eventOperation]").val();
+				eventConfig={eventType:eventType,eventOperation:eventOperation,businessData:$tr.data("businessData")};
+			}
+			url=Urls.appendParam(url,"id",id);
+			$.openLink(url,{eventConfig:eventConfig},function(res){
+				if(res){
+					$tr.data("businessData",res.businessData);
+				}
+			});
+		});
+	});
+}(jQuery));          
+	//]]>
+	</script>
+</div>

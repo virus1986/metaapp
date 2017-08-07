@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+	xmlns:context="http://www.springframework.org/schema/context"  
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+	http://www.springframework.org/schema/context  
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+	default-autowire="byName"> 
+	<!-- workflow annotation inject config -->
+	<!-- <context:annotation-config></context:annotation-config> -->
+	<context:component-scan base-package="bingo.workflow"/>
+	<context:component-scan base-package="bingo.metaapp.web.workflow">
+		<context:include-filter type="regex" expression=".*Listener" />
+	</context:component-scan>
+    <!-- 必须定义，否则核心不能使用spring作为bean容器 -->
+	<bean class="bingo.workflow.engine.impl.spring.SpringBeanFactoryBinder"/>
+	<bean class="bingo.workflow.engine.GeneratorExtImp"/>
+	<bean class="bingo.metaapp.web.workflow.CallActivityStartVariableProviderImpl"/>
+	<bean class="bingo.metaapp.web.workflow.TaskDurationCalculatorProviderImpl"/>
+	<bean class="bingo.metaapp.web.workflow.WorkflowExperssionProviderImpl"/>
+</beans>

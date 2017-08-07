@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" height="100%" multiSelect="true" multiSelectKey="None" shrinkToFit="true" deleteUrl="~/entities/WfProc/delete" createUrl="~/entities/WfProc/create" dataUrl="~/entities/WfProc/query_paged" entityName="WfProc" id="grid_aa3d03db-b6d0-4e38-821b-55c5ed75105e">
+    <columns>
+        <column width="30" primaryKey="true" visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="procId"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="90" dataField="procName"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="procDefId"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="procDefKey"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="procCatagoryId"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="60" dataField="standardConsuming"/>
+    </columns>
+    <contextButtons>
+    </contextButtons>
+    <toolBarSetting>
+    	<button isInMoreBtns="false" cssClass="" name="fresh"/>
+    </toolBarSetting>
+    <joinEntities>
+    </joinEntities>
+    <filter groupOp="AND">
+        <filters>
+        </filters>
+        <rules>
+            <rule data="1" field="WfProc.isLast" op="eq"/>
+            <rule data="" field="WfProc.procDefKey" op="nn"/>
+        </rules>
+    </filter>
+    <orderby>
+        <rule direction="Desc" field="createdTime"/>
+    </orderby>
+    <quickSearch searchColNum="3">
+        <column dataField="procName"/>
+        <column dataField="procDefKey"/>
+        <column dataField="procDefId"/>
+    </quickSearch>
+    <addDialogSettings showType="tab"/>
+    <editDialogSettings showType="tab"/>
+    <viewDialogSettings showType="tab"/>
+</grid>

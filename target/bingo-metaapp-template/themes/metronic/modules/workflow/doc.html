@@ -1,0 +1,130 @@
+<div th:id="${viewId}" class="panel apply-panel">
+	<div class="form-toolbar" style="position: fixed; left: 5px; margin-top: 5px;">
+		<div>
+			<button th:if="${buttonsAuthority['import']}" onclick="" class="btn green table-toolbar-icon-item import"
+				title="导入本地的文档">
+				<i class="icon-folder-open"></i> <span> 导入</span>
+			</button>
+			<button th:if="${buttonsAuthority['rest']}" onclick="" class="btn green table-toolbar-icon-item rest"
+				title="从服务器上下载文档覆盖当前文档">
+				<i class="icon-undo"></i> <span> 重置</span>
+			</button>
+			<button th:if="${buttonsAuthority['save']}" onclick="" class="btn green table-toolbar-icon-item save"
+				title="保存并上传文件到服务器">
+				<i class="icon-save"></i> <span> 保存</span>
+			</button>
+			<button th:if="${buttonsAuthority['saveAs']}" onclick="" class="btn green table-toolbar-icon-item saveAs"
+				title="保存到本地">
+				<i class="icon-cloud-download"></i> <span> 下载</span>
+			</button>
+			<button th:if="${buttonsAuthority['print']}" onclick="" class="btn green table-toolbar-icon-item print"
+				title="打印文件">
+				<i class="icon-print"></i> <span> 打印</span>
+			</button>
+			<button th:if="${buttonsAuthority['modify']}" onclick="" class="btn green table-toolbar-icon-item modify"	title="">
+				<i class="icon-file-alt"></i> <span> 查看痕迹</span>
+			</button>
+			<button th:if="${buttonsAuthority['final']}" onclick="" class="btn green table-toolbar-icon-item final"
+				style="display: none" title="">
+				<i class="icon-file-text"></i> <span> 隐藏痕迹</span>
+			</button>
+		</div>		
+	</div>
+	<div class="dso-container" style="margin-top: 45px;">
+		
+	</div>
+
+<script type="text/javascript" th:inline="javascript">
+	//<![CDATA[ 
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var filepath=/*[[${filepath}]]*/;
+		var iframeId=/*[[${queryString['_iframe_id']}]]*/;
+		//状态值，0：创建，1：编辑，2：只读，3：无操作
+		var status=/*[[${queryString['_status']}]]*/;
+		var userName=/*[[${user.name}]]*/;
+		var container=$('#' + viewId);		
+		Page.init(container);
+		
+		function close(reVal){
+			if(!CommonUtil.isEmpty(iframeId) && window.parent.Page){
+				window.parent.Page.closeIframe(iframeId,reVal);
+				return;
+			}
+			window.returnValue=reVal;
+			window.close();			
+		}		
+		if(status==null){
+			status=0;
+		}		
+		var _options={
+			viewId 				: viewId,
+			context 			: container,
+			dsoContainer 		: $(".dso-container",container)[0],
+			serverFilePath	 	: filepath,
+			status				: status,
+			userName			: userName
+		};		
+		if(status==1){
+			$(".import",container).hide();
+		}else if(status==2){
+			$(".save",container).hide();
+			$(".rest",container).hide();
+			$(".import",container).hide();
+		}else if(status==3){
+			$("button",".form-toolbar").hide();
+		}
+		
+		setTimeout(function(){
+			reqModule(["module/workflow/doc_manager"],function(DocManager){
+				var docManager=DocManager.createNew(_options);
+				
+				//保存到服务器
+				$(".save",container).click(function(){
+					docManager.saveToServer();
+					close(docManager.options);
+				});
+				
+				//导入本地文件
+				$(".import",container).click(function(){
+					var me=this;
+					docManager.importLocalFile(me);
+				});
+				
+				//另存文件到本地
+				$(".saveAs",container).click(function(){
+					var me=this;
+					docManager.saveAs(me);
+				});
+				
+				//打印
+				$(".print",container).click(function(){
+					var me=this;
+					docManager.print(me);
+				});
+				
+				//隐藏文件
+				$(".modify",container).click(function(){
+					var me=this;				
+					docManager.showModify();
+					$(me).hide();
+					$(".final",container).show();
+				});		
+				
+				//最终版
+				$(".final",container).click(function(){
+					var me=this;	
+					docManager.showFinal();
+					$(me).hide();
+					$(".modify",container).show();
+				});	
+				
+				
+				
+			});
+		},500);
+		
+	});
+	//]]> 
+	</script>
+</div>

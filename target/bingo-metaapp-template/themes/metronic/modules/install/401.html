@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>云应用平台安装向导</title>
+<link rel="stylesheet"
+	th:href="${themes.file('modules/install/style/style.css')}" />
+</head>
+<body>
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="btn btn-navbar" data-toggle="collapse"
+					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span>
+				</a> <a class="brand" href="index.html"> <img
+					th:src="${themes.file('modules/install/style/logo.png')}"
+					alt="logo" />
+				</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav pull-right">
+						<li><a href="javascript://">功能特性</a></li>
+						<li><a href="http://developer.bingosoft.net/blog">博客</a></li>
+						<li><a href="javascript://">联系我们</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="box_sign">
+		<div class="container">
+			<div class="span12 box_wrapper">
+				<div class="span12 head-info">
+					<i class="i_loading"></i>云应用平台安装
+				</div>
+				<div class="span12 box">
+					<div>
+						<div class="head">
+							<h4>我的应用</h4>
+						</div>
+						<div class="form">
+								<div class="row-fluid">
+									<div class="span4">
+										<img
+											th:src="${themes.file('modules/install/style/images/wxts.gif')}" />
+									</div>
+									<div class="span8">
+										<p>
+											对不起，您没有创建应用的权限。
+										</p>
+									</div>
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer id="footer" style="margin-top: 270px">
+		<div class="container">
+			<hr />
+			<div class="row copyright">
+				<div class="span4">
+					<h3>Relation</h3>
+					<a href="javascript://" class="social fb"> <i class="i_facebook"></i>
+					</a> <a href="javascript://" class="social tw"> <i class="i_twitter"></i>
+					</a> <a href="javascript://" class="social yt"> <i class="i_youtube"></i>
+					</a>
+				</div>
+				<div class="span3 offset5 copy">
+					<p>2012 - developer.bingosoft.net</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<script type="text/javascript"
+		th:src="${themes.file('modules/install/scripts/jquery.js')}"></script>
+	<script type="text/javascript"
+		th:src="${themes.file('modules/install/scripts/bootstrap.min.js')}"></script>
+	<script type="text/javascript"
+		th:src="${themes.file('modules/install/scripts/theme.js')}"></script>
+</body>
+</html>

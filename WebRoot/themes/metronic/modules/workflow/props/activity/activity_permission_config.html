@@ -1,0 +1,200 @@
+<div th:id="${viewId}" class="panel apply-panel">
+	<style type="text/css">
+		.permissions-table th{
+			background-color: #D5E4AB;
+			border-color: #A5C74B;
+			text-align: center;
+			font-weight: bold;
+		}
+	</style>
+	<div class="portlet box slave tea-green">
+		<div class="portlet-title">
+			<div class="caption">
+				<i class="icon-reorder"></i><span th:text="'主表'+${entityName}+'字段权限配置'"></span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="dataTables_wrapper form-inline">
+			<table class="table table-striped table-hover table-bordered permissions-table">
+				<thead>
+					<tr class="nodrop nodrag">
+						<th style="display:none;">
+						</th>
+						<th style="width: 150px;">字段名</th>
+						<th style="width: 120px;">只读</th>
+						<th style="width: 120px;">可编辑</th>
+						<th style="width: 120px;">不可访问</th>
+						<th style="width: 120px;">隐藏</th>
+						<th>默认权限</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="item,status:${entityFields}" th:with="inputName=${entityName}+'_'+${item['name']}">
+						<td style="display: none">
+							<input name="type" type="hidden" value="field"/>
+							<input name="entityName" type="hidden" th:value="${entityName}"/>
+							<input name="id" type="hidden"/>
+							<input name="name" type="hidden" th:value="${item['name']}"/>
+						</td>
+						<td th:text="${item['displayName']}">
+						</td> 
+						<td>
+						<label>
+							<input type="radio" value="readonly" th:name="${inputName}"/>
+							<span>只读</span>
+						</label>
+						</td>
+						<td>
+							<input type="radio" value="editable" th:name="${inputName}"/>
+							<span>可编辑</span>
+						</td>
+						<td>
+							<input type="radio" value="accessdeny" th:name="${inputName}"/>
+							<span>不可访问</span>
+						</td>
+						<td>
+							<input type="radio" value="hidden" th:name="${inputName}"/>
+							<span>隐藏</span>
+						</td>
+						<td>
+							<input type="radio" value="nocontrol" checked="checked" th:name="${inputName}"/>
+							<span style="color:#208A31;">默认权限</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+		</div>
+	</div>
+	<div class="portlet box slave tea-green" th:if="${slaveEntityFieldsMap.size()>0}" th:each="slave:${slaveEntityFieldsMap}">
+		<div class="portlet-title">
+			<div class="caption">
+				<i class="icon-reorder"></i><span th:text="'从表'+${slave['key']}+'字段权限配置'"></span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="dataTables_wrapper form-inline">
+			<table class="table table-striped table-hover table-bordered permissions-table">
+				<thead>
+					<tr class="nodrop nodrag">
+						<th style="display:none;">
+						</th>
+						<th style="width: 150px;">字段名</th>
+						<th style="width: 120px;">只读</th>
+						<th style="width: 120px;">可编辑</th>
+						<th style="width: 120px;">不可访问</th>
+						<th style="width: 120px;">隐藏</th>
+						<th>默认权限</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="item,status:${slave['value']}" th:with="inputName=${slave['key']}+'_'+${item['name']}">
+						<td style="display: none">
+							<input name="entityName" type="hidden" th:value="${slave['key']}"/>
+							<input name="type" type="hidden" value="field"/>
+							<input name="id" type="hidden"/>
+							<input name="name" type="hidden" th:value="${item['name']}"/>
+						</td>
+						<td th:text="${item['displayName']}">
+						</td> 
+						<td>
+						<label>
+							<input type="radio" value="readonly" th:name="${inputName}"/>
+							<span>只读</span>
+						</label>
+						</td>
+						<td>
+							<input type="radio" value="editable" th:name="${inputName}"/>
+							<span>可编辑</span>
+						</td>
+						<td>
+							<input type="radio" value="accessdeny" th:name="${inputName}"/>
+							<span>不可访问</span>
+						</td>
+						<td>
+							<input type="radio" value="hidden" th:name="${inputName}"/>
+							<span>隐藏</span>
+						</td>
+						<td>
+							<input type="radio" value="nocontrol" checked="checked" th:name="${inputName}"/>
+							<span style="color:#208A31;">默认权限</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+		</div>
+	</div>
+	<!-- <div class="portlet box slave tea-green" th:if="${slavesNamesMap.size()>0}">
+		<div class="portlet-title">
+			<div class="caption">
+				<i class="icon-reorder"></i><span th:text="'是否禁用从表，勾选则此环节不显示此从表'"></span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="dataTables_wrapper form-inline">
+			<div class="permissions-table-slave">
+				<label th:each="slave:${slavesNamesMap}"><input type="checkbox" th:name="${slave['key']}" th:value="${slave['key']}"/><span th:text="${slave['value']}"></span></label>
+			</div>
+			</div>
+		</div>
+	</div> -->
+	<div id="permissionHiddenBtn" style="display:none;"></div>
+	<script th:inline="javascript">
+	//<![CDATA[ 
+;(function($){
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;
+		var procId = /*[[${procId}]]*/;
+		var entityName = /*[[${entityName}]]*/;
+		var actName = /*[[${actName}]]*/;
+		var activityPermissionList = /*[[${activityPermissionList}]]*/;
+		//$(context).uiwidget();
+		$.each(activityPermissionList,function(i,permission){
+			var type=permission.type;
+			var key,value,id;
+			var inputDom,trDom;
+			if(type==="field"){
+				key=permission.entityName+"_"+permission.name;
+				value=permission.permission;
+				id=permission.id;
+				inputDom=$("[name="+key+"][value="+value+"]").attr("checked","checked");
+				trDom=inputDom.closest("tr");
+				trDom.find("[name=id]").val(id);
+				inputDom.closest("tbody").prepend(trDom);
+			}else if(type==="slave"){
+				key=permission.name;
+				value=permission.name;
+				id=permission.id;
+				inputDom=$("[name="+key+"][value="+value+"]").attr("checked","checked");
+				inputDom.data("id",id);
+			}
+		});
+		
+		$("#permissionHiddenBtn",context).data("getPermissions",function(){
+			var permissions=[];
+			$(".permissions-table tr :radio:checked",context).not("[value=nocontrol]").each(function(i,item){
+				var itemDom=$(item);
+				var trDom=itemDom.closest("tr");
+				var id=trDom.find("[name=id]").val();
+				var type=trDom.find("[name=type]").val();
+				var entityName2=trDom.find("[name=entityName]").val();
+				var name=trDom.find("[name=name]").val();
+				var permission=itemDom.val();
+				permissions.push({id:id,procId:procId,actName:actName,type:type,entityName:entityName2,name:name,permission:permission});
+			});
+			$(".permissions-table-slave :checkbox:checked",context).each(function(i,item){
+				var itemDom=$(item);
+				var id=itemDom.data("id")||"";
+				var type="slave";
+				var name=itemDom.val();
+				var permission="accessdeny";
+				permissions.push({id:id,procId:procId,actName:actName,type:type,entityName:entityName,name:name,permission:permission});
+			});
+			return permissions;
+		});
+	});
+}(jQuery));
+	//]]>
+	</script>
+</div>

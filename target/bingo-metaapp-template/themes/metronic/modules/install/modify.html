@@ -1,0 +1,137 @@
+<!-- 导航 -->
+<div class="header">
+	<div class="logo">
+		<a href="/index.html"></a>
+	</div>
+	<div class="nav">
+		<ul>
+			<li><a href="/#page2">功能</a></li>
+			<li><a href="/price.html">购买</a></li>
+			<li><a href="/#page5">客户</a></li>
+			<li><a href="/#page6">下载</a></li>
+			<li><a href="##">帮助</a></li>
+		</ul>
+	</div>
+	<div class="navigation">
+		<ul>
+			<li><a href="/webos/ssoclient/logout" class="loginout">注销</a></li>
+		</ul>
+	</div>
+</div>
+
+<!-- 正文 -->
+<div class="register-wrapper">
+	<div class="main-body">
+		<div class="main-header">
+			<h2>帐号提示</h2>
+		</div>
+		<div class="login-group modify-warn">
+			<i class='icon-edit'></i><span>您好，您的Link帐号未激活，请登录邮箱激活！</span>
+		</div>
+		<div class="main-content">
+			<form>
+				<input type="hidden" id="id" name="id" th:value="${enterpriseId}" />
+				<div class="login-group modify-info">
+					<span>您也可以更换其他邮箱重新发送邮件激活:</span>
+				</div>
+				<div class="login-group modify-email">
+					<label for="">邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱：</label>
+					<div class="modify-emial-body">
+						<div class="edit-area">
+							<span id="email" name="email" th:text="${enterpriseMail}">xxxxxx</span>
+						</div>
+					</div>
+					<a href="javascript://" class="edit-mail">修改</a>
+				</div>
+				<div style="display: flex; margin-top: 100px;">
+					<a href="javascript://" class="email-send" title="重新发送邮件">重新发送邮件</a>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript" th:inline="javascript">
+		/*<![CDATA[*/
+		$(function(){
+			$('.edit-mail').click(function(){
+				var email = null;
+				
+				if(!$(this).data("isEdit")){
+					$(this).data("isEdit",true);
+					
+					email = $('#email').text();
+					$('#email').remove();
+					$('.edit-area').html("<input id='email' style='margin: 0;width: 200px;' name='email' value='"+email+"'/>");
+					
+					$('.email-send').css("background","#54C58B");
+					
+					$(this).html("确定");
+				}else{
+					email = $('#email').val();
+					var pattern = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;  
+				    if (!pattern.test(email)) {  
+				        $("#email").focus();
+						$.messageBox.info({message:"请输入正确的邮箱地址！",title:"提示"});
+						return;
+				    } 
+				    $(this).data("isEdit",false);
+					$('#email').remove();
+					$('.edit-area').html("<span id='email' name='email'>"+email+"</span>");
+					
+					$('.email-send').removeAttr("style");;
+					
+					$(this).html("修改");
+				}
+			});
+			
+			$('.email-send').click(function(){
+				if($('.edit-mail').data("isEdit"))
+					return;
+				
+				var data = {
+						id : $('#id').val(),
+						email : $('#email').text()
+				}
+				
+				if(data.email.length<1){
+					$("#email").focus();
+					$.messageBox.info({message:"邮箱不能为空！",title:"提示"});
+					return;
+				}
+				
+				$.messageBox.confirm({message:"将向邮箱发送激活信息，是否继续？",
+					title:"提示",
+					okButton: "确定",  
+					cancelButton: "取消", 
+					callback:function(ret){
+						
+					if(ret){
+						var requestParams={
+							type:"POST",
+							data:data,
+							success:function(response) {
+								Loader.hideLoader();
+								//if('true' == response)
+									//$.messageBox.info({message:"已经向您的邮箱发送信息，请注意查收！",title:"提示"});
+								
+								window.setTimeout(function(){
+									window.location.href = contextPath+"/install/point?status=" + response;
+									Loader.hideLoader();
+								},200);
+							},
+							error:function(xhr, textStatus, errorThrown){
+								$.messageBox.info({message:xhr.responseText,title:"Erorr!"});
+								window.setTimeout(function(){
+									Loader.hideLoader();
+								},200);
+							}
+						};
+						Loader.showLoader('数据提交中，请稍等...');		
+						installModule.ajaxConn(requestParams, 'reSendMail');
+					}
+				}}) ;
+			});
+			
+		});
+		/*]]>*/
+	</script>
+</div>

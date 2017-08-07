@@ -1,0 +1,138 @@
+<div  th:attr="data-url=${requestUrl}"  th:id="${viewId}">
+	<div class="breadcrumbs" id="breadcrumbs">
+		<ul class="breadcrumb">		
+		</ul>
+	</div>
+	<div class="container-fluid m-top10">
+		<meta:grid id="'grid_'+${entityName}+'_'+${view}+'_'+${viewId}"  entityName="${entityName}" 	view="${view}">
+		<div class="toolbar-template"><![CDATA[
+		<div class="container-fluid" style="padding:0px">
+			<div th:id="'toolbar_'+${jqgrid.id}"
+			class="table-toolbar toolbar toolbar-auto row-fluid simple-search-area">
+				<table th:object="${jqgrid}" class="form-horizontal">
+					<tbody>
+						<tr>
+						<td>
+							<div class="control-group">
+				              <label class="control-label grid-simple-search-label">流程名称：</label>
+				              <div class="controls grid-simple-search-controls">
+				                <input type="text" name="WfProcInst.procDefId" data-operator="insql" class="input input-medium"/>
+				              </div>
+				            </div>
+				        </td><td>
+							<div class="control-group">
+				              <label class="control-label grid-simple-search-label">发起人部门：</label>
+				              <div class="controls grid-simple-search-controls">
+				                <input type="text" name="WfProcInst.proposerDeptName" data-operator="cn" class="input input-medium"/>
+				              </div>
+				            </div>
+				        </td><td>
+							<div class="control-group">
+				              <label class="control-label grid-simple-search-label">发起时间：</label>
+				              <div class="controls grid-simple-search-controls">
+				                <input name="WfProcInst.startTime" data-operator="gt" class="Wdate input date-template input-medium val-location focus-location" type="text"
+			data-widget="calendar" data-options="{'isShowWeek':true,'dateFmt':'yyyy-MM'}" />
+				              </div>
+				            </div>
+						</td>
+						</tr>
+						<tr>
+						<td>
+						<div class="control-group">
+				              <label class="control-label grid-simple-search-label">主题：</label>
+				              <div class="controls grid-simple-search-controls">
+				                <input type="text" name="WfProcInst.title" data-operator="cn" class="input input-medium"/>
+				              </div>
+				            </div>
+						</td>
+						<td>
+						<div class="control-group">
+				              <label class="control-label grid-simple-search-label">发起人：</label>
+				              <div class="controls grid-simple-search-controls">
+				                <input type="text" name="WfProcInst.proposerName" data-operator="cn" class="input input-medium"/>
+				              </div>
+				            </div>
+						</td>
+						<td>
+						  
+						</td>
+						</tr>
+						<tr>
+							<td>
+								
+							</td>
+							<td></td>
+							<td>
+							<div class="control-group">
+				              <div class="controls grid-simple-search-controls" style="margin-left:50px;">
+								<div class="toolbar-btns">
+									<div th:include="${themes.meta('/searchsaver/fragment')} :: 'html'" class="btn-group"></div>
+									<button type="button" class="btn resetBtn">重置</button>
+								</div>
+							<div class="btn-group">
+								<button class="btn dropdown-toggle" data-toggle="dropdown">更多操作 <i class="icon-angle-down"></i>
+								</button>
+								<ul class="dropdown-menu pull-right table-toolbar-icon">
+									<li th:each="btn,itStat:${jqgrid.customToolBarSetting}" 
+									    class="table-toolbar-icon-item"
+										th:attr="data-func=${btn.onClick}"
+										th:id="'toolbar_'+${btn.name}+'_'+${jqgrid.id}">
+										<a href="javascript://" th:title="${btn.toolTip}">
+										<img style="width:22px;height:22px;margin-right:20px;" th:src="${themes.icon(btn.buttonIcon)}" />
+										<span th:text="${btn.text}"></span></a>
+									</li>
+								</ul>
+							</div>
+				              </div>
+				            </div>
+							
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			</div>
+		</div>
+		]]></div>
+		</meta:grid>
+	</div>
+	<script th:inline="javascript">
+	//<![CDATA[ 
+;(function($){	         
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;
+		var viewId=/*[[${viewId}]]*/;
+		var entityName=/*[[${entityName}]]*/;
+		var view=/*[[${view}]]*/;
+       	$("table.form-horizontal",context).find("input").on("keydown",function(){
+       		if(event.keyCode==13){
+       			$(".searchBtn",context).click();
+       		}
+       	});
+		var $grid = $('#grid_'+entityName+'_'+view+'_'+viewId, context);
+		var barIdDom=$("#toolbar_grid_"+entityName+"_"+view+"_"+viewId);
+		barIdDom.data("itemChangeFunc",function(rule,rules){//{"field":name,"op":operator,"data":value}
+			if(!rule){
+				return;
+			}
+			if(rule.field=="WfProcInst.startTime"){
+				var originData=rule.data;
+				rule.data=rule.data+"-01 00:00:00";
+				var day = new Date(originData.split("-")[0],originData.split("-")[1],0);
+				var lastDate = originData+"-"+day.getDate();
+				rules.push({"field":"WfProcInst.startTime","op":"le","data":lastDate+" 23:59:59"});
+			}else if(rule.field=="WfProcInst.procDefId"){
+				rule.data="select distinct wfProc.procDefId from WfProc wfProc,"
+				+"WfProcInst inst where wfProc.procName like '%"+rule.data+"%' and wfProc.procDefId=inst.procDefId";
+			}
+		});
+		/* barIdDom.data("rulesChangeFunc",function(rules){//[{"field":name,"op":operator,"data":value}]
+			rules
+			return rules;
+		}); */
+	});
+}(jQuery)); 	
+	//]]>
+	</script>
+	<div th:include="${themes.meta('/searchsaver/fragment')} :: 'js'"></div>
+</div>

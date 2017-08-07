@@ -1,0 +1,10 @@
+<div  th:attr="data-url=${requestUrl}"  th:id="${viewId}">
+	<div class="breadcrumbs" id="breadcrumbs">
+		<ul class="breadcrumb">		
+		</ul>
+	</div>
+	<div class="container-fluid m-top10">
+		<meta:grid id="'grid_'+${entityName}+'_'+${view}+'_'+${viewId}"  entityName="${entityName}" 	view="${view}">
+		</meta:grid>
+	</div>
+</div>

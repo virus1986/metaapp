@@ -1,0 +1,70 @@
+<div th:fragment="rootmenu">
+	<li>
+          <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+          <div class="sidebar-toggler hidden-phone">
+          </div>
+          <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+      </li>
+      <li>
+          <!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
+          <form class="sidebar-search" >
+          <div class="input-box"  id="nav-global-search">
+              <a href="javascript:;" class="remove"></a>
+              <input type="text" placeholder="Search..." />
+			  <div class="searchResultBox" style="display:none;height:300px;overflow-y: auto;overflow-x:hidden;"></div>
+              <input type="button" class="submit" value=" " />
+          </div>
+          </form>
+          <!-- END RESPONSIVE QUICK SEARCH FORM -->
+      </li>
+
+	<li  class="current" th:each="menu : ${siteMap.menus}"  th:attr="data-menuid=${menu.id}" th:class="${menuStat.first}? 'current'">
+	<a th:if="${menu!=null}" href="#"  
+		data-url="" class="root  menu-item" th:attr="data-url=${menu.submenuSource},data-id=${menu.id},menu-url=${menu.url}">
+		<i class="menu-icon"  th:if="${!menu.icon.startsWith('icon-')}"  th:style="'background-image:url('+${themes.icon(menu.icon)}+')!important'"> </i>
+		<i  th:if="${menu.icon.startsWith('icon-')}"  th:class="${menu.icon+'  menu-icon'}"> </i>
+		<span class="title" th:text="${menu.text}">客户管理</span>
+		<span class="arrow"  th:if="${menu.menus != null || menu.submenuSource !=null }"></span>
+	</a>
+	<ul class="sub-menu" th:if="${menu.menus != null }">
+		<li   th:each="subMenu:${menu.menus}" >
+			<a href="#"  class=" menu-item"  menu-url=""  th:attr="data-url=${subMenu.submenuSource},data-id=${subMenu.id},menu-url=${subMenu.url}">
+				<i class="menu-icon"  th:if="${!subMenu.icon.startsWith('icon-')}"  th:style="'background-image:url('+${themes.icon(subMenu.icon)}+')!important'"> </i>
+				<i  th:if="${subMenu.icon.startsWith('icon-')}"  th:class="${subMenu.icon+'  menu-icon'}"> </i>
+				<span class="title"  th:text="${subMenu.text}"></span>
+				<span class="arrow"  th:if="${subMenu.menus != null }"></span>
+			</a>
+			<ul class="sub-menu" th:if="${subMenu.menus != null }">
+				<li    th:each="subMenu1:${subMenu.menus}" >
+					<a href="#"  class=" menu-item"  th:attr="data-url=${subMenu1.submenuSource},data-id=${subMenu1.id},menu-url=${subMenu1.url}">
+						<i class="menu-icon"  th:if="${!subMenu1.icon.startsWith('icon-')}"  th:style="'background-image:url('+${themes.icon(subMenu1.icon)}+')!important'"> </i>
+						<i  th:if="${subMenu1.icon.startsWith('icon-')}"  th:class="${subMenu1.icon+'  menu-icon'}"> </i>
+						<span class="title"  th:text="${subMenu1.text}"></span>
+						<span class="arrow"  th:if="${subMenu1.menus != null }"></span>
+					</a>
+					<ul class="sub-menu" th:if="${subMenu1.menus != null }">
+						<li    th:each="subMenu2:${subMenu1.menus}"  >
+								<a href="#" class=" menu-item"    th:attr="data-url=${subMenu2.submenuSource},data-id=${subMenu2.id},menu-url=${subMenu2.url}">
+									<i class="menu-icon"  th:if="${!subMenu2.icon.startsWith('icon-')}"  th:style="'background-image:url('+${themes.icon(subMenu2.icon)}+')!important'"> </i>
+									<i  th:if="${subMenu2.icon.startsWith('icon-')}"  th:class="${subMenu2.icon+'  menu-icon'}"> </i>
+									<span class="title"  th:text="${subMenu2.text}"></span>
+									<span class="arrow"  th:if="${subMenu2.menus != null }"></span>
+								</a>
+								<ul class="sub-menu" th:if="${subMenu2.menus != null }">
+									<li    th:each="subMenu3:${subMenu2.menus}" >
+										<a href="#"  class=" menu-item"   th:attr="data-url=${subMenu3.submenuSource},data-id=${subMenu3.id},menu-url=${subMenu3.url}">
+											<i class="menu-icon"  th:if="${!subMenu3.icon.startsWith('icon-')}"  th:style="'background-image:url('+${themes.icon(subMenu3.icon)}+')!important'"> </i>
+											<i  th:if="${subMenu3.icon.startsWith('icon-')}"  th:class="${subMenu3.icon+'  menu-icon'}"> </i>
+											<span class="title"  th:text="${subMenu3.text}"></span>
+											<span class="arrow"  th:if="${subMenu3.menus != null }"></span>
+										</a>
+									</li>
+								</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		 </li>
+	</ul>
+</li>
+</div>

@@ -1,0 +1,100 @@
+@charset "utf-8";
+
+/* 全局 字体大小 颜色 链接 */
+html {
+	_overflow-x:hidden;
+}
+body {
+	background-color:#fff;
+	zoom: 1;
+}
+a {
+	color: #0088cc;
+	text-decoration: none;
+	cursor:pointer;
+}
+a:hover {
+	color: #005580;
+	text-decoration: underline;
+}
+
+/* 主体内容 */
+.container-body {	
+	background:#fff url(images/content_bg.png) 0 -150px repeat-x;
+	overflow:auto;
+}
+.container-popup {
+	background:#fff url(images/content_bg.png) 0 -150px repeat-x;
+}
+.container-body .container-fluid,
+.container-popup .container-fluid  {
+	padding:0;
+}
+
+
+/* 主体内容的标题 */
+.page-header{
+	padding:0 10px;
+	border-bottom:0;
+}
+.page-title {
+	height:30px;
+	background: url(images/page-title.jpg) repeat-x;
+	line-height: 30px;
+	padding: 0 10px;
+	font-size: 14px;
+	color: #074E81;	
+}
+.page-title .row-fluid {
+	_width:98%;
+}
+.page-title h2 {	
+	font-size: 14px;
+	line-height:30px;
+}
+
+/* popup层的标题中的关键字 */
+.title-keyword {
+	color: #3A87AD;
+	font-weight: bold;
+}
+
+
+/* panel */
+.panel .panel-head ,.panel .panel-head .first {
+	color:#333;
+}
+
+.search-panel .panel-head {
+	display:none;
+}
+.form-panel .panel-head {
+	display:none;
+}
+.apply-panel .panel-head {
+	display:none;
+}
+
+
+/* master-page场景 */
+.master-page {}
+
+
+/* itemdetail-page场景 */
+.itemdetail-page {}
+
+
+/* login-page场景 */
+.login-page {}
+
+.user-content {
+	float: left;
+	width: 80%;
+	margin-left: 210px;
+	margin-top: 10px;
+}
+
+.hidden {
+	display: none;
+}
+

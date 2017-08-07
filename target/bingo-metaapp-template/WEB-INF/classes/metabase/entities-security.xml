@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<metadata xmlns="http://schemas.bingosoft.net/metabase/metadata" xsi:schemaLocation="http://schemas.bingosoft.net/metabase/metadata http://schemas.bingosoft.net/metabase/1.0/metadata.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <entities>
+		<entity pack="security" is-display="true" display-name="角色" name="Role" is-system="true" table="sec_role">
+            <field column="Code" data-type="String" is-display="true" display-name="角色编码" display-order="1" field-type="SingleLineText" unique="false" name="code" nullable="true" sql-type="varchar" summary="角色编码" is-system="true"/>
+            <field column="Name" length="150" data-type="String" is-display="true" display-for="{form:true,list:true}" display-name="角色名称" display-order="2" field-type="SingleLineText" unique="false" name="name" nullable="false" semantics="Title" sql-type="varchar" summary="角色名" is-system="true">
+                <field-type-params>
+                    <param name="length" value="150"/>
+                </field-type-params>
+            </field>
+            <field column="Description" length="1000" data-type="String" is-display="true" display-for="{form:true,list:true}" display-name="描述" display-order="4" field-type="MultiLineText" unique="false" name="description" nullable="true" sql-type="varchar" summary="描述" is-system="true">
+                <field-type-params>
+                    <param name="length" value="1000"/>
+                </field-type-params>
+            </field>
+            <field column="Condition_Expr" length="255" data-type="String" is-display="true" display-for="{form:true,list:true}" display-name="表达式" display-order="4" field-type="MultiLineText" unique="false" name="conditionExpr" nullable="true" sql-type="varchar" summary="条件表达式" is-system="true">
+                <field-type-params>
+                    <param name="length" value="255"/>
+                </field-type-params>
+            </field>
+            <field column="Type" data-type="SmallInt" is-display="true" display-for="{form:true,list:true}" display-name="角色类型" display-order="5" field-type="SingleOption" input-type="Dropdown" unique="false" name="type" nullable="true" sql-type="smallint" summary="角色类型（管理类、流转类、混合类）" is-system="true">
+            	<options>
+                    <item name="管理类" value="0"/>
+                    <item name="流转类" value="1"/>
+                    <item name="混合类" value="2"/>
+                </options>
+            </field>
+            <field column="Participant_Type" data-type="SmallInt" default-value="0" is-display="true" display-for="{form:true,list:true}" display-name="参与者类型" display-order="6" field-type="SingleOption" input-type="Tile" unique="false" name="participantType" nullable="true" sql-type="smallint" summary="参与者类型（用户、部门）" is-system="true">
+            	<options>
+                    <item name="用户" value="0"/>
+                    <item name="部门" value="1"/>
+                </options>
+            </field>
+            <field column="Created_By" length="36" data-type="String" default-value="@{env.User.Id}" is-display="true" display-for="{form:true,list:true}" display-name="创建人" display-order="7" field-type="SingleLineText" unique="false" name="createdBy" nullable="false" sql-type="varchar" summary="创建人" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="Created_Date" data-type="Timestamp" default-value="@{env.Now}" is-display="true" display-for="{form:true,list:true}" display-name="创建时间" display-order="8" field-type="Timestamp" unique="false" name="createdDate" nullable="false" sql-type="timestamp" summary="创建时间" is-system="true"/>
+            <field column="Last_Updated_By" length="36" data-type="String" default-value="@{env.User.Id}" is-display="true" display-for="{form:true,list:true}" display-name="最后修改人" display-order="9" field-type="SingleLineText" unique="false" name="lastUpdatedBy" nullable="false" sql-type="varchar" summary="最后修改人" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="Last_Updated_Date" data-type="Timestamp" default-value="@{env.Now}" is-display="true" display-for="{form:true,list:true}" display-name="最后修改时间" display-order="10" field-type="Timestamp" unique="false" name="lastUpdatedDate" nullable="false" semantics="Updated" sql-type="timestamp" summary="最后修改时间" is-system="true"/>
+            <field column="isDefault" data-type="Boolean" default-value="0" is-display="true" display-for="{form:true,list:true}" display-name="是否默认角色" display-order="100" field-type="Boolean" input-type="Tile" unique="false" name="isDefault" nullable="true" sql-type="boolean" summary="默认角色是对具体应用来说" is-system="false"/>
+            <id column="ID" data-type="Guid" is-display="false" display-name="id" display-order="0" unique="false" name="id" nullable="false" ref-to="appId" sql-type="varchar" is-system="true"/>
+            <many-to-many display-name="用户" is-abstract="false" is-display="false" join-entity="UserRole" name="Users" optional="true" target-entity="User"/>
+        </entity>
+    
+        <entity pack="security" is-display="true" display-name="角色用户" name="UserRole" is-system="true" table="sec_user_role">
+            <field column="Created_By" length="36" data-type="String" default-value="@{env.User.Id}" is-display="true" display-for="{form:true,list:true}" display-name="创建人" display-order="2" field-type="SingleLineText" unique="false" name="createdBy" nullable="false" sql-type="varchar" summary="创建人" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="Created_Date" data-type="Timestamp" default-value="@{env.Now}" is-display="true" display-for="{form:true,list:true}" display-name="创建时间" display-order="3" field-type="Timestamp" unique="false" name="createdDate" nullable="false" sql-type="timestamp" summary="创建时间" is-system="true"/>
+            <field column="Last_Updated_By" length="36" data-type="String" default-value="@{env.User.Id}" is-display="true" display-for="{form:true,list:true}" display-name="最后修改人" display-order="4" field-type="SingleLineText" unique="false" name="lastUpdatedBy" nullable="false" sql-type="varchar" summary="最后修改人" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="Last_Updated_Date" data-type="Timestamp" default-value="@{env.Now}" is-display="true" display-for="{form:true,list:true}" display-name="最后修改时间" display-order="5" field-type="Timestamp" unique="false" name="lastUpdatedDate" nullable="false" semantics="Updated" sql-type="timestamp" summary="最后修改时间" is-system="true"/>
+            <composite-id>
+                <field column="USER_ID" data-type="Guid" is-display="false" display-name="用户" display-order="0" unique="false" name="userId" nullable="false" ref-entity="User" ref-to="id" sql-type="varchar" is-system="true"/>
+                <field column="ROLE_ID" data-type="Guid" is-display="false" display-name="角色" display-order="1" unique="false" name="roleId" nullable="false" ref-entity="Role" ref-to="id" sql-type="varchar" is-system="true"/>
+            </composite-id>
+            <many-to-one display-name="User" field="userId" field-order="0" field-ref="id" is-abstract="false" is-display="false" identity="true" name="User" optional="false" target-entity="User"/>
+            <many-to-one display-name="Role" field="roleId" field-order="1" field-ref="id" is-abstract="false" is-display="false" identity="true" name="Role" optional="false" target-entity="Role"/>
+        </entity>
+    
+		<entity pack="security" is-display="true" display-name="受控资源" name="ResourcePermission" display-for="{manage:false}" is-system="true" table="sec_resource_permission">
+			<id column="id" data-type="Guid" is-display="false" display-name="id" name="id" nullable="false" is-system="true"/>
+			<field column="code" data-type="String" is-display="true" display-name="编号" field-type="SingleLineText" name="code" nullable="false" is-system="true"/>
+			<field column="entity" data-type="String" is-display="true" display-name="所属实体" field-type="SingleLineText" name="entity" nullable="true" is-system="true"/>
+			<field column="resource_name" data-type="String" is-display="true" display-name="资源名称" semantics="Title" field-type="SingleLineText" name="resourceName" nullable="true" is-system="true"/>
+			<field column="resource_type" data-type="String" is-display="true" display-name="资源类型" field-type="SingleOption" name="resourceType" nullable="true" is-system="true"/>
+			<field column="resource_operation" data-type="String" is-display="true" display-name="资源操作" field-type="SingleLineText" name="resourceOperation" nullable="true" is-system="true"/>
+		</entity>
+		
+		<entity pack="security" is-display="true" display-name="权限" name="Permission" display-for="{manage:false}" is-system="true" table="sec_permission">
+			<id column="id" data-type="Guid" is-display="false" display-name="id" name="id" nullable="false" is-system="true"/>
+			<field column="parent" name="parent" data-type="String" is-display="true" display-name="父权限" field-type="SingleLineText"  nullable="true" is-system="true"/>
+			<field column="code" data-type="String" is-display="true" display-name="编号" field-type="SingleLineText" name="code" nullable="false" is-system="true"/>
+			<field column="name" data-type="String" is-display="true" display-name="名称" semantics="Title" field-type="SingleLineText" name="name" nullable="true" is-system="true"/>
+			<field column="url" data-type="String" is-display="true" display-name="访问地址" field-type="SingleOption" name="url" nullable="true" is-system="true"/>
+			<field column="ELEMENT_ID" data-type="String" is-display="true" display-name="结点Id" field-type="SingleLineText" name="elementId" nullable="true" is-system="true"/>
+			<field column="ELEMENT_BEHAVIOUR" data-type="String" is-display="true" display-name="结点动作" field-type="SingleLineText" name="element_behaviour" nullable="true" is-system="true"/>
+			<field column="ORDER" is-display="true" display-name="排序" field-type="Integer" name="order" nullable="true" is-system="true"/>
+			<field column="DESCRIPTION" data-type="String" is-display="true" display-name="描述" field-type="SingleLineText" name="description" nullable="true" is-system="true"/>
+			<field column="ICON" data-type="String" is-display="true" display-name="图标" field-type="SingleLineText" name="icon" nullable="true" is-system="true"/>
+			<field column="ICON_LARGE" data-type="String" is-display="true" display-name="大图标" field-type="SingleLineText" name="icon_large" nullable="true" is-system="true"/>
+			<field column="ICON_SMALL" data-type="String" is-display="true" display-name="小图标" field-type="SingleLineText" name="icon_small" nullable="true" is-system="true"/>
+			<field column="ICON_MIDDLE" data-type="String" is-display="true" display-name="中图标" field-type="SingleLineText" name="icon_middle" nullable="true" is-system="true"/>
+			<field column="CREATED_BY" data-type="String" is-display="true" display-name="创建人" default-value="@{env.User.id}" field-type="SingleLineText" name="createdBy" nullable="true" is-system="true"/>
+			<field column="CREATED_DATE" data-type="Timestamp" is-display="true" display-name="创建时间" default-value="@{env.Now}" field-type="Timestamp" name="createdDate" nullable="true" is-system="true"/>
+			<field column="LAST_UPDATED_BY" data-type="String" is-display="true" display-name="更新人" default-value="@{env.User.id}" field-type="SingleLineText" name="lastUpdatedBy" nullable="true" is-system="true"/>
+			<field column="LAST_UPDATED_DATE" data-type="Timestamp" is-display="true" display-name="更新时间" default-value="@{env.Now}" field-type="Timestamp" name="lastUpdatedDate" nullable="true" is-system="true"/>
+			<field column="IS_REFERENCE" field-type="Boolean" default-value="true" name="isReference" display-name="是否引用" is-display="true" is-system="true"></field>
+			<field column="REFERENCE" data-type="String" is-display="true" name="reference" display-name="引用权限"  field-type="SingleLineText"  nullable="true" is-system="true"/>
+		</entity>
+   
+		<entity pack="security" is-display="true" display-name="角色权限" name="RolePermission" display-for="{manage:false}" is-system="true" table="sec_role_permission">
+			<composite-id>
+				<field column="ROLE_ID" data-type="String" is-display="false" display-name="角色" name="roleId" nullable="false" is-system="true"/>
+				<field column="OPERATION_ID" data-type="String" is-display="false" display-name="操作" name="operationId" nullable="false" is-system="true"/>
+			</composite-id>
+			<field column="RULE_ID" data-type="String" is-display="true" display-name="规则" field-type="SingleLineText" name="ruleId" nullable="true" is-system="true"/>
+			<field column="CREATED_BY" data-type="String" is-display="true" display-name="创建人" default-value="@{env.User.Name}" field-type="SingleLineText" name="createdBy" nullable="true" is-system="true"/>
+			<field column="CREATED_DATE" data-type="Timestamp" is-display="true" display-name="创建时间" default-value="@{env.Now}" field-type="Timestamp" name="createdDate" nullable="true" is-system="true"/>
+			<field column="LAST_UPDATED_BY" data-type="String" is-display="true" display-name="更新人" default-value="@{env.User.Name}" field-type="SingleLineText" name="lastUpdatedBy" nullable="true" is-system="true"/>
+			<field column="LAST_UPDATED_DATE" data-type="Timestamp" is-display="true" display-name="更新时间" default-value="@{env.Now}" field-type="Timestamp" name="lastUpdatedDate" nullable="true" is-system="true"/>
+		</entity>
+		
+		 <!-- 记录级权限 -->
+        <entity pack="security" is-display="true" display-for="{manage:true}" display-name="UAM角色权限" inherits-persistence="PerEntity" name="RoleRecordPermission" is-system="true" table="sec_role_Record_permission">
+            <field column="Role_Id" data-type="Guid" is-display="false" display-name="角色标识" display-order="0" unique="false" length="36" name="roleId" nullable="true" ref-entity="Role" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="Record_Id" data-type="Guid" is-display="false" display-name="记录标识" display-order="1" unique="false" length="36" name="recordId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="Entity" data-type="String" is-display="true" display-name="实体" display-order="4" field-type="SingleLineText" unique="false" length="50" name="entity" nullable="true" sql-type="varchar" summary="所属实体" is-system="true"/>
+            <field column="Rule_Id" data-type="Guid" is-display="true" display-name="规则标识" display-order="2" field-type="SingleLineText" unique="false" length="36" name="ruleId" nullable="true" ref-entity="PermissionRule" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="Created_By" data-type="Guid" default-value="@{env.User.Id}" is-display="true" display-for="{form:true,list:true}" display-name="创建人" display-order="3" unique="false" name="createdBy" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="Created_Date" data-type="Timestamp" default-value="@{env.Now}" is-display="true" display-for="{form:true,list:true}" display-name="创建时间" display-order="4" field-type="Timestamp" unique="false" name="createdDate" nullable="false" sql-type="timestamp" is-system="true"/>
+            <field column="PARENT" data-type="String" is-display="true" display-name="主记录的标识" display-order="4" field-type="SingleLineText" unique="false" length="36" name="parent" nullable="true" sql-type="varchar" summary="主记录的标识" is-system="true"/>
+            <field column="Last_Updated_By" data-type="Guid" default-value="@{env.User.Id}" is-display="true" display-for="{form:true,list:true}" display-name="最后修改人" display-order="5" unique="false" name="lastUpdatedBy" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="Last_Updated_Date" data-type="Timestamp" default-value="@{env.Now}" is-display="true" display-for="{form:true,list:true}" display-name="最后修改时间" display-order="6" field-type="Timestamp" unique="false" name="lastUpdatedDate" nullable="false" semantics="Updated" sql-type="timestamp" is-system="true"/>
+            <id column="ID"  data-type="Guid" default-value="@{env.Guid}" is-display="true" display-for="{list:true,form:true}" display-name="id" display-order="0" unique="false" length="36" name="id" nullable="false" sql-type="varchar" is-system="true">
+            </id>
+            <many-to-one display-name="规则" field="ruleId" field-order="2" field-ref="id" is-abstract="false" is-display="false" name="PermissionRule" optional="true" target-entity="PermissionRule"/>
+            <many-to-one display-name="角色" field="roleId" field-order="0" field-ref="id" is-abstract="false" is-display="false" name="Role" optional="false" target-entity="Role"/>
+            <many-to-one display-name="创建人" field="createdBy" field-order="3" field-ref="id" is-abstract="false" is-display="false" name="User" optional="true" target-entity="User"/>
+        </entity>  
+    
+		<entity pack="security" is-display="true" display-name="权限规则" name="PermissionRule" display-for="{manage:false}" is-system="true" table="sec_permission_rule">
+			<id column="ID" data-type="Guid" is-display="false" display-name="id" name="id" nullable="false" is-system="true"/>
+			<field column="OPERATION_ID" data-type="String" is-display="true" display-name="操作" field-type="SingleLineText" name="operationId" nullable="true" is-system="true"/>
+			<field column="NAME" data-type="String" is-display="true" display-name="规则名称" semantics="Title" field-type="SingleLineText" name="name" nullable="true" is-system="true"/>
+			<field column="PRIORITY" data-type="Integer" is-display="true" display-name="优先级" field-type="Integer" name="priority" nullable="true" default-value="10" is-system="true"/>
+			<field column="RULE" length="1000" data-type="String" is-display="true" display-name="规则" field-type="MultiLineText" name="rule" nullable="true" is-system="true"/>
+			<field column="BEHAVIOUR" data-type="String" is-display="true" display-name="操作行为" field-type="SingleLineText" name="behaviour" nullable="true" is-system="true"/>
+			<field column="SCOPE_TYPE" field-type="SingleOption"  data-type="Integer" input-type="Tile" name="scopeType" is-display="true" display-name="范围类型">
+				<options>
+					<item name="操作" value="0" is-default="true"/>
+					<item name="实体" value="2"/>
+					<item name="全局" value="4"/>
+				</options>
+			</field>			
+			<field column="DESCRIPTION" data-type="String" is-display="true" display-name="规则描述" field-type="SingleLineText" name="description" nullable="true" is-system="true"/>
+			<field column="CREATED_BY" data-type="String" is-display="true" display-name="创建人" default-value="@{env.User.Name}" field-type="SingleLineText" name="createdBy" nullable="true" is-system="true"/>
+			<field column="CREATED_DATE" data-type="Timestamp" is-display="true" display-name="创建时间" default-value="@{env.Now}" field-type="Timestamp" name="createdDate" nullable="true" is-system="true"/>
+			<field column="LAST_UPDATED_BY" data-type="String" is-display="true" display-name="更新人" default-value="@{env.User.Name}" field-type="SingleLineText" name="lastUpdatedBy" nullable="true" is-system="true"/>
+			<field column="LAST_UPDATED_DATE" data-type="Timestamp" is-display="true" display-name="更新时间" default-value="@{env.Now}" field-type="Timestamp" name="lastUpdatedDate" nullable="true" is-system="true"/>
+		</entity>
+    
+		<entity pack="security" is-display="true" display-name="角色继承" name="RoleInheritance" display-for="{manage:false}" is-system="true" table="sec_role_inheritance">
+			<composite-id>
+				<field column="PARENT_ROLE_ID" data-type="String" is-display="false" display-name="parentRoleId" name="parentRoleId" nullable="false" is-system="true"/>
+				<field column="CHILD_ROLE_ID" data-type="String" is-display="false" display-name="childRoleId" name="childRoleId" nullable="false" is-system="true"/>
+			</composite-id>
+			<field column="CREATED_BY" data-type="String" is-display="true" display-name="创建人" default-value="@{env.User.Name}" field-type="SingleLineText" name="createdBy" nullable="true" is-system="true"/>
+			<field column="CREATED_DATE" data-type="Timestamp" is-display="true" display-name="创建时间" default-value="@{Now}" field-type="Timestamp" name="createdDate" nullable="true" is-system="true"/>
+			<field column="LAST_UPDATED_BY" data-type="String" is-display="true" display-name="更新人" default-value="@{env.User.Name}" field-type="SingleLineText" name="lastUpdatedBy" nullable="true" is-system="true"/>
+			<field column="LAST_UPDATED_DATE" data-type="Timestamp" is-display="true" display-name="更新时间" default-value="@{env.Now}" field-type="Timestamp" name="lastUpdatedDate" nullable="true" is-system="true"/>
+		</entity>
+    </entities>
+</metadata>

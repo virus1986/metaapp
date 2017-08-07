@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:fragment="head">
+    <meta charset="utf-8"/>
+    <title>品高BOSS</title>
+	<meta http-equiv="pragma" content="no-cache" />
+	<meta http-equiv="cache-control" content="no-cache" />
+    	
+    <!-- required -->
+    <link rel="stylesheet"
+    	th:href="${themes.css('style.css')}"/>
+    	
+    <link rel="stylesheet" type="text/css"
+			th:href="${themes.css('module/error/error.css')}"  />
+    
+    <link  rel="stylesheet"
+    	th:href="${themes.css('module/baseframe/baseframe.css')}"/>
+    <link rel="stylesheet"
+    	th:href="${themes.css('module/common/master.css')}"/>
+    <link 
+        th:href="${themes.js('plugins/settings/settings.css')}" rel="stylesheet" />
+    <link rel="stylesheet"
+    	th:href="${themes.css('override.css')}"/>
+    	
+    <link rel="stylesheet" th:href="${themes.file('modules/install/style/Style.css')}"/>
+
+	<script  th:src="${themes.js('jquery.js')}"></script>
+    <script th:src="${themes.js('common.js')}"></script>
+
+	<!--[if lt IE 9]>
+	  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<style>
+     /* 去掉后台系统的滚动条 */
+        html
+        {
+            overflow: hidden;
+        }
+	</style>
+	
+	<script type="text/javascript" th:inline="javascript">
+		window.Global=$.extend(true,{
+			contextPath:/*[[${contextPath}]]*/,			
+			statics:/*[[${statics}]]*/,			
+			iconPath:/*[[${iconPath}]]*/,
+		},window.Global);
+	</script>
+</head>
+<body class="container-index">
+	<div class="wrapper master-page">
+		<div class="wrapper">
+			<!-- 顶部信息 -->
+			<div id="header" class="header">
+				<div class="navbar">
+					<div class="navbar-inner">
+						<div class="container">
+							<a class="btn btn-navbar" data-toggle="collapse"
+								data-target=".nav-collapse"><span class="icon-bar"></span><span
+								class="icon-bar"></span><span class="icon-bar"></span> </a><a
+								class="brand" href="javascript://"></a>
+							<div class="nav-collapse pull-right">
+								<ul class="nav">
+								</ul>
+								<ul class="nav pull-right">
+									<li class="dropdown"><a href="javascript://" class="dropdown-toggle"
+										data-toggle="dropdown">
+											<span th:text="#{welcome.test}">欢迎您，张三</span>
+											 <b class="caret"></b></a>
+										<ul class="dropdown-menu">
+											<li><a href="javascript://">个人信息</a></li>
+											<li><a href="javascript://">修改密码</a></li>
+											<li><a href="javascript://">我的购物车</a></li>
+
+											<li><a href="javascript://">其他设置</a></li>
+										</ul></li>
+								</ul>
+							</div>
+							<div>
+					
+				  </div> 
+							<!-- /.nav-collapse -->
+						</div>
+					</div>
+					
+					<!-- /navbar-inner -->
+				</div>
+				
+				<!-- /navbar -->
+			</div>
+			<!-- 内容区域 -->			
+			<div class="contentLeftNoMargin" style="height:500px,margin-left:0px;">
+				<div class="container">
+					<div class="arrowlist">
+				        <ul>
+				            <li class="first-li"><a href="javascript://" class="first"><span style="width: 120px;"><b>1</b>基本信息确认</span></a></li>
+				            <li><a href="javascript://"><span style="width: 120px;"><b>2</b>元数据化数据库</span></a></li>
+				            <li><a href="javascript://" class="current"><span style="width: 120px;"><b>3</b>初始化数据</span></a></li>
+				            <li><a href="javascript://"><span style="width: 120px;"><b>4</b>物理表导入</span></a></li>
+				            <li><a href="javascript://" class="last"><span style="width: 155px;"><b>5</b>完成，使用元数据平台！</span></a></li>
+				        </ul>
+				    </div>			
+					<div class="wxts_bg">
+					        <table cellspacing="10">
+					            <tr>
+					                <td>
+					                    <img th:src="${themes.file('modules/install/style/images/wxts.gif')}"/>
+					                </td>
+					                <td>
+					                	<span>立即初始化系统数据<br/><br/></span>
+					                	<!-- <button id="init-metastore" style="padding:9px 14px;font-size:16px;" class="btn btn-info">开始</button> --><br/>
+					                	<span id="initMetaInfoSpan" class="label label-info hide">正在初始化...</span>
+					                </td>
+					            </tr>
+					        </table>
+					</div>
+					<div class="linkbtn">
+	        			<a id="init-metastore" href="javascript://" class="next-btn"><span>确定</span></a>
+	        		</div>
+				</div>
+			</div>
+			<div id="footer" class="footer">
+				<p>品高软件 版权所有 2012 (c) All Rights Reserved</p>
+			</div>
+		</div>
+	</div>
+
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(function(){
+			window.setTimeout(function(){
+				var contentHei = $(window).height() - $("#header").height()	- $("#footer").height();
+				$(".contentLeftNoMargin").height(contentHei);
+			},100);
+			$("#init-metastore").click(function(){
+				$("#initMetaInfoSpan").show();
+				$.get(Global.contextPath+"/install/filldata-menu",function(resp){
+					if("success"==resp){
+						$("#initMetaInfoSpan").append("<br/>菜单数据初始化完成！");
+					}else{
+						$("#initMetaInfoSpan").append("<br/>菜单数据初始化失败！");
+					}
+					$.get(Global.contextPath+"/install/filldata-operation",function(resp){
+						if("success"==resp){
+							$("#initMetaInfoSpan").append("<br/>操作数据初始化完成！");
+							window.location.href="import-tables";
+						}else{
+							$("#initMetaInfoSpan").append("<br/>操作数据初始化失败！");
+						}
+					});
+				});
+				
+			});
+		});
+		/*]]>*/
+	</script>
+</body>
+</html>

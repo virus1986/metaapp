@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid autoWidth="true" columnReordering="false"	dataUrl="~/entities/Role/query_paged" createUrl="~/entities/Role/create" deleteUrl="~/entities/Role/delete" editUrl="~/entities/Role/edit"	entityName="Role" height="100%" 	id="grid_a3a9738e-f571-4e9f-af98-8377076ade31" multiSelect="true" 	multiSelectKey="None" shrinkToFit="true" view="" 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <columns>
+    <column dataField="id" editable="true" fixed="false" frozen="false" primaryKey="true" resizable="true" searchable="true" textAlign="Left" visible="false" width="100"/>
+    <column dataField="name"  searchable="true"  textAlign="Left"  editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" visible="true" width="100"/>
+    <column dataField="type"  searchable="true"  textAlign="Left"  editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" visible="true" width="50"/>
+    <column dataField="description"  searchable="true"  textAlign="Left"  editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" visible="true" width="50"/>
+  </columns>
+  <toolBarSetting>
+    <!-- <button  buttonIcon="main/lock-open.png"  cssClass="authorize"  isInMoreBtns="false"  name="authorize"  onClick=""   /> -->
+  	<button  buttonIcon="main/button-add.png"  cssClass=""  isInMoreBtns="false"  name="create"  onClick="grid.addRecord"   />
+    <button  buttonIcon="main/comment-edit.png"  cssClass=""  isInMoreBtns="false"  name="edit"  onClick="grid.editRecord"   />
+  	<button  buttonIcon="main/button-white-remove.png"  cssClass=""  isInMoreBtns="false"  name="delete"  onClick="grid.delRecord"   />
+  	<button buttonIcon="main/button-load.png" cssClass="" isInMoreBtns="false" name="fresh" onClick="grid.refreshGrid"  />
+  </toolBarSetting>
+  <editDialogSettings caption="" showType="tab"/>
+  <contextButtons>
+  		<button  buttonIcon="mini/icon_tool_022.gif"  cssClass=""   name="edit"  onClick="grid.editRecord"   />
+    	<button  buttonIcon="mini/icon_tool_060.gif"  cssClass=""   name="delete"  onClick="grid.delRecord"   />
+  	</contextButtons>
+  <filter groupOp="and">
+    <filters/>
+    <rules>
+    </rules>
+  </filter>
+  <orderby>
+  </orderby>
+  <scriptBlock></scriptBlock>
+  <quickSearch>
+    <column dataField="name"/>
+  </quickSearch>
+</grid>

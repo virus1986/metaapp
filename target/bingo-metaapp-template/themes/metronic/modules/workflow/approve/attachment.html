@@ -1,0 +1,148 @@
+<div class="row-fluid attachment-block" th:id="${viewId}">
+	<div class="portlet box tea-green">
+		<div class="portlet-title">
+			<div class="caption">
+				<i class="icon-reorder"></i>流程附件<small></small>
+			</div>
+			<div class="actions" th:if="${type=='todo' or type=='draft'}" style="margin-top:0px;">
+				<div th:id="'add-attachment'+${viewId}" >
+					<span class="btn blue table-toolbar-icon-item" th:id="'addAttachmentBrowseButton'+${viewId}" style="padding:2px 8px;">
+						<i class="icon-plus"></i>
+						<span>添加附件</span>
+					</span>
+				</div>				
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="dd attachment-con" style="min-height:30px;border:1px dashed #ececec;" th:id="'attachment-con'+${viewId}">
+				<meta:placeholder  th:each="attach:${attachments}" th:with="url=${attach['url']}">
+					<div class="attachement-item" th:with="pathMap=${x.downloadPathMap(url)}" th:attr="data-attachmentid=${attach['id']},data-url=${pathMap[filePath]}">
+						<a target="_blank" th:with="createdTime=(${attach['createdTime']}?${#dates.format(attach['createdTime'], 'yyyy-MM-dd HH:mm')}:''),creator=${attach['creator']}?${attach['creator']}:''" th:text="${attach['name']+'    ('+createdTime+'&nbsp;'+creator+')'}"
+							th:href="${pathMap[downloadPath]}"></a>
+						<a th:if="${queryString['tododraft']=='1' and createdBy==attach['createdBy']} or ${procInst['status']==10 and createdBy==attach['createdBy']}" href="javascript://" class="icon-remove hide">删除</a>
+					</div>
+				</meta:placeholder>
+			</div>
+			
+		</div>
+	</div>
+	<style type="text/css">
+	.attachement-item:hover .icon-remove{
+		display:inline-block;
+		margin-left:15px;
+	}
+	</style>
+<script th:inline="javascript" type="text/javascript">
+     //<![CDATA[ 
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var businessId=/*[[${businessId}]]*/;
+		var type=/*[[${type}]]*/;
+		var context=$('#' + viewId);
+		var attachmentPostUrl=Global.contextPath+"/workflow/process/attachment?businessId="+businessId;
+		var uploadUrls=Urls.uploadUrls();
+		var fsUploadPath=uploadUrls.fsUploadPath;
+		var fsDownloadPath=uploadUrls.fsDownloadPath;
+		var fsDeletePath=uploadUrls.fsDeletePath;
+		var fileNameSpecials=UploadUtils.fileNameSpecials;
+		var fileNameSpecialsInfo=UploadUtils.fileNameSpecialsInfo;
+		//Page.init(context);
+		var addAttachmentConId='add-attachment'+viewId;
+		var attachmentConId='attachment-con'+viewId;
+		var browseId='addAttachmentBrowseButton'+viewId;
+		var attachmentCon=$("#"+attachmentConId,context);
+		var addAttachmentCon=$("#"+addAttachmentConId,context);
+		//var attachments=[];
+		var uploaderRuntimes='html5,flash,silverlight,html4';
+		if(CommonUtil.isIE()){
+			uploaderRuntimes='flash,silverlight,html4'
+		}
+		var uploader = new plupload.Uploader({
+			runtimes : uploaderRuntimes,
+			max_file_size : '10mb',
+			browse_button : browseId, // you can pass in id...
+			container: addAttachmentConId, // ... or DOM Element itself
+			autostart:true,
+			urlstream_upload:true,
+			silverlight_xap_url :Global.contextPath+'/statics/scripts/plugins/plupload2/Moxie.xap',
+			url : fsUploadPath,
+			flash_swf_url : Global.contextPath+'/statics/scripts/plugins/plupload2/Moxie.swf',
+			
+			drop_element:attachmentConId,
+			
+			filters :[
+						{title : "upload files",extensions : "*"}
+					],
+
+			init: {
+				FilesAdded: function(up, files) {
+					var stop=false;
+					plupload.each(files, function(file) {
+						while(fileNameSpecials.exec(file.name) != null) {
+							stop=true;
+							jQuery.messageBox.info({message:fileNameSpecialsInfo});
+							return false;
+						}
+					});
+					if(stop){
+						return;
+					}
+					plupload.each(files, function(file) {
+						attachmentCon.append($('<div class="attachement-item" id="' + file.id + '"><a target="_blank">'+file.name+'</a> (' + plupload.formatSize(file.size) + ') <b></b><a href="javascript://" class="icon-remove hide">删除</a></div>'));
+					});
+					setTimeout(function() {
+						uploader.start();
+					}, 10);
+				},
+				
+				fileUploaded:function(up, file,resp,container){
+					var respObj=$.parseJSON(resp.response);
+					resp=respObj;
+					var filePath=resp.filePath||resp.realPath;
+					var diskId=resp.diskId||'';
+					var fileName=file.name;
+					var extension=fileName.substring(fileName.lastIndexOf("."));
+					var fileItem={filePath:filePath,extension:extension,name:fileName};
+					if(diskId){
+						fileItem.diskId=diskId;
+					}
+					var attachment={url:JSON.stringify(fileItem),name:fileName,businessId:businessId};
+					$.restPost(attachmentPostUrl,attachment,function(res){
+						var _url=Urls.urlParam(fsDownloadPath,[{key:"filepath",value:filePath},{key:"name",value:fileName},{key:"fileId",value:diskId}]);
+						$("#"+file.id,context).find("a").attr("href",_url);
+						$("#"+file.id,context).data("attachmentid",res.id);
+						$("#"+file.id,context).data("url",filePath);
+					});
+					//attachments.push(attachment);
+				},
+
+				UploadProgress: function(up, file) {
+					$("#"+file.id,context).find('b').html('<span>' + file.percent + "%</span>");
+				},
+
+				Error: function(up, err) {
+					alert("\nError #" + err.code + ": " + err.message);
+				}
+			}
+		});
+
+		uploader.init();
+		
+		$(attachmentCon).on("click",".icon-remove",function(e){
+			var row=$(this).parent();
+			var filePath=row.data("url");
+			var attachmentid=row.data("attachmentid");
+			var attachment={id:attachmentid,url:filePath,businessId:businessId};
+			var delUrl=Global.contextPath+"/entities/formattachment/delete?id="+attachmentid;
+			$.restGet(delUrl,function(res){
+				row.remove();
+				if(filePath){
+					$.get(fsDeletePath+'&filepath='+filePath);
+				}
+			});
+			return false;
+		});
+	});
+	//]]>
+</script> 
+</div>

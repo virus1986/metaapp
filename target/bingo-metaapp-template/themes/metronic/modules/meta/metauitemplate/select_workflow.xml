@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" loadonce="true" columnReordering="false" createUrl="~/entities/MetauiTemplate/create" dataUrl="~/entities/MetauiTemplate/query_paged?isWorkFlowSelect=1" deleteUrl="~/entities/MetauiTemplate/delete" editUrl="~/entities/MetauiTemplate/edit" entityName="MetauiTemplate" height="300px" id="grid_da71eadf-d99f-419e-9d84-9fcfedc0fab8" isSwitchView="false" multiSelect="true" multiSelectKey="None" shrinkToFit="true" type="normal" view="select" width="100%">
+    <appearanceSettings caption="选择流程关联表单"/>
+     <pagerSettings isEnabled="true" pageSize="5000" pageSizeOptions="[5000,10000]">
+        <currentPage>1</currentPage>
+        <scrollBarPaging>false</scrollBarPaging>
+    </pagerSettings>
+    <columns>
+        <column dataField="id" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="false" width="150"/>
+        <column dataField="displayName" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="300"/>
+        <column dataField="name" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="150"/>
+        <column dataField="entityName" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="150"/>
+        <column dataField="url" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="150"/>
+    </columns>
+    <contextButtons>
+        <button cssClass="" isInMoreBtns="true" name="preview" text="预览" toolTip="预览视图"/>
+    </contextButtons>
+    <customSettings/>
+    <toolBarSetting>
+        <button isInMoreBtns="true" cssClass="" name="fresh" buttonIcon="main/button-load.png" onClick="grid.refreshGrid" text="刷新" toolTip="刷新"/>
+    </toolBarSetting>
+    <editDialogSettings caption="" showType="pop-up"/>
+    <filter groupOp="and">
+        <filters>
+        </filters>
+        <rules>
+        <rule data="form" field="layoutType" op="eq"/>
+        <rule data="main" field="type" op="eq"/>
+        <rule data="form_template_workflow" field="converter" op="eq"/>
+        <rule data="select * from Metauitemplate t2 where t2.entityName=Metauitemplate.entityName and t2.status=10 and t2.name=Metauitemplate.name and t2.version>Metauitemplate.version" field="id" op="nexists"/>
+		<rule data="10" field="status" op="eq"/>
+        </rules>
+    </filter>
+    <groupSettings collapseGroups="false"/>
+    <orderby/>
+    <quickSearch searchColNum="4">
+        <column dataField="displayName"/>
+    </quickSearch>
+    <joinEntities>
+    </joinEntities>
+    <scriptBlock/>
+    <treeGridSettings enabled="false"/>
+    <viewDialogSettings caption="" showType="pop-up"/>
+</grid>

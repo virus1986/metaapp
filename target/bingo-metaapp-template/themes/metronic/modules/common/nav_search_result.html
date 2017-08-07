@@ -1,0 +1,20 @@
+<div th:id="${viewId}" style="min-height:300px;">
+	<ul class="dropdown-menu" style="width:100%;position:static;display: block;">
+		<li class="navMenuSearchItem searchItem" th:each="sr:${searchResult.portalMenuResults}" th:attr="data-id=${sr.id}">
+			<a href="javascript://">
+			<img th:src="${#strings.isEmpty(sr.icon)?themes.statics('images/ui_menu_blue.png'):sr.icon}" style="display: inline;width:16px;height:16px;"/>
+			<span th:text="${sr.displayName}"></span></a></li>
+		<li class="entitySearchItem searchItem" th:each="sr:${searchResult.entityResults}" th:attr="data-id=${sr.id}">
+			<a href="javascript://">
+			<img th:src="${themes.statics('images/table.png')}" style="display: inline;width:16px;height:16px;"/>
+			<span th:text="${sr.displayName}">
+			</span></a></li>
+	</ul>
+<script th:inline="javascript">
+/*<![CDATA[*/
+	$(function(){
+		window._GlobalNavigationSearchResult = /*[[${searchResult}]]*/;
+	});
+/*]]>*/
+</script>
+</div>

@@ -1,0 +1,175 @@
+body {
+background-color: #e4f0c0;
+}
+
+.header .navbar-inner {
+filter: none;
+background-image: none;
+background-color: #fc7e7d;
+box-shadow: none;
+margin-left:0;
+}
+
+.header .btn-navbar {
+background-color:#fc7e7d;
+}
+
+.header .nav .dropdown-toggle:hover,.header .nav .dropdown.open .dropdown-toggle {
+background-color:#d96160;
+}
+.navbar .nav li.dropdown.open>.dropdown-toggle, .navbar .nav li.dropdown.active>.dropdown-toggle, .navbar .nav li.dropdown.open.active>.dropdown-toggle{
+	background-color:#d96160;
+}
+
+.header .nav li.dropdown .dropdown-toggle i {
+color:#fff;
+}
+
+.page-sidebar {
+background-color:#e4f0c0;
+background:#e4f0c0 url(../../img/silder-bg.jpg) no-repeat right top;
+}
+
+.page-sidebar-menu > li > a {
+border-top:1px solid #b9cc89;
+color:#49562b;
+}
+
+.page-sidebar-menu > li a i {
+color:#7e8a61;
+}
+
+.page-sidebar-menu > .open > a,.page-sidebar-menu > li > a:hover {
+background:#fc7e7d;
+color:#fff;
+}
+
+.page-sidebar-menu > .active > a {
+background:#fc7e7d;
+color:#fff;
+}
+
+.page-sidebar-menu > li > .sub-menu > li.active > a,.page-sidebar-menu > li > .sub-menu > li > a:hover {
+color:#fff;
+background:#BCD38B;
+}
+
+.page-sidebar-menu > li > .sub-menu > li > a:hover {
+background:#BCD38B;
+}
+
+.page-sidebar-menu > li > .sub-menu li > .sub-menu > li.active > a,.page-sidebar-menu > li > .sub-menu li > .sub-menu > li > a:hover,.page-sidebar-menu > li > .sub-menu li.open > a {
+color:#ecf2f5;
+background:#BCD38B;
+}
+
+.page-sidebar-menu li > .sub-menu > li > a {
+color:#49562b;
+}
+
+.page-sidebar .sidebar-search input {
+color:#576a38;
+background: none;
+box-shadow: none;
+}
+
+.page-sidebar .sidebar-search .input-box {
+border-bottom: 1px solid #bacc88;
+}
+
+.sidebar-toggler {
+background-image:url(../../img/sidebar-toggler-zhen.jpg);
+background-color:#0f5179;
+}
+
+.page-sidebar-closed .page-sidebar .sidebar-search.open {
+background-color:#1570a6!important;
+}
+
+.page-sidebar-closed .page-sidebar .sidebar-search.open .remove {
+background-image:url(../../img/sidebar-search-close-blue.png);
+}
+
+.page-sidebar-closed .page-sidebar-menu > li:hover .sub-menu {
+background-color:#394654;
+}
+
+.header .hor-menu .hor-menu-search-form-toggler.hide {
+background:#000 url(../../img/hor-menu-search-close.png) no-repeat center;
+}
+
+.header .hor-menu .search-form {
+background:#000;
+}
+
+.header .hor-menu .search-form .btn {
+color:#f0f8fd;
+background:#04141e url(../../img/search-icon.png) no-repeat center;
+}
+
+.header .hor-menu .search-form form input {
+color:#f0f8fd;
+}
+
+.footer .footer-tools .go-top {
+background-color:#33414f;
+}
+
+.footer .footer-tools .go-top:hover {
+filter:alpha(opacity=70);
+opacity:0.7;
+}
+
+.page-footer-fixed .footer {
+background-color:#e4f0c0;
+}
+
+.page-footer-fixed .footer .footer-tools .go-top {
+background-color:#6c7f25;
+}
+
+.gritter-top {
+background:url(../../plugins/gritter/images/gritter-blue.png) no-repeat left -30px!important;
+}
+
+.gritter-bottom {
+background:url(../../plugins/gritter/images/gritter-blue.png) no-repeat left bottom!important;
+}
+
+.gritter-item {
+display:block;
+background:url(../../plugins/gritter/images/gritter-blue.png) no-repeat left -40px!important;
+}
+
+.gritter-close {
+background:url(../../plugins/gritter/images/gritter-blue.png) no-repeat left top!important;
+}
+
+.gritter-title {
+text-shadow:none!important;
+}
+
+.gritter-light .gritter-item,.gritter-light .gritter-bottom,.gritter-light .gritter-top,.gritter-light .gritter-close {
+background-image:url(../../plugins/gritter/images/gritter-light.png)!important;
+}
+
+.gritter-item-wrapper a {
+color:#18a5ed;
+}
+
+.gritter-item-wrapper a:hover {
+color:#0b6694;
+}
+
+.header .nav > li.dropdown.user .dropdown-toggle .username,.page-sidebar-menu > li a:hover i,.page-sidebar-menu > li.active > a i,.page-sidebar-menu > li.open > a i,.footer .footer-tools .go-top i,.page-footer-fixed .footer .footer-tools .go-top i {
+color:#fff;
+}
+
+.footer .footer-inner,.page-footer-fixed .footer .footer-inner {
+color:#85929e;
+}
+
+.dropdown-menu li > a:hover, .dropdown-menu .active > a, .dropdown-menu .active > a:hover{
+	background:#e9e9e9;
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9',endColorstr='#e9e9e9',GradientType=0)
+}

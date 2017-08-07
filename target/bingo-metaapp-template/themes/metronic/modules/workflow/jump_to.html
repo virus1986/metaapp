@@ -1,0 +1,114 @@
+<div th:id="${viewId}" class="panel apply-panel " style="min-width: 950px;min-width: 950px;" >
+	<form id="entityForm"  th:action="${requestUrl}" method="post" data-widget="validator" class="form-horizontal ajaxpost ">
+		<div class="table-dialog">
+			<div class="ui-dialog-title" >
+				<span>流程跳转</span>
+			</div>
+			<div class="ui-dialog-content container-fluid ">
+				<table class="form-table form-bordered col4-fluid">
+					<tbody>
+					<tr>
+						<th><label>目标环节:</label></th>
+						<td>
+							<span class="inputpro-img input-append"> 
+								<input type="text" data-validator="required,length[0,255]"
+									id="activityName_text" name="activityName_text" />
+								<span class="add-on btn select-activity" > <i class=" icon-search"></i>
+								</span>
+								<input type="hidden" id="activityName" name="activityName" />
+							</span>
+						</td>						
+					</tr>
+					<tr>
+						<th><label>处理人:</label></th>
+						<td>
+							<span class="inputpro-img input-append"> 
+								<input type="text" id="actor_text" name="actor_text" />
+								<span class="add-on btn select-actor" > <i class=" icon-search"></i>
+								</span>
+							</span> 处理人为空时，自动使用流程配置的参与者
+						</td>						
+					</tr>
+					<tr>
+						<th><label>跳转原因:</label></th>
+						<td>
+							<textarea style="width:95%; height:60px" row="5" 
+							data-validator="required,length[0,2000]" id="remarks" 
+							name="remarks" ></textarea>			
+						</td>						
+					</tr>
+				</tbody>
+				</table>
+			</div>
+			<div class="ui-dialog-buttonset">
+				<button type="button" name="save" class="btn purple btnOk"><span th:text="#{common.save}"></span>
+					<i class="m-icon-swapright m-icon-white"></i>
+				</button>
+				<button type="button" name="close" class="btn closeBtn" th:text="#{common.cancel}"></button>
+			</div>
+		</div>
+	</form>
+	
+<script th:inline="javascript">
+	/*<![CDATA[*/	
+		$(function(){
+			var viewId=/*[[${viewId}]]*/;
+			var procDefId=/*[[${procInst.definitionId}]]*/;
+			var procDefKey=/*[[${procInst.definitionKey}]]*/;
+			var context = $('#' + viewId);
+			var cActors=[];
+			Page.init(context);
+			
+			$(context).on("click",".select-activity",function(e){
+				var textInput=$(this).prev("input");
+				var valueInput=$(this).nextAll("input");
+				/* var procActivitiesSelectUrl=Global.contextPath+"/workflow/process/selectProcActivities";
+				procActivitiesSelectUrl=Urls.appendParam(procActivitiesSelectUrl,"procDefKey",procDefKey);
+				$.openLink(procActivitiesSelectUrl,{width:400},function(res){
+					if(res){
+						textInput.val(res.text);
+						valueInput.val(res.id);
+					}
+				}) */
+				$.openLink(Global.wfDesignerDiagramViewPath+"?selectAct=1&flowId="+procDefId,{
+	        		showType:'pop-up',iframe:false,height:450,width:1000,target:'designer_'+procDefId},function(res){
+	        			if(res){
+	        				valueInput.val(res.id);
+	        				textInput.val(res.properties.name);
+	        			}
+	        		});
+			});
+			
+			$(context).on("click",".select-actor",function(e){
+				var input=$(this).prev("input");
+				var selectUserUrl=Global.contextPath+"/entities/user/treeList/uamOrganization?view=select_tree_list&refField=orgId&mode=multi";
+				$.openLink(selectUserUrl,function(users){
+					if(users){
+						cActors=[];
+						var usrNames="";
+						for(var i=0;i<users.length;++i){
+							var actor={id:users[i].id,name:users[i].text||users[i].name,type:"user"};
+							cActors.push(actor);
+							usrNames+=actor.name+"  ";
+						}	
+						input.val(usrNames);
+					}
+				});
+			});
+			$(".btnOk",context).click(function(e){
+				var act=$("#activityName",context).val();
+				if(!act){
+					$.messageBox.info({message:"请选择要跳转的环节"});
+					return;
+				}
+				var reVal={
+						jumpToAct:act,
+						candidates:cActors,
+						userComment:$("#remarks",context).val()					
+					}
+				$(context).dialogClose(reVal);
+			});
+			
+		});
+	/*]]>*/
+	</script></div>

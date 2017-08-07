@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid autoWidth="true" columnReordering="false"	
+	th:attr="dataUrl='~/entities/'+${metaEntity.name}+'/query_paged',
+	createUrl='~/entities/'+${metaEntity.name}+'/create',
+	deleteUrl='~/entities/'+${metaEntity.name}+'/delete',
+	editUrl='~/entities/'+${metaEntity.name}+'/edit',
+	entityName=${metaEntity.name}" 		
+	th:id="'grid_'+${viewId}" 
+	height="240px" multiSelect="true" multiSelectKey="None" 	shrinkToFit="true" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <columns>
+    <column th:each="metaField:${idFields}"
+		th:attr="dataField=${metaField.name}"
+		width="30" primaryKey="true" visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left"  />
+	<column th:each="metaField:${titleFields}"
+		th:attr="dataField=${metaField.name}"
+		width="300" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left"  />
+	<column th:each="metaField,iterStat:${otherFields}"
+		th:if="${metaField.isDisplay() and iterStat.index &lt; 3}"
+		th:attr="dataField=${metaField.name}, 
+		width=${metaField.length*0.6 &gt;400?400:(metaField.length*0.6 &lt;80?80:(metaField.length*3/5))}"
+		visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left"  />
+   </columns>
+  <contextButtons>
+   </contextButtons>
+   <toolBarSetting>
+        <button name="create"/>
+		<button name="edit"/>
+        <button name="delete"/>		
+        <button name="fresh"/>
+  </toolBarSetting>
+  <joinEntities/>
+  <filter groupOp="AND">
+       <filters/>
+       <rules/>
+   </filter>
+  <orderby/>
+  <quickSearch>
+  	<column th:each="metaField:${titleFields}"
+		th:attr="dataField=${metaField.name}" />
+	<column th:each="metaField,iterStat:${otherFields}"
+		th:if="${#strings.containsIgnoreCase(metaField.name,'name') or #strings.containsIgnoreCase(metaField.name,'code') or #strings.containsIgnoreCase(metaField.name,'title')}"
+		th:attr="dataField=${metaField.name}" />
+  </quickSearch>
+</grid>

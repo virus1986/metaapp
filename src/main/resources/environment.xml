@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<environment xmlns="http://schemas.bingosoft.net/javaframework/environment">
+	<!--
+		安全上下文环境变量提供者，把登录用户的所有属性作为环境变量，可以通过User.{PropName}来访问。
+		如：User.Id,User.Name
+		-->
+	<!--<provider prefix="User" type="bingo.security.SecurityEnvironment" />-->
+
+	<provider type="bingo.environment.EnvironmentProvider">
+		<variable name="Guid" type="bingo.environment.variable.UUIDVariable" scope="none"/>
+		<variable name="Now" type="bingo.metaapp.web.variables.Now" scope="none"/>
+		<variable name="Timestamp" type="bingo.metaapp.web.variables.Timestamp" scope="none"/>
+		<variable name="User" type="bingo.metaapp.web.variables.User"/>
+		<variable name="CompanyId" type="bingo.metaapp.web.variables.CompanyId"/>
+		<variable name="UserActors" type="bingo.metaapp.web.variables.UserActorVariable"/>
+		<variable name="UserEntity" type="bingo.metaapp.web.variables.UserEntity"/>
+		<variable name="ECode" type="bingo.metaapp.saas.ECode" scope="none"/>
+		<variable name="UserRoles" type="bingo.metaapp.web.variables.UserRolesVariable" scope="session"/>
+	</provider>
+
+	<!--<provider prefix="Profile" type="bingo.integration.environment.SystemParamsEnvironmentProvider" />-->
+</environment>

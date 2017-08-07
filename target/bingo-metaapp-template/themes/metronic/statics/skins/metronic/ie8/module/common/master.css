@@ -1,0 +1,53 @@
+#sidebar ul li li a {
+text-indent:12px;
+line-height:inherit;
+background:none;
+height:20px;
+}
+
+.ui-carousel {
+padding:0;
+}
+
+.tree-menu.ui-helper-reset {
+border:none;
+}
+
+#sidebar ul li ul.bbit-tree-node-ct {
+box-shadow:none;
+}
+
+.main-icons .menu-icon-select-btn {
+width:26px;
+height:26px;
+display:inline-block;
+}
+
+.main-icons .menu-icon-select-btn:hover {
+background-color:#DCE6ED;
+}
+
+.main-icons .menu-icon-select-btn.current {
+background-color:#08C;
+}
+
+.menubar-search .search-query {
+margin-bottom:0;
+font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size:12px;
+font-weight:400;
+line-height:1;
+color:#333;
+border:1px solid #E5E5E5;
+background:#599AC4 url(icon-search.png) no-repeat 8px center;
+padding:3px 0 0 25px;
+}
+
+.menubar-search .search-query:focus,.menubar-search .search-query.focused,.menubar-search .search-query:hover {
+margin-bottom:0;
+color:#333;
+background-color:#fff;
+border:0;
+outline:0;
+padding:3px 0 0 25px;
+}

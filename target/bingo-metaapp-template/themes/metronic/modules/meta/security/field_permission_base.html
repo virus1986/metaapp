@@ -1,0 +1,112 @@
+<div th:id="${viewId}" class=" ui-corner-all permissions" style="border: 0px">
+			<table	class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th style="width:150px" th:text="#{metadata.field}"></th>
+						<th class="width100" th:text="#{security.permissionControl}"></th>
+						<th style="width:200px"><span th:text="#{security.role}"></span>[<a class="add-roles" href="javascript://" th:text="#{common.add}"></a>]</th>
+						<th style="width:50px;" th:text="#{security.field.read}"></th>
+						<th style="width:50px;" th:text="#{security.field.create}"></th>
+						<th style="width:50px;" th:text="#{security.field.update}"></th>
+						<th width="*"></th>
+					</tr>
+				</thead>
+				<tbody th:each="metaField:${metaEntity.fields}" 
+					th:with="permissionId=${'$'+metaEntity.name+':FieldOp'+':'+metaField.name},isInControl=${#maps.containsKey(controlledFields,metaField.name)}" 
+					th:id="${permissionId}"
+					th:switch="${!(#maps.containsKey(controlledFields,metaField.name)) or (#lists.size(roles)==0)}?'0':'1'">
+					<!-- 不受控 -->
+					<tr th:case="'0'">
+						<td th:text="${metaField.displayName}"></td>
+						<td>
+							<div class="switch switch-small" data-on="success" data-off="warning">
+							    <input th:id="${permissionId}" type="checkbox" name="isInControl"  th:checked="${isInControl}"/>
+							</div>
+						</td>
+						<td>
+							<span th:if="${!isInControl}"></span>
+							<a th:if="${isInControl}" class="add-roles" href="javascript://" th:text="#{security.addRole}"></a>
+						</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>					
+					<!-- 受控，且设置了角色 -->
+					<tr th:case="*" 
+						th:each="role,iterStat:${roles}" 
+						th:with="roleSelectPermission=${rolePermissions[permissionId+':Select'+'_'+role.id]},roleInsertPermission=${rolePermissions[permissionId+':Insert'+'_'+role.id]},roleUpdatePermission=${rolePermissions[permissionId+':Update'+'_'+role.id]}"
+						th:id="${role.id}">
+						<td th:if="${iterStat.index==0}" th:rowspan="${iterStat.size}" th:text="${metaField.displayName}" style="vertical-align:middle;"></td>
+						<td th:if="${iterStat.index==0}" th:rowspan="${iterStat.size}" style="vertical-align:middle">
+							<div class="switch switch-small" data-on="success" data-off="warning">
+							    <input th:id="${permissionId}" type="checkbox" name="isInControl" th:checked="${isInControl}" />
+							</div>
+						</td>
+						<td th:text="${role.name}"></td>
+						<td th:switch="${#objects.nullSafe(roleSelectPermission,'_none_')}" th:attr="data-operation='Select'" style="text-align: center;">
+							<a th:case="'_none_'" class="role-permission"  th:attr="data-status=0" ><img th:src="${themes.icon('led-icons/cross.png')}"/></a>
+							<a th:case="*"        class="role-permission"  th:attr="data-status=1" ><img th:src="${themes.icon('led-icons/accept.png')}"/></a>
+						</td>
+						<td th:switch="${#objects.nullSafe(roleInsertPermission,'_none_')}" th:attr="data-operation='Insert'" style="text-align: center;">
+							<a th:case="'_none_'" class="role-permission"  th:attr="data-status=0" ><img th:src="${themes.icon('led-icons/cross.png')}"/></a>
+							<a th:case="*"        class="role-permission"  th:attr="data-status=1" ><img th:src="${themes.icon('led-icons/accept.png')}"/></a>
+						</td>
+						<td th:switch="${#objects.nullSafe(roleUpdatePermission,'_none_')}" th:attr="data-operation='Update'" style="text-align: center;">
+							<a th:case="'_none_'" class="role-permission"  th:attr="data-status=0" ><img th:src="${themes.icon('led-icons/cross.png')}"/></a>
+							<a th:case="*"        class="role-permission"  th:attr="data-status=1" ><img th:src="${themes.icon('led-icons/accept.png')}"/></a>
+						</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+	<script th:inline="javascript">
+	//<![CDATA[
+		$(function(){
+			var options={
+				viewId:/*[[${viewId}]]*/,
+				roles:/*[[${roles}]]*/,
+			};
+			
+			reqModule(["module/security/fieldpermission"],function(module){
+				var fieldSec=module.createNew(options);
+				$('.switch',fieldSec.context)['bootstrapSwitch']();
+				$('.switch',fieldSec.context).on('switch-change',function (e, data) {
+			        var $el=$(data.el);
+			        var self=$(this);
+		        	self.bootstrapSwitch("setActive",false);
+			        var permissionId=$el.attr("id");
+			        if(data.value){
+			        	fieldSec.turnOnPermission(self,permissionId);
+			        }else{
+			        	fieldSec.turnOffPermission(self,permissionId);
+			        }
+			  	});
+				
+				fieldSec.context.on("click",".add-roles",function(e){
+					var self=$(this);
+					fieldSec.addRoles(self);
+				});
+				
+				fieldSec.context.on("click",".role-permission",function(e){
+					var self=$(this);
+					var status=self.attr("data-status");
+					if(status=="0"){
+						fieldSec.addPermission(self);
+					}else{
+						fieldSec.delPermission(self);
+					}
+				});
+				
+				//订阅父页面的事件
+		    	fieldSec.context.closest(".entity-permission").on("add-roles",function(e,data){
+		    		var roles=data.roles;
+		    		var tableEl=$("table",fieldSec.context);
+		    		fieldSec.addRolesToUI(tableEl,roles);
+		    	});
+			});
+		});
+	    
+	//]]>
+	</script>
+</div>

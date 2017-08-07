@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:xs="http://www.w3.org/2001/XMLSchema" autoWidth="true" 
+		columnReordering="false" 
+		loadonce="false"
+		entityName="MetauiTemplate" height="400" 
+		multiSelect="true" multiSelectKey="None" shrinkToFit="true"
+		viewFunc="system/metauiTemplate.editRecord"
+		editUrl="~/entities/MetauiTemplate/edit" deleteUrl="~/entities/MetauiTemplate/delete" 
+		createUrl="~/entities/MetauiTemplate/create" dataUrl="~/entities/MetauiTemplate/query_paged?isWorkFlowSelect=1">
+	<appearanceSettings caption="流程表单管理"/>
+	<pagerSettings isEnabled="true" pageSize="20" pageSizeOptions="[10,20,50]">
+        <currentPage>1</currentPage>
+        <scrollBarPaging>false</scrollBarPaging>
+    </pagerSettings>
+	<columns>
+		<column dataField="id" primaryKey="true" visible="false"/>
+		<column dataField="url" visible="false"/>
+		<column dataField="layoutType" visible="false"/>
+		<column dataField="isCustom" visible="false"/>
+		<column dataField="converter" visible="false"/>
+		<column dataField="displayName" textAlign="Left" width="100"/>
+		<column dataField="name" primaryKey="true" width="60"/>
+		<column dataField="entityName" visible="true" width="80"/>
+		<column dataField="status" textAlign="Left" width="40"/>
+		<column dataField="version" textAlign="Left" width="40"/>
+		<column dataField="lastModifiedBy" width="50"/>
+		<column dataField="lastModified" textAlign="Center" width="50"/>
+	</columns>
+	<toolBarSetting>
+        <button name="createWorkflowForm"/>
+        <button  name="edit" onClick="system/metauiTemplate.editRecord"/>
+        <button name="delete"/>
+        <button name="fresh"/>
+    </toolBarSetting>
+    <contextButtons>
+    	<button  name="edit"  onClick="system/metauiTemplate.editRecord" />
+  		<button  name="publish" />
+  		<button  name="versions"/>
+    	<button  name="delete" />
+    	<button  name="delVersions" />
+  	</contextButtons>
+	<filter groupOp="and">
+		<filters/>
+		<rules>
+		<rule data="form" field="layoutType" op="eq"/>
+        <rule data="main" field="type" op="eq"/>
+        <rule data="form_template_workflow" field="converter" op="eq"/>
+        <rule data="select * from Metauitemplate t2 where t2.entityName=Metauitemplate.entityName and t2.name=Metauitemplate.name and t2.version>Metauitemplate.version" field="id" op="nexists"/>
+		</rules>
+	</filter>
+	<orderby/>
+	<quickSearch searchColNum="3">
+   		<column dataField="name"/>
+   		<column dataField="displayName"/>
+    </quickSearch>
+</grid>

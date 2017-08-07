@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- paddingColumnField 用于增加一列有rowspan的空白列 -->
+<column dataField="paddingColumnField" width="80" resizable="false" searchable="false">
+</column>
+<!-- cellattr 用于控制单元格的属性，例如rowspan和colspan等等-->
+<column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="120" dataField="startTime">
+	<cellattr>
+ 	<![CDATA[
+ 	function(rowId, val, rawObject, cm){
+	 	var first = $(this).jqGrid().isFirstRow();
+	 	var sum = $(this).jqGrid('getGridParam', 'records');
+	 	if(first){
+	 		return 'rowspan=\"'+sum+'\"';
+	 	}
+	 	else{
+ 			return 'style=\"display:none;\"';
+ 		}
+ 	}
+ 	]]>
+	</cellattr>
+</column>

@@ -1,0 +1,59 @@
+<!-- 导航 -->
+<div class="header">
+	<div class="logo">
+		<a href="/index.html"></a>
+	</div>
+	<div class="nav">
+		<ul>
+			<li><a href="/#page2">功能</a></li>
+			<li><a href="/price.html">购买</a></li>
+			<li><a href="/#page5">客户</a></li>
+			<li><a href="/#page6">下载</a></li>
+			<li><a href="##">帮助</a></li>
+		</ul>
+	</div>
+	<div class="navigation">
+		<ul>
+			<li><a href="./register"><img
+					th:src="${contextPath}+'/themes/metronic/modules/install/images/btn-reg2.png'" /></a></li>
+			<li><a href="/webos"><img
+					th:src="${contextPath}+'/themes/metronic/modules/install/images/btn-login2.png'" /></a></li>
+		</ul>
+	</div>
+</div>
+
+<!-- 正文注册 -->
+<div class="register-wrapper">
+	<div class="main-body">
+		<div class="main-header">
+			<h2>帐号提示</h2>
+		</div>
+		<div class="main-content">
+			<form>
+				<div class="login-group" style="font-size: 20px;">
+					恭喜您，您的企业已创建成功，请登录邮箱激活:</div>
+				<div class="login-group"
+					style="margin-top: 50px; margin-bottom: 5px;">
+					<label for=""
+						style="width: 100px; text-align: left; text-align: left; margin-left: 40px;">管理员帐号：</label>
+					<div class="group-text">
+						<span th:text="${admin}">xxxxxx</span>
+					</div>
+				</div>
+				<div class="login-group">
+					<label for=""
+						style="width: 100px; text-align: left; text-align: left; margin-left: 40px;">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：</label>
+					<div class="group-text">
+						<span th:text="${adminPwd}">xxxxxx</span>
+					</div>
+				</div>
+				<div style="display: flex; margin-top: 100px;">
+					<a href="/webos"
+						style="padding: 15px 150px; color: white; background: burlywood; margin: 0 22px;"
+						title="您可以点击此按钮进入系统">点击进入Link</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+

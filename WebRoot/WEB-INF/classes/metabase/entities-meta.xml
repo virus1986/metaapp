@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<metadata xmlns="http://schemas.bingosoft.net/metabase/metadata" xsi:schemaLocation="http://schemas.bingosoft.net/metabase/metadata http://schemas.bingosoft.net/metabase/1.0/metadata.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <entities>
+	 <entity pack="meta" is-display="true" display-for="{manage:false}" display-name="SearchSaver" inherits-persistence="PerEntity" name="SearchSaver" is-system="true" table="metaui_search_saver">
+          <field column="user_id" length="36" default-value="@{env.User.id}" data-type="String" is-display="true" display-name="userId" display-order="1" field-type="SingleLineText" unique="false" name="userId" nullable="false" sql-type="varchar" is-system="true"/>
+          <field column="search_json" length="500" data-type="String" is-display="true" display-name="searchJson" display-order="2" field-type="SingleLineText" unique="false" name="searchJson" nullable="false" sql-type="varchar" is-system="true"/>
+          <field column="name" length="500" data-type="String" is-display="true" display-name="name" display-order="2" field-type="SingleLineText" unique="false" name="name" nullable="false" sql-type="varchar" is-system="true"/>
+          <field column="modified_time" data-type="Timestamp" default-value="@{env.Now}" is-display="true" display-for="{list:true,form:true}" display-name="modifiedTime" display-order="3" field-type="Date" unique="false" name="modifiedTime" nullable="false" semantics="Updated" sql-type="timestamp" is-system="true"/>
+          <field column="view" length="50" data-type="String" is-display="true" display-name="view" display-order="4" field-type="SingleLineText" unique="false" name="view" nullable="false" sql-type="varchar" is-system="true"/>
+          <id column="id" data-type="Guid" is-display="false" display-name="id" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+      </entity>
+      <entity pack="meta"  name="MetauiTemplate" table="metaui_template" is-system="true" display-for="{manage:false}" is-display="false" display-name="视图模板">
+			<id data-type="Guid" name="id"  is-display="false" is-system="true" />
+			<field field-type="SingleLineText" length="50" name="name"  is-display="true" display-name="名称" nullable="false"  is-system="true"></field>
+			<field field-type="SingleLineText" length="50" name="entityName" is-display="true" display-name="所属实体" nullable="false"></field>
+			<field field-type="SingleLineText" length="150" name="displayName" is-display="true" display-name="显示名称" nullable="false" semantics="Title"></field>
+			<field field-type="SingleLineText" length="20" name="type" is-display="true" display-name="类型"></field>
+			<field field-type="SingleLineText" length="50" name="creator" is-display="true" display-name="创建人" default-value="@{env.User.Name}"></field>
+			<field field-type="DateTime" name="creationTime" is-display="true" display-name="创建时间" default-value="@{env.Now}"></field>
+			<field field-type="SingleLineText" length="50" name="lastModifiedBy" is-display="true" display-name="修改人" default-value="@{env.User.Name}"></field>
+			<field field-type="DateTime" name="lastModified" is-display="true" display-name="修改时间" default-value="@{env.Now}"></field>
+			<field field-type="RichText" data-type="Text" name="configData" is-display="true" display-name="配置信息" ></field>
+			<field field-type="SingleLineText" length="50" name="converter" is-display="true" display-name="转换器" ></field>
+			<field field-type="RichText" data-type="Text" name="template" is-display="true" display-name="模板内容" ></field>
+			<field field-type="SingleLineText" length="20" name="priorityBy" is-display="true" display-name="优先级"></field>
+			<field field-type="Integer" name="version" is-display="true" display-name="版本号" default-value="1"></field>
+			<field field-type="SingleOption"  data-type="Integer" name="status" default-value="0" is-display="true" display-name="状态">
+				<options>
+					<item name="草稿" value="0" is-default="true"/>
+					<item name="已发布" value="10"/>
+				</options>
+			</field>			
+			<field field-type="SingleOption" length="20" data-type="String" name="layoutType" is-display="true" display-name="布局类型" >
+				<options>
+					<item name="视图" value="view" is-default="true"/>
+					<item name="表单" value="form"/>
+				</options>
+			</field>
+			<field field-type="SingleLineText" length="500" name="url" is-display="true" display-name="访问地址"></field>
+			<field field-type="SingleLineText" length="150" name="realPath" is-display="true" display-name="真实路径"></field>
+			<field field-type="MultiLineText" length="2000" name="description" is-display="true" display-name="描述"></field>
+			<field field-type="SingleOption" length="20" data-type="String"  name="dataSourceType" is-display="true" display-name="数据源类型" >
+				<options>
+					<item is-default="true" name="实体" value="entity"/>
+					<item name="Sql" value="sql"/>
+				</options>
+			</field>
+			<field field-type="MultiLineText" data-type="String_4000" name="sql" is-display="true" display-name="sql语句" ></field>
+			
+			<field field-type="Boolean" default-value="true" name="inControl" display-name="是否受控" is-display="true"></field>
+		</entity>
+		<entity pack="meta" name="MetaAppconfig" table="meta_appconfig" is-system="true" display-for="{manage:true}" is-display="false" display-name="应用信息">
+			<id data-type="String_100" name="key" column="key" display-name="键" is-display="true" nullable="false" is-system="true" />
+			<field data-type="String_100" name="name" column="name" display-name="名称" is-display="true" nullable="true" is-system="true" semantics="Title" />
+			<field data-type="String_2000"  name="value" column="value" display-name="值" is-display="true" nullable="true" is-system="true"></field>
+		</entity>
+		<!-- 字段属性中目前除了is-system和is-display之外其它布尔类型的属性都是不带“is-”前缀的。 -->
+		<entity pack="meta" name="DefaultFields" table="metaui_default_fields" is-system="true" persistent="false" display-for="{manage:false}" is-display="false" display-name="默认字段">
+			<id data-type="Guid" name="id" column="id"  is-display="false" is-system="true"/>
+			<field field-type="SingleLineText" length="50" name="name" display-name="名称" is-display="true" is-system="false" column="name" semantics="Title" nullable="false" display-for="{list:true, form:true}"></field>
+			<field field-type="SingleLineText" data-type="Guid"  name="createdBy" display-name="创建人" is-display="false" is-system="true" column="created_by"  update="false" default-value="@{env.User.id}"   nullable="true" display-for="{list:true, form:false}"></field>
+			<field field-type="DateTime" name="createdTime" display-name="创建时间" is-display="false" is-system="true" column="created_time" update="false" semantics="Created"  default-value="@{env.Now}" nullable="true" display-for="{list:true, form:false}"></field>
+			<field field-type="SingleLineText" data-type="Guid" name="modifiedBy" display-name="修改人" is-display="false" is-system="true" column="modified_by" default-value="@{env.User.id}" nullable="true" display-for="{list:true, form:false}"></field>
+			<field field-type="DateTime" name="modifiedTime" display-name="修改时间" is-display="false" is-system="true" column="modified_time" semantics="Updated" default-value="@{env.Now}"  nullable="true" display-for="{list:true, form:false}"></field>
+		</entity>
+	
+		<entity pack="meta" name="MetauiOperation" table="metaui_operation" is-system="false" display-for="{manage:false}" is-display="false" display-name="操作元数据">
+			<id name="id" column="id" data-type="Guid" is-display="false" is-system="true"/>
+			<field field-type="SingleLineText" length="50" name="name" display-name="名称" is-display="true" is-system="true" column="name"  nullable="false" display-for="{list:true, form:true}"></field>
+			<field field-type="SingleLineText" length="150" name="displayName" display-name="显示名称" is-display="true" is-system="true" semantics="Title" column="display_name" nullable="false" display-for="{list:true, form:true}"></field>
+			<field field-type="SingleLineText" length="50" name="entityName" display-name="所属实体名称" is-display="false" is-system="true" column="entity_name" nullable="true" display-for="{list:false, form:false}"></field>
+			<field field-type="MultiOptions" length="100" input-type="Tile" name="scope" display-name="使用范围" is-display="true" is-system="true" column="scope" nullable="false" display-for="{list:true, form:true}">
+				<options>
+					<item name="视图工具栏" value="listtoolbar"/>
+					<item name="视图弹出菜单" value="listcontext"/>
+					<item name="表单工具栏" value="formtoolbar"/>
+				</options>
+			</field>
+			<field field-type="SingleOption" length="20" input-type="Dropdown" name="recordType" display-name="记录类型" is-display="true" is-system="true" column="record_Type" nullable="false" display-for="{list:true, form:true}">
+				<options>
+					<item name="单条记录" value="single"/>
+					<item name="多条记录" value="multi"/>
+				</options>
+			</field>
+			<field field-type="Icon" length="300" width="32" height="32" name="icon" display-name="图标" is-display="true" is-system="true" column="icon"  update="true" default-value=""  nullable="true" display-for="{list:true, form:true}"></field>
+			<field field-type="Icon" length="300" width="16" height="16" name="iconSmall" display-name="小图标" is-display="true" is-system="true" column="icon_Small"  update="true" default-value=""  nullable="true" display-for="{list:true, form:true}"></field>
+			<field field-type="Icon" length="300" width="128" height="128" name="iconLarge" display-name="大图标" is-display="true" is-system="true" column="icon_Large"  update="true" default-value=""  nullable="true" display-for="{list:true, form:true}"></field>
+			<field field-type="SingleLineText" length="150" name="toolTip" display-name="提示" is-display="true" is-system="true" column="tool_tip" default-value="" nullable="true" display-for="{list:true, form:true}"></field>
+			<field field-type="SingleOption" length="250" input-type="Dropdown" name="scriptLib" display-name="脚本库" is-display="true" is-system="true" column="script_lib" nullable="true" display-for="{list:true, form:true}"></field>
+			<field field-type="Code" name="script" display-name="内嵌脚本" is-display="true" is-system="true" column="script" nullable="true" display-for="{list:false, form:true}"></field>
+			<field field-type="SingleLineText" length="150" name="mainFunc" display-name="入口函数" is-display="true" is-system="true" column="main_func" nullable="true" display-for="{list:true, form:true}"></field>
+			<field field-type="Boolean" default-value="false" name="isDefault" display-name="是否默认操作" is-display="true" is-system="true" column="is_default" nullable="true" display-for="{list:true, form:true}"></field>
+			<field field-type="Integer" name="displayOrder" column="display_order" is-display="true" display-name="显示顺序"  default-value="0"></field>
+		
+			<field field-type="SingleLineText" length="50" name="creator" display-name="创建人" is-display="false" is-system="true" column="creator"  update="false" default-value="@{env.User.Name}"  nullable="false" display-for="{list:true, form:true}"></field>
+			<field field-type="DateTime" name="createdTime" display-name="创建时间" is-display="false" is-system="true" column="created_time" semantics="Created"  default-value="@{env.Now}" nullable="false" display-for="{list:true, form:true}"></field>
+			<field field-type="SingleLineText" length="50" name="modifiedBy" display-name="修改人" is-display="false" is-system="true" column="modified_by" default-value="@{env.User.Name}" nullable="false" display-for="{list:true, form:true}"></field>
+			<field field-type="DateTime" name="modifiedTime" display-name="修改时间" is-display="false" is-system="true" column="modified_time" semantics="Updated" default-value="@{env.Now}"  nullable="false" display-for="{list:true, form:true}"></field>
+			<field field-type="Boolean" default-value="true" name="inControl" display-name="是否应受安全控制" is-display="true"></field>
+			<field field-type="Boolean" name="enabled" is-display="true" display-name="是否启用" default-value="true"></field>
+		</entity>
+			
+		<entity pack="meta" name="ScriptLib" table="metaui_script_lib"  display-for="{manage:false}"  is-system="false" is-display="false" display-name="脚本库">
+			<id name="id" column="id" data-type="Guid" is-display="false" is-system="true"/>
+			<field field-type="SingleLineText" length="50" name="name" display-name="名称" is-display="true" is-system="true" column="name" nullable="false" display-for="{list:true, form:true}"></field>
+			<field field-type="SingleLineText" length="150" name="displayName" display-name="显示名称" semantics="Title" is-display="true" is-system="true" column="display_name" nullable="false" display-for="{list:true, form:true}"></field>
+			<field field-type="Code" name="content" display-name="内容" is-display="true" is-system="true" column="content" default-value="" nullable="true" display-for="{list:true, form:true}"></field>
+			<field field-type="MultiLineText" length="500" name="summary" display-name="说明" is-display="true" is-system="true" column="summary" nullable="true" display-for="{list:true, form:true}"></field>
+			<field field-type="SingleLineText" length="350" name="url" display-name="访问链接" is-display="true" is-system="true" column="url" nullable="true" display-for="{list:true, form:true}"></field>
+			<field field-type="Boolean" default-value="false" name="isSystem" display-name="是否系统脚本" is-display="true" is-system="true" column="is_system" nullable="true" display-for="{list:true, form:false}"></field>
+			<field field-type="SingleLineText" length="50" name="creator" display-name="创建人" is-display="false" is-system="true" column="creator"  update="false" default-value="@{env.User.Name}"  nullable="false" display-for="{list:true, form:true}"></field>
+			<field field-type="DateTime" name="createdTime" display-name="创建时间" is-display="false" is-system="true" column="created_time" semantics="Created"  default-value="@{env.Now}" nullable="false" display-for="{list:true, form:true}"></field>
+			<field field-type="SingleLineText"  length="50" name="modifiedBy" display-name="修改人" is-display="false" is-system="true" column="modified_by" default-value="@{env.User.Name}" nullable="false" display-for="{list:true, form:true}"></field>
+			<field field-type="DateTime" name="modifiedTime" display-name="修改时间" is-display="false" is-system="true" column="modified_time" semantics="Updated" default-value="@{env.Now}"  nullable="false" display-for="{list:true, form:true}"></field>
+		</entity>
+		<!-- saas 化默认字段 -->
+		<entity pack="meta" name="SaasFields"  table="metaui_saas_fields" is-system="true" persistent="false" display-for="{manage:false}" is-display="false" display-name="saas化字段">
+			<id data-type="Guid" name="id" column="id"  is-display="false" is-system="true"/>
+			<field field-type="SingleLineText" default-value="@{env.ECode}" length="500" name="eCode" display-name="租户编码" is-display="true" is-system="false" column="E_CODE" nullable="true" display-for="{list:true, form:true}"></field>
+		</entity>
+    </entities>
+</metadata>
+   

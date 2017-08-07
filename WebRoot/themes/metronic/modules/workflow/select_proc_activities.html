@@ -1,0 +1,34 @@
+<div class="panel apply-panel" style="padding:0px;width:400px;height:410px" th:id="${viewId}" >
+<div class="ui-dialog-title hide">	
+	<span th:text="'选择环节'"></span>
+</div>
+<div class="form-horizontal" style="padding:10px 10px;">
+  <div class="control-group">
+  	<label class="radio" th:each="act:${activities}">
+	  <input type="radio" name="activityName" th:value="${act['key']}"/>
+	  <span th:text="${act['value']}"></span>
+	</label>
+  </div>
+  
+</div>
+<div class="ui-dialog-buttonset">
+	<button type="button" class="btn saveBtn purple" th:text="#{common.save}"></button>
+	<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+</div>
+<script type="text/javascript" th:inline="javascript">
+//<![CDATA[ 
+$(function(){
+	var context=/*[['#'+${viewId}]]*/;
+	$(".saveBtn",context).click(function(){
+		var selectItem=$("[name=activityName]:checked",context);
+		var selectId=selectItem.val();
+		var selectText=selectItem.next().text();
+		$(context).dialogClose({id:selectId,text:selectText});
+	});
+	$(".closeBtn",context).click(function(){
+		$(context).dialogClose(null);
+	});	
+});           
+//]]> 
+</script>
+</div>

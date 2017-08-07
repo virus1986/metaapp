@@ -1,0 +1,165 @@
+<div th:id="${viewId}">
+<script type="text/javascript" th:inline="javascript">
+	//<![CDATA[ 
+		$(function(){
+			
+			var viewId = /*[[${viewId}]]*/;
+			var relationEntity = /*[[${relationEntity}]]*/;
+			var relationFieldName = /*[[${relationFieldName}]]*/;
+			var entityName = /*[[${entityName}]]*/;
+			var view = /*[[${view}]]*/;
+			var treeLabelField = /*[[${treeLabelField}]]*/;
+			var _ref_entity = /*[[${_ref_entity}]]*/;
+			var relationEntityDisplayName = /*[[${relationEntityDisplayName}]]*/ ;
+			var sourceEntityDisplayName = /*[[${sourceEntityDisplayName}]]*/ ;
+			var treeUrl = /*[[@{/treemodels/entity/}]]*/;
+			var rootUrl = /*[[@{/}]]*/;
+			var isSelfRelation = sourceEntityDisplayName == relationEntityDisplayName ;
+			
+			var viewObj = $("#"+viewId) ;
+			var gridId = 'grid_'+entityName+'_'+view+'_'+viewId ;
+
+			var contentHeight = viewObj.parent().parent().outerHeight(true)- 40 ;
+
+			viewObj.find(">div").height(contentHeight) ;
+			viewObj.uiwidget() ;
+
+			function toTreeNode(nodeId){
+				var treeRoot=$("#"+viewId +" .list-tree").find(".bbit-tree-ec-icon");
+				if(!treeRoot.hasClass("bbit-tree-elbow-minus")){
+					treeRoot.trigger("click");
+				}
+				var treeIcon=$(".bbit-tree-ec-icon","div[nodeid="+nodeId+"]");
+				if(!treeIcon.hasClass("bbit-tree-elbow-minus")){
+					treeIcon.trigger("click");
+				}
+			}
+			
+			function menuAddAction(){
+				var id = this.data.id ;
+				
+				var callback = isSelfRelation?function(){}:function(returnVal){
+					$("#"+viewId +" .list-tree").tree().reload();
+					$("#"+viewId +" .list-tree").find("[nodeid='"+id+"']").find(".bbit-tree-ec-icon").click() ;
+				} ;
+				
+				jQuery( '#'+gridId ).addRecord(null,null,[{key:relationFieldName,value:id}],callback) ;
+			}
+			
+			function menuUpdateAction(){
+				var id = this.data.id ;
+				jQuery( '#'+gridId ).editRecord(null,null,id,function(returnVal){
+
+				}) ;
+			}
+			
+			function menuDeleteAction(){
+				var id = this.data.id ;
+				jQuery( '#'+gridId ).delRecord(null,null, [id], function(returnVal){
+
+				}) ;	
+			}
+
+			$("#"+viewId +" .list-tree").tree({
+				source : 'remote',
+				method : 'get',
+				asyn:false,
+				expandLevel:2,
+				rootId   :   'root',
+	           	rootText :   relationEntityDisplayName,
+				url : treeUrl+relationEntity+"/"+treeLabelField,
+				nodeFormat : function(record) {
+					var nd = record
+					if(  nd.hasChildren|| 
+			        		( false == nd.complete && typeof(nd.hasChildren)=='undefined'  )||
+			        		(nd.childNodes && nd.childNodes.length>0  ) ){
+						record.icon  = rootUrl+"/themes/default/statics/images/icons/mini/icon_tool_064.gif" ;
+		        	}else{
+		        		record.icon  = rootUrl+"/themes/default/statics/images/icons/mini/icon_tool_145.gif" ;
+			        }
+					
+					return record;
+				},
+				onNodeClick: function(id, text, record,node){
+					if(id != 'root'){
+						var reqParams=$.extend({type:"get",dataType:"json",contentType:'application/json'},{});
+
+						var recursiveQuery = /*[[@{/uamCommon/recursiveQuery/}]]*/;
+						recursiveQuery=recursiveQuery+"?entityName="+relationEntity+"&rootId="+id;
+						
+						//获取递归子节点ID
+						jQuery.restAjax(recursiveQuery, {}, function(result){
+							//alert($.json.encode(result));
+							result = result||[] ;
+
+							var rules = [{"field":relationFieldName,"op":"insql","data":"'"+result.join("','")+"'"}] ;
+							jQuery( '#'+gridId ).multiFieldsQuickSearch(rules);
+						},reqParams);
+						
+						
+						
+					}else{
+						jQuery( '#'+gridId ).multiFieldsQuickSearch([]);
+					}
+					
+				},
+				contextMenu : function(record) {
+					//自关联
+					var add=i18n.t("common.add");
+					if( isSelfRelation ){
+						if(record.id == 'root'){
+							return {items:[{ text: add, icon: rootUrl+"/themes/default/statics/images/icons/led-icons/add.png",id: record.id, action: menuAddAction}]} ;
+						}else{
+							return {
+								items : [{ text: add, icon: rootUrl+"/themes/default/statics/images/icons/led-icons/add.png",id: record.id, action: menuAddAction},
+			                             { text: i18n.t("common.edit"), icon: rootUrl+"/themes/default/statics/images/icons/led-icons/application_edit.png",id: record.id, action: menuUpdateAction },
+			                             { type: "splitLine" },
+			                             { text: i18n.t("common.delete"), icon: rootUrl+"/themes/default/statics/images/icons/led-icons/delete.png",id: record.id, action: menuDeleteAction }]
+							};
+						}
+					}else{
+						return {items:[{ text: add+sourceEntityDisplayName, icon: rootUrl+"/themes/default/statics/images/icons/led-icons/add.png",id: record.id, action: menuAddAction}]} ;
+					}
+					
+				}
+			});
+
+			window.treeListGridComplete = function(){
+				var $grid=$(this);
+				$grid.jqGrid("setGridHeight",(contentHeight-158)+"px");
+			}
+		});
+
+		
+	//]]> 
+	</script>
+	
+<div   data-widget="layout" style="min-width:950px;">
+   <div region="west" split="true" th:title="${relationEntityDisplayName+#messages.msg('common.tree')}" style="width:190px;padding:2px;">
+		<div class="list-tree"></div>
+   </div>
+   <div region="center" th:title="${sourceEntityDisplayName+#messages.msg('common.list')}">
+      <div class="container-fluid" th:attr="data-url=${requestUrl}" style="padding:0px;height:400px;"  >
+		<meta:grid id="'grid_'+${entityName}+'_'+${view}+'_'+${viewId}" gridComplete="treeListGridComplete" entityName="${entityName}" view="${treeListView}" />
+	  </div>
+   </div>
+
+   <style type="text/css">
+   		.list-tree{
+			background:#fff;
+			border:none;
+			padding:1px;
+		}
+		
+		.list-tree .bbit-tree-node a span{
+			border:none;
+		}
+		
+		.list-tree .bbit-tree-node{
+			padding:1px !important;
+		}
+   </style>
+   
+   
+</div>
+</div>

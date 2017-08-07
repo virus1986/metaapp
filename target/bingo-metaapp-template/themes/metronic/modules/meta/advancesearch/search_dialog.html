@@ -1,0 +1,445 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width: 950px;">
+	<style>
+		#search-form .ui-dialog-content {
+			min-height: 400px;
+		}
+		#search-form .s-group-operator, #search-form .s-group, 
+		#search-form .s-field, #search-form .s-value, #search-form .s-delete {
+			display: inline-block;
+		}
+		#search-form .s-group, #search-form .s-group-root {
+			background: #d5edff;
+			overflow: visible;
+			margin-left: 3px;
+		}
+		#search-form .s-condition {
+			padding-bottom: 5px;
+			padding-top: 5px;
+			width: 420px;
+			margin-bottom: 5px;
+		}
+		#search-form .s-add {
+		}
+		#search-form .s-group-operator {
+			width: 85px;
+			background: #d5edff;
+			padding: 5px;
+			margin-left: 0px;
+		}
+		#search-form .s-group .s-group-operator{
+			position: relative;
+			right: 8px;
+		}
+		#search-form .s-group-operator .btn-group .btn {
+			height: 28px;
+		}
+		#search-form .s-holder {
+			padding-left: 0px;
+		}
+		#search-form .s-holder .s-condition{
+			margin-top: 0px;
+			margin-left: 3px;
+			padding: 5px;
+			background: #F1FDFF;
+			border: 1px solid #D5EDFF;
+		}
+		#search-form .s-group-inner {
+			padding-left: 10px;
+			background: #FFFFFF;
+			overflow: visible;
+			margin-left: 0px;
+		}
+		#search-form #s-search {
+			width: 99%;
+		}
+		#search-form .s-delete {
+			cursor: pointer;
+		}
+		#search-form .s-condition>span.s-line{
+			display: inline-block;
+			width: 15px;
+			border-top:3px solid #D5EDFF;
+			position: relative;
+			float: left;
+			top: 12px;
+			right: 20px;
+		}
+		#search-form .s-group>span.s-line{
+			display: inline-block;
+			width: 15px;
+			border-top:3px solid #D5EDFF;
+			position: relative;
+			float: left;
+			top: 18px;
+			right: 15px;
+		}
+	</style>
+	<form id="search-form" data-widget="validator" class="form-horizontal ajaxpost">
+		<div class="table-dialog">
+			<div class="ui-dialog-title">
+				<span th:text="(${isDesign} ? #{'advanceSearch.designTitle'} : #{'advanceSearch.nonedesignTitle'}) + ' - ' + ${searchEntities[0].displayName}"></span>
+			</div>
+			<div class="ui-dialog-content container-fluid">
+				<div id='s-search'>
+				</div>
+			</div>
+			<div class="ui-dialog-buttonset">
+				<button type="button" name="search" class="btn purple searchbtn-primary " th:text="${isDesign}?#{common.ok}:#{common.search}"></button>
+				<button type="button" name="reset" class="btn" th:text="#{common.reset}"></button>
+				<button type="button" name="close" class="btn closeBtn" th:text="#{common.cancel}"></button>
+			</div>
+		</div>
+	</form>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(function(){
+			var viewId=/*[[${viewId}]]*/;
+			var config = /*[[${searchConfig}]]*/;
+			var searchEntities = /*[[${searchEntities}]]*/;
+			var fields = searchEntities[0].fields;
+			var fieldMap = {};
+			var showJoins = true;
+			var initJson = /*[[${initJson}]]*/; 
+			initJson = JSON.parse(initJson);
+			//initJson = {"groupOp":"AND","groups":[{"groupOp":"OR","rules":[{"field":"serviceTelephone","op":"beginWith","data":"020"},{"field":"serviceTelephone","op":"beginWith","data":"010"}]}],"rules":[{"field":"companyName","op":"contains","data":"品高"},{"field":"contactPerson","op":"notBeginWith","data":"陈"}]} ;
+			var operatorMap = {};//for getting operator
+			var context = '#' + viewId, scontext = context + ' #s-search', sform = '#search-form';
+			var sgrouproot = '.s-group-root', sgroup = '.s-group', sgroupinner = '.s-group-inner', 
+				scondition = '.s-condition', sholder = '.s-holder', 
+				sgroupoperator = '.s-group-operator', sgroupselect = '.s-group-select',
+				sfield = '.s-field', soperator = '.s-operator', svalue='.s-value', 
+				sdelete = '.s-delete', sdeletebtn = '.s-delete-btn', sdeletegroup = '.s-delete-group',
+				sadd = '.s-add', saddsingle = '.s-add-single', saddgroup = '.s-add-group',
+				btnSearch = '[name=search]', btnReset = '[name=reset]', btnClose = '[name=close]',
+				sgroupand = '.s-group-and', sgroupor = '.s-group-or', sgroupoption = '.s-group-option';
+			var templates = '#templates', tmplCondition = '#templates .search-items .s-condition',
+			    tmplGroup = '#templates .search-items .s-group',
+				tmplOption = '#templates .search-items .s-option',
+				tmplInputTypes = '#templates .input-types ', tmpl = '-template', 
+				vallocation = '.val-location', focuslocation = '.focus-location';
+			//init
+			function init() {
+				$(context).uiwidget();
+				Page.init(context, {extendContext:false});
+				initUtilMap();
+				if(initJson && initJson != {}) {
+					initGroup(initJson);
+				} else {
+					insertGroup(null, true);
+				}
+// 				insertCondition($(sgrouproot, scontext).children(sgroupinner).children(sholder));
+			}
+			//functions
+			function initUtilMap() {
+				$.each(config.operators, function() {
+					operatorMap[this.name] = this;
+				});
+				$.each(fields, function() {
+					fieldMap[searchEntities[0].name + '.' + this.name] = this;
+				});
+				if(showJoins) {
+					for(var i = 1; i < searchEntities.length; i++) {
+						var en = searchEntities[i];
+						$.each(en.fields, function(){
+							fieldMap[en.name + '.' + this.name] = this;
+						});
+					}
+				}
+			}
+			function insertCondition($holder) {
+				var $condition = newCondition();
+				feedFields($condition.children(sfield));
+				$condition.find(sdelete).hide();
+				$holder.append($condition);
+				$condition.children(sfield).change();
+				return $condition;
+			}
+			function insertGroup($holder, isInsertCondition) {
+				var $newGroup = newGroup();
+				if(null == $holder) {//inserting root group
+					$holder = $(scontext);
+					$newGroup.removeClass('s-group').addClass('s-group-root');
+					var $sdeletegroup = $newGroup.find(sdeletegroup).parent();
+					$sdeletegroup.prev().remove();
+					$sdeletegroup.remove();
+				}
+				$holder.append($newGroup);
+				//insert first condition
+				if(isInsertCondition) insertCondition($newGroup.children(sgroupinner).children(sholder));
+				return $newGroup;
+			}
+			
+			function feedFields($select) {
+				$select.empty();
+				$.each(fields, function() {
+					var $option = newOption();
+					$option.val(searchEntities[0].name + '.' + this.name).text(this.displayName);
+					$select.append($option);
+				});
+				if(showJoins) {
+					for(var i = 1; i < searchEntities.length; i++) {
+						var en = searchEntities[i];
+						$.each(en.fields, function() {
+							var $option = newOption();
+							$option.val(en.name + '.' + this.name).text(i18n.t("advanceSearch.entityfieldDesc",en.displayName,this.displayName));
+							$select.append($option);
+						});
+					}
+				}
+			}
+			function feedOperators($operator, fieldName) {
+				var conditions = getConditionsForField(fieldName);
+				$operator.empty();
+				$.each(conditions, function() {
+					var $option = newOption(), oprt = operatorMap[this.operator];
+					$option.val(this.operator)
+						.text(oprt.displayName);
+					if(oprt.hasInput) $option.data('inputType', this.inputType);
+					$operator.append($option);
+				});
+			}
+			function getConditionsForField(fieldName) {
+				var field = getFieldForName(fieldName), conditions = [];
+				if(!field || (!field.fieldType && !field.dataType)) 
+					consolelog('Error found no fieldType or dataType for field named ' + fieldName);
+				for(var i = 0; i < config.conditions.length; i++) {
+					var condition = config.conditions[i];
+					if(condition.fieldType && (condition.fieldType == field.fieldType)) {
+						conditions.push(condition);
+					} else if(condition.dataType && condition.dataType == field.dataType) {
+						conditions.push(condition);
+					}
+				}
+				return conditions;
+			}
+			function getFieldForName(fieldName) {
+				for(var i = 0; i < fields.length; i++) {
+					var field = fields[i];
+					if(searchEntities[0].name + '.' + field.name == fieldName) return field;
+				}
+				if(showJoins) {
+					for(var i = 1; i < searchEntities.length; i++) {
+						var en = searchEntities[i];
+						for(var j = 0; j < en.fields.length; j++){
+							var f = en.fields[j];
+							if(en.name + '.' + f.name == fieldName) return f;
+						}
+					}
+				}
+				return null;
+			}
+			function initInputType($value, fieldName, inputType) {
+				$value.empty();
+				var $tmpl = $(tmplInputTypes + '.' + inputType + tmpl).clone(true);
+				$value.append($tmpl);
+				var initFunc = $tmpl.attr('data-initFunc');
+				if($.isFunction(eval(initFunc))) {
+					eval(initFunc)($tmpl, fieldMap[fieldName]);
+				}
+				return $tmpl;
+			}
+			//get filter to send back to jqgrid.
+			function getSearchJson() {
+				var $grouproot = $(sgrouproot, context);
+				return getGroupJson($grouproot);
+			}
+			function getGroupJson($group) {
+				var groupOp = $group.children(sgroupoperator).find(sgroupoption).attr('data-option'),
+					$holder = $group.children(sgroupinner).children(sholder),
+					json = {};
+				if(groupOp) json.groupOp = groupOp;
+				else throw 'groupOp can not be null!';
+				if($holder.is(':empty')) return {};
+				else {
+					var $groups = $holder.children(sgroup);
+					if($groups && $groups.length > 0) {
+						json.groups = [];
+						$groups.each(function(){
+							json.groups.push(getGroupJson($(this)));
+						});
+					}
+					var $conditions = $holder.children(scondition);
+					if($conditions && $conditions.length >0){
+						json.rules = [];
+						$conditions.each(function(){
+							json.rules.push(getConditionJson($(this)));
+						});
+					}
+					return json;
+				}
+			}
+			function getConditionJson($cond) {
+				var field = $cond.children(sfield).val(), 
+					op = $cond.children(soperator).val(),
+					data = null,
+					inputType = $cond.children(soperator).children(':selected').data('inputType');
+				if(field && op) {
+					if(!inputType) {
+						data = '';
+					} else {
+						data = $cond.children(svalue).find(vallocation).val();
+					}
+					return {field: field, op: op, data: data};
+				} else throw 'Error with this condition!';
+			}
+			//init html structure according to initJson
+			function initGroup(grp, $holder) {
+				var $group = null;
+				if($holder) $group = insertGroup($holder, false);
+				else $group = insertGroup(null, false);
+				var $groupholder = getHolder($group);
+				getGroupOp($group).text(grp.groupOp == 'AND'? 'AND':'OR').attr('data-option', grp.groupOp);
+				if(grp.rules && grp.rules.length > 0) {
+					$.each(grp.rules, function(){
+						initCondition(this, $groupholder);
+					});
+				}
+				if(grp.groups && grp.groups.length > 0) {
+					$.each(grp.groups, function(){
+						initGroup(this, $groupholder);
+					});
+				}
+			}
+			function initCondition(cdtn, $holder) {
+				var $condition = insertCondition($holder);
+				$condition.children(sfield).val(cdtn.field).trigger('change');
+				$condition.children(soperator).val(cdtn.op).trigger('change');
+				$condition.children(svalue).find(vallocation).val(cdtn.data);
+			}
+			//convenient function
+			function getHolder($group) {return $group.children(sgroupinner).children(sholder);	}
+			function getGroupOp($group) {return $group.children(sgroupoperator).find(sgroupoption);}
+			//use templates
+			function newCondition() { return $(tmplCondition, context).clone(true);	}
+			function newGroup() { return $(tmplGroup, context).clone(true);	}
+			function newOption() { return $(tmplOption, context).clone(true);	}
+			//event
+			$(sfield, context).on('change', function(){
+				var $ts = $(this), fieldName = $ts.val();
+				var $operator = $ts.siblings(soperator);
+				if($operator && $operator.length > 0) {
+					feedOperators($operator, fieldName);
+					$operator.change();
+				} else consolelog('Error with this html structure!');
+			});
+			$(soperator, context).on('change', function(){
+				var $ts = $(this), operatorName = $ts.val(), inputType = $ts.find(':selected').data('inputType');
+				var $value = $ts.siblings(svalue), fieldName = $ts.siblings(sfield).val();
+				if($value && $value.length > 0) {
+					if(!inputType) $value.empty();
+					else {
+						var $tmpl = initInputType($value, fieldName, inputType);
+						$value.show();
+						if($tmpl.is(focuslocation)) $tmpl.focus();
+						else $tmpl.find(focuslocation).focus();
+					}
+				} else consolelog('Error with this html structure!');
+			});
+			$(sdeletebtn, context).on('click', function(){
+				$(this).closest(scondition).remove();
+			});
+			$(sdeletegroup, context).on('click', function(){
+				$(this).closest(sgroup).remove();
+			});
+			$(saddsingle, context).on('click', function(){
+				var $ts = $(this), $sgroup = $ts.closest(sgroup);
+				if(!$sgroup || $sgroup.length == 0) $sgroup = $ts.closest(sgrouproot);
+				var $holder = $sgroup.children(sgroupinner).children(sholder);
+				insertCondition($holder);
+			});
+			$(saddgroup, context).on('click', function(){
+				var $ts = $(this), $sgroup = $ts.closest(sgroup);
+				if(!$sgroup || $sgroup.length == 0) $sgroup = $ts.closest(sgrouproot);
+				var $holder = $sgroup.children(sgroupinner).children(sholder);
+				insertGroup($holder, true);
+			});
+			$(scondition, context).hover(function(){
+				var $ts = $(this), $del = $ts.children(sdelete);
+				if($del && $del.length == 1) {
+					$del.fadeIn('slow');
+				}
+			}, function(){
+				var $ts = $(this), $del = $ts.children(sdelete);
+				if($del && $del.length == 1) {
+					$del.fadeOut('slow');
+				}
+			});
+			$(btnSearch, context).on('click', function(){
+				var valInfo = $.validation.validate(sform) ;
+				if( valInfo.isError ) {
+					return false;
+				}
+				var searchJson = getSearchJson();
+				consolelog(JSON.stringify(searchJson));
+				$(context).dialogClose(searchJson);
+			});
+			$(btnReset, context).on('click', function(){
+				$(scontext).empty();
+				insertGroup(null, true);
+			});
+			$(btnClose, context).on('click', function(){
+				$(context).dialogClose();
+			});
+			$(sgroupand + ', ' + sgroupor, context).on('click', function(){
+				var $ts = $(this), $option = $ts.parent().parent().prev().children(sgroupoption);
+				$option.text($ts.text()).attr('data-option', $ts.attr('data-option'));
+			});
+			init();
+		});
+	/*]]>*/
+	</script>
+	<div id="templates" class="hide">
+		<div class="input-types">
+			<div th:each="type : ${inputTypes}">
+				<div th:include="${themes.meta('/advancesearch/search_input_types')} :: ${type}"></div>
+			</div>
+		</div>
+		<div class="search-items">
+			<div class="s-group row-fluid">
+				<span class='s-line'></span>
+				<div class='s-group-operator span1' style="width:85px">
+					<div class="btn-group">
+		                <button class="btn dropdown-toggle" data-toggle="dropdown">
+		                	<span class='s-group-option' data-option='AND'>
+		                		AND</span>
+		                	<span class="caret"></span>
+		                </button>
+		                <ul class="dropdown-menu s-group-select">
+		                  <li><a href="javascript://" class='s-group-and' data-option='AND'>
+		                  		AND </a></li>
+		                  <li><a href="javascript://" class='s-group-or' data-option='OR'>
+		                  		OR </a></li>
+		                  <li class='divider'></li>
+		                  <li><a href="javascript://" class='s-add-single'>
+		                  		<img alt="" th:src="${themes.icon('led-icons/ui_text_field_password.png')}"/>
+		                  		 <span th:text="#{advanceSearch.addSingleCondition}"></span></a></li>
+		                  <li><a href="javascript://" class='s-add-group'>
+		                  		<img alt="" th:src="${themes.icon('led-icons/layout_header_footer_3.png')}"/>
+								<span th:text="#{advanceSearch.addGroup}"></span></a></li>
+		                  <li class='divider'></li>
+		                  <li><a href="javascript://" class='s-delete-group'>
+		                  		<img alt="" th:src="${themes.icon('led-icons/cancel.png')}"/>
+		                  		<span th:text="#{advanceSearch.delGroup}"></span></a></li>
+		                </ul>
+		            </div>
+				</div>
+				<div class='s-group-inner span10'>
+					<div class='s-holder'>
+					</div>
+				</div>
+			</div>
+			<div class='s-condition'>
+				<span class='s-line'></span>
+				<select class='s-field input input-small' data-validator="required"></select>
+				<select class='s-operator input input-small' data-validator="required"></select>
+				<div class='s-value'></div>
+				<div class='s-delete'>
+					<i class='s-delete-btn icon-remove'></i>
+				</div>
+			</div>
+			<select>
+				<option value='' class='s-option'></option>
+			</select>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,205 @@
+<div class="row-fluid" th:id="${viewId}" th:name="'historyDocPaper'+${viewId}">
+	<div class="portlet box tea-green" meta:sec="${sec.workflow(dd,dd)}">
+		<div class="portlet-title">
+			<div class="caption">
+				<i class="icon-reorder"></i>处理过程<small></small>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<table class="table td-middle table-condensed table-bordered table-striped">
+			<tbody>
+				<meta:placeholder th:each="h:${taskHistory}">
+				<tr th:if="${h.siblings==null}">
+					<meta:placeholder  th:if="${h.status!=1}">
+					<td th:text="${h.actTitle}" style="vertical-align: middle;" width="10%"></td>
+					<td>
+						<div style="width: 100%;height: 100px">
+							<div style="width: 90%;height: 80%" th:utext="${#strings.unescapeJava(h.userComment)}"></div>
+							<div class="row-fluid">
+								<span class="span2 offset7" th:text="'审批人:'+${h.assigneeName}"></span>
+								<span class="span3" th:text="${h.startTime}?${#dates.format(h.startTime, 'yyyy年MM月dd日HH:mm')}:''">2014年9月6日</span>
+							</div>
+						</div>
+					</td>
+					</meta:placeholder>
+					<meta:placeholder  th:if="${h.status==1}">
+					<td th:text="${h.actTitle}" style="vertical-align: middle;" width="10%"></td>
+					<td class="view-to-hide">
+						<div style="width: 100%;" class="row-fluid">
+							<div style="width: 100%" name="taskCommon">
+								<div class="span12" th:if="!${h.type==2 or h.type==4}">
+									<label class="radio inline"><input type="radio" name="approveValue" value="1"/>&nbsp;通过</label>&nbsp;&nbsp;
+									
+									<label class="radio inline"><input type="radio" name="approveValue" value="0"/>&nbsp;驳回</label>&nbsp;&nbsp;
+									<select class="reject-to-con" name="rejectToAct" style="margin-bottom: 0px;border-top: none;border-left: none;border-right: none;">
+										<option value="-2">上一步</option>
+										<option th:each="hisTask,stat:${historyTasks}"
+											 th:value="${hisTask.activityInstanceId}" th:selected="${stat.index==0}"
+											  th:text="${hisTask.title}+'['+${hisTask.assigneeName}+']'"></option>
+									</select>
+									<span class="reapprove-block">
+										<label class="reject-to-con checkbox inline">
+											驳回处理后
+											<select name="reapprove">
+												<option value="0">直接返回到当前步骤</option>
+												<option value="1">重走审批流程</option>
+											</select>
+										</label>
+									</span>
+								</div>
+								<div name="comment-area" class="row-fluid" >
+									<textarea name="userComment" required="required" class="m-wrap bg-white" style="width: 98%;margin-top:10px;" rows="3" placeholder="请输入审批意见"></textarea>
+									<div class="row-fluid" >
+										<div class="span5">
+											<button class="btn mini green userCommentSelectHat" style="margin-top: 10px" >
+												<i class="icon-asterisk">选择常用意见</i>
+											</button>
+											<span class="pop-select hide">
+												<select name="selectForUserComment" style="margin-bottom: 0px;margin-top: 1px">
+												</select>
+											</span>
+										</div>
+										<div class="span2">
+											<button class="btn mini tea-green addCommonOpinion" style="margin-top: 10px">
+											  	<i class="icon-asterisk">设为常用意见</i>
+											</button>
+										</div>
+										<div class="span4" style="margin-top: 10px">
+											<meta:placeholder  th:if="${h.status!=1}">
+												<span th:if="${h.agentName!=null and h.assigneeName!=null}" th:text="'审批人:'+${h.agentName}"></span>
+												<span th:unless="${h.agentName!=null}" th:text="'审批人:'+(${h.assigneeName}?${h.assigneeName}:${h.assigneeIdentityName})"></span>
+											</meta:placeholder>
+											<span th:if="${h.status==1}" th:attr="data-task-id=${h.id}" class="task-user dropdown">
+												<span class="approve-actors" th:include="'/themes/' + ${theme} + '/modules/workflow/approve/history_approve_actor' :: 'actor'"></span>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</td>
+					<td class="view-to-show hide">
+						<div style="width: 100%;" class="row-fluid">
+							<div class="span4 offset7" style="margin-top: 10px">
+								<meta:placeholder  th:if="${h.status!=1}">
+									<span th:if="${h.agentName!=null and h.assigneeName!=null}" th:text="'审批人:'+${h.agentName}"></span>
+									<span th:unless="${h.agentName!=null}" th:text="'审批人:'+(${h.assigneeName}?${h.assigneeName}:${h.assigneeIdentityName})"></span>
+								</meta:placeholder>
+								<span th:if="${h.status==1}" th:attr="data-task-id=${h.id}" class="task-user dropdown">
+									审批人:
+									<a href="javascript://" class="dropdown-toggle" data-toggle="dropdown" data-close-others="true">
+									 	<span class="task-user-list"></span>
+									</a>
+								</span>
+							</div>
+						</div>
+					</td>
+					</meta:placeholder>
+				</tr>
+				</meta:placeholder>
+				<tr th:if="${procInst.status==10}" th:switch="${procInst.endReason}">
+					<td th:case="8" colspan="6" style="font-weight: bold;color: #0d638f;">流程已强制结束</td>
+					<td th:case="9" colspan="6" style="font-weight: bold;color: #0d638f;">流程已废弃</td>
+					<td th:case="*" colspan="6" style="font-weight: bold;color: #0d638f;">流程已完成<span th:if="${isSubprocess and not parentComplete}">,父流程未完成</span></td>
+				</tr>
+			</tbody>
+		  </table>
+		</div>
+	</div>
+</div>
+<div style="margin-bottom: 50px"></div>
+<script th:inline="javascript">
+//<![CDATA[
+$(function(){
+	var context = /*[['#'+${viewId}]]*/;
+	var approveContainer = $(context).closest(".workflow-approve-container").find("#approveContainer");
+	var commentArea = $("[name=comment-area]",context);
+	var userCommentSelectHat = $(".userCommentSelectHat",commentArea);
+	var addCommonOpinion = $(".addCommonOpinion",commentArea);
+	var selectForUserComment = $("[name=selectForUserComment]",commentArea);
+	setTimeout(function(){
+		var selectAct = approveContainer.find("select.select-act-tocontinue-con").clone();
+		var labelAct = approveContainer.find("select.select-act-tocontinue-con").parent("div").find("label:eq(1)").clone();
+		$("input[name=approveValue]:first",context).parent("label").after(selectAct);
+		$("input[name=approveValue]:first",context).parent("label").after(labelAct);
+	},100);
+	//将用户处理意见回写到隐藏域
+	$(context).on('change',"select.select-act-tocontinue-con",function(){
+		approveContainer.find("select.select-act-tocontinue-con").val($(this).val());
+	});
+	$("input[name=approveValue]",context).change(function(){
+		approveContainer.find('input[type=radio][value='+$(this).val()+']').attr('checked',true);
+		if($(this).val()==0){
+			$("select.reject-to-con",context).fadeIn();
+			$("span.reapprove-block",context).fadeIn();
+		}else if($(this).val()==1){
+			$("select.reject-to-con",context).fadeOut();
+			$("span.reapprove-block",context).fadeOut();
+		}
+	});
+	$("select[name=rejectToAct]",context).change(function(){
+		approveContainer.find('select[name=rejectToAct]').val($(this).val());
+	});
+	$("select[name=reapprove]",context).change(function(){
+		approveContainer.find('select[name=reapprove]').val($(this).val());
+	});
+	$("[name=userComment]",context).change(function(){
+		approveContainer.find('[name=userComment]').val($(this).val());
+	});
+	//保存常用意见按钮事件
+	userCommentSelectHat.click(function(){
+		$(this).siblings(".pop-select").toggleClass("hide");
+	});
+	addCommonOpinion.click(function(){
+		var $commentInput=commentArea.find("[name=userComment]");
+		var userComment=$commentInput.val();
+		if(!userComment){
+			$.messageBox.warning({message:"待保存的意见不可为空!"});
+			return;
+		}
+		var opinion={content:userComment};
+		var opinionSaveUrl=Global.contextPath+"/entities/wfCommonOpinion/edit";
+		$.ajax({
+			url:opinionSaveUrl,
+			data:opinion,
+			type:"POST",
+			success:function(data, textStatus, jqXHR){
+				$.messageBox.info({message:"常用意见保存成功!"});
+			}
+		});
+		return false;
+	});
+	selectForUserComment.change(function(){
+		$(this).parent(".pop-select").addClass("hide");
+		var userInput=commentArea.find("[name=userComment]");
+		var userComment=userInput.val();
+		var opinion=$(this).val();
+		if(!opinion){
+			return false;
+		}
+		if(!!userComment){
+			$.messageBox.confirm({
+				message:"替换或追加意见",
+				title:"选择意见添加方式",
+				cancelButton:"追加",
+				okButton:"替换",
+				callback:function(confirm){
+					if(confirm){
+						userInput.val(opinion);
+					}else{
+						userInput.val(userComment+"\n"+opinion);
+					}
+				}
+			});
+		}else{
+			userInput.val(opinion);
+		}
+		userInput.change();
+	});
+	//将常用意见的元素复制到此处的选项中
+	var options = approveContainer.find("[name=selectForUserComment]").find("option").clone();
+	selectForUserComment.append(options);
+	//管理员选项
+});
+//]]>
+</script>

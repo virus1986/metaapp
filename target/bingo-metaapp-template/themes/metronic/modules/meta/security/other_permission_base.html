@@ -1,0 +1,134 @@
+<div th:id="${viewId}" class=" ui-corner-all permissions" style="border: 0px">
+			<table	class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th style="width:150px" th:text="#{security.menuName}"></th>
+						<th class="width100" th:text="#{security.permissionControl}"></th>
+						<th style="width:200px"><span th:text="#{security.role}"></span>[<a class="add-roles" href="javascript://" th:text="#{common.add}"></a>]</th>
+						<th style="width:50px;" th:text="#{security.permission}"></th>
+						<th width="*" th:text="#{common.remark}"></th>
+					</tr>
+				</thead>
+				<tbody th:each="metaObj:${metauiOps}" 
+				 	th:id="${originalPermission.code}"
+					th:with="originalPermission=${objToPerm[metaObj.toString()]},
+						permission=${objToPerm[metaObj.toString()].refPermission} ,
+						isInControl=${(!objToPerm[metaObj.toString()].isReference and objToPerm[metaObj.toString()].isInControl) or (objToPerm[metaObj.toString()].refPermission!=null and objToPerm[metaObj.toString()].refPermission.isInControl)}"
+					th:switch="${((!objToPerm[metaObj.toString()].isReference and objToPerm[metaObj.toString()].isInControl) or (objToPerm[metaObj.toString()].refPermission!=null and objToPerm[metaObj.toString()].refPermission.isInControl)) 
+						and (#lists.size(roles)>0)}?'1':'0'">
+					<!-- 不受控,或当前页面未设置角色-->
+					<tr th:case="'0'">
+						<td >
+							<a class='edit-metaobj' th:href="@{/metadata/uioperation/edit(id=${metaObj.id},entity=${entityName},editMode='1')}" >
+								<img th:src="${themes.icon(metaObj.icon)}" />
+								<span th:text="${metaObj.displayName}"> </span>
+							</a>
+						</td>
+						<td>
+							<div class="switch switch-small" data-on="success" data-off="warning">
+							    <input th:id="${originalPermission.code}" type="checkbox" name="isInControl"  
+							    	th:disabled="${originalPermission.isReference}" 
+							    	th:checked="${#objects.nullSafe(permission,originalPermission).isInControl}"/>
+							</div>
+						</td>
+						<td>
+							<span th:if="${!isInControl}"></span>
+							<a th:if="${isInControl}" class="add-roles" href="javascript://" th:text="#{security.addRole}"></a>
+						</td>
+						<td></td>
+						<td>
+							<div th:if="${originalPermission.isReference}"><span th:text="#{security.referenceTo}"></span>[<a href="javascript://" th:text="${permission==null?originalPermission.reference:permission.name}"></a>]<span th:text="#{security.permission}"></span>
+							</div>
+						</td>
+					</tr>					
+					<!-- 受控(本身Permission受控，或引用对象受控)，且设置了角色 -->
+					<tr th:case="*" 
+						th:each="role,iterStat:${roles}" 
+						th:with="rolePermission=${rolePermissions[#objects.nullSafe(permission,originalPermission).id+'_'+role.id]}"
+						th:id="${role.id}">
+						<td th:if="${iterStat.index==0}" th:rowspan="${iterStat.size}" style="vertical-align:middle;">
+							<a class='edit-metaobj' th:href="@{/metadata/uioperation/edit(id=${metaObj.id},entity=${entityName},editMode='1')}" >
+								<img th:src="${themes.icon(metaObj.icon)}" />
+								<span th:text="${metaObj.displayName}"> </span>
+							</a>
+						</td>
+						<td th:if="${iterStat.index==0}" th:rowspan="${iterStat.size}" style="vertical-align:middle">
+							<div class="switch switch-small" data-on="success" data-off="warning">
+							    <input th:id="${originalPermission.code}" type="checkbox" name="isInControl" th:disabled="${originalPermission.isReference}" th:checked="${isInControl}" />
+							</div>
+						</td>
+						<td th:text="${role.name}"></td>
+						<td th:switch="${#objects.nullSafe(rolePermission,'_none_')}" style="text-align: center;">
+							<a th:case="'_none_'" th:classappend="${originalPermission.isReference}?'':'role-permission'"  th:attr="data-status=0" ><img th:src="${themes.icon(originalPermission.isReference?'led-icons/cross_grey.png':'led-icons/cross.png')}"/></a>
+							<a th:case="*"        th:classappend="${originalPermission.isReference}?'':'role-permission'"  th:attr="data-status=1" ><img th:src="${themes.icon(originalPermission.isReference?'led-icons/accept_grey.png':'led-icons/accept.png')}"/></a>
+						</td>
+						<td>
+							<div th:if="${originalPermission.isReference and iterStat.index==0}"><span th:text="#{security.referenceTo}"></span>[<a href="javascript://" th:text="${permission==null?originalPermission.reference:permission.name}"></a>]<span th:text="#{security.permission}"></span>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+	<script th:inline="javascript">
+	//<![CDATA[
+		$(function(){
+			var options={
+				viewId:/*[[${viewId}]]*/,
+				roles:/*[[${roles}]]*/,
+			};
+			
+			reqModule(["module/security/otherpermission"],function(module){
+				var entitySec=module.createNew(options);
+				$('.switch',entitySec.context)['bootstrapSwitch']();
+				$('.switch',entitySec.context).on('switch-change',function (e, data) {
+			        var $el=$(data.el);
+			        var self=$(this);
+		        	self.bootstrapSwitch("setActive",false);
+			        var permissionId=$el.attr("id");
+			        if(data.value){
+			        	entitySec.turnOnPermission(self,permissionId);
+			        }else{
+			        	entitySec.turnOffPermission(self,permissionId);
+			        }
+			  	});
+				
+				$(".edit-metaobj",entitySec.context).click(function(e){
+					e.stopImmediatePropagation();
+					e.preventDefault();
+					var self=$(this);
+					var url=self.attr("href");
+					jQuery.openLink(url,{showType:"pop-up",width:800,height:400},function(){
+						var returnVal=$.dialogReturnValue();
+						if(!returnVal) return;
+						var $tab=entitySec.context.closest(".ui-tabs").tabs();
+						$tab.load({id:$tab.getSelectedId()});
+					});
+				});
+				
+				entitySec.context.on("click",".add-roles",function(e){
+					var self=$(this);
+					entitySec.addRoles(self);
+				});
+				
+				entitySec.context.on("click",".role-permission",function(e){
+					var self=$(this);
+					var status=self.attr("data-status");
+					if(status=="0"){
+						entitySec.addPermission(self);
+					}else{
+						entitySec.delPermission(self);
+					}
+				});
+				
+				//订阅父页面的事件
+		    	entitySec.context.closest(".entity-permission").on("add-roles",function(e,data){
+		    		var roles=data.roles;
+		    		var tableEl=$("table",entitySec.context);
+		    		entitySec.addRolesToUI(tableEl,roles);
+		    	});
+			});
+		});
+	    
+	//]]>
+	</script>
+</div>

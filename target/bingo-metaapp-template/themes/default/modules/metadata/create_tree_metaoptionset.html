@@ -1,0 +1,280 @@
+<div th:id="${viewId}" class="panel apply-panel" style="height:490px;">
+<div class="ui-dialog-title hide">
+	<span th:if="${action=='edit'}" th:text="#{optionset.editTitle}"></span>
+	<span th:if="${action=='view'}" th:text="#{optionset.viewTitle}"></span>
+	<span th:if="${action!='edit'} and ${action!='view'}" th:text="#{optionset.createTitle}"></span>
+</div>
+<form id="createTreeOptionSetForm" data-widget="validator" th:action="${requestUrl}">
+<table id="createOptionSetTable" class="form-table">
+<tbody>
+	<tr >
+	<td style="vertical-align: top;">
+		<table class="form-table">
+			<caption th:text="#{common.baseInfo}"></caption>
+			<tbody>
+				<tr>
+					<th><label th:text="#{common.displayName}+':'"></label></th>
+					<td>
+						<input type="hidden" name="id" th:value="${optionset.id}"/>
+						<input type="text" name="displayName" th:value="${optionset.displayName}" class="input-large" 
+							th:placeholder="#{validation.string36}"
+							data-validator="required,length[1,36]"/>
+					</td>
+				</tr>
+				<tr>
+					<th><label th:text="#{common.name}+':'"></label></th>
+					<td>
+					<input th:if="${action=='edit'}" type="input" name="name" th:value="${optionset.name}"  disabled="disabled" class="input-large"/>
+					<input type="text" th:unless="${action=='edit'}" name="name" th:value="${optionset.name}"  class="input-large" 
+						th:placeholder="#{validation.autoByDisplayName}"
+						data-validator="required,length[1,36],name,func[optionsetNameUnique]"/>
+					<span th:unless="${action=='edit'}" class="label label-info" th:text="#{validation.nameSpec}"></span>
+					</td>
+				</tr>
+				<tr>
+				<th><label th:text="#{common.description}+':'"></label></th>
+					<td>
+					<textarea name="summary" class="shortArea" style="height:200px;"
+					 	data-validator="length[0,1000]"
+						th:placeholder="#{optionset.summarySpec}"/>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	
+	</td>
+	<td style="vertical-align: top;width:300px;">
+		<table class="form-table">
+			<caption>
+			  <div style="display:inline-block;vertical-align: middle;" th:text="#{optionset.itemInfo}"></div>
+			  <div class="btn-group" style="display:inline-block;vertical-align: middle;">
+			    <a class="btn" href="javascript://" id="addOptionItem" th:title="#{common.addSibling}">
+			    	<i class="icon-plus"></i></a>
+			    <a class="btn" href="javascript://" id="upOptionItem" th:title="#{common.up}">
+			    	<i class="icon-arrow-up"></i></a>
+			    <a class="btn" href="javascript://" id="downOptionItem" th:title="#{common.down}">
+			    	<i class="icon-arrow-down"></i></a>
+			  </div>
+			</caption>
+				<tbody>
+					<tr>
+						<td colspan="3" class="span3">
+							<div class="optionItemTree" style="height:400px;overflow:auto; "></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+	</td>
+	</tr>
+	
+</tbody>
+</table>
+<div class="ui-dialog-buttonset">
+	<button th:if="${action!='view'}" type="button" class="btn btn-primary saveMetaOptionSet" th:text="#{common.save}"></button>
+	<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+</div>
+</form>
+<script th:inline="javascript">
+//<![CDATA[
+           function optionsetNameUnique(caller) {
+				var context = /*[['#'+${viewId}]]*/;
+				var myOptionSet = $(caller, context).val();
+				var result = {isError:false,errorInfo:""};
+				$.ajax({
+					url		:	Global.contextPath + "/validation/optionset_name_unique",
+					data	:	{
+									optionset  : myOptionSet
+								},
+					async	:	false,
+					success	:	function(data){
+									if (data == false) {
+										result = {isError:true,errorInfo:i18n.t("optionset.nameAlreadyExist")};
+									} else {
+										result = {isError:false,errorInfo:""};
+									}
+								}
+				});
+				return result;
+			};
+     $(function() {
+    	 var action = /*[[${action}]]*/;
+    	 var optionstring = /*[[${options}]]*/;
+    	 var context=/*[['#'+${viewId}]]*/;
+    	 var options = [];
+    	 if(action == "edit") options = JSON.parse(optionstring);
+    	 var flatOptions=TreeOptions.treeOptionToFlat(options,{});
+    	 //consolelog(flatOptions);
+    	 Form.init(context,"#createTreeOptionSetForm");
+    	 var optionItemCreateUrl=Global.contextPath+"/metadata/optionset/createOptionItem";
+    	 var optionItemTreeUrl=/*[[@{/metadata/optionset/treemodel(id=${optionSetName})}]]*/;;
+    	 $(".optionItemTree",context).tree({
+    			source : 'remote',
+    			method : 'get',
+    			nodeFormat : function(record) {
+    				return record;
+    			},
+    			url : optionItemTreeUrl,
+    			onNodeClick:function(id, text, record,node){
+    			},
+    			contextMenuEventType:'click',
+    			contextMenu:function( record ){
+    				var imageRoot=Global.themePath+"/statics/images/icons/led-icons";
+    				var type=record.type;
+    				var id=record.id;
+    				function menuAddAction(){
+    					$.openLink(optionItemCreateUrl,{title:i18n.t("optionset.option.add.title"),showType:'pop-up',action:'add',flatOptions:flatOptions},function(resp){
+    						if(resp){
+    							var json={parentId:id,id:id+resp.value,text:resp.name,userData:resp};
+    							$(".optionItemTree",context).tree().addNode(json);
+    							flatOptions[resp.value]=resp.name;
+    							//consolelog("after add item:");
+    							//consolelog(record);
+    						}
+    					});
+    				};
+    				function menuEditAction(){
+    					$.openLink(optionItemCreateUrl,{title:i18n.t("optionset.option.edit.title"),showType:'pop-up',userData:record.userData,action:'edit',flatOptions:flatOptions},function(resp){
+    						if(resp){
+    							var json={id:id,text:resp.name,userData:resp};
+    							$(".optionItemTree",context).tree().updateNode(json);
+    							flatOptions[resp.value]=resp.name;
+    							//consolelog("after update item:");
+    							//consolelog(record);
+    						}
+    					});
+    				};
+    				function menuDelAction(){
+    					$(".optionItemTree",context).tree().deleteNode(record.id);
+    					flatOptions[record.userData.value]=null;
+    				};
+    				if(type=="treeOptionsetRoot"){
+    					return { 
+        					width: 100, 
+        					items: [
+        	                         { text: i18n.t("optionset.option.addSub.title"), icon:imageRoot+"/add.png",id: record.id, action: menuAddAction}
+        	                      ]
+        	                } ;
+    				}else{
+	    				return {
+	    					width: 100, 
+	    					items: [
+	    	                         { text:  i18n.t("optionset.option.addSub.title"), icon:imageRoot+"/add.png",id: record.id, action: menuAddAction},
+	    	                         { text:  i18n.t("common.edit"), icon:imageRoot+"/application_edit.png",id: record.id, action: menuEditAction},
+	    	                         { text: i18n.t("common.delete"), icon:imageRoot+"/application_delete.png",id: record.id, action: menuDelAction}
+	    	                      ]
+	    	                } ;
+    				}
+    			}
+    	 });
+    	 setTimeout(function(){
+    		 $(".optionItemTree",context).tree().expandLevel(null,1);
+    		 $(context).dialogResize();
+    	 },300);
+    	 function optionNodeToOption(optionNode){
+    		 var name=optionNode.userData.name;
+    		 var value=optionNode.userData.value;
+    		 var description=optionNode.userData.description;
+    		 var childs=[];
+    		 var childNodes=optionNode.childNodes;
+    		 if(childNodes!=null&&childNodes.length>0){
+    		 	 var len=childNodes.length;
+    			 for(var i=0;i<len;++i){
+    				 childs.push(optionNodeToOption(childNodes[i]));
+    			 }
+    		 }
+    		 return {name:name,value:value,description:description,childs:childs};
+    	 };
+    	 function getDataOptions(){
+    		 var treeNodes=$(".optionItemTree",context).tree().getAllNodes();
+    		 //consolelog("begin get options:");
+    		 //consolelog(treeNodes);
+    		 
+    		 var dataOptions=[];
+    		 var optionNodes=treeNodes[0].childNodes;
+    		 //consolelog(optionNodes);
+    		 if(optionNodes&&optionNodes.length>0){
+	    		 var len=optionNodes.length;
+    			 for(var i=0;i<len;++i){
+    				 dataOptions.push(optionNodeToOption(optionNodes[i]));
+    			 }
+    		 }
+    		 //consolelog(dataOptions);
+    		 //consolelog("end get options:");
+    		 return dataOptions;
+    	 };
+    	 $(".saveMetaOptionSet",context).click(function(){
+    		 var valInfo = $.validation.validate(context +" #createTreeOptionSetForm") ;
+   			 if( valInfo.isError ) {
+   			 	return false;
+   			 }
+    		 var url=$("#createTreeOptionSetForm", context).attr("action");
+    		 var data=$("#createTreeOptionSetForm", context).toJson();
+    		 var btnSelf=$(this);
+    		 data.options = getDataOptions();
+    		 data.kind="Tree";
+    		 jQuery.restPost(url,data,function(response){
+    				if(response){
+    					jQuery(context).dialogClose(response);
+    				}
+    			},{
+    				beforeSend:function(xhr){
+    					CommonUtil.showLoading(context,i18n.t("common.processing"));
+    					btnSelf.attr("disabled","disabled");
+    					btnSelf.addClass("disabled");
+    				  },complete:function(xhr,textStatus){
+    						CommonUtil.hiddenLoading();
+    						btnSelf.removeAttr("disabled");
+    						btnSelf.removeClass("disabled");
+    				  }
+    			});
+    	 });
+    	 $(".closeBtn",context).click(function(){
+    		 $(context).dialogClose();
+    	 });
+    	 $("[name=displayName]",context).blur(function(){
+    		 var displayName=$("[name=displayName]",context).val();
+    		 if(!displayName){
+    			 displayName=i18n.t("optionset.option.title");
+    		 }
+    		 var json={id:"treeOptionsetRoot",text:displayName};
+			 $(".optionItemTree",context).tree().updateNode(json);
+    	 });
+    	 if(action != "edit"){
+ 			$("[name=displayName]", context).keyup(function(){
+ 				$("[name=name]", context).val($(this).toPinyin().replace(/\s*/g,''));
+ 			});
+ 		 }
+    	 $("#upOptionItem",context).click(function(){
+    		 var currentNode=$(".optionItemTree",context).tree().getCurrentNode();
+    		 //consolelog(currentNode);
+    		 $(".optionItemTree",context).tree().upMoveNode(currentNode);
+    	 });
+    	 $("#downOptionItem",context).click(function(){
+    		 var currentNode=$(".optionItemTree",context).tree().getCurrentNode();
+    		 //consolelog(currentNode);
+    		 $(".optionItemTree",context).tree().downMoveNode(currentNode);
+    	 });
+    	 $("#addOptionItem",context).click(function(){
+    		 var currentNode=$(".optionItemTree",context).tree().getCurrentNode();
+    		 if(!currentNode){
+    			 $.messageBox.info({message:i18n.t("optionset.option.selectOne")});
+    			 return;
+    		 }
+    		 if(currentNode.type=="treeOptionsetRoot"){
+    			 $.messageBox.info({message:i18n.t("optionset.option.selectOneNotRoot")});
+    			 return;
+    		 }
+    		 $.openLink(optionItemCreateUrl,{title:i18n.t("optionset.option.add.title"),showType:'pop-up',action:'add',flatOptions:flatOptions},function(resp){
+				if(resp){
+					var json={parentId:currentNode.parentId,id:currentNode.parentId+resp.value,text:resp.name,userData:resp};
+					$(".optionItemTree",context).tree().addNode(json);
+					flatOptions[resp.value]=resp.name;
+					//consolelog("after add item:");
+					//consolelog(record);
+				}
+			});
+    	 });
+     });
+//]]>
+</script>
+</div>

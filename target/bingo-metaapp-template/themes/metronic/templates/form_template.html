@@ -1,0 +1,81 @@
+<div th_:id="${viewId}" class="panel apply-panel" style="min-width:850px;">
+  <form id="entityForm" th_:object="${entity}"
+	th_:action="${requestUrl}" method="post" data-widget="validator" class="form-horizontal ajaxpost" th_:classappend="${action}">
+		<input th:each="hiddenField:${layout.hiddenFields}"  type="hidden"  th:attr="meta_:field='*{'+${hiddenField}+'}'"  />
+		<div class="table-dialog">
+			<div class="ui-dialog-title" th_:switch="${action}">
+				<span th_:case="'EDIT'" th_:text="#{common.edit}+${metaEntity.displayName}"></span>
+				<span th_:case="'CREATE'" th_:text="#{common.create}+${metaEntity.displayName}"></span>
+				<span th_:case="'VIEW'" th_:text="#{common.view}+${metaEntity.displayName}"></span>
+				<span th_:case="*" th_:text="#{common.notExistAction}+${action}"></span>
+			</div>	
+			<div class="container-fluid">
+				<div th:if="${layout.sections.size()>1}" th:each="section:${layout.sections}" class="portlet box tea-green">
+					<div class="portlet-title">
+						<div class="caption">
+							<i class="icon-reorder"></i><span th:text="${section.name}"></span>
+						</div>
+						<div class="tools">
+							<a href="javascript:;" class="collapse"></a>
+							<!-- <a href="javascript:;" class="reload"></a> -->
+						</div>
+					</div>
+					<div class="portlet-body form-bordered">
+						<table th:each="section:${layout.sections}" th:classappend="'form-table col'+${section.colNum}*2+'-fluid'">
+							<tr th:each="row:${section.rows}"><meta:placeholder th:each="cell:${row}">
+								<th th:switch="${cell.contentType}">
+									<label th:case="'Control'"	th:text="${layoutCtx.fields[cell.content.dataFieldName].displayName}+'：'"></label>
+									<label th:case="'RefEntityControl'" th:text="${layoutCtx.relations[cell.content.relationName].displayName}+'：'"></label>
+									<label th:case="*" ></label>
+								</th>
+								<td th:switch="${cell.contentType}"	th:colspan="${cell.colspan}*2-1">
+									<input th:case="'Control'" 
+											th:attr="meta_:field=${cell.content.dataFieldName},__${cell.attrsString()}__" />
+									<input th:case="'RefEntityControl'" 
+											th:attr="meta_:field=${cell.content.dataFieldName},__${cell.attrsString()}__" />
+									<span  th:case="*" th:text="''">
+									</span>
+								</td></meta:placeholder></tr>
+						</table>
+					</div>	
+				</div>
+
+				<table th:if="${layout.sections.size()==1}"  th:each="section:${layout.sections}" th:classappend="'form-table form-bordered col'+${section.colNum}*2+'-fluid'">
+					<tr th:each="row:${section.rows}"><meta:placeholder th:each="cell:${row}">
+						<th th:switch="${cell.contentType}">
+							<label	th:case="'Control'"	th:text="${layoutCtx.fields[cell.content.dataFieldName].displayName}+'：'"></label>
+							<label th:case="'RefEntityControl'" th:text="${layoutCtx.relations[cell.content.relationName].displayName}+'：'"></label>
+							<label th:case="*" ></label>
+						</th>
+						<td th:switch="${cell.contentType}"	th:colspan="${cell.colspan}*2-1">
+							<input th:case="'Control'" 
+									th:attr="meta_:field=${cell.content.dataFieldName},__${cell.attrsString()}__" />
+							<input th:case="'RefEntityControl'" 
+									th:attr="meta_:ref=${cell.content.refEntityName}+'::'+${cell.content.relationName},__${cell.attrsString()}__" />
+							<span  th:case="*" th:text="''">
+							</span>
+						</td></meta:placeholder></tr>
+				</table>
+			</div>	
+			<div class="ui-dialog-buttonset">
+				<button th_:if="${action} != 'VIEW'" type="submit" name="save" class="btn purple">
+					<span th_:text="#{common.save}"></span>
+					<i class="m-icon-swapright m-icon-white"></i>
+				</button>
+				<button type="button" name="close" class="btn closeBtn" th_:text="(${action} != 'VIEW')?#{common.cancel} : #{common.close}">
+				</button>
+			</div>
+		</div>
+	</form>
+<script type="text/javascript"  th_:inline="javascript">
+//<![CDATA[ 
+;(function($){
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var container=$('#' + viewId);
+		Page.init(container);
+	});
+}(jQuery)); 
+//]]> 
+</script>
+</div>

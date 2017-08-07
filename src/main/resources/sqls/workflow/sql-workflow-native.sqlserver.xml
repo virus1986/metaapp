@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment></comment>
+	<!-- 取得当前登录用户的所有流程角色 -->
+	<entry key="business.getAllWfRole">
+		<![CDATA[
+			select wur.org_id + '.' + sr.ID as roleId from wf_user_role wur, sec_role sr
+            where wur.role_id = sr.id
+            and wur.user_id = #userID#
+		]]>
+	</entry>
+	<entry key="business.getAllWfPost">
+		<![CDATA[
+			select su.ID as userId,su.NAME as userName,wp.POST_ID as postId,wu.DUTY_ID as dutyId,wu.NAME as dutyName,po.ORG_ID as orgId,so.name as orgName
+				from uam_user_post wp ,uam_user su,uam_post po,uam_duty wu,uam_organization so
+				where wp.USER_ID=su.ID 
+				and wp.POST_ID=po.POST_ID
+				and po.DUTY_ID=wu.DUTY_ID
+				and po.ORG_ID=so.ID
+            and su.id = #userID#
+		]]>
+	</entry>
+	<entry key="business.getCurUserTaskIdInInst">
+		<![CDATA[
+			select top 1 wt.id_ from wf_task wt
+			where wt.proc_inst_id=#instId#
+			and wt.assignee_id=#curUserId#
+			order by wt.end_time desc
+		]]>
+	</entry>
+	
+		
+	<!-- 查询某个人的所有角色部门岗位 -->
+	<entry key="business.getUserWorkFlowInfo">
+		<![CDATA[
+			SELECT
+				user.ID userId,
+				user.ORG_ID userOrgId,
+				userpost.POST_ID postId,
+				post.DUTY_ID dutyId,
+				userrole.role_id roleId,
+				userrole.org_id roleOrgId
+			FROM
+				uam_user user
+			JOIN uam_user_post userpost ON user.ID = userpost.USER_ID
+			JOIN uam_post post ON userpost.POST_ID = post.POST_ID
+			JOIN wf_user_role userrole ON user.ID = userrole.user_id
+			WHERE
+				user.ID = #userId#
+		]]>
+	</entry>
+	<entry key="business.getUserWorkFlowProcInstId">
+		<![CDATA[
+			SELECT
+				WfTask.proc_inst_id instId
+			FROM
+				wf_task WfTask
+			JOIN wf_proc_inst WfProcInst ON WfTask.proc_inst_id = WfProcInst.id_
+			WHERE
+				(
+					(
+						WfTask.status_ != 10
+						AND WfTask.deleted_ = 0
+					)
+				)
+			AND (
+				(
+					WfTask.assignee_id = #userId#
+					OR (
+						EXISTS (
+							SELECT
+								id_
+							FROM
+								wf_actor wfActor
+							WHERE
+								value_ IN (
+									$existStr$
+								)
+							AND task_id = WfTask.id_
+						)
+					)
+					OR WfTask.agent_id = #userId#
+				)
+			)
+		]]>
+	</entry>	
+</properties>

@@ -1,0 +1,41 @@
+<div class="container-fluid" th:attr="data-url=${requestUrl}" style="padding:0px" th:id="${viewId}" >
+<meta:grid id="'grid_'+${entityName}+'_'+${view}+'_'+${viewId}" entityName="${entityName}" view="${view}" >
+	<div class="toolbar-template">
+		<![CDATA[
+		<div class="container-fluid" style="padding:0px">
+			<div th:id="'toolbar_'+${jqgrid.id}"
+			class="table-toolbar toolbar toolbar-auto row-fluid simple-search-area">
+				<table th:object="${jqgrid}" class="form-horizontal">
+					<tbody>
+						<tr th:each="rowData:${simpleSearchLayout}">
+						<td th:each="rowCol,state:${rowData}">
+							<div th:if="${state.count}!=${state.size}" class="control-group" style="display:inline-table;">
+				              <label class="control-label" style="width:80px;" th:with="displayName=${rowCol['fieldDisplayName']}" th:text="(${displayName!=''})?(${displayName}+'：'):''"></label>
+				              <div class="controls" style="margin-left:80px;">
+				                <input id="${rowCol['id']}" meta:searchField="${rowCol['fieldName']}"/>
+				              </div>
+				            </div>
+							<div th:if="${state.count}==${state.size}" class="control-group" style="display:inline-table;">
+				              <label class="control-label" style="width:80px;" th:with="displayName=${rowCol['fieldDisplayName']}" th:if="${rowCol['fieldName']!='btns'} and ${rowCol['fieldDisplayName']!=''}" th:text="(${displayName!=''})?(${displayName}+'：'):''"></label>
+				              <div class="controls" style="margin-left:80px;">
+				                <div th:if="${rowCol['fieldName']!='btns'}">
+									<input id="${rowCol['id']}" meta:searchField="${rowCol['fieldName']}"/>
+								</div>
+								<div th:if="${rowCol['fieldName']=='btns'}" class="toolbar-btns" style="width:200px;text-align: left;">
+									<button type="button" class="btn searchBtn">查询</button>
+									<button type="button" class="btn resetBtn">重置</button>
+								</div>
+				              </div>
+				            </div>
+						</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			</div>
+		</div>
+		]]>
+	</div>
+</meta:grid>
+
+</div>

@@ -1,0 +1,31 @@
+<div th:id="${viewId}">
+	<ul th:each="entry:${otherWorkFlows}" class="proc-ul-nav">
+		<li><i class="icon-plus toggle-hide"></i><input type="checkbox" class="proc-select-down"/><span th:text="${entry.key['catagoryName']}"></span></li>
+		<ul class="proc-ul">
+			<li th:each="proc:${entry.value}">
+				<input type="checkbox" class="proc-item" name="procItem" th:value="${proc['procId']}"/><span  th:text="${proc['procName']}"></span>
+			</li>									
+		</ul>
+	</ul>
+	<script  th:inline="javascript">
+//<![CDATA[ 
+$(function(){
+	var context = /*[['#'+${viewId}]]*/;
+	$(".proc-select-down",context).click(function(){
+		var self=$(this);
+		var checked=self.attr("checked");
+		if(checked){
+			self.parent().nextAll("ul").find(":checkbox").attr("checked","checked");
+		}else{
+			self.parent().nextAll("ul").find(":checkbox").removeAttr("checked");
+		}
+	});
+	$(".toggle-hide").click(function(){
+		var self=$(this);
+		self.parent().nextAll("ul").toggleClass("hide");
+	});
+	//$(".second-toggle-hide",context).trigger("click");
+});
+//]]>
+</script>
+</div>

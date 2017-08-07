@@ -1,0 +1,75 @@
+<div id="selectIcon" style="min-width:900px">
+<style>
+#selectIcon{
+	margin: 5px;
+}
+.icons{
+	padding: 8px;
+	cursor: pointer;
+	line-height: 35px;
+	font-size: 14px;
+}
+
+.tab-pane span{
+	display:inline-block;
+	min-width:35px;
+}
+
+.icons_hover{
+	padding:7px;
+	border:1px solid #ccc;
+}
+
+</style>
+	<div id="iconSet" data-widget="tab">
+		<ul id="myTab" th:remove="all-but-first">
+		  <li th:each="iconSet : ${iconSets}">
+		  	<a href="#home" th:href="'#' + ${iconSet.name}" th:text="${iconSet.name}">Home</a>
+		  </li>
+		</ul>
+		
+		  <div th:each="iconSet : ${iconSets}" style="text-align: justify;" class="tab-pane" id="home" th:id="${iconSet.name}">
+		  	<span th:each="icon : ${iconSet.icons}">
+		  		<img th:if="${!#strings.isEmpty(icon.url)}" class="icons icons-template"  alt="" th:alt="${icon.name}"  
+		  	 	th:title="${icon.name}" src="" th:src="${themes.icon(icon.url)}" th:attr="data-url=${icon.url}"/>
+		  	 	
+		  	 	<i th:if="${#strings.isEmpty(icon.url)}"  class="icons icons-template" alt=""  th:alt="${icon.name}"  
+		  	 		th:title="${icon.name}" th:classappend="${icon.name}"  th:attr="data-url=${icon.name}"></i>
+		  	</span>
+		  	 
+		  </div>		
+	</div>
+	<div class="ui-dialog-buttonset">
+	
+	</div>
+	<script type="text/javascript"  th:inline="javascript" >
+	$(function(){
+		var context = "#selectIcon";
+		var selected = "icon-selected";
+		var hover = "icon-hover";	
+		
+		function init(){
+			$(".tab-pane:first, #myTab li:first", context).addClass("active");
+		};
+		init();
+		
+		$('#myTab a', context).click(function (e) {
+			e.preventDefault();
+			$(this).tab('show');
+		})
+		
+		$(".icons-template", context).hover(
+			function(){
+				$(this).addClass("icons_hover");
+			},
+			function(){
+				$(this).removeClass("icons_hover");
+			}
+		).click(function(){
+			var url = $(this).attr("data-url");
+			jQuery.dialogReturnValue(url);
+			$(context).dialogClose();
+		});
+	});
+	</script>
+</div>

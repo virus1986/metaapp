@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" height="100%" multiSelect="true" multiSelectKey="None" shrinkToFit="true" viewFunc="system/workflow.itemViewByInst" editUrl="~/entities/WfProcInst/edit" deleteUrl="~/entities/WfProcInst/delete" createUrl="~/entities/WfProcInst/create" dataUrl="~/entities/WfProcInst/query_paged" entityName="WfProcInst" id="grid_1fdacec2-f9a5-4bfc-b3bc-12bb158d7621">
+    <appearanceSettings caption="我发起的流程"/>
+    <columns>
+        <column visible="false" width="100" primaryKey="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="id"/>
+        <column visible="false" text="业务流程" width="200" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="businessData"/>
+        <column visible="false" text="提交时间" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="100" dataField="startTime"/>
+        <column text="主题" dataField="title" width="200" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" />
+        <column text="流程名称" dataField="wfproc.procName" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="150"/>
+        <column text="状态" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="status"/>
+        <column text="当前环节" dataField="currentActivityTitle" sortable="false" width="100" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="false" textAlign="Left"/>
+    	<column text="耗时" dataField="duration" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80">
+        	<millisecondFormatter unit="m"/>
+        </column>
+    </columns>
+    <contextButtons>
+    </contextButtons>
+    <toolBarSetting>
+        <button isInMoreBtns="false" cssClass="" name="fresh" buttonIcon="main/button-load.png" onClick="grid.refreshGrid"/>
+        <button isInMoreBtns="false" cssClass="" name="search" buttonIcon="main/search-add.png" onClick="grid.advanceSearch"/>
+        <button isInMoreBtns="false" cssClass="" name="export" buttonIcon="main/file-send.png" onClick="grid.exportGrid"/>
+    </toolBarSetting>
+    <joinEntities>
+    	<entity name="wfproc" alias="wfproc" joinExpression="left join wfproc wfproc on WfProcInst.businessType=wfproc.procId"/>
+    </joinEntities>
+    <filter groupOp="AND">
+        <filters>
+        </filters>
+        <rules>
+            <rule data="@{env.User.Id}" field="WfProcInst.starterId" op="eq"/>
+        </rules>
+    </filter>
+    <orderby>
+         <rule direction="Desc" field="createTime"/>
+    </orderby>
+    <quickSearch searchColNum="4">
+        <column dataField="title"/>
+    </quickSearch>
+    <addDialogSettings/>
+    <editDialogSettings/>
+    <viewDialogSettings/>
+</grid>

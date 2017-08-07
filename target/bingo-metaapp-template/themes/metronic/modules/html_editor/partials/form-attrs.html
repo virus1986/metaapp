@@ -1,0 +1,43 @@
+<div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	<h3>窗体基本属性</h3>
+</div>
+<div class="modal-body">
+	<form class="form-horizontal" id="form-attr-edit-form">
+	  <div class="control-group">
+	    <label class="control-label">显示名称：</label>
+	    <div class="controls">
+	      <input type="text" id="displayName" name="displayName" ng-model="formLayout.displayName" required="required"/>
+	    </div>
+	  </div>
+	  <div class="control-group">
+	    <label class="control-label">窗体类型：</label>
+	    <div class="controls">
+	        <label class="radio inline">
+				<input id="type_0" name="type"  ng-model="formLayout.type" value="main"  type="radio" />
+				<span class="lbl">主窗体</span>
+			</label><label class="radio inline">
+				<input id="type_1" name="type" ng-model="formLayout.type" value="partial" type="radio" />
+				<span class="lbl">局部窗体</span>
+			</label>
+	    </div>
+	  </div>
+	  <div class="control-group">
+	    <label class="control-label">窗体风格：</label>
+	    <div class="controls">
+	     	<label class="radio inline">
+				<input class="ace" id="converter_0" name="converter" ng-model="formLayout.converter"  value="form_template"  type="radio" />
+				<span class="lbl">弹出窗口式</span>
+			</label><label class="radio inline">
+				<input id="converter_1" name="converter" ng-model="formLayout.converter" value="form_template_tab" type="radio" />
+				<span class="lbl">Tab中打开式</span>
+			</label><label class="radio inline">
+				<input id="converter_2" name="converter" ng-model="formLayout.converter" value="form_template_workflow" type="radio" />
+				<span class="lbl">流程表单</span>
+			</label>
+	    </div>
+	  </div>
+	</form>
+</div>
+<div class="modal-footer"> 
+	<a class="btn btn-primary" data-dismiss="modal">关闭</a> 
+</div>

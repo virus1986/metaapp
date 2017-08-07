@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" height="280" multiSelect="true" multiSelectKey="None" shrinkToFit="true" editUrl="~/entities/wfCommonOpinion/edit" deleteUrl="~/entities/wfCommonOpinion/delete" createUrl="~/entities/wfCommonOpinion/create?procId=@{Request('procId')}" dataUrl="~/entities/wfCommonOpinion/query_paged" entityName="wfCommonOpinion" id="grid_3e6508d0-de5c-419f-b39e-4ebc6777e08d">
+    <columns>
+        <column width="30" primaryKey="true" visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="id"/>
+        <column width="30" primaryKey="true" visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="procId"/>
+         <column width="300" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="content">
+        	<titleFieldFormatter/>
+        </column>
+        <column width="100" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="createdTime"/>
+    </columns>
+    <contextButtons>
+        <button name="edit"/>
+        <button name="delete"/>
+    </contextButtons>
+    <toolBarSetting>
+        <button name="create"/>
+        <button name="edit"/>
+        <button name="delete"/>
+        <button name="fresh"/>
+    </toolBarSetting>
+    <joinEntities>
+    </joinEntities>
+    <filter groupOp="AND">
+        <filters>
+        </filters>
+        <rules>
+        	 <rule data="@{Request('procId')}" field="procId" op="eq"/>
+        </rules>
+    </filter>
+     <orderby>
+    	<rule direction="Desc" field="createdTime"/>
+    </orderby>
+    <quickSearch>
+        <column dataField="content"/>
+    </quickSearch>
+    <addDialogSettings/>
+    <editDialogSettings/>
+    <viewDialogSettings/>
+</grid>

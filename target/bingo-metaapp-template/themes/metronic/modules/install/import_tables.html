@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>云应用平台安装向导</title>
+<link rel="stylesheet"
+	th:href="${themes.file('modules/install/style/style.css')}" />
+</head>
+<body>
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="btn btn-navbar" data-toggle="collapse"
+					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span>
+				</a> <a class="brand" href="index.html"> <img
+					th:src="${themes.file('modules/install/style/logo.png')}"
+					alt="logo" />
+				</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav pull-right">
+						<li><a href="javascript://">功能特性</a></li>
+						<li><a href="http://developer.bingosoft.net/blog">博客</a></li>
+						<li><a href="javascript://">联系我们</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="box_sign">
+		<div class="container">
+			<div class="span12 box_wrapper">
+				<div class="span12 head-info" style="width:70%">
+					<i class="i_loading"></i>云应用平台安装
+				</div>
+				<div class="span12 box" style="width:70%">
+					<div>
+						<div class="head">
+							<h4>Step 2 of 3:实体导入</h4>
+						</div>
+						<div class="alert alert-info">
+							<i	class="icon-info-sign"></i> 请选择转成实体的物理表，物理表转成实体后，可通过系统提供的实体管理功能，对其属性进行动态设置。
+						</div>
+						<div class="form">
+							<div class="row-fluid">
+								<div class="span5">
+									<select id="from" multiple="multiple"
+										style="min-height: 350px;">
+										<option th:each="table:${tables}" th:value="${table}"
+											th:text="${table}"></option>
+									</select>
+								</div>
+								<div class="span2" >
+									<div style="margin-top: 50px;">
+									<a id="chooseAll" class="btn" href="javascript://"><i
+										class="icon-forward"></i> 全选</a><br />
+									<br /> <a id="chooseSelected" class="btn" href="javascript://"><i
+										class="icon-arrow-right"></i> 单选</a><br />
+									<br /> <a id="removeSelected" class="btn" href="javascript://"><i
+										class="icon-arrow-left"></i> 移除</a><br />
+									<br /> <a id="removeAll" class="btn" href="javascript://"><i
+										class="icon-backward"></i> 清空</a><br />
+									<br />
+									</div>
+								</div>
+								<div class="span5">
+									<select id="to" multiple="multiple" style="min-height: 350px;"></select>
+								</div>
+							</div>
+							<input id="skip" type="button" class="btn btn-success" value="跳过" />&nbsp;&nbsp;&nbsp;&nbsp;
+							<input id="import-tables-btn" type="button" class="btn btn-primary" value="下一步" />
+						</div>
+						<div class="alert alert-info msg" style="display:none">
+                        	<a class="close" data-dismiss="alert">×</a>
+						  	<i class="icon-ok"></i> 系统数据初始化中，请稍等...
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer id="footer">
+		<div class="container">
+			<hr />
+			<div class="row copyright">
+				<div class="span4">
+					<h3>Relation</h3>
+					<a href="javascript://" class="social fb"> <i class="i_facebook"></i>
+					</a> <a href="javascript://" class="social tw"> <i class="i_twitter"></i>
+					</a> <a href="javascript://" class="social yt"> <i class="i_youtube"></i>
+					</a>
+				</div>
+				<div class="span3 offset5 copy">
+					<p>2012 - developer.bingosoft.net</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<script type="text/javascript"
+		th:src="${themes.file('modules/install/scripts/jquery.js')}"></script>
+	<script type="text/javascript"
+		th:src="${themes.file('modules/install/scripts/bootstrap.min.js')}"></script>
+	<script type="text/javascript"
+		th:src="${themes.file('modules/install/scripts/theme.js')}"></script>
+	<script type="text/javascript"
+		th:src="${themes.file('modules/install/scripts/jquery.json.js')}"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(function(){
+			var contextPath=/*[[${contextPath}]]*/"";
+			var tName=/*[[${tName}]]*/"";
+			function goNext(){
+				window.location.href="over?_tname="+tName;
+			};
+			
+			$("#skip").click(function(){
+				goNext();
+			});
+			
+			$("#import-tables-btn").click(function(){
+				var tables=[];
+				$("#to option").each(function(){
+					var value=$(this).val();
+					tables.push(value);
+				});
+				
+				if(tables.length>0){
+					var url=contextPath+"/rest/metadata/entities/import_existed_tables_default?_tname="+tName;
+					var requestParams={
+						url:url,
+						data:JSON.stringify(tables),
+						type:"post",
+						dataType:"json",
+						contentType:'application/json',
+						success:function(response) {
+							$(".msg").removeClass("alert-info");
+							$(".msg").addClass("alert-success");
+							$(".msg").html("物理表导入成功。页面将自动跳转进入下一步！");
+							window.setTimeout(function(){
+								goNext();
+							},2000);
+						},
+						error:function(xhr, textStatus, errorThrown){
+							self.removeAttr("disabled");
+							$(".msg").removeClass("alert-info");
+							$(".msg").addClass("alert-error");
+							$(".msg").html("系统数据初始化错误！");
+						}
+					};
+					var self=$(this);
+					self.attr("disabled","disabled");
+					$(".msg").show();
+					$.ajax(requestParams);
+				}else{
+					var skip=false;
+					if(confirm("尚未导入任何实体，确认将跳过本步骤，是否继续？")){
+						skip=true;
+					}else{
+						skip=false;
+					}
+					if(skip){
+						$("#skip").trigger("click");
+					}
+				}
+			});
+			$("#chooseAll").click(function(){
+				var tables=[];
+				$("#from option").each(function(){
+					var value=$(this).val();
+					tables.push(value);
+				});
+				var options=[],len=tables.length,_table;
+				for(var i=0;i<len;++i){
+					_table=tables[i];
+					options.push("<option value='"+_table+"'>"+_table+"</option>")
+				}
+				if(options.length>0){
+					$("#to").append(options.join(""));
+					$("#from").empty();
+				}
+			});
+			$("#chooseSelected").click(function(){
+				var tables=[];
+				$("#from option:selected").each(function(){
+					var value=$(this).val();
+					tables.push(value);
+				});
+				var options=[],len=tables.length,_table;
+				for(var i=0;i<len;++i){
+					_table=tables[i];
+					options.push("<option value='"+_table+"'>"+_table+"</option>");
+					$("option[value="+_table+"]","#from").remove();
+				}
+				if(options.length>0){
+					$("#to").append(options.join(""));
+				}
+			});
+			$("#removeSelected").click(function(){
+				var tables=[];
+				$("#to option:selected").each(function(){
+					var value=$(this).val();
+					tables.push(value);
+				});
+				var options=[],len=tables.length,_table;
+				for(var i=0;i<len;++i){
+					_table=tables[i];
+					options.push("<option value='"+_table+"'>"+_table+"</option>");
+					$("option[value="+_table+"]","#to").remove();
+				}
+				if(options.length>0){
+					$("#from").append(options.join(""));
+				}
+			});
+			$("#removeAll").click(function(){
+				var tables=[];
+				$("#to option").each(function(){
+					var value=$(this).val();
+					tables.push(value);
+				});
+				var options=[],len=tables.length,_table;
+				for(var i=0;i<len;++i){
+					_table=tables[i];
+					options.push("<option value='"+_table+"'>"+_table+"</option>");
+				}
+				if(options.length>0){
+					$("#from").append(options.join(""));
+					$("#to").empty();
+				}
+			});
+		});
+		/*]]>*/
+	</script>
+
+</body>
+</html>

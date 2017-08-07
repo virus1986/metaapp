@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div class="panel apply-panel" style="min-width:950px;" th:id="${viewId}">
+  <form class="form-horizontal ajaxpost" data-widget="validator"
+    id="entityForm" method="post" th:action="${requestUrl}" th:object="${entity}">
+    <input meta:field="*{id}" type="hidden"/>
+    <div class="table-dialog">
+      <div class="ui-dialog-title" th:switch="${action}">
+        <span th:case="'EDIT'" th:text="#{common.edit}+${metaEntity.displayName}"/>
+        <span th:case="'CREATE'" th:text="#{common.create}+${metaEntity.displayName}"/>
+        <span th:case="'VIEW'" th:text="#{common.view}+${metaEntity.displayName}"/>
+        <span th:case="*" th:text="#{common.notExistAction}+${action}"/>
+      </div>
+      <div class="ui-dialog-content container-fluid">
+          <table class="form-section form-table col4-fluid">
+                <caption>
+                  <span th:text="#{security.permissionRule.ruleCaption}"></span>
+                </caption>
+                <tr>
+                  <th>
+                    <label><meta:display-name field="name"/>:</label>
+                  </th>
+                  <td>
+                    <input meta:field="name"/>
+                  </td>
+                  <th>
+                    <label><meta:display-name field="priority"/>:</label>
+                  </th>
+                  <td>
+                    <input meta:field="priority"/>
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    <label><meta:display-name field="scopeType"/>:</label>
+                  </th>
+                  <td>
+                   	<input meta:field="scopeType" readonly="readonly"/>
+                  </td>
+                  <th>
+                    <label th:text="#{security.permissionRule.scopeName}+':'"></label>
+                  </th>
+                  <td>
+                   	<lable th:text="${scopeName}"></lable>
+                   	<input type="hidden" meta:field="operationId"/>
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    <label><meta:display-name field="rule"/>:</label>
+                  </th>
+                  <td colspan="3">
+                    <input meta:field="RULE"/>
+                  </td>
+                </tr>
+              </table>
+      </div>
+      <div class="ui-dialog-buttonset">
+        <button class="btn btn-primary" name="save"
+          th:if="${action} != 'VIEW'" type="submit" th:text="#{common.save}">
+					</button>
+        <button class="btn closeBtn" name="close"
+          th:text="(${action} != 'VIEW')? #{common.cancel} : #{common.close}" type="button">
+					</button>
+      </div>
+    </div>
+  </form>
+  <script th:inline="javascript" type="text/javascript">
+//<![CDATA[ 
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		Form.init("#"+viewId,"#entityForm");
+	});
+//]]></script>
+</div>

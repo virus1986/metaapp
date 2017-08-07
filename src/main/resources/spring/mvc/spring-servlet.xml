@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+                           http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.2.xsd"
+                           default-autowire="byType">
+
+
+	<!-- **************************************************************** -->
+	<!-- RESOURCE FOLDERS CONFIGURATION -->
+	<!-- Dispatcher configuration for serving static resources -->
+	<!-- **************************************************************** -->
+	<mvc:resources location="/themes/" mapping="/themes/**" />
+	<mvc:resources location="/statics/" mapping="/statics/**" />
+	<mvc:resources location="/favicon.ico" mapping="/favicon.ico" />
+
+
+	<!-- **************************************************************** -->
+	<!-- SPRING ANNOTATION PROCESSING -->
+	<!-- **************************************************************** -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+	        <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+	        	<property name="supportedMediaTypes">
+					<list>
+						<value>text/html;charset=UTF-8</value>
+					</list>
+				</property>
+	        </bean>
+	        <bean class="bingo.metaapp.web.springmvc.MappingJacksonHttpMessageConverterEx">
+	        </bean>
+	        <bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
+    	</mvc:message-converters>
+    	<mvc:argument-resolvers>  
+           <bean class="bingo.metaapp.web.springmvc.method.annotation.FormModelMethodArgumentResolver"/>  
+        </mvc:argument-resolvers>
+	</mvc:annotation-driven>
+	<!--locale resolver-->
+	<bean id="localeResolver" class="bingo.metaapp.web.springmvc.CookieLocaleResolver">
+		<property name="cookieName" value="lang"/>
+		<property name="cookieMaxAge" value="100000"/>
+	</bean>
+	<!--Interceptor-->
+	<mvc:interceptors>
+		<bean class="bingo.metaapp.web.springmvc.LocaleChangeInterceptor">
+			<property name="paramName" value="lang"/>
+		</bean>
+    	<!--视图拦截器-->
+    	<bean class="bingo.metaapp.web.springmvc.ModelAndViewHandlerInterceptor">
+    		<property name="notUseMasterpagePattern">
+    			<list>
+    				<value>install</value>
+    				<value>html_editor</value>
+    				<value>workflow_designer</value>
+    			</list>
+    		</property>
+    	</bean>
+	</mvc:interceptors>
+
+	<context:component-scan base-package="bingo.metaapp.web">
+		<context:include-filter type="regex" expression=".*Controller" />
+		<context:include-filter type="regex" expression=".*Resource" />
+		<context:exclude-filter type="regex" expression=".*Test.*" />
+	</context:component-scan>
+
+	<!-- **************************************************************** -->
+	<!-- THYMELEAF-SPECIFIC ARTIFACTS -->
+	<!-- TemplateResolver <- TemplateEngine <- ViewResolver -->
+	<!-- **************************************************************** -->
+
+    <!-- 模板解析分发器 -->
+	<bean id="templateResolverDispatcher" class="bingo.metaui.core.thymeleaf.MultiTemplateResolver">
+		<property name="resolvers">
+			<map>
+				<entry key="file" value-ref="fileTemplateResolver">
+				</entry>
+				<entry key="db">
+					<!-- 数据库模板解析 -->	
+					<bean class="bingo.metaui.core.thymeleaf.DbTemplateResolver">
+						<property name="characterEncoding" value="utf-8"></property>
+						<property name="templateMode" value="XHTML" />
+						<!--开发阶段禁用视图缓存-->
+						<property name="cacheable" value="false"></property>
+				    	<property name="cacheTTLMs" value="0"></property>
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<!-- 文件模板解析 -->
+	<bean id="fileTemplateResolver"
+		class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+		<property name="prefix" value="/" />
+		<property name="suffix" value=".html" />
+		<property name="characterEncoding" value="utf-8"></property>
+		<property name="templateMode" value="XHTML" />
+		<!--开发阶段禁用视图缓存-->
+		<property name="cacheable" value="false"></property>
+    	<property name="cacheTTLMs" value="0"></property>
+	</bean>
+	<bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
+		<property name="templateResolver" ref="templateResolverDispatcher" />
+		<property name="dialects">
+			<set>
+				<bean class="org.thymeleaf.spring3.dialect.SpringStandardDialect" />
+				<bean class="bingo.metaui.core.thymeleaf.MetaDialect" />
+				<bean class="bingo.metaapp.js.thymeleaf.WroDialect" />
+			</set>
+		</property>
+	</bean>
+
+	<bean name="jspViewResolver"	class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/" />
+		<property name="suffix" value=".jsp" />
+		<property name="order" value="1" />
+	</bean>
+
+	<bean id="viewResolver" class="bingo.metaapp.web.springmvc.MultiViewResolver">
+		<property name="order" value="0" />
+		<property name="resolvers">
+			<map>
+				<entry key="jsp" value-ref="jspViewResolver">
+				</entry>
+				<entry key="html">
+					<bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
+						<property name="templateEngine" ref="templateEngine" />
+						<property name="characterEncoding" value="UTF-8" />
+						<property name="cache" value="false" />
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<!-- 错误处理
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver"/>-->
+	<bean id="exceptionResolver" class="bingo.metaapp.web.springmvc.SimpleMappingExceptionResolverEx">
+		<!--根据抛出的错误类，查找错误视图-->
+		<property name="exceptionMappings">
+			<props>
+                <prop key="bingo.metaapp.web.common.exception.Exception404">common/error_404</prop> 
+				<prop key="java.lang.Exception">common/error</prop>    
+			</props>
+		</property>
+		<!--默认错误视图-->
+		<property name="defaultErrorView" value="common/error"/>
+		<!--根据错误视图名称，设置请求返回httpStatusCode-->
+		<property name="statusCodes">
+			<map>
+				<entry key="common/error_404" value="404"></entry>
+				<entry key="common/error" value="500"></entry>
+			</map>
+		</property>
+	</bean>
+
+</beans>
+
+

@@ -1,0 +1,80 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:850px;">
+<style>
+<!--
+#createScriptLibForm {
+	height: 400px;
+}
+#createScriptLibTable {
+	margin-top: 20px;
+	width: 100%;
+	border: none;
+}
+#scriptContent {
+	height: 320px;
+	border: 1px solid #ccc;
+	font-size:14px;
+	margin-left: 35px;
+}
+-->
+</style>
+  <form id="createScriptLibForm"  th:object="${entity}" data-widget="validator" method="post" class="form-horizontal ajaxpost">
+  <div class="row-fluid">
+  	<div class="span12">
+  	<table class="form-table col4-fluid" id="createScriptLibTable">
+		<tbody>
+			<tr>
+				<th><label><meta:display-name field="displayName"/>:</label></th>
+				<td>
+				<input meta:field="displayName" class="input-large" disabled="true"/>
+				</td>
+				
+				<th><label><meta:display-name field="name"/>:</label></th>
+				<td>
+				<input meta:field="name" disabled="true" class="input-large"/>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+  	</div>
+  </div>
+  	<div class="row-fluid">
+  		<div class="span11">
+  			<input type="hidden" meta:field="content"/>
+  			<div class="span10" id="scriptContent"></div>
+  		</div>
+  	</div>
+	<div class="ui-dialog-buttonset">
+		<button type="button" class="btn closeBtn" th:text="#{common.close}"></button>
+	</div>
+	</form>
+<script th:inline="javascript">
+//<![CDATA[ 
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var context = "#"+viewId;
+		var contentEditor = "scriptContent";
+		var editor = null;
+		
+		function init(){
+			var name = $("[name='displayName']", context).val();
+			setCurrentTitle(context, i18n.t("scriptlib.view.title",name));
+			initEditor(contentEditor);
+			Page.init(context);
+		};
+		reqModule(["ace"],function(){
+			init();
+		});
+		
+		function initEditor(id){
+		    editor = ace.edit(id);
+		    editor.setTheme("ace/theme/eclipse");
+		    editor.getSession().setMode("ace/mode/javascript");
+		    var content = $("#content", context).val();
+		    editor.setValue(content);
+		    editor.clearSelection();
+		    editor.setReadOnly(true);
+		}
+	});
+//]]> 
+</script>
+</div>

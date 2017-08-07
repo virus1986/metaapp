@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<metadata xmlns="http://schemas.bingosoft.net/metabase/metadata" xsi:schemaLocation="http://schemas.bingosoft.net/metabase/metadata http://schemas.bingosoft.net/metabase/1.0/metadata.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <entities>
+        <entity is-display="false" display-for="{manage:true}" display-name="test" inherits-persistence="PerEntity" name="test" is-system="false" table="new_test">
+            <field column="created_time" data-type="DateTime" default-value="@{env.Now}" is-display="false" display-for="{list:true,form:false}" display-name="创建时间" display-order="2" field-type="DateTime" unique="false" name="createdTime" nullable="true" semantics="Created" sql-type="timestamp" is-system="true"/>
+            <field column="modified_time" data-type="DateTime" default-value="@{env.Now}" is-display="false" display-for="{list:true,form:false}" display-name="修改时间" display-order="2" field-type="DateTime" unique="false" name="modifiedTime" nullable="true" semantics="Updated" sql-type="timestamp" is-system="true"/>
+            <field column="modified_by" data-type="Guid" default-value="@{env.User.id}" is-display="false" display-for="{list:true,form:false}" display-name="修改人" display-order="2" field-type="SingleLineText" unique="false" length="36" name="modifiedBy" nullable="true" ref-entity="User" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="created_by" data-type="Guid" default-value="@{env.User.id}" is-display="false" display-for="{list:true,form:false}" display-name="创建人" display-order="2" field-type="SingleLineText" unique="false" length="36" name="createdBy" nullable="true" ref-entity="User" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="name" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="名称" display-order="2" field-type="SingleLineText" unique="false" length="50" name="name" nullable="false" semantics="Title" sql-type="varchar" is-system="true"/>
+            <field column="_wen_ben" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="文本" display-order="100" field-type="SingleLineText" unique="false" length="500" name="WenBen" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="_ri_qi" data-type="Date" is-display="true" display-for="{list:true,form:true}" display-name="日期" display-order="100" field-type="Date" unique="false" name="RiQi" nullable="true" sql-type="date" is-system="false"/>
+            <field column="_fu_wen_ben" data-type="Text" is-display="true" display-for="{list:true,form:true}" display-name="富文本" display-order="100" field-type="RichText" unique="false" length="5000" name="FuWenBen" nullable="true" sql-type="longvarchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="5000"/>
+                    <param name="mode" value="large"/>
+                </field-type-params>
+            </field>
+            <field column="_dai_ma" data-type="Code" is-display="true" display-for="{list:true,form:true}" display-name="代码" display-order="100" field-type="Code" unique="false" length="8000" name="DaiMa" nullable="true" sql-type="varchar" is-system="false"/>
+            <field column="_duo_xing_wen_ben" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="多行文本" display-order="100" field-type="MultiLineText" unique="false" length="2000" name="DuoXingWenBen" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="2000"/>
+                </field-type-params>
+            </field>
+            <field column="_wen_jian_shang_chuan" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="文件上传" display-order="100" field-type="Upload" unique="false" length="255" name="WenJianShangChuan" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="fileSuffix" value="*"/>
+                    <param name="maxSize" value="10"/>
+                </field-type-params>
+            </field>
+            <field column="url" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="url" display-order="100" field-type="Url" unique="false" length="255" name="url" nullable="true" sql-type="varchar" is-system="false"/>
+            <field column="_you_jian" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="邮件" display-order="100" field-type="Email" unique="false" length="255" name="YouJian" nullable="true" sql-type="varchar" is-system="false"/>
+            <field column="_tu_pian" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="图片" display-order="100" field-type="Photo" unique="false" length="255" name="TuPian" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="height" value="100"/>
+                    <param name="width" value="100"/>
+                </field-type-params>
+            </field>
+            <field column="_shi_jian_chuo" data-type="Timestamp" is-display="true" display-for="{list:true,form:true}" display-name="时间戳" display-order="100" field-type="Timestamp" unique="false" name="ShiJianChuo" nullable="true" sql-type="timestamp" is-system="false"/>
+            <field column="_shi_fu" data-type="Boolean" is-display="true" display-for="{list:true,form:true}" display-name="是否" display-order="100" field-type="Boolean" input-type="Tile" unique="false" name="ShiFu" nullable="true" sql-type="boolean" is-system="false"/>
+            <field column="_bai_fen_bi" data-type="Decimal" is-display="true" display-for="{list:true,form:true}" display-name="百分比" display-order="100" field-type="Percent" unique="false" name="BaiFenBi" nullable="true" sql-type="decimal" is-system="false"/>
+            <field column="_duo_xuan_xiang" data-type="String" default-value="blue" is-display="true" display-for="{list:true,form:true}" display-name="多选项" display-order="100" field-type="MultiOptions" input-type="Dropdown" unique="false" length="255" name="DuoXuanXiang" nullable="true" option-set="Color" sql-type="varchar" is-system="false"/>
+            <field column="_fu_dian_shu" data-type="Double" is-display="true" display-for="{list:true,form:true}" display-name="浮点数" display-order="100" field-type="Double" unique="false" name="FuDianShu" nullable="true" sql-type="double" is-system="false">
+                <field-type-params>
+                    <param name="scale" value="2"/>
+                    <param name="precision" value="19"/>
+                </field-type-params>
+            </field>
+            <field column="_huo_bi" data-type="Decimal" is-display="true" display-for="{list:true,form:true}" display-name="货币" display-order="100" field-type="Money" unique="false" name="HuoBi" nullable="true" sql-type="decimal" is-system="false">
+                <field-type-params>
+                    <param name="unit" value="元"/>
+                </field-type-params>
+            </field>
+            <field column="_ri_qi_shi_jian" data-type="DateTime" is-display="true" display-for="{list:true,form:true}" display-name="日期时间" display-order="100" field-type="DateTime" unique="false" name="RiQiShiJian" nullable="true" sql-type="timestamp" is-system="false"/>
+            <field column="_zheng_shu" data-type="Integer" is-display="true" display-for="{list:true,form:true}" display-name="整数" display-order="100" field-type="Integer" unique="false" name="ZhengShu" nullable="true" sql-type="integer" is-system="false"/>
+            <field column="_dan_xuan_xiang" data-type="String" default-value="M" is-display="true" display-for="{list:true,form:true}" display-name="单选项" display-order="100" field-type="SingleOption" input-type="Dropdown" unique="false" length="255" name="DanXuanXiang" nullable="true" option-set="sex" sql-type="varchar" is-system="false"/>
+            <field column="_shu_zi" data-type="Decimal" is-display="true" display-for="{list:true,form:true}" display-name="数字" display-order="100" field-type="Decimal" unique="false" name="ShuZi" nullable="true" sql-type="decimal" is-system="false">
+                <field-type-params>
+                    <param name="scale" value="2"/>
+                    <param name="precision" value="19"/>
+                </field-type-params>
+            </field>
+            <id column="id" data-type="Guid" is-display="false" display-name="主键" display-order="0" unique="false" length="36" name="id" nullable="false" sql-type="varchar" summary="Primary key, identity of a record!" is-system="true"/>
+            <many-to-one display-name="创建人" field="createdBy" field-order="2" field-ref="id" is-abstract="true" is-display="true" name="user" optional="false" target-entity="User"/>
+            <many-to-one display-name="修改人" field="modifiedBy" field-order="2" field-ref="id" is-abstract="true" is-display="true" name="user1" optional="false" target-entity="User"/>
+        </entity>
+    </entities>
+</metadata>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:substituteby="'/themes/'+${theme}+'/modules/common/statics'::head">
+</head>
+<body class="container-index">
+    <div class="wrapper master-page">
+        <div class="wrapper">
+            <!-- 顶部信息 -->
+            <div id="header" class="header" th:style="'background-image: url(' + ${themes.statics('/skins/default/module/baseframe/images/bg-header.jpg')} + ')'">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="container">
+                            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                                class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                            </a>
+                            <div class="sys_logo">
+                                <div class="sys_logo_content">
+                                    <div class="sys_logo_img">
+                                        <img th:src="${#strings.isEmpty(config['Profile.App.Banner'])}?${contextPath}+'/themes/default/statics/images/bingocclogo.png':${contextPath}+'/install/upload?action=download&amp;filepath=' + ${config['Profile.App.Banner']}" src="/boss/themes/default/statics/images/bingocclogo.png" th:title="#{master.bingoCloud}" th:alt="#{master.bingoCloud}" /></div>
+                                    <div class="sys_logo_title" th:text="${config != null?config['Profile.App.Title']:#messages.msg('master.notSetup')}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nav-collapse pull-right">
+                                <ul class="nav">
+                                </ul>
+                                <ul class="nav pull-right">
+                                    <li class="dropdown">
+	                                    <a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">
+	                                    	<span th:text="${#messages.msg('master.welcomeInfo',user.name)}"></span><b class="caret"></b>
+	                                    </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="./login/logout" th:text="#{master.logout}"></a></li>
+                                           <!--  <li><a href="javascript://" th:text="#{master.personalInfo}"></a></li>
+                                            <li><a href="javascript://" th:text="#{master.changePassward}"></a></li> -->
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown"><a href="javascript://" class="dropdown-toggle" data-toggle="dropdown"><span th:text="#{master.setup}">
+                                        </span><b class="caret"></b></a>
+                                        <ul class="dropdown-menu">
+                                            <!-- <li id="master-addPluginModule"><a href="javascript://" th:text="#{master.addModule}"></a></li> -->
+                                            <li id="master-toggleAppSkin"><a href="javascript://" th:text="#{master.toggleSkin}"></a></li>
+                                        </ul>
+                                    </li>
+                                    <!-- <li class="dropdown"><a href="javascript://" id="reportBug" class="dropdown-toggle"
+										data-toggle="dropdown"><span th:text="#{master.feedback}"></span></a></li> -->
+                                </ul>
+                            </div>
+                            <div>
+                            </div>
+                            <!-- /.nav-collapse -->
+                        </div>
+                    </div>
+                    <!-- /navbar-inner -->
+                </div>
+                <!-- /navbar -->
+            </div>
+            <!-- 导航菜单 -->
+            <div id="sidebar" class="sidebar">
+                <div class="siderbar-h2">
+                    <div id="nav-global-search" class="form-search">
+					  <div class="input-append">
+					    <div class="menubar-search">
+							<input type="text" class="search-query span2" th:placeholder="#{master.navSearchPlaceholder}"/>
+					    	<div class="searchResultBox" style="display:none;height:300px;overflow-y: auto;overflow-x:hidden;background-color: #fff;"></div>
+						</div>
+					  </div>
+					</div>
+                </div>
+                <div id="menuTreeCon" th:include="'/themes/'+${theme}+'/modules/common/root_menu'::rootmenu">
+                </div>
+            </div>
+            <!-- 内容区域 -->
+            <div id="content" class="content" style="height: 800px">
+                <div class="ui-tabs" id="tab-container" style="padding-right: 0px">
+                    <div id="default-content" class="default-content-tab" th:if="${contentPage}">
+                        <div th:substituteby="${contentPage}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="footer" class="footer">
+                <p>
+                    <span th:text="${config['Profile.App.Copyright']}"></span>(<span th:text="${config['Profile.App.Version']}">2.0.0</span>)</p>
+            </div>
+        </div>
+    </div>
+ <!--  
+<script type="text/javascript" src="http://10.201.76.179:8080/s/zh_CNfg9mof/785/3/1.2.5/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=67e578cf"></script>
+-->
+    <script th:substituteby="'/themes/'+${theme}+'/modules/common/statics'::scripts"></script>
+    <script th:inline="javascript">
+	/*<![CDATA[*/
+		$(function() {			
+	         window.ATL_JQ_PAGE_PROPS =  {
+	            "triggerFunction": function(showCollectorDialog) {
+	                //Requries that jQuery is available! 
+	                jQuery("#reportBug").click(function(e) {
+	                    e.preventDefault();
+	                    showCollectorDialog();
+	                });
+	            }
+	        };	
+			
+			
+			var isFirstLink=true;
+			//#curr-menu-name 当前菜单名称
+			//#secmenu-list 包围所有tree的外围div
+			//#root-menu 所有左下角的菜单项的外围ul
+			//外围ul>li>a[href]属性中存放对应的tree的selector
+
+			//#XXX-tree 某个菜单树
+			var currMenuName = "#curr-menu-name";
+			var secmenuList = "#secmenu-list";
+			var rootMenu = "#root-menu";
+
+			var customerTree = "#customer-tree";
+			function hideAllTree(){
+				$(".tree-menu").hide();
+			};
+
+			function loadMenuTree(selector, myUrl){
+				if(!myUrl){
+					return false;
+				}
+				$(selector).tree({
+					source : 'remote',
+					method : 'get',
+					nodeFormat : function(record) {
+						return record;
+					},
+					url : myUrl,
+					onNodeClick:function(id, text, record,node){
+						var entityName="";
+						var displayName = null;
+						if(record.parent != null) displayName = record.parent.text;
+						var divider = " > ";
+						var divider2 = " | ";
+						var dataUrl=record.dataUrl;
+						var title=null;
+						var showType=record.showType||"tab";
+						if(record.type=="fieldsNode"){
+							// 显示字段列表
+							title=displayName + divider + text;
+						}else if(record.type=="formsNode"){
+							// 显示窗体列表
+							title=displayName + divider + text;
+						}else if(record.type=="entityNode"){
+							title=text + divider2 + i18n.t("common.edit");
+						}else if(record.type=="relationNode"){
+							// 显示实体关系列表
+							title=displayName + divider + text;
+						}else if(record.type=="operationNode"){
+							// 显示实体操作列表
+							title=displayName + divider + text;
+						}else if(record.type=="securityNode"){
+							// 显示实体权限列表
+							title=displayName + divider + text;
+						}else if(record.type=="viewsNode"){
+							title=displayName + divider + text;
+						}else if(record.dataUrl){
+							title=text;
+						}
+						if(!!dataUrl){
+							if(!!showType&&showType.toLowerCase()=='cur-tab'){
+								$.openLink(dataUrl,{showType:'cur-tab',title:title,height:'100%'});
+							}else if(!!showType&&showType.toLowerCase()=='win'){
+								$.openLink(dataUrl,{showType:'win',title:title,target:title,height:'100%'});
+							}else if(!!showType&&showType.toLowerCase()=='pop-up'){
+								$.openLink(dataUrl,{showType:'pop-up',title:title});
+							}else{
+								$.openLink(dataUrl,{showType:'tab',title:title,height:'100%'});
+							}
+						}
+					},
+					contextMenu : function(record) {
+						return {
+							items : []
+						};
+					}
+				});
+			};
+
+
+			function addClickEventToRootMenu(selector){
+				$("#menuTreeCon").on("click","#root-menu>li",function(event){
+//					console.dir(this);
+
+					//改变当前菜单名称
+					var anchor = $(this).find("a.root");
+					var menuName = anchor.text();
+					changeCurrMenuName(menuName);
+
+					//读取菜单tree
+					var treeSelector = anchor.attr("href");
+					var url = anchor.attr("data-url");
+					loadMenuTree(treeSelector, url);
+
+					//显示该树
+					hideAllTree();
+					$(treeSelector).show();
+
+					//改变选中菜单的背景色
+					$(this).siblings().removeClass("current");
+					$(this).addClass("current");
+
+					event.stopPropagation();
+					event.preventDefault();
+					return false;
+				});
+			};
+
+			function changeCurrMenuName(name){
+				$(currMenuName).text(name);
+			};
+
+			hideAllTree();
+			addClickEventToRootMenu(rootMenu);
+
+			//访问页面激发点击第一菜单项事件
+			$(rootMenu + ">li:first").click();
+
+			$(".tab-link").click(function(e){
+		    	var url=$(this).attr("href");
+		    	var title=$(this).text();
+		    	$.openLink(url,{showType:'tab',title:title});
+				e.stopImmediatePropagation();
+				e.stopPropagation();
+				e.preventDefault();
+			});
+
+			$(window).resize(function() {
+				window.setTimeout(function(){
+					var contentHei = $(window).height() - $("#header").height()	- $("#footer").height();
+					var secmenuHei = contentHei - $(".rootmenu").height()- $(".siderbar-h2").height() - 6;
+					$("#sidebar").height(contentHei);
+					$("#settings").height(contentHei);
+					$("#content").height(contentHei);		
+					$("#tab-container").height(contentHei-5);
+					$(".secmenu-list").css({"overflow":"auto","height":secmenuHei});
+					$(".ui-tabs-panel","#tab-container").each(function(i,dom){
+						var jTab=$(this);						
+						Page.fitTabContentSize(jTab);
+					});
+				},100);			
+			}); 
+			$(window).trigger("resize");
+			//应用模块动态安装
+			$("#master-addPluginModule").click(function(){
+				var url=Global.contextPath+"/install/addModules";
+				$.openLink(url,{},function(resp){
+					if(resp){
+						window.location.reload();
+					}
+				});
+			});
+			//切换皮肤
+			$("#master-toggleAppSkin").click(function(){
+				var url=Global.contextPath+"/install/toggleSkin";
+				$.openLink(url,{},function(resp){
+					if(resp){
+						window.location.reload();
+					}
+				});
+			});
+			
+			$('.dropdown-toggle').dropdown();
+			//begin 导航全局搜索模块
+			 // Highlight an item in the results dropdown
+			    function selectDropdownItem (item) {
+			        if(item) {
+			        	if(selected_dropdown_item) {
+			                deselectDropdownItem($(selected_dropdown_item));
+			            }
+	            		item.addClass("input-img-selected-item");
+			            selected_dropdown_item = item;
+			        }
+			    };
+			var searchItemSelectedDom=null;
+			var inputSearch=$("input","#nav-global-search");
+			var popContainer=inputSearch.next(".searchResultBox");
+			popContainer.mouseleave(function(){
+				if(!inputSearch.is(":focus")){
+					popContainer.hide();
+					searchItemSelectedDom=null;
+				}
+			});
+			$(document).click(function(){
+				if(!inputSearch.is(":focus")){
+					popContainer.hide();
+					searchItemSelectedDom=null;
+				}
+			});
+			$("input","#nav-global-search").keydown(function(event){
+				switch(event.keyCode) {
+				case KEY.LEFT:
+                case KEY.RIGHT:
+                case KEY.UP:
+	            case KEY.DOWN:
+	            	if(!searchItemSelectedDom){
+	            		if(popContainer.find(".searchItem:first").length>0){
+	            			searchItemSelectedDom=popContainer.find(".searchItem:first");
+	            		}
+	            	}else{
+	            		if(event.keyCode==KEY.DOWN|| event.keyCode === KEY.RIGHT){
+		            		if(searchItemSelectedDom.next(".searchItem").length>0){
+		            			searchItemSelectedDom.removeClass("input-img-selected-item");
+		            			searchItemSelectedDom=searchItemSelectedDom.next(".searchItem");
+		            		}
+	            		}else{
+	            			if(searchItemSelectedDom.prev(".searchItem").length>0){
+		            			searchItemSelectedDom.removeClass("input-img-selected-item");
+		            			searchItemSelectedDom=searchItemSelectedDom.prev(".searchItem");
+		            		}
+	            		}
+	            	}
+	            	if(searchItemSelectedDom){
+	            		searchItemSelectedDom.addClass("input-img-selected-item");
+	            	}
+	            	return false;
+	            	break;
+	            case KEY.BACKSPACE:
+	            	setTimeout(function(){doSearch();}, 5);
+	            case KEY.ESCAPE:
+	            	popContainer.hide();
+	            	break;
+	            case KEY.TAB:
+                case KEY.ENTER:
+                	if(searchItemSelectedDom){
+                		doNavigate(searchItemSelectedDom);
+                		popContainer.hide();
+                		searchItemSelectedDom=null;
+                		return false;
+                		break;
+                	}
+                case KEY.NUMPAD_ENTER:
+	            default:
+	            	if(String.fromCharCode(event.which)){
+	            		setTimeout(function(){doSearch();}, 5);
+	            	}
+	            	break;
+				}
+			});
+			function doNavigate(searchItemSelectedDom){
+				var id=$(searchItemSelectedDom).attr("data-id");
+				if(searchItemSelectedDom.hasClass("navMenuSearchItem")){
+					_navigateToMenu(id,"menu");
+				}else if(searchItemSelectedDom.hasClass("entitySearchItem")){
+					_navigateToMenu(id,"entity");
+				}
+			};
+			var currentSearchKey=null;
+			function doSearch(){
+				var searchString=$("input","#nav-global-search").val();
+				currentSearchKey=searchString;
+				var url=Global.contextPath+"/navigationSearch/doSearch?keyword="+encodeURIComponent(searchString);
+				CommonLoader.loadData(null,url,null,function(html){
+					if(currentSearchKey!==searchString){
+						return false;
+					}
+					popContainer.html(html).css({
+		                position: "absolute",
+		                top: inputSearch.outerHeight()+8,//self.offset().top + 
+		                left: 2,//inputSearch.offset().left
+		                zIndex: 2000,
+		                width:$("#nav-global-search").width()-4
+		            }).show();
+					//consolelog(window._GlobalNavigationSearchResult);
+					popContainer.off("mousedown",".navMenuSearchItem");
+					popContainer.on("mousedown",".navMenuSearchItem",function(){
+						var id=$(this).attr("data-id");
+						_navigateToMenu(id,"menu");
+						popContainer.hide();
+					});
+					popContainer.off("mousedown",".entitySearchItem");
+					popContainer.on("mousedown",".entitySearchItem",function(){
+						var id=$(this).attr("data-id");
+						_navigateToMenu(id,"entity");
+						popContainer.hide();
+					});
+				},{isShowLoading:false});
+			};
+			function getSingleNavSearchDetail(id,results){
+				for(var i=0;i<results.length;++i){
+					if(id==results[i].id){
+						return results[i];
+					}
+				}
+			};
+			function navigateToDeepMenu(parentIds){
+					//consolelog("父菜单有：");
+					//consolelog(parentIds);
+				for(var i=1;i<parentIds.length;++i){
+					var nodeId=parentIds[i];
+					var parentIcon=$(".bbit-tree-ec-icon","div[nodeid="+nodeId+"]");
+					if(!parentIcon.hasClass("bbit-tree-elbow-minus")){
+						parentIcon.trigger("click");
+					}
+				}
+			};
+			function _navigateToMenu(id,type){
+				var _copyGlobalNavigationSearchResult=window._GlobalNavigationSearchResult;
+				if(!_copyGlobalNavigationSearchResult){
+					return;
+				}
+				var menuResults=null;
+				if(type=="menu"){
+					menuResults=_copyGlobalNavigationSearchResult.portalMenuResults
+				}else if(type=="entity"){
+					menuResults=_copyGlobalNavigationSearchResult.entityResults
+				}
+				var detail=getSingleNavSearchDetail(id,menuResults);
+				var parentIds=detail.parentIds;
+				if(parentIds.length===0){
+					$("#menuTreeCon #root-menu>li[data-menuid="+id+"]").trigger("click");
+				}else{
+					var realBottomId=parentIds[0];
+					var currentBottomLi=$("#menuTreeCon #root-menu>li.current");
+					var currentMenuId=currentBottomLi.attr("data-menuid");
+					if(currentMenuId!=realBottomId){
+						$("#menuTreeCon #root-menu>li[data-menuid="+realBottomId+"]").trigger("click");
+					}
+					if(parentIds.length>1){
+						if(type=="menu"){
+							navigateToDeepMenu(parentIds);//打开所有父菜单导航
+						}else if(type=="entity"){
+							Navigator.navigateToMenu(id,'fields');//实体定位已经有调用原有js
+						}
+					}
+					if(type=="menu"){
+						$("a span","div[nodeid="+id+"]").trigger("click");//点击当前菜单id的
+					}
+				}
+			};
+			// end 导航全局搜索模块
+		});
+
+		function reloadNav(){
+			var url=/*[[@{/portal/rootmenu}]]*/;;
+			CommonLoader.loadData(null,url,null,function(resp){
+				$("#menuTreeCon").html($(resp).html());
+				//访问页面激发点击第一菜单项事件
+				$("#root-menu>li:first").click();
+				$(window).trigger("resize");
+			});
+		}
+		
+		
+		/*]]>*/
+    </script>
+</body>
+</html>

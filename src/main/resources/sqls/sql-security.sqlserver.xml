@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <!-- OVERRIDE SQL： 返回用户所拥有的所有操作权限，参数：userId，userRoles:用户所有角色的字符串，多个以逗号隔开
+         返回字段：Operation,Name,Url,Rule,Priority,ElementId,Behaviour
+    -->
+    <entry key="security.getAllUserPermissions">
+    <![CDATA[
+        SELECT sp.code as Operation,sp.name as Name,pr.[Rule],pr.Behaviour,pr.Priority
+        FROM sec_role_permission rp 
+                INNER JOIN SEC_Permission      sp ON rp.operation_id = sp.id 
+                LEFT  JOIN SEC_Permission_Rule pr ON rp.Rule_Id      = pr.id
+        WHERE rp.Role_ID in ($userRoles$)
+        order by pr.Priority asc
+    ]]>
+    </entry>
+
+</properties>

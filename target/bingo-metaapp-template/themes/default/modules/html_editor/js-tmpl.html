@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:meta="http://www.bingosoft.net">
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="pragma" content="no-cache" />
+	<meta http-equiv="cache-control" content="no-cache" />
+</head>
+<body>
+<div th:fragment="tmpl">
+    <script id="fieldTemplate" type="text/x-jsrender">
+	  <tr>
+		{{for fields}}	
+		<th><label contenteditable="true">{{if label}}{{>label}}{{else}}&nbsp;{{/if}}</label></th>
+		<td class="column">
+		{{if label}}
+		<div class="box box-element field-item" aria-disabled="false" style="display: block;" data-label="{{:label}}" data-field="{{:field}}"> 
+			<a href="#close" class="remove label label-important"><i class="icon-remove icon-white"></i>删除</a> <span class="drag label"><i class="icon-move"></i>拖动</span>
+			<div class="preview"></div>
+			<div class="view">
+				<input _meta:field="{{:field}}"/>
+			</div>
+		</div>
+		{{else}}&nbsp;
+		{{/if}}
+		</td>
+		{{/for}}
+	  </tr>
+	</script>
+	<script id="editTabTemplate" type="text/x-jsrender">
+	<div class="accordion-group" data-tabId="{{:tabId}}">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-edit-tab" href="#collapseOne{{:#index}}" style="display:inline-block;width:80%;">
+      {{:text}}
+	  </a>
+	  <span class="btn btn-mini remove-tab"><i class="icon-trash"></i>移除</span>
+    </div>
+    <div id="collapseOne{{:#index}}" class="accordion-body collapse {{if #index===0}}in{{else}}{{/if}}">
+      <div class="accordion-inner">
+		<label>显示名称：</label>
+    	<input name="text" type="text" value="{{:text}}"/>
+		
+		<label>访问地址：</label>
+		{{if add}}
+    	<input name="href" type="text" value="{{:href}}" style="width:100%;"/>
+		<span class="label badge-important">可用~代表应用上下文</span>
+		{{else}}
+    	<input name="href" disabled="disabled" type="text" value="{{:href}}" style="width:100%;"/>
+		{{/if}}
+      </div>
+    </div>
+  	</div>
+	</script>
+	<script id="addTabTemplate" type="text/x-jsrender">
+	<li class="new-added"><a href="{{:href}}" _th:href="${themes.resolveAppPath('{{:href}}')}">{{:text}}</a><span></span></li> 
+	</script>
+	<script id="addToolbarButtonTemplate" type="text/x-jsrender">
+	<li class="form-toolbar-button" data-func="{{:mainFunc}}"><a href="javascript://"
+		title="{{:displayName}}"> <img _th:src="${themes.icon('{{:icon}}')}"/><span>{{:displayName}}</span>
+	</a></li>
+	</script>
+	<script id="formTableTemplate" type="text/x-jsrender">
+	<table class="form-table col{{:actualCols}}-fluid">
+		<caption contenteditable="true">标题</caption>
+		<thead></thead>
+		<tbody>
+			{{for rows}}	
+			<tr>
+				{{for cols}}
+				<th><label></label></th>
+				<td class="column"></td>
+				{{/for}}
+			</tr>
+			{{/for}}
+		</tbody>
+	</table>    
+	</script>    
+	<script id="normalTableTemplate" type="text/x-jsrender">
+	<table class="col{{:actualCols}}-fluid">
+		<tbody>
+			{{for rows}}	
+			<tr>
+				{{for cols}}
+				<td class="column normal"></td>
+				{{/for}}
+			</tr>
+			{{/for}}
+		</tbody>
+	</table>    
+	</script>
+	<script id="fieldLabelTemplate" type="text/x-jsrender">
+	<div class="box normal box-element">
+		<div class="toolbar">
+			<a href="#close" class="remove label label-important"><i class="icon-remove icon-white"></i>删除</a> 
+		</div> 
+		<div class="view">
+			<label contenteditable="true">{{:label}}</label>
+		</div>
+	</div>
+	</script>
+</div>
+</body>
+</html>

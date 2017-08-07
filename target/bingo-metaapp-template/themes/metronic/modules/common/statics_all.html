@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:meta="http://www.bingosoft.net">
+<head th:fragment="head">
+    <meta charset="utf-8"/>
+    <title th:text="${config != null?config['Profile.App.Title']:'未设置'}">品高云运营支撑管理系统</title>
+	<meta http-equiv="pragma" content="no-cache" />
+	<meta http-equiv="cache-control" content="no-cache" />
+    	
+   <link href="../../statics/skins/default/style.css" rel="stylesheet"
+    	th:href="${themes.css('style.css')}"/>
+    
+    <link href="../../statics/skins/default/style.css" rel="stylesheet"
+    	th:href="${themes.css('css/themes/')+currentSite.styleContent+'.css'}"/>
+    	
+	<link href="skins/default/module/error/error.css" rel="stylesheet" type="text/css"
+			th:href="${themes.css('module/error/error.css')}"  />
+    
+    <link href="../../statics/skins/default/module/common/master.css" rel="stylesheet"
+    	th:href="${themes.css('module/common/master.css')}"/>
+    <link href="../../statics/scripts/plugins/settings/settings.css" 
+        th:href="${themes.js('plugins/settings/settings.css')}" rel="stylesheet" />
+	<!-- plugin styles -->
+    <link href="../../statics/scripts/plugins/dialog/jquery.dialog.css" rel="stylesheet"
+    	th:href="${themes.js('plugins/dialog/jquery.dialog.css')}"/>
+    <link href="../../statics/scripts/plugins/contextmenu/jquery.contextmenu.css" rel="stylesheet"
+    	th:href="${themes.js('plugins/contextmenu/jquery.contextmenu.css')}"/>
+    <link href="../../statics/scripts/plugins/tree/jquery.tree.css" rel="stylesheet"
+    	th:href="${themes.js('plugins/tree/jquery.tree.css')}"/>
+    <link href="../../statics/scripts/plugins/layout/jquery.layout.css" rel="stylesheet"
+    	th:href="${themes.js('plugins/layout/jquery.layout.css')}"/>	
+    <link href="../../statics/scripts/plugins/tab/jquery.ui.tabs.css" rel="stylesheet"
+    	th:href="${themes.js('plugins/tab/jquery.ui.tabs.css')}"/>	    	
+	<link href="../../statics/scripts/plugins/messagebox/jquery.messagebox.css"
+		th:href="${themes.js('plugins/messagebox/jquery.messagebox.css')}"	type="text/css" rel="stylesheet" />	
+   	<link href="../../statics/scripts/plugins/jqgrid/ui.jqgrid.css"	rel="stylesheet"
+		th:href="${themes.js('plugins/jqgrid/ui.jqgrid.css')}" />
+		
+	<link href="../../statics/skins/default/style.css" rel="stylesheet"
+    	th:href="${themes.css('override.css')}"/>
+    	
+    <link href="../../statics/skins/default/module/appmar/appmar.css" rel="stylesheet"
+    	th:href="${themes.css('module/appmar/appmar.css')}"/>
+			
+	<script src="../../statics/scripts/require.js" th:src="${themes.js('require.js')}"></script>
+	<script src="../../statics/scripts/jquery.js" th:src="${themes.js('jquery.js')}"></script>
+	<script src="../../statics/scripts/plugins/jquery.ui.js"
+			th:src="${themes.js('plugins/jquery.ui.js')}"
+			type="text/javascript"></script>
+	<script th:src="${themes.css('plugins/bootstrap/js/bootstrap.min.js')}" type="text/javascript"></script>
+		
+	
+<!-- BEGIN CORE PLUGINS -->
+	
+	
+
+    <!--[if lt IE 9]>
+	<script th:src="${themes.css('plugins/excanvas.min.js')}"></script>
+	<script th:src="${themes.css('plugins/respond.min.js')}"></script>  
+	<![endif]-->
+	
+    
+    <!-- BEGIN PAGE LEVEL SCRIPTS -->
+    <script th:src="${themes.css('scripts/app.js')}" type="text/javascript"></script>
+    <!-- END PAGE LEVEL SCRIPTS -->
+
+	
+	<!--[if lt IE 9]>
+	  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<style>
+     /* 去掉后台系统的滚动条 */
+        html
+        {
+            overflow: hidden;
+        }
+	</style>
+	
+	<script type="text/javascript" th:inline="javascript">
+	    var currentSite = /*[[${currentSite}]]*/ ;
+	
+		window.Global=$.extend(true,{
+			contextPath:/*[[${contextPath}]]*/,	
+			themePath:/*[[${themePath}]]*/,	
+			statics:/*[[${statics}]]*/,			
+			iconPath:/*[[${iconPath}]]*/,
+			server:/*[[${server}]]*/,
+		},window.Global);
+		var dynRequire=require.config({
+			context:"dynamic module require",
+			baseUrl:Global.contextPath+"/scriptlib/download/"
+		});
+		var reqModule=require.config({
+			context:"dynamic module in themes/static/scripts folder",
+			baseUrl:Global.statics+"scripts/"
+		});
+	</script>
+</head>
+<body id="user-master">
+
+	<!-- 页脚 -->
+	<div th:fragment="footer" class="user-footer" style="vertical-align: middle;display: inline-block;">
+		Copyright © 2002-2012 <a href="http://www.bingosoft.net"
+			target="_blank">品高软件</a> <a href="http://www.bingocloud.cn/"
+			target="_blank" title="品高云"> <img
+			src="../../Statics/images/cloud.jpg" /></a> Powered By Bingo Cloud<br />
+		ICP备案编号：粤ICP备05028607号-2<br />
+	</div>
+
+	<div th:fragment="scripts"  style="display: none">
+	
+	<script src="../../statics/scripts/common.js" th:src="${themes.js('common.js')}"></script>
+	<script src="../../statics/scripts/json2.js" th:src="${themes.js('json2.js')}"></script>
+    <script src="../../statics/scripts/plugins/jsrender.js"  th:src="${themes.js('plugins/jsrender.js')}"></script>
+	
+    <script th:src="${themes.css('plugins/jquery-migrate-1.2.1.min.js')}" type="text/javascript"></script>
+    <script th:src="${themes.css('plugins/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js')}"
+        type="text/javascript"></script>
+   
+   <script src="plugins/jquery-slimscroll/jquery.slimscroll.min.js" 
+    	  th:src="${themes.css('plugins/jquery-slimscroll/jquery.slimscroll.min.js')}"  type="text/javascript"></script>
+	
+        
+
+		<script src="../../statics/scripts/browserfix.js"
+			th:src="${themes.js('browserfix.js')}"
+			type="text/javascript"></script>
+		
+		
+		<script src="../../statics/scripts/plugins/jquery.cookie.js"
+			th:src="${themes.js('plugins/jquery.cookie.js')}"></script>
+		<script src="../../statics/scripts/plugins/settings/settings.js"
+			th:src="${themes.js('plugins/settings/settings.js')}"
+			type="text/javascript"></script>
+
+		<script src="../../statics/scripts/plugins/jquery.json.js"
+			th:src="${themes.js('plugins/jquery.json.js')}"
+			type="text/javascript"></script>
+		
+		<script src="../../statics/scripts/plugins/jquery.bgiframe.js"
+			th:src="${themes.js('plugins/jquery.bgiframe.js')}"
+			type="text/javascript"></script>
+		<script src="../../statics/scripts/plugins/messagebox/jquery.messagebox.js"
+		th:src="${themes.js('plugins/messagebox/jquery.messagebox.js')}"
+		type="text/javascript"></script>
+
+		<!-- calendar -->
+		<script src="../../statics/scripts/plugins/calendar/WdatePicker.js"
+			th:src="${themes.js('plugins/calendar/WdatePicker.js')}"
+			type="text/javascript"></script>
+
+		<!-- validation -->
+		<script
+			src="../../statics/scripts/plugins/validator/jquery.validation.js"
+			th:src="${themes.js('plugins/validator/jquery.validation.js')}"
+			type="text/javascript"></script>
+		<link href="../../statics/scripts/plugins/validator/jquery.validation.css"
+			th:href="${themes.js('plugins/validator/jquery.validation.css')}"
+			type="text/css"  rel="stylesheet" />
+
+		<!-- upload -->
+		<script src="../../statics/scripts/plugins/plupload/plupload.full.js"
+			th:src="${themes.js('plugins/plupload/plupload.full.js')}"
+			type="text/javascript"></script>
+
+		<!-- dialog -->
+		<script src="../../statics/scripts/plugins/dialog/jquery.dialog.js"
+			th:src="${themes.js('plugins/dialog/jquery.dialog.js')}"
+			type="text/javascript"></script>
+
+		<!-- combotree -->
+		<script
+			src="../../statics/scripts/plugins/combotree/jquery.combotree.js"
+			th:src="${themes.js('plugins/combotree/jquery.combotree.js')}"
+			type="text/javascript"></script>
+
+		<!-- selectmulti -->
+		<script
+			src="../../statics/scripts/plugins/multiselect/jquery.multiselect.js"
+			th:src="${themes.js('plugins/multiselect/jquery.multiselect.js')}"
+			type="text/javascript"></script>
+
+		<!-- autocomplete -->
+		<script
+			src="../../statics/scripts/plugins/autocomplete/jquery.ui.autocomplete.js"
+			th:src="${themes.js('plugins/autocomplete/jquery.ui.autocomplete.js')}"
+			type="text/javascript"></script>
+		<!-- inputpro -->
+		<script
+			src="../../statics/scripts/plugins/inputpro/jquery.inputpro.js"
+			th:src="${themes.js('plugins/inputpro/jquery.inputpro.js')}"
+			type="text/javascript"></script>
+		<!-- grid -->
+		<script
+			src="../../statics/scripts/plugins/grid/grid.js"
+			th:src="${themes.js('plugins/grid/grid.js')}"
+			type="text/javascript"></script>
+			
+		<!-- JQGrid -->
+		
+		<script
+			src="../../statics/scripts/plugins/jqgrid/jquery.jqGrid.js"
+			th:src="${themes.js('plugins/jqgrid/jquery.jqGrid.js')}"
+			type="text/javascript"></script>
+		<script
+			src="../../statics/scripts/plugins/jqgrid/grid.addons.configfilter.js"
+			th:src="${themes.js('plugins/jqgrid/grid.addons.configfilter.js')}"
+			type="text/javascript"></script>	
+		<script
+			src="../../statics/scripts/plugins/jqgrid/grid.locale-cn.js"
+			th:src="${themes.js('plugins/jqgrid/grid.locale-cn.js')}"
+			type="text/javascript"></script>
+			
+		<!-- tabe drag and row add -->
+		<script
+			src="../../statics/scripts/plugins/jqgrid/grid.locale-cn.js"
+			th:src="${themes.js('plugins/jquery.table.addrow.js')}"
+			type="text/javascript"></script>
+			
+		
+		<!-- Ajax Form submit -->
+		<script src="../../statics/scripts/plugins/jquery.form.js"
+			th:src="${themes.js('plugins/jquery.form.js')}" type="text/javascript"></script>
+		
+		<!-- jQuery context menu -->
+		<script src="../../statics/scripts/plugins/contextmenu/jquery.contextmenu.js"
+			th:src="${themes.js('plugins/contextmenu/jquery.contextmenu.js')}" type="text/javascript"></script>
+			
+		<!-- jQuery tree -->
+		<script src="../../statics/scripts/plugins/tree/jquery.tree.js"
+			th:src="${themes.js('plugins/tree/jquery.tree.js')}" type="text/javascript"></script>
+			
+		<!-- jQuery tab -->
+		<script src="../../statics/scripts/plugins/tab/jquery.ui.tabs.js"
+			th:src="${themes.js('plugins/tab/jquery.ui.tabs.js')}" type="text/javascript"></script>
+			
+		<!-- jQuery layout -->
+		<script src="../../statics/scripts/plugins/layout/jquery.layout.js"
+			th:src="${themes.js('plugins/layout/jquery.layout.js')}" type="text/javascript"></script>
+			
+		<!-- jQuery 向导 -->	
+		<script src="../../statics/scripts/plugins/wizard/jquery.wizard.page.js"
+			th:src="${themes.js('plugins/wizard/jquery.wizard.page.js')}" type="text/javascript"></script>
+			
+		<!-- jQuery 汉字转拼音 -->
+		<script src="../../statics/scripts/plugins/pinyin/jquery.hz2py.js"
+			th:src="${themes.js('plugins/pinyin/jquery.hz2py.js')}" type="text/javascript"></script>
+			
+		<!-- swfObject -->
+		<script src="../../statics/scripts/highlight/swfobject.js"
+			th:src="${themes.js('highlight/swfobject.js')}" type="text/javascript"></script>
+			
+		<!-- ace -->
+		<script src="../../statics/scripts/plugins/ace/src-min-noconflict/ace.js"  
+			th:src="${themes.js('plugins/ace/src-min-noconflict/ace.js')}" 
+			type="text/javascript" charset="utf-8"></script>
+		<!-- qtip
+		<script src="../../statics/scripts/plugins/qtip/jquery.qtip.js"  
+			th:src="${themes.js('plugins/qtip/jquery.qtip.js')}" ></script> -->
+			
+		<!-- ueditor -->
+		<link href="../../statics/scripts/plugins/ueditor/themes/default/ueditor.css"
+			th:href="${themes.js('plugins/ueditor/themes/default/ueditor.css')}"
+			type="text/css"  rel="stylesheet" />
+		<script src="../../statics/scripts/plugins/ueditor/editor_config.js"
+			th:src="${themes.js('plugins/ueditor/editor_config.js')}" type="text/javascript"></script>
+		<script src="../../statics/scripts/plugins/ueditor/editor_all.js"
+			th:src="${themes.js('plugins/ueditor/editor_all.js')}" type="text/javascript"></script>
+		
+		<!-- token input -->
+		<link href="../../statics/scripts/plugins/tokeninput/styles/token-input-facebook.css"
+			th:href="${themes.js('plugins/tokeninput/styles/token-input-facebook.css')}"
+			type="text/css"  rel="stylesheet" />
+		<script src="../../statics/scripts/plugins/tokeninput/jquery.tokeninput.js"
+			th:src="${themes.js('plugins/tokeninput/jquery.tokeninput.js')}" type="text/javascript"></script>
+		<!-- bootstrap swtich -->
+		<link href="../../statics/scripts/plugins/switch/bootstrapSwitch.css"
+			th:href="${themes.js('plugins/switch/bootstrapSwitch.css')}"
+			type="text/css"  rel="stylesheet" />
+		<script src="../../statics/scripts/plugins/switch/bootstrapSwitch.js"
+			th:src="${themes.js('plugins/switch/bootstrapSwitch.js')}" type="text/javascript"></script>
+		<!-- jquery template -->
+		<script src="../../statics/scripts/plugins/template/jquery.tmpl.js"
+			th:src="${themes.js('plugins/template/jquery.tmpl.js')}" type="text/javascript"></script>
+		<!-- xml和json转换 -->
+		<script  th:src="${themes.js('plugins/xml_json/json2xml.js')}"></script>
+		<script  th:src="${themes.js('plugins/xml_json/xml2json.js')}"></script>
+	
+		
+		<!-- Common Modules -->
+		<script src="../../statics/scripts/module/common.js"
+			th:src="${themes.js('module/common.js')}" type="text/javascript"></script>
+			
+		<script th:src="${themes.js('module/jsloader.js')}" type="text/javascript"></script>
+			
+		<script th:src="${themes.js('module/config.js')}" type="text/javascript"></script>
+		
+		<!-- jit chart -->
+			<link href="../../statics/scripts/plugins/jit_chart/base.css" 
+	        th:href="${themes.js('plugins/jit_chart/base.css')}" rel="stylesheet" />
+		    <link href="../../statics/scripts/plugins/jit_chart/Spacetree.css" 
+		        th:href="${themes.js('plugins/jit_chart/Spacetree.css')}" rel="stylesheet" />
+		        
+		
+			<script src="../../statics/scripts/plugins/jit_chart/jit-yc.js"  
+					th:src="${themes.js('plugins/jit_chart/jit-yc.js')}" 
+					type="text/javascript" charset="utf-8"></script>
+					
+			<script src="../../statics/scripts/plugins/jit_chart/jit_chart.js"  
+					th:src="${themes.js('plugins/jit_chart/jit_chart.js')}" 
+					type="text/javascript" charset="utf-8"></script>
+				
+					
+	</div>
+</body>
+</html>

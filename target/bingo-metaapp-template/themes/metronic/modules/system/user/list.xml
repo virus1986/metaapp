@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid autoWidth="true" columnReordering="false"	dataUrl="~/entities/User/query_paged" createUrl="~/entities/User/create" deleteUrl="~/entities/User/delete" editUrl="~/entities/User/edit"	entityName="User" height="100%" 	id="grid_20fed72b-03c8-4e71-9053-24d537e9017c" multiSelect="true" 	multiSelectKey="None" shrinkToFit="true" view="" 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <columns>
+   	<column dataField="id" editable="true" fixed="false" frozen="false" primaryKey="true" resizable="true" searchable="true" textAlign="Left" visible="false" width="150"/>
+    <column dataField="name"  searchable="true"  textAlign="Left"  editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" visible="true" width="150"/>
+    <column dataField="loginId"  searchable="true"  textAlign="Left"  editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" visible="true" width="150"/>
+    <column dataField="sex"  searchable="true"  textAlign="Left"  editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" visible="true" width="150"/>
+    <column dataField="status"  searchable="true"  textAlign="Left"  editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" visible="true" width="150"/>
+    <column dataField="mobilePhone"  searchable="true"  textAlign="Left"  editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" visible="true" width="150"/>
+    <column dataField="email"  searchable="true"  textAlign="Left"  editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" visible="true" width="150"/>
+    <column dataField="lastUpdatedDate"  searchable="true"  textAlign="Left"  editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" visible="true" width="150"/>
+  </columns>
+  <toolBarSetting>
+  	<button  buttonIcon="main/button-add.png"  cssClass=""  isInMoreBtns="false"  name="create"  onClick="grid.addRecord"   />
+    <button  buttonIcon="main/comment-edit.png"  cssClass=""  isInMoreBtns="false"  name="edit"  onClick="grid.editRecord"   />
+    <button  buttonIcon="main/button-white-remove.png"  cssClass=""  isInMoreBtns="false"  name="delete"  onClick="grid.delRecord"   />
+    <button  buttonIcon="main/button-load.png"  cssClass=""  isInMoreBtns="false"  name="fresh"  onClick="grid.refreshGrid"   />
+    <button  buttonIcon="main/search-add.png"  cssClass=""  isInMoreBtns="false"  name="search"  onClick="grid.advanceSearch"   />
+    <button  buttonIcon="main/file-send.png"  cssClass=""  isInMoreBtns="false"  name="export"  onClick="grid.exportGrid"   />
+   </toolBarSetting>
+     <contextButtons>
+  		<button  buttonIcon="mini/icon_tool_022.gif"  cssClass=""   name="edit"  onClick="grid.editRecord"   />
+    	<button  buttonIcon="mini/icon_tool_060.gif"  cssClass=""   name="delete"  onClick="grid.delRecord"   />
+  	</contextButtons>
+  <filter groupOp="and">
+    <filters/>
+    <rules>
+    </rules>
+  </filter>
+  <orderby>
+  </orderby>
+  <scriptBlock></scriptBlock>
+  <quickSearch>
+    <column dataField="name"/>
+    <column dataField="id"/>
+  </quickSearch>
+  <addDialogSettings showType="pop-up"/>
+  <appearanceSettings alternateRowBackground="true" caption="" highlightRowsOnHover="true" rightToLeft="false" rowNumbersColumnWidth="25" scrollBarOffset="18" showFooter="false" showRowNumbers="true" shrinkToFit="true"/>
+  <editDialogSettings showType="pop-up"/>
+  <treeGridSettings enabled="false"/>
+  <viewDialogSettings showType="pop-up"/>
+</grid>

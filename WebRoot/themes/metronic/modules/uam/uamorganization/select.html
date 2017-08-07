@@ -1,0 +1,136 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:350px;">
+	<style>
+	.ui-dialog {
+		position: relative;
+	}
+	.cascadeOption {
+		position: absolute;
+		top: 55px;
+		background-color: #FFFFFF;
+	}
+	</style>
+	<div class="ui-dialog-title">
+			<span> 组织机构选择</span>
+	</div>
+	<div class="ui-dialog-content">	  	
+		<div class="cascadeOption">级联模式：
+			<select name="mode">
+				<option value="false">不级联</option>
+				<option value="true">双向级联</option>
+				<option value="UP">向上级联</option>
+				<option value="DOWN">向下级联</option>
+			</select>
+		</div>
+		<div class="list-tree" style="margin-top: 35px;">
+
+		</div>
+	</div>
+
+	<div class="ui-dialog-buttonset">
+			<button type="button" id="save" class="btn purple" th:text="#{common.sure}"></button>
+			<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+
+   <style type="text/css">
+   		.list-tree{
+			background:#fff;
+			border:none;
+			padding:1px;
+		}
+
+		.list-tree .bbit-tree-node a span{
+			border:none;
+		}
+
+		.list-tree .bbit-tree-node{
+			padding:1px !important;
+		}
+   </style>
+
+
+<script type="text/javascript" th:inline="javascript">
+	//<![CDATA[
+		$(function(){
+			var viewId = /*[[${viewId}]]*/;
+			var context = /*[['#'+${viewId}]]*/;
+			var mode=/*[[${mode}]]*/;
+			var showItemCheckbox = true;
+			
+			var treeLoadUrl=Global.contextPath +"/treemodels/entity/uamorganization/name?parent=parentId";			
+			var recursiveQuery=Global.contextPath +'/entities/uamorganization/recursiveQuery/?entityName=uamorganization';
+			
+			var treeId = "#"+viewId +" .list-tree";
+			/** 树的展现定义 **/
+			$(treeId).tree({
+				source 		: 'remote',
+				method 		: 'get',
+				async		:false,
+				expandLevel	:1,
+				url 		: treeLoadUrl,
+				showCheck	:true,
+				cascadeCheck:false,	
+				rootId   	:"root",
+	           	rootText 	:"组织机构",
+				nodeFormat : function(record) {
+					if("class" == record.showType){
+						record.showCheck = false ;
+					}else if("item" == record.showType && !showItemCheckbox){
+						record.showCheck = false ;
+					}
+					if(record.childNodes != null){
+						record.icon = Global.contextPath + "/themes/default/statics/images/icons/mini/icon_tool_145.gif";
+					}
+					return record;
+				},
+				onLoaded:function(){
+					var len = $(".bbit-tree-root",context).find("li").length;
+					if(len && len > 0){
+						$("#tip",context).hide();
+					}else{
+						$("#tip",context).show();
+					}
+
+				},
+				onCheck:function(id, text,checked){
+					if(mode=="single"){
+						//控制单选
+						if(!checked){
+							var ids = $(treeId).tree().getSelectedIds();
+							if(ids.length == 1) return;
+							for(i in ids){
+								if(ids[i] != id)
+									$(treeId).tree().checkNode(ids[i],false) ;
+							}
+						} 
+					}
+				}
+			});
+			$('[name=mode]', context).change(function() {
+				var $t = $(this), val = $t.val();
+				if(val) {
+					if(val === 'true') val = true;
+					if(val === 'false') val = false;
+					$(treeId).tree().treeOption("cascadeCheck",val);
+				}
+			});
+			//$(treeId).tree();
+
+			$(treeId).tree().expandLevel(null, 1); //加载完成后展开到第三级节点
+			//取消功能函数
+			$(".closeBtn",context).click(function(){
+				$(context).dialogClose();
+			});
+			
+			//确定功能函数
+			$("#save",context).click(function(){			
+				var nodes = $(treeId).tree().getSelectNodes();				
+				if(nodes.length <1){
+					$.messageBox.warning({message:"请选择部门"});
+					return;
+				}
+				$(context).dialogClose(nodes);
+			});
+		});
+	//]]>
+	</script>
+</div>

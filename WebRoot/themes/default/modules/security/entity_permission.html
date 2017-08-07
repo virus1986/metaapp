@@ -1,0 +1,111 @@
+<div th:id="${viewId}" class="tab-form container-fluid  ui-corner-all entity-permission">
+	<div class="row-fluid">
+		<div class="form-toolbar">
+			<ul>
+				<li class="add-roles">
+					<a  href="javascript://" th:title="#{security.authorizeNewRole}">
+						<img th:src="${themes.icon('main/enterprise.png')}"/><span th:title="#{security.selectRole}"> </span>
+					</a>
+				</li>
+				<li class="refresh">
+					<a  href="javascript://" th:title="#{security.clearEntityPermission}">
+						<img th:src="${themes.icon('main/button-load.png')}"/><span th:title="#{common.refreshPage}"> </span>
+					</a>
+				</li>
+				<li class="spliter"></li>
+				<li  class="add-rule">
+					<a  href="javascript://" th:title="#{security.newRuleForCurrentEntity}">
+						<img th:src="${themes.icon('main/document-1-add.png')}"/><span th:text="#{security.newRule}"> </span>
+					</a>
+				</li>
+				<li  class="manage-rules">
+					<a  href="javascript://" th:title="#{security.manageRuleDesc}">
+						<img th:src="${themes.icon('main/document-checklist.png')}"/><span th:text="#{security.manageRule}"> </span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="row-fluid bottom-tabs">
+		<div id="entity-permission-detail-tabs" class="entity-permission-detail-tabs tabs-bottom"
+			style="padding-right: 0px">
+			<div class="tabs-spacer"></div>
+			<ul class="entity-permission-detail-ul">
+				<li>
+					<a th:href="@{'/sec/entities/'+${entity}+'/entitypermission'}" th:text="#{security.entityPermission}"></a><span></span>
+				</li>
+				<li>
+					<a th:href="@{'/sec/entities/'+${entity}+'/fieldpermission'}" th:text="#{security.fieldPermission}"></a><span></span>
+				</li>
+				<li>
+					<a th:href="@{'/sec/entities/'+${entity}+'/otherpermission'}" th:text="#{security.otherPermission}"></a><span></span>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<script th:inline="javascript">
+	//<![CDATA[
+    $(function(){
+    	var context=/*[['#'+${viewId}]]*/;
+    	var entity=/*[[${entity}]]*/;
+		var $container=$(context);
+	
+		var reloadPage=function(){
+	    	var $tab=$(".ui-tabs",context).tabs();
+			$tab.load({id:$tab.getSelectedId()});
+			$(context).trigger('refresh', self);
+		}
+		
+		$(".add-roles",context).click(function(e){
+			var url=Global.contextPath+"/entities/Role/select?mode=multi";
+			var self=$(this);
+			$.openLink(url, {
+				title : i18n.t("role.select"),
+				requestType : "GET"
+				}, function() {
+					var reVal=jQuery.dialogReturnValue();
+					if(!reVal || reVal.length==0) return;
+					self.closest(".entity-permission").trigger('add-roles', {'el': self, 'roles': reVal});
+			});
+		});
+		$(".refresh",context).click(function(e){
+			var self=$(this);
+			reloadPage();
+		});
+		$(".add-rule",context).click(function(e){
+			var self=$(this);
+			var url=Global.contextPath+"/entities/PermissionRule/create?scopeType=2&operationId="+entity;
+			$.openLink(url, {
+				title : i18n.t("permissionrule.new"),
+				requestType : "GET"
+				}, function() {
+					var reVal=jQuery.dialogReturnValue();
+					if(!reVal || reVal.length==0) return;
+					reloadPage();
+			});
+		});
+		
+		$(".manage-rules",context).click(function(e){
+			var self=$(this);
+			var url=Global.contextPath+"/entities/PermissionRule/list?view=listbyentity&operationId="+entity;
+			$.openLink(url, {
+				title : i18n.t("permissionrule.manage"),
+				requestType : "GET",
+				width:"800"
+				}, function() {
+					reloadPage();
+			});
+		});
+		
+		$(".manage-rules",context).click(function(e){
+			reloadPage();
+		});
+		
+		Page.init(context,{
+			pageType:"in-tab",
+			entityTabs:"entity-permission-detail-tabs"
+		});
+    });
+	//]]>
+	</script>
+</div>

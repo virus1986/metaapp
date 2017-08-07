@@ -1,0 +1,51 @@
+<div th:id="${viewId}" style="min-width: 950px;">
+	<form id="entityForm" th:object="${entity}" th:action="${requestUrl}" method="post" data-widget="validator" class="form-horizontal ajaxpost full">
+		<div class="portlet box tea-green">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-reorder"></i>标题1
+				</div>
+				<div class="tools">
+					<a href="javascript:;" class="collapse"></a>
+				</div>
+			</div>
+			<div class="portlet-body form-bordered">
+				<table class="form-table form-bordered col6-fluid">
+					<tr>
+						<th><label></label></th>
+						<td></td>
+						<th><label></label></th>
+						<td></td>
+						<th><label></label></th>
+						<td></td>
+					</tr>
+					<tr>
+						<th><label></label></th>
+						<td></td>
+						<th><label></label></th>
+						<td></td>
+						<th><label></label></th>
+						<td></td>
+					</tr>
+					<tr>
+						<th><label></label></th>
+						<td></td>
+						<th><label></label></th>
+						<td></td>
+						<th><label></label></th>
+						<td></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</form>
+	<textarea id="script" style="display:none;">
+	/*<![CDATA[*/	
+		$(function(){
+			var viewId=/*[[${viewId}]]*/;
+			var container = $('#' + viewId);
+			Page.init(container);
+		});
+	/*]]>*/
+	</textarea>
+</div>

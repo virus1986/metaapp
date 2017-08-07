@@ -1,0 +1,130 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:1000px;">
+	<form class="form-horizontal  ajaxpost" data-widget="validator"
+				id="entityForm" method="post" th:action="${requestUrl}"
+				th:object="${entity}">
+				<input meta:field="*{id}" type="hidden" />
+				<div class="ui-dialog-title hide" th:switch="${action}">
+		          <span th:case="'EDIT'" th:text="#{common.edit}+${metaEntity.displayName}">
+		          </span>
+		          <span th:case="'CREATE'" th:text="#{common.create}+${metaEntity.displayName}">
+		          </span>
+		          <span th:case="'VIEW'" th:text="#{common.view}+${metaEntity.displayName}">
+		          </span>
+		          <span th:case="*" th:text="#{common.notExistAction}+${action}">
+		          </span>
+		        </div>
+				<div class="container-fluid">
+						<table class="form-table form-bordered col4-fluid">
+							<tbody>
+								<tr>
+									<th><label>流程名称:</label></th>
+									<td colspan="3"><input meta:field="procName" style="width: 427px;" />
+									<input type="hidden" meta:field="procId" />
+									<input type="hidden" meta:field="entityName"/>
+									</td>
+								</tr>
+								<tr>
+									<th><label>业务归属分类:</label></th>
+									<td colspan="3">
+										<input meta:field="procCatagoryId"/></td>
+								</tr>
+								<tr th:if="${entity[freestyle]}">
+									<th><label>第一步处理人:</label></th>
+									<td colspan="3">
+										<span class="inputpro-img input-append">
+											<ul class="token-input-list-facebook" style="width: 412px;height:26px;">
+											</ul> 
+											<input type="hidden" id="firstStepActorsText" name="firstStepActorsText" th:value="${entity['firstStepActorsText']}"/>
+											<span class="add-on btn select-actor" > <i class=" icon-search"></i>
+											</span>
+											<input type="hidden" id="firstStepActorsId" name="firstStepActorsId" th:value="${entity['firstStepActorsId']}"/>
+										</span> <span class="label label-info">设置自由流第一步默认发送人</span>
+									</td>						
+								</tr>
+								<tr>
+									<th><label>业务管理员:</label></th>
+									<td colspan="3">
+										<input meta:ref="user::user"/></td>
+								</tr>
+								<tr>
+									<th><label>流程表单:</label></th>
+									<td colspan="3"><span class="inputpro-img input-append">
+											<input meta:field="formUrl" style="width: 400px;" data-uneditable="true"/>
+											<a href="javascript://" class="add-on btn select-workflow-form" ><i	class="icon-search"></i></a></span>
+											<a hef="javascript://" title="新建表单" class="add-on btn create-workflow-form" style="width:18px;padding:5px;"><i class="icon-plus"></i></a>
+											<a href="javascript://" title="设计表单" class="add-on btn edit-workflow-form" style="width:18px;padding:5px;"><i class="icon-edit"></i></a>
+									</td>
+								</tr>
+								<tr>
+									<th><label>流程标题定义:</label></th>
+									<td colspan="3">
+										<textarea maxlength="150" meta:field="procTitleDef" style="width:427px;"></textarea>
+										<div style="margin-top:1px;">
+										<span style="font-style: italic;color: blue;">通用变量：</span><select class="select-def-exp" name="select-common-def-exp" style="width:80px;">
+											<option value="">--选择--</option>
+											<option value="{公司}">公司</option>
+											<option value="{部门}">部门</option>
+											<option value="{申请人}">申请人</option>
+											<option value="{原始标题}">原始标题</option>
+											<option value="{流程名称}">流程名称</option>
+											<option value="{seq:5}">自增序列(可设长度)</option>
+											<option value="{date:yyyyMMdd}">日期时间(可设格式)</option>
+											<option value="{yyyy}">当前年(如:2014)</option>
+											<option value="{mm}">当前月(如:03)</option>
+											<option value="{dd}">当前日(如:12)</option>
+										</select>
+										<span style="font-style: italic;color: blue;">表单变量：</span><select class="select-def-exp" name="select-formfield-def-exp" style="width:80px;">
+											<option value="">--选择--</option>
+										</select>
+										</div>
+									</td>
+								</tr>
+                               <!--  <tr>
+									<th><label>图标:</label></th>
+									<td colspan="1">
+									<input meta:field="icon" data-setNames="font-awesome" />
+										</td>
+									<th><label>背景色:</label></th>
+									<td colspan="1">
+									<input meta:field="bgColor" /></td>
+								</tr> -->
+							</tbody>
+						</table>
+				</div>
+				<div class="ui-dialog-buttonset">
+	                <button th:if="${action} != 'VIEW'" type="submit" name="save" class="btn purple">
+	                  <span th:text="#{common.save}">
+	                  </span>
+	                  <i class="m-icon-swapright m-icon-white">
+	                  </i>
+	                </button>
+	                <button type="button" name="close" class="btn closeBtn" th:text="(${action} != 'VIEW')?#{common.cancel} : #{common.close}">
+	                </button>
+	              </div>
+			</form>
+	<script th:inline="javascript">
+	//<![CDATA[ 
+;(function($){
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;
+		var action = /*[[${action}]]*/;
+		Page.init(context);
+		var _options={
+			context:context,
+			action:action
+		};
+		reqModule(["module/workflow/wfproc_manager"],function(WfprocManager){
+			var wfprocManager=WfprocManager.createNew(_options);
+		});
+	});
+}(jQuery)); 
+	//]]>
+	</script>
+</div>
+
+
+
+
+
+
+

@@ -1,0 +1,463 @@
+<div th:id="${viewId}">
+
+	<div data-widget="validator"
+		class="table-toolbar toolbar toolbar-auto row-fluid simple-search-area"
+		th:id="'toolbar_grid_procEffectiveActivity'" style="">
+		<table>
+			<tbody>
+				<tr>
+					<td><label class="control-label ">流程分类：</label></td>
+					<td><input id="idProcId" name="procId" type="text"
+						onclick="showMenu_Act()" th:value="${procName}"
+						th:attr="t-value=${procId}" /></td>
+					<td><label class="control-label ">区域：</label></td>
+					<td><input id="idOrgArea" name="orgArea" type="text"
+						onclick="showOrgMenu_Act()" th:value="${orgAreaName}"
+						th:attr="t-value=${orgAreaId}" /></td>
+				</tr>
+				<tr>
+					<td><label class="control-label ">开始日期：</label></td>
+					<td><input id="idStartTime"
+						class="Wdate input date-template input-medium val-location focus-location"
+						type="text" data-widget="calendar"
+						data-options="{'isShowWeek':false,'dateFmt':'yyyy-MM-dd'}"
+						data-operator="gt" name="startTime" th:value="${defStartTime}"></input>
+					</td>
+					<td><label class="control-label ">结束日期：</label></td>
+					<td><input id="idEndTime"
+						class="Wdate input date-template input-medium val-location focus-location"
+						type="text" data-widget="calendar"
+						data-options="{'isShowWeek':false,'dateFmt':'yyyy-MM-dd'}"
+						data-operator="gt" data-validator="bigThen" name="endTime"
+						th:value="${defEndTime}"> </input></td>
+					<td colspan="2">
+						<div class="toolbar-btns">
+							<button id="btnSearchData" type="button"
+								class="btn green searchBtn" onClick="doActivitySearch();">查询</button>
+							<button id="btnResetSearch" type="button" class="btn resetBtn"
+								onClick="doActivityReset();">重置</button>
+							<button type="button" class="btn btn-success export-excel" >
+								导出成Excel
+							</button>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<table th:id="${'grid_procDefEffective_'+viewId}"></table>
+	<div th:id="${'grid_procDefEffective_pager_'+viewId}"></div>
+
+	<div id="menuContent" class="menuContent"
+		style="display: none; position: absolute;">
+		<ul th:id="${'treeProc_'+viewId}" class="ztree"
+			style="margin-top: 0; width: 160px;"></ul>
+	</div>
+
+	<div id="menuOrgContent" class="menuContent"
+		style="display: none; position: absolute;">
+		<ul th:id="${'treeOrg_'+viewId}" class="ztree"
+			style="margin-top: 0; width: 160px;"></ul>
+	</div>
+
+	<script th:inline="javascript">
+	//<![CDATA[ 
+	
+	var contextAct = /*[['#'+${viewId}]]*/;
+	           
+	var gridId_act= /*[['#grid_procDefEffective_'+${viewId}]]*/;
+	var gridPagerId_act= /*[['#grid_procDefEffective_pager_'+${viewId}]]*/;
+
+	var treeOrgAct= /*[['treeOrg_'+${viewId}]]*/;
+	var treeProcAct= /*[['treeProc_'+${viewId}]]*/;
+	
+	function showMenu_Act() {
+
+		var cityObj = $("#idProcId",contextAct);
+		var cityOffset = $("#idProcId",contextAct).offset();
+		$("#menuContent",contextAct).css({left:cityOffset.left + "px", top:cityOffset.top + cityObj.outerHeight() + "px"}).slideDown("fast");
+
+		$("body").bind("mousedown", onBodyDown_Act);
+	}
+	function hideMenu_Act() {
+		$("#menuContent",contextAct).fadeOut("fast");
+		$("body").unbind("mousedown", onBodyDown_Act);
+	}
+	function onBodyDown_Act(event) {
+		if (!(event.target.id == "menuBtn" || event.target.id == "menuContent" || $(event.target).parents("#menuContent").length>0)) {
+			hideMenu_Act();
+		}
+	}
+	
+	function showOrgMenu_Act() {
+
+		var cityObj = $("#idOrgArea",contextAct);
+		var cityOffset = $("#idOrgArea",contextAct).offset();
+		$("#menuOrgContent",contextAct).css({left:cityOffset.left + "px", top:cityOffset.top + cityObj.outerHeight() + "px"}).slideDown("fast");
+
+		$("body").bind("mousedown", onOrgBodyDown_Act);
+	}
+	function hideOrgMenu_Act() {
+		$("#menuOrgContent",contextAct).fadeOut("fast");
+		$("body").unbind("mousedown", onOrgBodyDown_Act);
+	}
+	function onOrgBodyDown_Act(event) {
+		if (!(event.target.id == "menuBtn" || event.target.id == "menuOrgContent" || $(event.target).parents("#menuOrgContent").length>0)) {
+			hideOrgMenu_Act();
+		}
+	}
+	
+	$(function(){
+		
+		contextAct = /*[['#'+${viewId}]]*/;
+		
+		Page.init(contextAct);
+
+		$('.export-excel', contextAct).click(function() {
+			var parm="proc_id="+(!!$("#idProcId",contextAct).attr("t-value") ?$("#idProcId",contextAct).attr("t-value"):"");
+			parm+="&orgAreaId="+ (!!$("#idOrgArea",contextAct).attr("t-value") ?$("#idOrgArea",contextAct).attr("t-value"):"");						
+			parm+="&durationDiff="+ (!!$("#idDurationDiff",contextAct).val() ?$("#idDurationDiff",contextAct).val():"");			
+			parm+="&startTime="+ (!!$("#idStartTime",contextAct).val() ?$("#idStartTime",contextAct).val():"");
+			parm+="&endTime="+ (!!$("#idEndTime",contextAct).val() ?$("#idEndTime",contextAct).val():"");
+			parm+="&page=1&rows=99999&sidx=avg_duration&sord=desc&isExport=true";
+			var url = Global.contextPath +"/workflow/statistics/exportEffectiveActivityPaged?"+parm;
+			window.location.assign(url);
+			return;
+		});
+		
+		function funcDuration (cellval, unit) {
+     		if (!$.isNumeric(cellval)) {
+     			return cellval;
+     		}
+     		var secondsSum = cellval;
+     		var numyears = Math.floor(secondsSum / 525600);
+     		var numdays = Math.floor((secondsSum % 525600) / 1440);
+     		var numhours = Math.floor(((secondsSum % 525600) % 1440) / 60);
+     		var numminutes = Math
+     				.floor((((secondsSum % 525600) % 1440) % 60));
+     		var numseconds = 0;//(((secondsSum % 525600) % 1440) % 60);
+     		var years = numyears ? numyears + "年" : "", days = numdays ? numdays
+     				+ "天" : "", hours = numhours ? numhours + "小时" : "", minutes = numminutes ? numminutes
+     				+ "分钟"
+     				: "", seconds = numseconds ? numseconds + "秒" : "";
+     		if (unit == "d") {
+     			cellval = (years + days) ? (years + days) : "1天";
+     		} else if (unit == "m") {
+     			if(!(years + days + hours) && minutes==0)
+     				cellval = "0";
+     			else
+     				cellval = (years + days + hours + minutes) 
+     		} else if (unit == "h") {
+     			cellval = (years + days + hours) ? (years + days + hours) : "小于1小时";
+     		} else {
+     			cellval = (years + days + hours + minutes + seconds) ? (years
+     					+ days + hours + minutes + seconds) : "1秒";
+     		}
+     		return cellval;
+     	}
+
+		function intFormatter(cellvalue, options, rowObject){
+			return funcDuration(cellvalue, "m");
+		};
+
+		var colName = ["环节名称","流程ID","流程定义ID","流程名称","标准工时","平均实际工时","平均工时差异","处理总数","超时完成数","超时完成占比","平均超时时间"]
+		
+		var gridUrl= Global.contextPath+"/workflow/statistics/procEffectiveActivityPaged";
+		$(gridId_act,contextAct).jqGrid({
+			url : gridUrl,
+			mtype : 'POST',
+			datatype : 'json',
+			postData: {
+				proc_id: function () {  
+					res = $("#idProcId",contextAct).attr("t-value"); 
+					return (!!res ?res:""); 
+				},
+				orgAreaId: function () { 
+					res = $("#idOrgArea",contextAct).attr("t-value"); 
+					return (!!res ?res:""); 
+				},
+				durationDiff: function () { return $("#idDurationDiff",contextAct).val(); },
+				startTime: function () { return $("#idStartTime",contextAct).val(); },
+				endTime: function () { return $("#idEndTime",contextAct).val(); }
+			},
+			page : 1,
+			rowNum : 10,
+			rownumbers : true,
+			multiselect : false,
+			multiboxonly: true,
+			loadonce: false,
+			pager:gridPagerId_act,
+		   	sortname: 'avg_duration',
+		    sortorder: "desc",
+			rowList : [ 10, 20, 50, 80, 100 ],
+			colNames : colName,
+			jsonReader : {
+				id : "name",
+				repeatitems : false
+			},
+			shrinkToFit :true,
+			prmNames : {
+				id : "name",
+				search: "search"
+			},
+			toolbar: [true, 'top'],
+			headertitles: true,
+			altRows: true,
+			autowidth : true,
+			height:"100%",
+			colModel : [ {name:'act_title',index:'act_title', width:100, key:true, sorttype:'string'},
+						{name:'proc_id',index:'proc_id', width:100, sorttype:'integer',hidden: true},
+						{name:'proc_def_id',index:'proc_def_id', hidden: true},						
+						{name:'proc_name',index:'proc_name', width:300, sorttype:'string'},
+						{name:'exp_duration',index:'exp_duration', width:60, sorttype:"number", formatter:intFormatter,sortable:false},
+						{name:'avg_duration',index:'avg_duration', width:120, sorttype:"number", formatter:intFormatter},
+						{name:'duration_diff',index:'duration_diff', width:70, sorttype:"number",sortable:false},
+						{name:'task_num',index:'task_num', width:70, sorttype:"number",sortable:false},
+						{name:'out_num',index:'out_num', width:70, sorttype:"number",sortable:false},
+						{name:'out_perc',index:'out_perc', width:70, sorttype:"number",sortable:false},
+						{name:'out_duration',index:'out_duration', width:120, sorttype:"number", formatter:intFormatter,sortable:false}
+						],
+			searchDialogOptions : {
+				multipleSearch : true,
+				"recreateForm" : true,
+				"height" : 400,
+				"width" : 700,
+				"left" : 350,
+				"top" : 100
+			},
+			gridComplete:function(){
+				Page.gridComplete.call(this);
+				
+				var datas = jQuery(gridId_act, contextAct).jqGrid('getRowData');
+				
+				var sTime = $("#idStartTime",contextAct).val();
+				var eTime = $("#idEndTime",contextAct).val();
+				for(var i=0;i < datas.length;i++){
+					var cl = datas[i];
+					be = "<button type='button' class='btn green'";
+					var be_pam = " data-act_title='"+cl.act_title +"'";
+					be_pam  +=" data-inst_id='"+cl.inst_id +"'";
+					be_pam = " data-proc_id='"+cl.proc_id +"'";
+					be_pam  +=" data-proc_name='"+cl.proc_name +"'";
+					if(sTime){
+						be_pam  +=" data-starttime='"+sTime +"'"
+					}
+					if(eTime){
+						be_pam  +=" data-endtime='"+eTime +"'"
+					}
+					be  += be_pam+"onclick='javascript:onViewActivityEffective(this)'>明细</button>";				
+					be_pam+=" data-proc_def_id='" + cl.proc_def_id +"'" +" data-act_title='" + cl.act_title +"'"
+					var be_out =  "<a href='#' "+be_pam+" onclick='javascript:onViewThird3Effective(this)'>"
+						+cl.out_num+"</a>";
+					
+					jQuery(gridId_act, contextAct).jqGrid('setRowData', cl.act_title, {act:be,out_num:be_out});
+				}	
+				
+/* 				var $grid=$(gridId_act);
+				$("input[name=btMultiSearch]",contextAct).off("click");
+				$("input[name=btMultiSearch]",contextAct).click(function(){
+					var searchString=$("input[name=searchString]",contextAct).val();
+					var rules=[{"field":"displayName","op":"cn","data":searchString},{"field":"name","op":"cn","data":searchString}];
+					setTimeout(function(){
+						$grid.multiFieldsQuickSearch(rules,'OR');
+					},300);
+				}); */
+			}
+		}).navGrid(gridPagerId_act,{
+			"add" : false,
+			"cloneToTop" : false,
+			"del" : false,
+			"edit" : false,
+			"position" : "left",
+			"refresh" : false,
+			"search" : false,
+			"view" : false,
+			"toggle" : false
+		}).bindKeys().initCustom();
+
+		var procSetting = {
+			view: {
+				dblClickExpand: true
+			},
+			async: {
+				enable: true,
+				url: Global.contextPath+"/workflow/statistics/wfProcStatistics",
+				autoParam:["id", "name=n", "level=lv"],
+				otherParam:{"maxLevel":3},
+				dataFilter: filter
+			},
+			callback: {
+				beforeClick: beforeClick,
+				onClick: onClick
+			}
+		};
+		
+		function filter(treeId, parentNode, childNodes) {
+			if (!childNodes) return null;
+			for (var i=0, l=childNodes.length; i<l; i++) {
+				childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
+			}
+			return childNodes;
+		}
+
+		function beforeClick(treeId, treeNode) {
+			var check = (treeNode.checked);
+			//if (!check) alert("只能选择城市...");
+//			if (!check) {
+//					var zTree = $.fn.zTree.getZTreeObj(treeProcAct);
+//				zTree.expandNode(treeNode);
+//			}
+			return check;
+		}
+		
+		function onClick(e, treeId, treeNode) {
+				var zTree = $.fn.zTree.getZTreeObj(treeProcAct),
+			nodes = zTree.getSelectedNodes(),
+			v = "";
+			ids = "";
+			nodes.sort(function compare(a,b){return a.id-b.id;});
+			for (var i=0, l=nodes.length; i<l; i++) {
+				v += nodes[i].name + ",";
+				ids += nodes[i].level +":"+nodes[i].id+",";
+			}
+			if (v.length > 0 ) v = v.substring(0, v.length-1);
+			if (ids.length > 0 ) ids = ids.substring(0, ids.length-1);
+			
+			var cityObj = $("#idProcId",contextAct);
+			cityObj.attr("value", v);
+			cityObj.attr("t-value", ids);
+			//alert(cityObj.attr("t-value"))
+
+			var check = (treeNode.checked);
+			if (check) {
+				hideMenu_Act();
+			}
+		}
+
+		var orgSetting = {
+				view: {
+					dblClickExpand: false
+				},
+				async: {
+					enable: true,
+					url: Global.contextPath+"/workflow/statistics/wfProcOrgArea",
+					autoParam:["id", "name=n", "level=lv"],
+					otherParam:{"maxLevel":1	}
+				},
+				callback: {
+					onClick: onOrgClick
+				}
+			};
+			
+			function filterOrg(treeId, parentNode, childNodes) {
+				if (!childNodes) return null;
+				for (var i=0, l=childNodes.length; i<l; i++) {
+					childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
+				}
+				return childNodes;
+			}
+
+			function beforeOrgClick(treeId, treeNode) {
+				var check = (treeNode && !treeNode.isParent);
+				//if (!check) alert("只能选择城市...");
+				if (!check) {
+					var zTree = $.fn.zTree.getZTreeObj(treeOrgAct);
+					zTree.expandNode(treeNode);
+				}
+				return check;
+			}
+			
+			function onOrgClick(e, treeId, treeNode) {
+
+				var zTree = $.fn.zTree.getZTreeObj(treeOrgAct),
+				nodes = zTree.getSelectedNodes(),
+				v = "";
+				ids = "";
+				nodes.sort(function compare(a,b){return a.id-b.id;});
+				for (var i=0, l=nodes.length; i<l; i++) {
+					v += nodes[i].name + ",";
+					ids += nodes[i].id+",";
+				}
+				if (v.length > 0 ) v = v.substring(0, v.length-1);
+				if (ids.length > 0 ) ids = ids.substring(0, ids.length-1);
+				
+				var cityObj = $("#idOrgArea",contextAct);
+				cityObj.attr("value", v);
+				cityObj.attr("t-value", ids);
+				//alert(cityObj.attr("t-value"))
+				
+				hideOrgMenu_Act();
+			}
+
+		$.fn.zTree.init($("#"+treeProcAct,contextAct), procSetting);
+		$.fn.zTree.init($("#"+treeOrgAct,contextAct), orgSetting);
+	});
+
+	function doActivitySearch (){
+		jQuery(gridId_act, contextAct).trigger("reloadGrid", [{page: 1}]);
+	}
+	function doActivityReset (){
+		$("#idProcId",contextAct).val("");
+		$("#idProcId",contextAct).attr("t-value","");
+		$("#idOrgArea",contextAct).val("");
+		$("#idOrgArea",contextAct).attr("t-value","");
+		$("#idDurationDiff",contextAct).val("");
+		$("#idStartTime",contextAct).val("");
+		 $("#idEndTime",contextAct).val("");
+		 
+		jQuery(gridId_act, contextAct).trigger("reloadGrid", [{page: 1}]);
+	}
+	function onViewActivityEffective (ctrl){
+		var param = "act_title="+encodeURIComponent($(ctrl).attr('data-act_title'));
+
+		var procId = $("#idProcId",contextAct).attr("t-value");
+		param+= "&proc_id="+(!!procId?procId:"");
+		param+= "&proc_name="+encodeURIComponent($("#idProcId",contextAct).val());
+		var orgId=$("#idOrgArea",contextAct).attr("t-value");
+		param+= "&orgAreaId="+ (!!orgId?orgId:"");
+		param+= "&orgAreaName="+encodeURIComponent($("#idOrgArea",contextAct).val());
+		param+= "&durationDiff="+$("#idDurationDiff",contextAct).val();
+		if($(ctrl).attr('data-starttime')){
+			param+= "&startTime="+$(ctrl).attr('data-starttime');
+		}
+		if($(ctrl).attr('data-endtime')){
+			param+= "&endTime="+ $(ctrl).attr('data-endtime');
+		}
+
+		var url = Global.contextPath + "/workflow/statistics/procEffectiveTask?"+param;
+		$.openLink(url,{showType:'tab',title:'节点处理人类型统计分析'},function(){});
+	}
+	function onViewThird3Effective (ctrl){
+		var param = "proc_id="+"2:"+$(ctrl).attr('data-proc_id');
+		param+= "&proc_name="+encodeURIComponent($(ctrl).attr('data-proc_name'));
+		var orgId=$("#idOrgArea",contextAct).attr("t-value");
+		param+= "&orgAreaId="+ (!!orgId?orgId:"");
+		param+= "&orgAreaName="+encodeURIComponent($("#idOrgArea",contextAct).val());
+		//param+= "&durationDiff="+$("#idDurationDiff",contextAct).val();
+		if($(ctrl).attr('data-starttime')){
+			param+= "&startTime="+$(ctrl).attr('data-starttime');
+		}
+		if($(ctrl).attr('data-endtime')){
+			param+= "&endTime="+ $(ctrl).attr('data-endtime');
+		}
+		if($(ctrl).attr('data-is_show_out')){
+			param+= "&isShowOut="+ $(ctrl).attr('data-is_show_out');
+		}
+		if($(ctrl).attr('data-is_show_reject')){
+			param+= "&isShowReject="+ $(ctrl).attr('data-is_show_reject');
+		}
+		if($(ctrl).attr('data-proc_def_id')){
+			param+= "&procDefId="+ $(ctrl).attr('data-proc_def_id');
+		}
+		if($(ctrl).attr('data-act_title')){
+			param+= "&actTitle="+ $(ctrl).attr('data-act_title');
+		}		
+		
+		var url = Global.contextPath + "/workflow/statistics/procEffectiveInstance?"+param;
+		$.openLink(url,{showType:'tab',title:'单据汇总统计分析'},function(){});
+	}
+	
+	//]]>
+	</script>
+</div>

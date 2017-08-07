@@ -1,0 +1,10 @@
+@CHARSET "UTF-8";
+.headerShapeRep{
+	display:none;
+}
+ul.x-tree-root-ct,ul.x-tree-node-ct{
+	margin: 0 0;
+}
+.extensive-remove {
+	background-image: url(images/remove.gif) ! important;
+}

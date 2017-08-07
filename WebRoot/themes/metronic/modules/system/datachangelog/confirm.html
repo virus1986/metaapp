@@ -1,0 +1,95 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:600px">
+	<div class="ui-dialog-title hide">
+		<span><span th:text="#{boss.changelog.prefixTitle}"></span><span class='log-entity-displayname'></span><span th:text="#{boss.changelog.suffixTitle}"></span></span>
+	</div>
+	<form class="form-horizontal" id="data-change-log-form" data-widget="validator" th:action="${requestUri}">
+	
+		<table class="form-table">
+			<tr>
+				<th th:inline="text"><span class='log-entity-displayname'></span>[[#{common.name}+':']]</th>
+				<td class='log-record-name'></td>
+			</tr>
+			<tr>
+				<th><meta:display-name field="DataChangeLog.reason"/>:</th>
+				<td><textarea name="reason" data-validator="required,length[5,5000]" style="width: 95%; height: 50px;"></textarea></td>
+			</tr>
+		</table>
+		
+		<table class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th><meta:display-name field="DataChangeLogItem.field"/></th>
+					<th><meta:display-name field="DataChangeLogItem.before"/></th>
+					<th><meta:display-name field="DataChangeLogItem.after"/></th>
+				</tr>
+			</thead>
+			<tbody class='changeRowContainer'>
+				<tr class='changeTemplate hide'>
+					<td class='number'></td>
+					<td class='field'></td>
+					<td class='before'></td>
+					<td class='after'></td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<div class="ui-dialog-buttonset">
+			<button type="button" class="btn btn-primary btnSaveLog" th:text="#{common.confirmUpdate}"></button>
+			<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+		</div>
+	</form>
+	
+	<script th:inline="javascript">
+	//<![CDATA[
+    $(function(){
+    	var context = /*[['#'+${viewId}]]*/;
+    	var key = /*[[${key}]]*/;
+    	var changer = window.data_change_log[key].changer;
+    	var recordId = window.data_change_log[key].recordId;
+    	var recordName = window.data_change_log[key].recordName;
+    	var entityName = window.data_change_log[key].entityName;
+    	var entityDisplayName = window.data_change_log[key].entityDisplayName;
+    	var number = 1;
+    	function init(){
+	    	Page.init(context);
+	    	$('.log-record-name', context).text(recordName);
+	    	$('.log-entity-displayname', context).text(entityDisplayName);
+	    	for(var i in changer) {
+	    		addChangeRow(changer[i]);
+	    	}
+    	}
+    	init();
+    	
+    	function getChangeRow(){
+    		return $('.changeTemplate', context).clone().removeClass('changeTemplate').removeClass('hide').addClass('changeRow');
+    	}
+    	
+    	function addChangeRow(changer) {
+    		var row = getChangeRow();
+    		row.find('.field').text(changer.field).end()
+    			.find('.before').text(changer.before).end()
+    			.find('.after').text(changer.after).end()
+    			.find('.number').text(number++);
+    		$('.changeRowContainer', context).append(row);
+    	}
+    	
+		$(".btnSaveLog", context).click(function(){
+			var valInfo = $.validation.validate(context + " #data-change-log-form") ;
+			if( valInfo.isError ) {
+				return false;
+			}
+			
+			$.restPost(Global.contextPath + '/entities/' + entityName + '/dataChangeLogConfirm', {
+				changer : changer, 
+				recordId : recordId,
+				reason : $('[name=reason]', context).val()
+			}, function(res){
+				$(context).dialogClose('ok');
+			});
+			return false;
+		});
+    });
+	//]]>
+	</script>
+</div>

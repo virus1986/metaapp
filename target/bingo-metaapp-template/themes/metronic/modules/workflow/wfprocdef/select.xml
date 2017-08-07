@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" createUrl="~/entities/WfProcDef/create" dataUrl="~/entities/WfProcDef/query_paged" deleteUrl="~/entities/WfProcDef/delete" editUrl="~/entities/WfProcDef/edit" entityName="WfProcDef" height="300px" id="grid_4f9e72b3-65bd-4b25-8e0d-4e356457d040" isSwitchView="false" multiSelect="true" multiSelectKey="None" shrinkToFit="true" type="normal" view="select" width="100%">
+    <addDialogSettings caption="" showType="pop-up"/>
+    <appearanceSettings alternateRowBackground="true" caption="" highlightRowsOnHover="true" rightToLeft="false" rowNumbersColumnWidth="25" scrollBarOffset="18" showFooter="false" showRowNumbers="true" shrinkToFit="true"/>
+    <columns>
+        <column dataField="id" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="false" width="150"/>
+        <column dataField="key" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="150"/>
+        <column dataField="version" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="80"/>
+        <column dataField="title" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="300"/>
+        <column dataField="description" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="150"/>
+    </columns>
+    <contextButtons>
+    </contextButtons>
+    <customSettings/>
+    <toolBarSetting>
+        <button isInMoreBtns="false"  name="deploy"/>
+    </toolBarSetting>
+    <editDialogSettings caption="" showType="pop-up"/>
+    <filter groupOp="and">
+        <filters>
+	        <filter groupOp="or">
+	        	<rules>
+	        		<rule data="false" field="isTemplate" op="eq"/>
+	        		<rule data="" field="isTemplate" op="nu"/>
+	        	</rules>
+	        </filter>
+        </filters>
+        <rules>
+        	<rule data="select * from WfProcDef t2 where t2.version>WfProcDef.version and t2.key=WfProcDef.key" field="id" op="nexists"/>
+        </rules>
+    </filter>
+    <groupSettings collapseGroups="false"/>
+    <orderby/>
+    <quickSearch searchColNum="4">
+        <column dataField="title"/>
+        <column dataField="key"/>
+    </quickSearch>
+    <joinEntities>
+    </joinEntities>
+    <scriptBlock/>
+    <treeGridSettings enabled="false"/>
+    <viewDialogSettings caption="" showType="pop-up"/>
+</grid>

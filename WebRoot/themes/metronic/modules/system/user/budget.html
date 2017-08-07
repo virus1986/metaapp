@@ -1,0 +1,51 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:950px;">
+<div>
+	<button id="total" >查看预算总额</button>
+	<button id="duty" >同步职务</button>
+	<button id="post" >同步岗位</button>
+	<button id="user" >同步用户</button>
+	<div id="data"></div>
+	<hr/>
+</div>
+<script type="text/javascript" th:inline="javascript">
+//<![CDATA[
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var container = $('#' + viewId);
+		Page.init(container);
+		$("#total",container).on("click",function(){
+			$.post(Global.contextPath + "/sync/budgetTest",
+				{
+				},
+				function(response){
+					$("#data",container).html(response);
+				});
+		});
+		$("#duty",container).on("click",function(){
+			$.post(Global.contextPath + "/sync/syncduty",
+				{
+				},
+				function(response){
+					$("#data",container).html(response);
+				});
+		});
+		$("#post",container).on("click",function(){
+			$.post(Global.contextPath + "/sync/syncpost",
+				{
+				},
+				function(response){
+					$("#data",container).html(response);
+				});
+		});
+		$("#user",container).on("click",function(){
+			$.post(Global.contextPath + "/sync/syncuser",
+				{
+				},
+				function(response){
+					$("#data",container).html(response);
+				});
+		});
+	});
+//]]>
+</script>
+</div>

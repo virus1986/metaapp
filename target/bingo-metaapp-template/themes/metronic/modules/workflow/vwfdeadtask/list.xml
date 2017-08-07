@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" height="100%" multiSelect="true" multiSelectKey="None" shrinkToFit="true" viewFunc="system/workflow.itemView" editUrl="~/entities/VWfDeadTask/edit" deleteUrl="~/entities/VWfDeadTask/delete" createUrl="~/entities/VWfDeadTask/create" dataUrl="~/entities/VWfDeadTask/query_paged" entityName="VWfDeadTask" id="grid_6e60e92e-eb33-4b59-a316-e0377ab3bed9">
+    <appearanceSettings caption="异常流程"/>
+    <columns>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="1" dataField="id"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="1" dataField="actName"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="1" dataField="creatorId"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="1" dataField="preTaskId"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="1" dataField="procId"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="1" dataField="procInstId"/>
+        <column visible="true" width="150" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="title"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="90" dataField="starterName"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="120" dataField="procName"/>
+        <column text="异常环节" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="100" dataField="actTitle"/>
+        <column text="异常时间" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="120" dataField="startTime"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="expireTime"/>
+        <column text="分配用户" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="210" dataField="deadActorValue">
+        	<customFormatter formatFunction="vwfdeadtask_formatFunction" unFormatFunction="vwfdeadtask_unFormatFunction"/>
+        </column>
+        <column visible="false" text="roleId" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="1" dataField="roleId"/>
+        <column visible="false" text="roleName" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="1" dataField="roleName"/>
+        <column visible="false" text="orgId" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="1" dataField="orgId"/>
+        <column visible="false" text="orgName" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="1" dataField="orgName"/>
+        <column visible="false" text="orgId" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="1" dataField="postId"/>
+        <column visible="false" text="orgName" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="1" dataField="postName"/>
+    </columns>
+    <contextButtons>
+    </contextButtons>
+    <toolBarSetting>
+        <button isInMoreBtns="false" cssClass="" name="fresh" buttonIcon="main/button-load.png" onClick="grid.refreshGrid"/>
+    </toolBarSetting>
+    <joinEntities>
+    </joinEntities>
+    <filter groupOp="AND">
+        <filters/>
+        <rules>
+            <rule data="select procuser.wfProcProcId from WfProcUser procuser where procuser.userId='@{env.User.id}'" field="procId" op="insql"/>
+        </rules>
+    </filter>
+    <orderby/>
+    <quickSearch>
+        <column dataField="title"/>
+    </quickSearch>
+    <addDialogSettings/>
+    <editDialogSettings/>
+    <viewDialogSettings/>
+</grid>

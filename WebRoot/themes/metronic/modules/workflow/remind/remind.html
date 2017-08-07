@@ -1,0 +1,51 @@
+<div th:id="${viewId}"  class="container-fluid" style="width:500px;height:200px;">
+	<label style="font-weight: bold;">请选择提醒方式：</label>
+	<label class="checkbox inline">
+		<input type="checkbox" name="remindType" value="link"/>link消息
+	</label>
+	<label class="checkbox inline">
+		<input type="checkbox" name="remindType" value="email"/>邮件通知
+	</label>
+	<div class="ui-dialog-buttonset">
+		<button type="button" class="btn saveBtn purple" th:text="#{common.sure}"></button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+	<script th:inline="javascript">
+	//<![CDATA[ 
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;
+		var taskId = /*[[${taskId}]]*/;
+		$(".saveBtn",context).click(function(){
+			var remindType=[];
+			$("[name=remindType]:checked",context).each(function(){
+				remindType.push($(this).val());
+			});
+			if(!remindType.length){
+				$.messageBox.warning({message:"请选择提醒方式!"});
+				return false;
+			}
+			remindType=remindType.join(",");
+			var btnSelf=$(this);
+			var remindUrl=Global.contextPath+"/workflow/process/remind";
+			remindUrl=Urls.urlParam(remindUrl,[{key:"taskId",value:taskId},
+			                                       {key:"remindType",value:remindType}]);
+			jQuery.restPost(remindUrl,{},function(response){
+				$(context).dialogClose(response);
+			},{beforeSend:function(xhr){
+				CommonUtil.showLoading(context,i18n.t("common.processing"));
+				btnSelf.attr("disabled","disabled");
+				btnSelf.addClass("disabled");
+			  },complete:function(xhr,textStatus){
+					CommonUtil.hiddenLoading();
+					btnSelf.removeAttr("disabled");
+					btnSelf.removeClass("disabled");
+			  }
+			});
+		});
+		$(".closeBtn",context).click(function(){
+			$(context).dialogClose();
+		});	
+	});
+	//]]>
+	</script>
+</div>

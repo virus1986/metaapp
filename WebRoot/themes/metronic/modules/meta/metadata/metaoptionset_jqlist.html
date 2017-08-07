@@ -1,0 +1,206 @@
+<div th:attr="data-url=${requestUrl}"  th:id="${viewId}">
+	<div class="breadcrumbs" id="breadcrumbs">
+		<ul class="breadcrumb">		
+		</ul>
+	</div>
+	<div class="container-fluid  m-top10">
+		<div style="margin:0px;padding:0px;">
+			<table th:id="'grid_metaoptionset'"></table>
+			<div th:id="'grid_metaoptionset_pager'"></div>
+			
+			<div th:id="'toolbar_grid_metaoptionset'" class="table-toolbar row-fluid" style="display: none">
+				<div class="grid-headerline">
+					<i class="icon-hand-right icon-animated-hand-pointer"></i>
+					<span class="grid-headtext">选项集管理</span>
+				</div>
+				<div class="pull-right ">					
+					<div class="btn-group">
+						<input name="searchString" type="text" class="m-wrap input-medium search-query pull-left" />
+						<input name="searchField" value="_quickSearch" type="hidden" />
+						<button class="btn blue" name="btMultiSearch"><i class="icon-search"></i></button>
+						<span class="arrow"></span>
+					</div>
+					<div class="btn-group">
+						<button th:id="'toolbar_add_grid_metafield_'+${entity}" class="btn green table-toolbar-icon-item" data-func="grid.addRecord">
+							<span th:text="#{common.create}">新建</span>
+							<i class="icon-plus"></i>
+						</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn dropdown-toggle" data-toggle="dropdown">更多操作 <i class="icon-angle-down"></i>
+						</button>
+						<ul class="dropdown-menu pull-right table-toolbar-icon">
+							<li th:id="'toolbar_add_grid_metafield_'+${entity}"  data-func="system/metaOptionset.createTreeOption" class="table-toolbar-icon-item">
+								<a href="javascript://">
+								<img th:src="${themes.icon('main/button-add.png')}" />
+								<span th:text="#{optionset.createTree}"></span></a></li>
+							<li th:id="'toolbar_edit_grid_metafield_'+${entity}" data-func="system/metaOptionset.editOption" class="table-toolbar-icon-item">
+								<a href="javascript://">
+								<img th:src="${themes.icon('main/comment-edit.png')}" />
+								<span th:text="#{common.edit}"></span></a></li>
+							<li th:id="'toolbar_del_grid_metafield_'+${entity}" data-func="grid.delRecord" class="table-toolbar-icon-item">
+								<a href="javascript://">
+								<img th:src="${themes.icon('main/button-white-remove.png')}" />
+								<span th:text="#{common.delete}"></span></a></li>
+							<li th:id="'toolbar_reflesh_grid_metafield_'+${entity}" data-func="grid.refreshGrid" class="table-toolbar-icon-item">
+								<a href="javascript://">
+								<img th:src="${themes.icon('main/button-load.png')}" />
+								<span th:text="#{common.refresh}"></span></a></li>
+						</ul>
+					</div>
+				</div>		
+			</div>
+		</div>
+	</div>
+	
+	<script th:inline="javascript">
+	//<![CDATA[	
+	$(function() {
+		function optionsFormatter(cellvalue, options, rowObject){
+			var optionStr = "";
+			var divider = " | ";
+			var ellipsis = "……";
+			var maxLength = 10;
+			var options=rowObject.options;
+			if(options.length < maxLength) maxLength = options.length;
+			for ( var i = 0; i < maxLength; i++) {
+				var item=options[i];
+				var displayName = item.name;
+				if(item["default"] == true || item["isDefault"] == true){
+					displayName = "<strong style='color:darkgreen;'>" + displayName + "</strong>";
+				}
+				optionStr += displayName;
+				if(i < maxLength - 1) optionStr += divider;
+			}
+			if(options.length > maxLength) optionStr += divider + ellipsis;
+			return optionStr;
+		};
+		function systemFormatter(cellvalue, options, rowObject){
+			if(cellvalue == true || cellvalue == "true") return i18n.t("common.yes");
+			return i18n.t("common.no");
+		};
+		var gridUrl=/*[[@{/metadata/optionset/query_paged}]]*/;
+		var gridCreateUrl=/*[[@{/metadata/optionset/create}]]*/;
+		var gridEditUrl=/*[[@{/metadata/optionset/create(action='edit')}]]*/;
+		var gridDeleteUrl=/*[[@{/metadata/optionset/delete}]]*/;
+		var gridId="grid_metaoptionset";
+		var pagerId="grid_metaoptionset_pager";
+		var toolbarId="toolbar_grid_metaoptionset";
+		var imageRoot=Global.themePath+"/statics/images/icons/mini";
+		var context=/*[['#'+${viewId}]]*/;
+		var col1=/*[[#{common.name}]]*/;
+		var col2=/*[[#{optionset.displayName}]]*/;
+		var col3=/*[[#{optionset.options}]]*/;
+		var col4=/*[[#{optionset.kind}]]*/;
+		var col5=/*[[#{optionset.system}]]*/;
+		var col6=/*[[#{optionset.lastModified}]]*/;
+		
+		$("#"+gridId).jqGrid({
+			url : gridUrl,
+			createurl : gridCreateUrl,
+			editurl : gridEditUrl,
+			deleteurl: gridDeleteUrl,
+			mtype : 'POST',
+			datatype : 'json',
+			page : 1,
+			rowNum : 100,
+			rownumbers : true,
+			multiselect : true,
+			multiboxonly: true,
+			loadonce:true,
+			pager:'#'+pagerId,
+			rowList : [ 10, 50, 100 ],
+			colNames : [col1,col2,col3,col4,col5,col6],
+			jsonReader : {
+				id : "name",
+				repeatitems : false
+			},
+			shrinkToFit :true,
+			prmNames : {
+				id : "name",
+				search: "search"
+			},
+			toolbar: [true, 'top'],
+			headertitles: true,
+			altRows: true,
+			autowidth : true,
+			height:"100%",
+			colModel : [{name:'name',index:'name',key:true,hidden: true},
+			{name:'displayName',index:'displayName',width:100,formatter:'titleField'},
+			{name:'options',index:'options', width:100, formatter:optionsFormatter},
+			{name:'kind',index:'kind', width:50},
+			{name:'system',index:'system', width:50, formatter:systemFormatter},
+			{name:'lastModified',index:'lastModified', width:50}
+			],
+			searchDialogOptions : {
+				multipleSearch : true,
+				"recreateForm" : true,
+				"height" : 400,
+				"width" : 700,
+				"left" : 350,
+				"top" : 100
+			},
+			gridComplete:function(){
+				Page.gridComplete.call(this);
+				var $grid=$("#"+gridId);
+				$("input[name=btMultiSearch]",context).off("click");
+				$("input[name=btMultiSearch]",context).click(function(){
+					var searchString=$("input[name=searchString]",context).val();
+					var rules=[{"field":"displayName","op":"cn","data":searchString},{"field":"name","op":"cn","data":searchString}];
+					setTimeout(function(){
+						$grid.multiFieldsQuickSearch(rules,'OR');
+					},300);
+				});
+			},
+			onBeforeDelete:function($grid){
+				var selectIds=$grid.jqGrid('getGridParam','selarrrow');
+				var sysIds=[];
+				for(var i=0;i<selectIds.length;++i){
+					var row=$grid.getRowData(selectIds[i]);
+					if(row.system == i18n.t("common.yes")){
+						sysIds.push(selectIds[i]);
+					}
+				}
+				if(sysIds.length>0){
+					$.messageBox.warning({message:i18n.t("optionset.sysNotAllowedDelete")});
+					return false;
+				}
+				return true;
+			},
+			onBeforeEdit:function($grid){
+				var selectIds=$grid.jqGrid('getGridParam','selarrrow');
+				var sysIds=[];
+				for(var i=0;i<selectIds.length;++i){
+					var row=$grid.getRowData(selectIds[i]);
+					if(row.system == i18n.t("common.yes")){
+						sysIds.push(selectIds[i]);
+					}
+				}
+				if(sysIds.length>0){
+					$.messageBox.warning({message:i18n.t("optionset.sysNotAllowedEdit")});
+					return false;
+				}
+				return true;
+			},
+			exContextMenu:[{text: i18n.t("common.edit"),icon:imageRoot+"/icon_tool_022.gif",  action: function(){
+				$("#"+gridId).jqGrid().editRecord();
+			}},
+			 {text: i18n.t("common.delete"),icon:imageRoot+"/icon_tool_060.gif",  action: function(){
+				 $("#"+gridId).jqGrid().delRecord();
+			}}]
+		}).navGrid('#'+pagerId,{
+			"add" : false,
+			"cloneToTop" : false,
+			"del" : false,
+			"edit" : false,
+			"position" : "left",
+			"refresh" : false,
+			"search" : false,
+			"view" : false,
+			"toggle" : false
+		}).bindKeys().initCustom().initCustToolBar(toolbarId);
+		
+	}); 
+	//]]>
+	</script>
+</div>

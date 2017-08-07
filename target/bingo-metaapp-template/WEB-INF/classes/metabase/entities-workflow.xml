@@ -1,0 +1,926 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<metadata xmlns="http://schemas.bingosoft.net/metabase/metadata" xsi:schemaLocation="http://schemas.bingosoft.net/metabase/metadata http://schemas.bingosoft.net/metabase/1.0/metadata.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <entities>
+    	<entity is-display="true" display-for="{manage:true}" display-name="任务" inherits-persistence="PerEntity" name="WfTask" pack="workflow" is-system="false" table="wf_task">
+            <field column="app_code" data-type="String" is-display="true" display-name="appCode" display-order="1" field-type="SingleLineText" unique="false" length="36" name="appCode" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="revision_" data-type="Integer" default-value="0" is-display="true" display-name="事务版本" display-order="2" field-type="Integer" unique="false" name="revision" nullable="false" sql-type="integer" is-system="true"/>
+            <field column="seq_" data-type="Integer" is-display="true" display-name="seq" display-order="3" field-type="Integer" unique="false" name="seq" nullable="true" sql-type="integer" is-system="true"/>
+            <field column="batch_" data-type="Integer" is-display="true" display-name="batch" display-order="4" field-type="Integer" unique="false" name="batch" nullable="true" sql-type="integer" is-system="true"/>
+            <field column="proc_def_id" data-type="Guid" is-display="true" display-name="流程定义" display-order="5" field-type="SingleLineText" unique="false" length="36" name="procDefId" nullable="false" ref-entity="WfProcDef" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="proc_inst_id" data-type="Guid" is-display="true" display-name="流程" display-order="6" field-type="SingleLineText" unique="false" length="36" name="procInstId" nullable="false" ref-entity="WfProcInst" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="root_inst_id" data-type="Guid" is-display="true" display-name="根流程" display-order="7" field-type="SingleLineText" unique="false" length="36" name="rootInstId" nullable="false" ref-entity="WfProcInst" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="execution_id" data-type="Guid" is-display="true" display-name="executionId" display-order="8" field-type="SingleLineText" unique="false" name="executionId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="act_inst_id" data-type="Guid" is-display="true" display-name="actInstId" display-order="9" field-type="SingleLineText" unique="false" name="actInstId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="parent_id" data-type="Guid" is-display="true" display-name="parentId" display-order="10" field-type="SingleLineText" unique="false" length="36" name="parentId" nullable="true" ref-entity="WfTask" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="deliver_task_id" data-type="Guid" is-display="true" display-name="deliverTaskId" display-order="11" field-type="SingleLineText" unique="false" length="36" name="deliverTaskId" nullable="true" ref-entity="WfTask" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="pre_task_id" data-type="Guid" is-display="true" display-name="preTaskId" display-order="12" field-type="SingleLineText" unique="false" name="preTaskId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="form_key" data-type="String" is-display="true" display-name="formKey" display-order="13" field-type="SingleLineText" unique="false" length="150" name="formKey" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="business_id" data-type="String" is-display="true" display-name="businessId" display-order="14" field-type="SingleLineText" unique="false" length="36" name="businessId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="business_data" data-type="String" is-display="true" display-name="businessData" display-order="15" field-type="SingleLineText" unique="false" length="4000" name="businessData" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="type_" data-type="SmallInt" default-value="1" is-display="true" display-name="任务类型" display-order="16" field-type="SmallInt" unique="false" name="type" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="title_" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="当前环节" display-order="17" field-type="SingleLineText" unique="false" length="300" name="title" nullable="false" semantics="Title" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="300"/>
+                </field-type-params>
+            </field>
+            <field column="priority_" data-type="SmallInt" default-value="5" is-display="true" display-name="priority" display-order="18" field-type="SmallInt" unique="false" name="priority" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="act_name" data-type="String" is-display="true" display-name="actName" display-order="19" field-type="SingleLineText" unique="false" length="150" name="actName" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="act_title" data-type="String" is-display="true" display-name="actTitle" display-order="20" field-type="SingleLineText" unique="false" length="300" name="actTitle" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="creator_id" data-type="String" is-display="true" display-name="creatorId" display-order="21" field-type="SingleLineText" unique="false" length="36" name="creatorId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="creator_name" data-type="String" is-display="true" display-name="creatorName" display-order="22" field-type="SingleLineText" unique="false" length="150" name="creatorName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="assignee_id" data-type="String" is-display="true" display-name="assigneeId" display-order="23" field-type="SingleLineText" unique="false" length="36" name="assigneeId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="assignee_name" data-type="String" is-display="true" display-name="assigneeName" display-order="24" field-type="SingleLineText" unique="false" length="150" name="assigneeName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="assignee_dept_id" data-type="String" is-display="true" display-name="assigneeDeptId" display-order="25" field-type="SingleLineText" unique="false" length="36" name="assigneeDeptId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="assignee_dept_name" data-type="String" is-display="true" display-name="assigneeDeptName" display-order="26" field-type="SingleLineText" unique="false" length="150" name="assigneeDeptName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="assignee_identity_id" data-type="String" is-display="true" display-name="assigneeIdentityId" display-order="27" field-type="SingleLineText" unique="false" length="36" name="assigneeIdentityId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="assignee_identity_name" data-type="String" is-display="true" display-name="assigneeIdentityName" display-order="28" field-type="SingleLineText" unique="false" length="150" name="assigneeIdentityName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="agent_id" data-type="String" is-display="true" display-name="agentId" display-order="29" field-type="SingleLineText" unique="false" length="36" name="agentId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="agent_name" data-type="String" is-display="true" display-name="agentName" display-order="30" field-type="SingleLineText" unique="false" length="150" name="agentName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="agent_dept_id" data-type="String" is-display="true" display-name="agentDeptId" display-order="31" field-type="SingleLineText" unique="false" length="36" name="agentDeptId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="agent_dept_name" data-type="String" is-display="true" display-name="agentDeptName" display-order="32" field-type="SingleLineText" unique="false" length="150" name="agentDeptName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="agent_identity_id" data-type="String" is-display="true" display-name="agentIdentityId" display-order="33" field-type="SingleLineText" unique="false" length="36" name="agentIdentityId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="agent_identity_name" data-type="String" is-display="true" display-name="agentIdentityName" display-order="34" field-type="SingleLineText" unique="false" length="150" name="agentIdentityName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="expire_time" data-type="Timestamp" is-display="true" display-name="过期时间" display-order="35" field-type="Timestamp" unique="false" name="expireTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="start_time" data-type="Timestamp" is-display="true" display-for="{list:true,form:true}" display-name="接收时间" display-order="36" field-type="Timestamp" unique="false" name="startTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="claim_time" data-type="Timestamp" is-display="true" display-name="认领时间" display-order="37" field-type="Timestamp" unique="false" name="claimTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="read_time" data-type="Timestamp" is-display="true" display-name="阅读时间" display-order="38" field-type="Timestamp" unique="false" name="readTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="end_time" data-type="Timestamp" is-display="true" display-name="处理时间" display-order="39" field-type="Timestamp" unique="false" name="endTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="duration_" data-type="BigInt" is-display="true" display-name="duration" display-order="40" field-type="BigInt" unique="false" name="duration" nullable="true" sql-type="numeric" is-system="true"/>
+            <field column="status_" data-type="SmallInt" default-value="1" is-display="true" display-name="status" display-order="41" field-type="SmallInt" unique="false" name="status" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="end_reason" data-type="SmallInt" default-value="0" is-display="true" display-name="endReason" display-order="42" field-type="SmallInt" unique="false" name="endReason" nullable="true" sql-type="smallint" is-system="true"/>
+            <field column="end_comment" data-type="String" is-display="true" display-name="endComment" display-order="43" field-type="SingleLineText" unique="false" length="500" name="endComment" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="user_input" data-type="String" is-display="true" display-name="userInput" display-order="44" field-type="SingleLineText" unique="false" length="2000" name="userInput" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="user_comment" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="userComment" display-order="45" field-type="SingleLineText" unique="false" length="4000" name="userComment" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="4000"/>
+                </field-type-params>
+            </field>
+            <field column="description_" data-type="String" is-display="true" display-name="description" display-order="46" field-type="SingleLineText" unique="false" length="2000" name="description" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="deleted_" data-type="SmallInt" default-value="0" is-display="true" display-name="deleted" display-order="47" field-type="SmallInt" unique="false" name="deleted" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="deleted_time" data-type="Timestamp" is-display="true" display-name="deletedTime" display-order="48" field-type="Date" unique="false" name="deletedTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="deleted_comment" data-type="String" is-display="true" display-name="deletedComment" display-order="49" field-type="SingleLineText" unique="false" length="500" name="deletedComment" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="terminal" data-type="String" is-display="true" display-name="终端" display-order="50" field-type="SingleLineText" unique="false" length="50" name="terminal" nullable="true" sql-type="varchar" is-system="true"/>
+            <id column="id_" data-type="Guid" is-display="false" display-for="{list:true,form:true}" display-name="待办编号" display-order="0" unique="false" length="36" name="id" nullable="false" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </id>
+            <many-to-one display-name="父任务" field="parentId" field-order="10" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_TASK_PARENT" optional="true" target-entity="WfTask"/>
+            <many-to-one display-name="流程定义" field="procDefId" field-order="5" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_TASK_PROC_DEF" optional="false" target-entity="WfProcDef"/>
+            <many-to-one display-name="FK_WF_TASK_DELIVER" field="deliverTaskId" field-order="11" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_TASK_DELIVER" optional="true" target-entity="WfTask"/>
+            <many-to-one display-name="所属流程" field="procInstId" field-order="6" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_TASK_PROC_INST" optional="false" target-entity="WfProcInst"/>
+            <many-to-one display-name="根流程" field="rootInstId" field-order="7" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_TASK_ROOT_INST" optional="false" target-entity="WfProcInst"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:false}" display-name="环节实例" inherits-persistence="PerEntity" name="WfActInst" pack="workflow" is-system="false" table="wf_act_inst">
+            <field column="app_code" data-type="String" is-display="true" display-name="appCode" display-order="1" field-type="SingleLineText" unique="false" length="36" name="appCode" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="revision_" data-type="Integer" default-value="0" is-display="true" display-name="事务版本" display-order="2" field-type="Integer" unique="false" name="revision" nullable="false" sql-type="integer" is-system="true"/>
+            <field column="seq_" data-type="Integer" is-display="true" display-name="seq" display-order="3" field-type="Integer" unique="false" name="seq" nullable="true" sql-type="integer" is-system="true"/>
+            <field column="path_" data-type="String" is-display="true" display-name="path" display-order="4" field-type="SingleLineText" unique="false" length="50" name="path" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="root_inst_id" data-type="String" is-display="true" display-name="rootInstId" display-order="5" field-type="SingleLineText" unique="false" length="36" name="rootInstId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="calling_path" data-type="String" is-display="true" display-name="callingPath" display-order="6" field-type="SingleLineText" unique="false" length="50" name="callingPath" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="calling_inst_id" data-type="String" is-display="true" display-name="callingInstId" display-order="7" field-type="SingleLineText" unique="false" length="36" name="callingInstId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="mi_batch" data-type="Integer" is-display="true" display-name="miBatch" display-order="8" field-type="Integer" unique="false" name="miBatch" nullable="true" sql-type="integer" is-system="true"/>
+            <field column="proc_def_id" data-type="Guid" is-display="true" display-name="procDefId" display-order="9" field-type="SingleLineText" unique="false" length="36" name="procDefId" nullable="false" ref-entity="WfProcDef" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="proc_inst_id" data-type="Guid" is-display="true" display-name="procInstId" display-order="10" field-type="SingleLineText" unique="false" length="36" name="procInstId" nullable="false" ref-entity="WfProcInst" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="execution_id" data-type="Guid" is-display="true" display-name="executionId" display-order="11" field-type="SingleLineText" unique="false" length="36" name="executionId" nullable="false" ref-entity="WfExecution" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="execution_path" data-type="String" is-display="true" display-name="executionPath" display-order="12" field-type="SingleLineText" unique="false" length="50" name="executionPath" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="pre_task_id" data-type="String" is-display="true" display-name="preTaskId" display-order="13" field-type="SingleLineText" unique="false" length="36" name="preTaskId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="name_" data-type="String" is-display="true" display-name="name" display-order="14" field-type="SingleLineText" unique="false" length="150" name="name" nullable="false" semantics="Title" sql-type="varchar" is-system="true"/>
+            <field column="title_" data-type="String" is-display="true" display-name="title" display-order="15" field-type="SingleLineText" unique="false" length="300" name="title" nullable="true" semantics="Title" sql-type="varchar" is-system="true"/>
+            <field column="type_" data-type="String" is-display="true" display-name="type" display-order="16" field-type="SingleLineText" unique="false" length="50" name="type" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="ext_type" data-type="String" is-display="true" display-name="extType" display-order="17" field-type="SingleLineText" unique="false" length="50" name="extType" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="start_time" data-type="Timestamp" is-display="true" display-name="startTime" display-order="18" field-type="Timestamp" unique="false" name="startTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="end_time" data-type="Timestamp" is-display="true" display-name="endTime" display-order="19" field-type="Timestamp" unique="false" name="endTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="duration_" data-type="BigInt" is-display="true" display-name="duration" display-order="20" field-type="BigInt" unique="false" name="duration" nullable="true" sql-type="numeric" is-system="true"/>
+            <field column="status_" data-type="SmallInt" default-value="1" is-display="true" display-name="status" display-order="21" field-type="SmallInt" unique="false" name="status" nullable="true" sql-type="smallint" is-system="true"/>
+            <field column="end_reason" data-type="SmallInt" is-display="true" display-name="endReason" display-order="22" field-type="SmallInt" unique="false" name="endReason" nullable="true" sql-type="smallint" is-system="true"/>
+            <field column="end_comment" data-type="String" is-display="true" display-name="endComment" display-order="23" field-type="SingleLineText" unique="false" length="500" name="endComment" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="deleted_" data-type="SmallInt" default-value="0" is-display="true" display-name="deleted" display-order="24" field-type="SmallInt" unique="false" name="deleted" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="deleted_time" data-type="Timestamp" is-display="true" display-name="deletedTime" display-order="25" field-type="Date" unique="false" name="deletedTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="deleted_comment" data-type="String" is-display="true" display-name="deletedComment" display-order="26" field-type="SingleLineText" unique="false" length="500" name="deletedComment" nullable="true" sql-type="varchar" is-system="true"/>
+            <id column="id_" data-type="Guid" is-display="false" display-name="id" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+            <many-to-one display-name="FK_WF_ACT_INST_PROC_DEF" field="procDefId" field-order="9" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_ACT_INST_PROC_DEF" optional="false" target-entity="WfProcDef"/>
+            <many-to-one display-name="FK_WF_ACT_INST_EXECUTION" field="executionId" field-order="11" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_ACT_INST_EXECUTION" optional="false" target-entity="WfExecution"/>
+            <many-to-one display-name="FK_WF_ACT_INST_PROC_INST" field="procInstId" field-order="10" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_ACT_INST_PROC_INST" optional="false" target-entity="WfProcInst"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:true}" display-name="流程定义" inherits-persistence="PerEntity" name="WfProcDef" pack="workflow" is-system="false" table="wf_proc_def">
+            <field column="app_code" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="应用编码" display-order="1" field-type="SingleLineText" unique="false" length="36" name="appCode" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="key_" data-type="String" is-display="true" display-name="版本键" display-order="2" field-type="SingleLineText" unique="false" length="150" name="key" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="version_" data-type="Integer" default-value="0" is-display="true" display-name="版本号" display-order="3" field-type="Integer" unique="false" name="version" nullable="false" sql-type="integer" is-system="true"/>
+            <field column="title_" data-type="String" is-display="true" display-name="流程标题" display-order="4" field-type="SingleLineText" unique="false" length="300" name="title" nullable="false" semantics="Title" sql-type="varchar" is-system="true"/>
+            <field column="type_" data-type="String" default-value="bpmn" is-display="true" display-name="流程类型" display-order="5" field-type="SingleLineText" unique="false" length="20" name="type" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="content_" data-type="Text" is-display="true" display-for="{list:true,form:true}" display-name="流程内容" display-order="6" field-type="MultiLineText" unique="false" name="content" nullable="false" sql-type="longvarchar" is-system="true"/>
+            <field column="form_key" data-type="String" is-display="true" display-name="formKey" display-order="7" field-type="SingleLineText" unique="false" length="150" name="formKey" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="resource_name" data-type="String" is-display="true" display-name="resourceName" display-order="8" field-type="SingleLineText" unique="false" length="150" name="resourceName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="resource_url" data-type="String" is-display="true" display-name="resourceUrl" display-order="9" field-type="SingleLineText" unique="false" length="350" name="resourceUrl" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="diagram_url" data-type="String" is-display="true" display-name="diagramUrl" display-order="10" field-type="SingleLineText" unique="false" length="350" name="diagramUrl" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="enabled_" data-type="SmallInt" default-value="1" is-display="true" display-name="enabled" display-order="11" field-type="SmallInt" unique="false" name="enabled" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="description_" data-type="String" is-display="true" display-name="流程描述" display-order="12" field-type="SingleLineText" unique="false" length="4000" name="description" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="creator_id" data-type="String" is-display="true" display-name="creatorId" display-order="13" field-type="SingleLineText" unique="false" length="36" name="creatorId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="creator_name" data-type="String" is-display="true" display-name="creatorName" display-order="14" field-type="SingleLineText" unique="false" length="150" name="creatorName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="create_time" data-type="Timestamp" is-display="true" display-name="createTime" display-order="15" field-type="Date" unique="false" name="createTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="deleted_" data-type="SmallInt" default-value="0" is-display="true" display-name="deleted" display-order="16" field-type="SmallInt" unique="false" name="deleted" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="deleted_time" data-type="Timestamp" is-display="true" display-name="deletedTime" display-order="17" field-type="Date" unique="false" name="deletedTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="deleted_comment" data-type="String" is-display="true" display-name="deletedComment" display-order="18" field-type="SingleLineText" unique="false" name="deletedComment" nullable="true" sql-type="varchar" is-system="true"/>
+            <id column="id_" data-type="Guid" is-display="false" display-name="主键" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+        	<field column="is_template" data-type="Boolean" default-value="false" is-display="true" display-name="是否模版" display-order="6" field-type="Boolean" input-type="Tile" unique="false" name="isTemplate" nullable="true" sql-type="tinyint" is-system="true"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:false}" display-name="WfBackserviceTask" inherits-persistence="PerEntity" name="WfBackserviceTask" pack="workflow" is-system="false" table="wf_backservice_task">
+            <field column="title" length="150" data-type="String" is-display="true" display-name="title" display-order="1" field-type="SingleLineText" unique="false" name="title" nullable="true" semantics="Title" sql-type="varchar" is-system="true"/>
+            <field column="created_time" data-type="Timestamp" default-value="@{env.Now}" is-display="true" display-name="createdTime" display-order="2" field-type="Date" unique="false" name="createdTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="created_by" length="50" data-type="String" is-display="true" display-name="createdBy" display-order="3" field-type="SingleLineText" unique="false" name="createdBy" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="creator_type" length="10" data-type="String" is-display="true" display-name="creatorType" display-order="4" field-type="SingleLineText" unique="false" name="creatorType" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="last_executed_time" data-type="Timestamp" is-display="true" display-name="lastExecutedTime" display-order="5" field-type="Date" unique="false" name="lastExecutedTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="executed_times" default-value="0" data-type="Integer" is-display="true" display-name="executedTimes" display-order="6" field-type="Integer" unique="false" name="executedTimes" nullable="true" sql-type="integer" is-system="true"/>
+            <field column="max_executed_times" data-type="Integer" is-display="true" display-name="maxExecutedTimes" display-order="7" field-type="Integer" unique="false" name="maxExecutedTimes" nullable="true" sql-type="integer" is-system="true"/>
+            <field column="execute_start_time" data-type="Timestamp" is-display="true" display-name="executeStartTime" display-order="8" field-type="Date" unique="false" name="executeStartTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="execute_expired_time" data-type="Timestamp" is-display="true" display-name="executeExpiredTime" display-order="9" field-type="Date" unique="false" name="executeExpiredTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="parent" length="36" data-type="String" is-display="true" display-name="parent" display-order="10" field-type="SingleLineText" unique="false" name="parent" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="task_type" length="10" data-type="String" is-display="true" display-name="taskType" display-order="11" field-type="SingleLineText" unique="false" name="taskType" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="business_data" length="4000" data-type="String" is-display="true" display-name="businessData" display-order="12" field-type="SingleLineText" unique="false" name="businessData" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="from_id" length="36" data-type="String" is-display="true" display-name="fromId" display-order="13" field-type="SingleLineText" unique="false" name="fromId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="from_name" length="150" data-type="String" is-display="true" display-name="fromName" display-order="14" field-type="SingleLineText" unique="false" name="fromName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="to_id" length="36" data-type="String" is-display="true" display-name="toId" display-order="15" field-type="SingleLineText" unique="false" name="toId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="to_name" length="150" data-type="String" is-display="true" display-name="toName" display-order="16" field-type="SingleLineText" unique="false" name="toName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="processing_key" default-value="new" length="36" data-type="String" is-display="true" display-name="processingKey" display-order="17" field-type="SingleLineText" unique="false" name="processingKey" nullable="true" sql-type="varchar" is-system="true"/>
+            <id column="id" data-type="Guid" is-display="true" display-name="id" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:false}" display-name="WfBackserviceTaskHistory" inherits-persistence="PerEntity" name="WfBackserviceTaskHistory" pack="workflow" is-system="false" table="wf_backservice_task_history">
+            <field column="title" length="150" data-type="String" is-display="true" display-name="title" display-order="1" field-type="SingleLineText" unique="false" name="title" nullable="true" semantics="Title" sql-type="varchar" is-system="true"/>
+            <field column="created_time" data-type="Timestamp" default-value="@{env.Now}" is-display="true" display-name="createdTime" display-order="2" field-type="Date" unique="false" name="createdTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="created_by" length="50" data-type="String" is-display="true" display-name="createdBy" display-order="3" field-type="SingleLineText" unique="false" name="createdBy" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="creator_type" length="10" data-type="String" is-display="true" display-name="creatorType" display-order="4" field-type="SingleLineText" unique="false" name="creatorType" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="last_executed_time" data-type="Timestamp" is-display="true" display-name="lastExecutedTime" display-order="5" field-type="Date" unique="false" name="lastExecutedTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="executed_times" data-type="Integer" is-display="true" display-name="executedTimes" display-order="6" field-type="Integer" unique="false" name="executedTimes" nullable="true" sql-type="integer" is-system="true"/>
+            <field column="max_executed_times" data-type="Integer" is-display="true" display-name="maxExecutedTimes" display-order="7" field-type="Integer" unique="false" name="maxExecutedTimes" nullable="true" sql-type="integer" is-system="true"/>
+            <field column="execute_start_time" data-type="Timestamp" is-display="true" display-name="executeStartTime" display-order="8" field-type="Date" unique="false" name="executeStartTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="execute_expired_time" data-type="Timestamp" is-display="true" display-name="executeExpiredTime" display-order="9" field-type="Date" unique="false" name="executeExpiredTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="parent" length="36" data-type="String" is-display="true" display-name="parent" display-order="10" field-type="SingleLineText" unique="false" name="parent" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="task_type" length="10" data-type="String" is-display="true" display-name="taskType" display-order="11" field-type="SingleLineText" unique="false" name="taskType" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="business_data" length="4000" data-type="String" is-display="true" display-name="businessData" display-order="12" field-type="SingleLineText" unique="false" name="businessData" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="from_id" length="36" data-type="String" is-display="true" display-name="fromId" display-order="13" field-type="SingleLineText" unique="false" name="fromId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="from_name" length="150" data-type="String" is-display="true" display-name="fromName" display-order="14" field-type="SingleLineText" unique="false" name="fromName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="to_id" length="36" data-type="String" is-display="true" display-name="toId" display-order="15" field-type="SingleLineText" unique="false" name="toId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="to_name" length="150" data-type="String" is-display="true" display-name="toName" display-order="16" field-type="SingleLineText" unique="false" name="toName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="execute_status" data-type="SmallInt" is-display="true" display-name="executeStatus" display-order="17" field-type="SmallInt" unique="false" name="executeStatus" nullable="true" sql-type="smallint" is-system="true"/>
+            <field column="description" length="500" data-type="String" is-display="true" display-name="description" display-order="18" field-type="SingleLineText" unique="false" name="description" nullable="true" sql-type="varchar" is-system="true"/>
+            <id column="id" data-type="Guid" is-display="true" display-name="id" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:false}" display-name="WfCode" inherits-persistence="PerEntity" name="WfCode" pack="workflow" is-system="false" table="wf_code">
+            <field column="last_seq" data-type="Integer" default-value="0" is-display="true" display-name="lastSeq" display-order="2" field-type="Integer" unique="false" name="lastSeq" nullable="false" sql-type="integer" is-system="true"/>
+            <composite-id>
+                <field column="name_" data-type="String" is-display="false" display-name="name" display-order="0" unique="false" length="150" name="name" nullable="false" semantics="Title" sql-type="varchar" is-system="true"/>
+                <field column="value_" data-type="String" is-display="false" display-name="value" display-order="1" unique="false" length="50" name="value" nullable="false" sql-type="varchar" is-system="true"/>
+            </composite-id>
+        </entity>
+        <entity is-display="true" display-for="{manage:false}" display-name="WfExecution" inherits-persistence="PerEntity" name="WfExecution" pack="workflow" is-system="false" table="wf_execution">
+            <field column="app_code" data-type="String" is-display="true" display-name="appCode" display-order="1" field-type="SingleLineText" unique="false" length="36" name="appCode" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="revision_" data-type="Integer" default-value="0" is-display="true" display-name="事务版本" display-order="2" field-type="Integer" unique="false" name="revision" nullable="false" sql-type="integer" is-system="true"/>
+            <field column="seq_" data-type="Integer" is-display="true" display-name="seq" display-order="3" field-type="Integer" unique="false" name="seq" nullable="true" sql-type="integer" is-system="true"/>
+            <field column="path_" data-type="String" is-display="true" display-name="path" display-order="4" field-type="SingleLineText" unique="false" length="50" name="path" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="root_inst_id" data-type="Guid" is-display="true" display-name="rootInstId" display-order="5" field-type="SingleLineText" unique="false" name="rootInstId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="proc_def_id" data-type="Guid" is-display="true" display-name="procDefId" display-order="6" field-type="SingleLineText" unique="false" length="36" name="procDefId" nullable="false" ref-entity="WfProcDef" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="proc_inst_id" data-type="Guid" is-display="true" display-name="procInstId" display-order="7" field-type="SingleLineText" unique="false" length="36" name="procInstId" nullable="false" ref-entity="WfProcInst" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="caller_inst_id" data-type="Guid" is-display="true" display-name="callerInstId" display-order="8" field-type="SingleLineText" unique="false" name="callerInstId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="caller_exec_id" data-type="Guid" is-display="true" display-name="callerExecId" display-order="9" field-type="SingleLineText" unique="false" name="callerExecId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="parent_id" data-type="Guid" is-display="true" display-name="parentId" display-order="10" field-type="SingleLineText" unique="false" length="36" name="parentId" nullable="true" ref-entity="WfExecution" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="parent_act_name" data-type="String" is-display="true" display-name="parentActName" display-order="11" field-type="SingleLineText" unique="false" length="150" name="parentActName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="parent_act_title" data-type="String" is-display="true" display-name="parentActTitle" display-order="12" field-type="SingleLineText" unique="false" length="300" name="parentActTitle" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="parent_act_path" data-type="String" is-display="true" display-name="parentActPath" display-order="13" field-type="SingleLineText" unique="false" length="50" name="parentActPath" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="start_act_name" data-type="String" is-display="true" display-name="startActName" display-order="14" field-type="SingleLineText" unique="false" length="150" name="startActName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="start_act_title" data-type="String" is-display="true" display-name="startActTitle" display-order="15" field-type="SingleLineText" unique="false" length="300" name="startActTitle" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="income_trans_name" data-type="String" is-display="true" display-name="incomeTransName" display-order="16" field-type="SingleLineText" unique="false" length="150" name="incomeTransName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="curr_act_inst_id" data-type="Guid" is-display="true" display-name="当前环节实例的标识" display-order="17" field-type="SingleLineText" unique="false" name="currActInstId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="last_task_id" data-type="Guid" is-display="true" display-name="最后一条待办" display-order="17" field-type="SingleLineText" unique="false" name="lastTaskId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="curr_act_path" data-type="String" is-display="true" display-name="currActPath" display-order="18" field-type="SingleLineText" unique="false" length="50" name="currActPath" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="curr_act_name" data-type="String" is-display="true" display-name="currActName" display-order="19" field-type="SingleLineText" unique="false" length="150" name="currActName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="curr_act_title" data-type="String" is-display="true" display-name="currActTitle" display-order="20" field-type="SingleLineText" unique="false" length="300" name="currActTitle" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="curr_act_started" data-type="SmallInt" default-value="1" is-display="true" display-name="currActStarted" display-order="21" field-type="SmallInt" unique="false" name="currActStarted" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="end_act_name" data-type="String" is-display="true" display-name="endActName" display-order="22" field-type="SingleLineText" unique="false" length="150" name="endActName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="end_act_title" data-type="String" is-display="true" display-name="endActTitle" display-order="23" field-type="SingleLineText" unique="false" length="300" name="endActTitle" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="parallel_" data-type="SmallInt" default-value="0" is-display="true" display-name="是否并行分支" display-order="24" field-type="SmallInt" unique="false" name="parallel" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="parallel_type" data-type="SmallInt" default-value="0" is-display="true" display-name="并行类型" display-order="25" field-type="SmallInt" unique="false" name="parallelType" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="start_time" data-type="Timestamp" is-display="true" display-name="startTime" display-order="26" field-type="Date" unique="false" name="startTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="end_time" data-type="Timestamp" is-display="true" display-name="endTime" display-order="27" field-type="Date" unique="false" name="endTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="duration_" data-type="BigInt" is-display="true" display-name="duration" display-order="28" field-type="BigInt" unique="false" name="duration" nullable="true" sql-type="numeric" is-system="true"/>
+            <field column="status_" data-type="SmallInt" default-value="1" is-display="true" display-name="status" display-order="29" field-type="SmallInt" unique="false" name="status" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="end_reason" data-type="SmallInt" is-display="true" display-name="endReason" display-order="30" field-type="SmallInt" unique="false" name="endReason" nullable="true" sql-type="smallint" is-system="true"/>
+            <field column="end_comment" data-type="String" is-display="true" display-name="endComment" display-order="31" field-type="SingleLineText" unique="false" length="500" name="endComment" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="deleted_" data-type="SmallInt" default-value="0" is-display="true" display-name="deleted" display-order="32" field-type="SmallInt" unique="false" name="deleted" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="deleted_time" data-type="Timestamp" is-display="true" display-name="deletedTime" display-order="33" field-type="Date" unique="false" name="deletedTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="deleted_comment" data-type="String" is-display="true" display-name="deletedComment" display-order="34" field-type="SingleLineText" unique="false" length="500" name="deletedComment" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="child_seq" data-type="SmallInt" is-display="true" display-name="childSeq" display-order="35" field-type="SmallInt" unique="false" name="childSeq" nullable="true" sql-type="smallint" is-system="true"/>
+            <field column="act_seq" data-type="Integer" default-value="0" is-display="true" display-name="actSeq" display-order="36" field-type="Integer" unique="false" name="actSeq" nullable="false" sql-type="integer" is-system="true"/>
+            <id column="id_" data-type="Guid" is-display="false" display-name="主键" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+            <many-to-one display-name="FK_WF_PROC_EXECUTION_DEF" field="procDefId" field-order="6" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_PROC_EXECUTION_DEF" optional="false" target-entity="WfProcDef"/>
+            <many-to-one display-name="FK_WF_PROC_EXECUTION_PARENT" field="parentId" field-order="10" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_PROC_EXECUTION_PARENT" optional="true" target-entity="WfExecution"/>
+            <many-to-one display-name="FK_WF_PROC_EXECUTION_INST" field="procInstId" field-order="7" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_PROC_EXECUTION_INST" optional="false" target-entity="WfProcInst"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:false}" display-name="WfNotifyReader" inherits-persistence="PerEntity" name="WfNotifyReader" pack="workflow" is-system="false" table="wf_notify_reader">
+            <field column="app_code" data-type="String" is-display="true" display-name="appCode" display-order="1" field-type="SingleLineText" unique="false" length="36" name="appCode" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="notify_id" data-type="Guid" is-display="true" display-name="notifyId" display-order="2" field-type="SingleLineText" unique="false" length="36" name="notifyId" nullable="true" ref-entity="WfNotify" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="reader_id" data-type="Guid" is-display="true" display-name="readerId" display-order="3" field-type="SingleLineText" unique="false" name="readerId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="reader_name" data-type="String" is-display="true" display-name="readerName" display-order="4" field-type="SingleLineText" unique="false" length="150" name="readerName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="read_time" data-type="Timestamp" default-value="@{env.Now}" is-display="true" display-name="readTime" display-order="5" field-type="Date" unique="false" name="readTime" nullable="false" sql-type="timestamp" is-system="true"/>
+            <id column="id_" data-type="Guid" is-display="false" display-name="id" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+            <many-to-one display-name="FK_WF_NOTIFY_READER" field="notifyId" field-order="2" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_NOTIFY_READER" optional="true" target-entity="WfNotify"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:false}" display-name="WfOrgRole" inherits-persistence="PerEntity" name="WfOrgRole" pack="workflow" is-system="false" table="wf_org_role">
+            <field column="created_by" length="50" data-type="String" is-display="true" display-name="createdBy" display-order="3" field-type="SingleLineText" unique="false" name="createdBy" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="created_date" data-type="Timestamp" is-display="true" display-name="createdDate" display-order="4" field-type="Date" unique="false" name="createdDate" nullable="false" sql-type="timestamp" is-system="true"/>
+            <field column="last_updated_by" length="50" data-type="String" is-display="true" display-name="lastUpdatedBy" display-order="5" field-type="SingleLineText" unique="false" name="lastUpdatedBy" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="last_updated_date" data-type="Timestamp" is-display="true" display-name="lastUpdatedDate" display-order="6" field-type="Date" unique="false" name="lastUpdatedDate" nullable="false" sql-type="timestamp" is-system="true"/>
+            <composite-id>
+                <field column="org_id" data-type="Guid" is-display="false" display-name="orgId" display-order="0" unique="false" length="36" name="orgId" nullable="false" ref-entity="uamOrganization" ref-to="id" sql-type="varchar" is-system="true"/>
+                <field column="role_org_id" data-type="Guid" is-display="false" display-name="roleOrgId" display-order="1" unique="false" length="36" name="roleOrgId" nullable="false" ref-entity="uamOrganization" ref-to="id" sql-type="varchar" is-system="true"/>
+                <field column="role_id" data-type="Guid" is-display="false" display-name="roleId" display-order="2" unique="false" length="36" name="roleId" nullable="false" ref-entity="Role" ref-to="id" sql-type="varchar" is-system="true"/>
+            </composite-id>
+            <many-to-one display-name="fk_wf_org_r_reference_sec_orga" field="roleOrgId" field-order="1" field-ref="id" is-abstract="false" is-display="true" identity="true" name="fk_wf_org_r_reference_sec_orga" optional="false" target-entity="uamOrganization"/>
+            <many-to-one display-name="fk_wf_org_role_orgid" field="orgId" field-order="0" field-ref="id" is-abstract="false" is-display="true" identity="true" name="fk_wf_org_role_orgid" optional="false" target-entity="uamOrganization"/>
+            <many-to-one display-name="fk_wf_org_r_reference_sec_role" field="roleId" field-order="2" field-ref="id" is-abstract="false" is-display="true" identity="true" name="fk_wf_org_r_reference_sec_role" optional="false" target-entity="Role"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:false}" display-name="WfParam" inherits-persistence="PerEntity" name="WfParam" pack="workflow" is-system="false" table="wf_param">
+            <field column="value_" data-type="String" is-display="true" display-name="value" display-order="1" field-type="SingleLineText" unique="false" length="350" name="value" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="revision_" data-type="Integer" default-value="0" is-display="true" display-name="revision" display-order="2" field-type="Integer" unique="false" name="revision" nullable="false" sql-type="integer" is-system="true"/>
+            <id column="name_" data-type="String" is-display="false" display-name="name" display-order="0" unique="false" length="150" name="name" nullable="false" semantics="Title" sql-type="varchar" is-system="true"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:false}" display-name="WfVariable" inherits-persistence="PerEntity" name="WfVariable" pack="workflow" is-system="false" table="wf_variable">
+            <field column="app_code" data-type="String" is-display="true" display-name="appCode" display-order="1" field-type="SingleLineText" unique="false" length="36" name="appCode" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="revision_" data-type="Integer" default-value="0" is-display="true" display-name="事务版本" display-order="2" field-type="Integer" unique="false" name="revision" nullable="false" sql-type="integer" is-system="true"/>
+            <field column="proc_inst_id" data-type="Guid" is-display="true" display-name="procInstId" display-order="3" field-type="SingleLineText" unique="false" length="36" name="procInstId" nullable="false" ref-entity="WfProcInst" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="execution_id" data-type="Guid" is-display="true" display-name="executionId" display-order="4" field-type="SingleLineText" unique="false" length="36" name="executionId" nullable="true" ref-entity="WfExecution" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="act_name" data-type="String" is-display="true" display-name="actName" display-order="5" field-type="SingleLineText" unique="false" length="150" name="actName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="task_id" data-type="Guid" is-display="true" display-name="taskId" display-order="6" field-type="SingleLineText" unique="false" length="36" name="taskId" nullable="true" ref-entity="WfTask" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="type_" data-type="SmallInt" default-value="0" is-display="true" display-name="type" display-order="7" field-type="SmallInt" unique="false" name="type" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="clazz_" data-type="String" is-display="true" display-name="clazz" display-order="8" field-type="SingleLineText" unique="false" length="350" name="clazz" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="name_" data-type="String" is-display="true" display-name="name" display-order="9" field-type="SingleLineText" unique="false" length="150" name="name" nullable="false" semantics="Title" sql-type="varchar" is-system="true"/>
+            <field column="value_" data-type="String" is-display="true" display-name="value" display-order="10" field-type="SingleLineText" unique="false" length="4000" name="value" nullable="true" sql-type="varchar" is-system="true"/>
+            <id column="id_" data-type="Guid" is-display="false" display-name="id" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+            <many-to-one display-name="FK_WF_VARIABLE_EXECUTION" field="executionId" field-order="4" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_VARIABLE_EXECUTION" optional="true" target-entity="WfExecution"/>
+            <many-to-one display-name="FK_WF_VARIABLE_PROC_INST" field="procInstId" field-order="3" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_VARIABLE_PROC_INST" optional="false" target-entity="WfProcInst"/>
+            <many-to-one display-name="FK_WF_VARIABLE_TASK" field="taskId" field-order="6" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_VARIABLE_TASK" optional="true" target-entity="WfTask"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:false}" display-name="编号部件" inherits-persistence="PerEntity" name="CustomIdComponent" pack="workflow" is-system="false" table="wf_custom_id_component">
+            <field column="belong_to" data-type="Guid" is-display="true" display-name="所属主表" display-order="1" field-type="SingleLineText" unique="false" length="36" name="belongTo" nullable="false" ref-entity="CustomId" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="name" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="部件名称" display-order="1" field-type="SingleLineText" unique="false" length="50" name="name" nullable="true" semantics="Title" sql-type="varchar" is-system="true">
+            </field>
+            <field column="type" data-type="Integer" is-display="true" display-for="{list:true,form:true}" display-name="部件类型" display-order="2" field-type="SingleOption" input-type="Dropdown" unique="false" name="type" nullable="true" sql-type="integer" is-system="true">
+                <options>
+                    <item name="固定值" value="1"/>
+                    <item name="日期时间" value="2"/>
+                    <item name="序列号" value="3"/>
+                </options>
+            </field>
+            <field column="order" data-type="Integer" is-display="true" display-name="序号" display-order="3" field-type="Integer" unique="false" name="order" nullable="true" sql-type="integer" is-system="true"/>
+            <field column="last_date" data-type="Timestamp" default-value="@{env.Now}" is-display="true" display-name="上一次生成日期" display-order="3" field-type="Date" unique="false" name="lastDate" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="fixed_value" data-type="String" is-display="true" display-name="固定值" display-order="4" field-type="SingleLineText" unique="false" length="50" name="fixedValue" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="time_format" data-type="String" default-value="yyddMM" is-display="true" display-for="{list:true,form:true}" display-name="时间格式" display-order="5" field-type="SingleLineText" unique="false" length="50" name="timeFormat" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="50"/>
+                </field-type-params>
+            </field>
+            <field column="start_value" data-type="Integer" default-value="1" is-display="true" display-for="{list:true,form:true}" display-name="起始值" display-order="6" field-type="Integer" unique="false" name="startValue" nullable="true" sql-type="integer" is-system="true">
+                <field-type-params>
+                    <param name="unit" value=""/>
+                </field-type-params>
+            </field>
+            <field column="length" data-type="Integer" default-value="4" is-display="true" display-for="{list:true,form:true}" display-name="位数" display-order="7" field-type="Integer" unique="false" name="length" nullable="true" sql-type="integer" is-system="true">
+                <field-type-params>
+                    <param name="unit" value=""/>
+                </field-type-params>
+            </field>
+            <field column="next_value" data-type="Integer" default-value="1" is-display="true" display-for="{list:true,form:true}" display-name="下一数" display-order="8" field-type="Integer" unique="false" name="nextValue" nullable="true" sql-type="integer" is-system="true">
+                <field-type-params>
+                    <param name="unit" value=""/>
+                </field-type-params>
+            </field>
+            <field column="step" data-type="Integer" default-value="1" is-display="true" display-for="{list:true,form:true}" display-name="步进" display-order="9" field-type="Integer" unique="false" name="step" nullable="true" sql-type="integer" is-system="true">
+                <field-type-params>
+                    <param name="unit" value=""/>
+                </field-type-params>
+            </field>
+            <field column="prefix" data-type="String" is-display="true" display-name="前缀" display-order="11" field-type="SingleLineText" unique="false" length="50" name="prefix" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="suffix" data-type="String" is-display="true" display-name="后缀" display-order="12" field-type="SingleLineText" unique="false" length="50" name="suffix" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="scope" data-type="String" default-value="yyyyMMdd" is-display="true" display-for="{list:true,form:true}" display-name="计数循环范围" display-order="13" field-type="SingleOption" input-type="Dropdown" unique="false" length="50" name="scope" nullable="true" sql-type="varchar" is-system="true">
+                <options>
+                    <item name="按日" value="yyyyMMdd"/>
+                    <item name="按月" value="yyyyMM"/>
+                    <item name="按年" value="yyyy"/>
+                </options>
+            </field>
+            <id column="id" data-type="Guid" is-display="false" display-name="主键" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+            <many-to-one display-name="编号主表" field="belongTo" field-order="1" field-ref="id" is-abstract="false" is-display="true" name="Reference_15" optional="false" target-entity="CustomId"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:false}" display-name="编号主表" inherits-persistence="PerEntity" name="CustomId" pack="workflow" is-system="false" table="wf_custom_id">
+            <field column="name" data-type="String" is-display="true" display-name="名称" display-order="1" field-type="SingleLineText" unique="false" length="50" name="name" nullable="true" semantics="Title" sql-type="varchar" is-system="true"/>
+            <field column="code" data-type="String" is-display="true" display-name="代码" display-order="2" field-type="SingleLineText" unique="false" length="50" name="code" nullable="true" sql-type="varchar" is-system="true"/>
+            <id column="id" data-type="Guid" is-display="false" display-name="主键" display-order="0" unique="false" name="id" nullable="false" ref-to="belongTo" sql-type="varchar" is-system="true"/>
+            <one-to-many display-name="所有编号部件" field="id" field-order="0" field-ref="belongTo" is-abstract="false" is-display="false" identity="true" name="customIdComponent" optional="false" target-entity="CustomIdComponent"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:true}" display-name="草稿事项" inherits-persistence="PerEntity" name="WfDraft" pack="workflow" is-system="false" table="wf_draft">
+            <field column="PROC_ID" data-type="Guid" is-display="true" display-for="{list:true,form:true}" display-name="所属流程" display-order="1" field-type="SingleLineText" unique="false" length="36" name="procId" nullable="false" ref-entity="WfProc" ref-to="procId" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="TITLE" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="标题" display-order="2" field-type="SingleLineText" unique="false" length="150" name="title" nullable="false" semantics="Title" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="150"/>
+                </field-type-params>
+            </field>
+            <field column="CREATED_DATE" data-type="Timestamp" default-value="@{env.Now}" is-display="true" display-for="{list:true,form:true}" display-name="创建时间" display-order="3" field-type="Date" unique="false" name="createdDate" nullable="false" sql-type="timestamp" is-system="true"/>
+            <field column="BUSINESS_ID" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="业务标志" display-order="4" field-type="SingleLineText" unique="false" length="36" name="businessId" nullable="false" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="business_data" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="业务数据" display-order="4" field-type="SingleLineText" unique="false" length="2000" name="businessData" nullable="false" sql-type="varchar" is-system="true">
+            </field>
+            <field column="OWNER_ID" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="拥有者" display-order="5" field-type="SingleLineText" unique="false" length="36" name="ownerId" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="APP_CODE" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="应用编码" display-order="6" field-type="SingleLineText" unique="false" length="36" name="appCode" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <id column="DRAFT_ID" data-type="Guid" is-display="false" display-for="{list:true,form:true}" display-name="草稿编号" display-order="0" unique="false" name="draftId" nullable="false" sql-type="varchar" is-system="true"/>
+            <many-to-one display-name="所属事项" field="procId" field-order="1" field-ref="procId" is-abstract="false" is-display="true" name="FK_WF_DRAFT_PROC_ID" optional="false" target-entity="WfProc"/>
+        </entity>
+        <entity is-display="false" display-for="{manage:true}" display-name="常用意见" inherits-persistence="PerEntity" name="wfCommonOpinion" pack="workflow" is-system="false" table="wf_common_opinion">
+            <field column="created_by" data-type="Guid" default-value="@{env.User.id}" is-display="false" display-for="{list:true,form:false}" display-name="创建人" display-order="2" field-type="SingleLineText" unique="false" length="36" name="createdBy" nullable="true" ref-entity="User" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="created_time" data-type="DateTime" default-value="@{env.Now}" is-display="false" display-for="{list:true,form:false}" display-name="创建时间" display-order="2" field-type="DateTime" unique="false" name="createdTime" nullable="true" semantics="Created" sql-type="timestamp" is-system="true"/>
+            <field column="modified_by" data-type="Guid" default-value="@{env.User.id}" is-display="false" display-for="{list:true,form:false}" display-name="修改人" display-order="2" field-type="SingleLineText" unique="false" length="36" name="modifiedBy" nullable="true" ref-entity="User" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="modified_time" data-type="DateTime" default-value="@{env.Now}" is-display="false" display-for="{list:true,form:false}" display-name="修改时间" display-order="2" field-type="DateTime" unique="false" name="modifiedTime" nullable="true" semantics="Updated" sql-type="timestamp" is-system="true"/>
+            <field column="name" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="标题" display-order="2" field-type="SingleLineText" unique="false" length="500" name="name" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="content" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="内容" display-order="100" field-type="MultiLineText" unique="false" length="4000" name="content" nullable="false" semantics="Title" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="4000"/>
+                </field-type-params>
+            </field>
+            <id column="id" data-type="Guid" is-display="false" display-name="主键" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="proc_id" data-type="String" is-display="false" display-for="{list:true,form:false}" display-name="流程" display-order="2" field-type="SingleLineText" unique="false" length="36" name="procId" nullable="true" sql-type="varchar" is-system="true"/>
+            <many-to-one display-name="创建人" field="createdBy" field-order="2" field-ref="id" is-abstract="true" is-display="true" name="user" optional="false" target-entity="User"/>
+            <many-to-one display-name="修改人" field="modifiedBy" field-order="2" field-ref="id" is-abstract="true" is-display="true" name="user1" optional="false" target-entity="User"/>
+        </entity>
+        
+        <entity is-display="true" display-for="{manage:true}" display-name="流程" inherits-persistence="PerEntity" name="WfProc" pack="workflow" is-system="false" table="wf_proc">
+            <field column="PROC_CATAGORY_ID" data-type="Guid" is-display="true" display-for="{list:true,form:true}" display-name="业务归属分类" display-order="1" field-type="SingleLineText" unique="false" length="36" name="procCatagoryId" nullable="false" ref-entity="WfProcCatagory" ref-to="procCatagoryId" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="created_time" data-type="DateTime" default-value="@{env.Now}" is-display="false" display-for="{list:true,form:false}" display-name="创建时间" display-order="2" field-type="DateTime" unique="false" name="createdTime" nullable="false" semantics="Created" sql-type="timestamp" is-system="true"/>
+            <field column="icon" data-type="String" default-value="icon-credit-card" is-display="true" display-name="图标" display-order="2" field-type="Icon" unique="false" length="150" name="icon" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="bg_color" data-type="String" is-display="true" display-name="背景色" display-order="2" field-type="SingleOption" input-type="Dropdown" unique="false" length="50" name="bgColor" nullable="true" option-set="Color" sql-type="varchar" is-system="true"/>
+            <field column="proc_order" data-type="Integer" default-value="0" is-display="true" display-name="排序" display-order="2" field-type="Integer" unique="false" name="procOrder" nullable="true" sql-type="integer" is-system="true"/>
+            <field column="PROC_NAME" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="名称" display-order="2" field-type="SingleLineText" unique="false" length="150" name="procName" nullable="false" semantics="Title" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="150"/>
+                </field-type-params>
+            </field>
+            <field column="entity_name" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="关联实体" display-order="2" field-type="SingleLineText" unique="false" length="50" name="entityName" nullable="false" semantics="Common" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="50"/>
+                </field-type-params>
+            </field>
+            <field column="doc_template" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="正文模板" display-order="100" field-type="Upload" unique="false" name="docTemplate" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="fileSuffix" value="doc"/>
+                    <param name="maxSize" value="10"/>
+                </field-type-params>
+            </field>
+            <field column="proc_title_def" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="流程标题定义" display-order="2" field-type="MultiLineText" unique="false" length="500" name="procTitleDef" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="proc_def_id" data-type="Guid" is-display="true" display-name="流程定义" display-order="2" field-type="SingleLineText" unique="false" length="36" name="procDefId" nullable="true" ref-entity="WfProcDef" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="PROC_DEF_KEY" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="流程定义key" display-order="3" field-type="SingleLineText" unique="false" length="36" name="procDefKey" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="APP_CODE" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="应用编码" display-order="4" field-type="SingleLineText" unique="false" length="36" name="appCode" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="is_last" data-type="Boolean" default-value="true" is-display="true" display-name="是否最新" display-order="6" field-type="Boolean" input-type="Tile" unique="false" name="isLast" nullable="false" sql-type="tinyint" is-system="true"/>
+            <field column="url" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="流程表单" display-order="100" field-type="SingleLineText" unique="false" length="500" name="formUrl" nullable="false" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="remarks" data-type="String" is-display="true" display-name="描述" display-order="100" field-type="MultiLineText" unique="false" length="1500" name="remarks" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="proc_stati_parentid" data-type="Guid" is-display="true" display-for="{list:true,form:false}" display-name="流程统计一级分类" display-order="100" field-type="CascadeOption" unique="false" length="36" lookup-value="WfProcStatistics" name="procStatiParentId" nullable="true" ref-entity="WfProcStatistics" ref-to="procStatiId" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="orderBy" value=""/>
+                    <param name="condition" value="levelType=1"/>
+                    <param name="parentField" value=""/>
+                    <param name="handleUnusedChild" value="disable"/>
+                </field-type-params>
+            </field>
+            <field column="proc_stati_id" data-type="Guid" is-display="true" display-for="{list:true,form:false}" display-name="流程统计二级分类" display-order="100" field-type="CascadeOption" unique="false" length="36" lookup-value="WfProcStatistics" name="procStatiId" nullable="true" ref-entity="WfProcStatistics" ref-to="procStatiId" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="orderBy" value=""/>
+                    <param name="condition" value="levelType=2"/>
+                    <param name="parentField" value="procStatiParentId"/>
+                    <param name="handleUnusedChild" value="disable"/>
+                </field-type-params>
+            </field>
+            <field column="standard_consuming" data-type="BigInt" is-display="true" display-for="{list:true,form:true}" display-name="标准耗时" display-order="100" field-type="BigInt" unique="false" name="standardConsuming" nullable="true" sql-type="numeric" is-system="false"/>
+            <field column="enable_doc" data-type="Boolean" default-value="0" is-display="true" display-for="{list:true,form:true}" display-name="启用正文" display-order="100" field-type="Boolean" input-type="Tile" unique="false" name="enableDoc" nullable="true" sql-type="boolean" is-system="false"/>
+            <field column="doc_field" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="正文字段" display-order="102" field-type="SingleLineText" unique="false" length="500" name="docField" nullable="true" sql-type="varchar" is-system="false">
+            </field>
+            <field column="enable_re_wf" data-type="Boolean" default-value="0" is-display="true" display-for="{list:true,form:true}" display-name="启用关联流程" display-order="100" field-type="Boolean" input-type="Tile" unique="false" name="enableReWf" nullable="true" sql-type="boolean" is-system="false"/>
+            <field column="container" data-type="String" default-value="container" is-display="true" display-for="{list:true,form:true}" display-name="审批模板" display-order="100" field-type="SingleOption" input-type="Dropdown" unique="false" length="255" name="container" nullable="true" sql-type="varchar" is-system="false">
+                <options>
+                    <item name="默认模板" value="container"/>
+                    <item name="默认模板(较长意见)" value="container_long_comment"/>
+                    <item name="私企通用" value="container_enterprise"/>
+                    <item name="国企专用" value="container_pernas"/>
+                    <item name="公文模板" value="container_doc_paper"/>
+                </options>
+            </field>
+            <id column="PROC_ID" data-type="Guid" is-display="false" display-for="{list:true,form:true}" display-name="事项标志" display-order="0" unique="false" length="36" name="procId" nullable="false" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </id>
+            <field column="first_step_actors" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="第一步处理人" display-order="100" field-type="SingleLineText" unique="false" length="2000" name="firstStepActors" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="2000"/>
+                </field-type-params>
+            </field>
+            <field column="form_valiation_type" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="表单验证类型" display-order="101" field-type="SingleOption" input-type="Dropdown" unique="false" length="20" name="formValiationType" nullable="true" sql-type="varchar" is-system="false">
+               <options>
+                    <item name="rest服务" value="rest"/>
+                </options>
+            </field>
+            <field column="form_valiation_param" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="表单验证参数" display-order="102" field-type="SingleLineText" unique="false" length="500" name="formValiationParam" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="skip" data-type="Boolean" default-value="false" is-display="true" display-name="开启跳过" display-order="6" field-type="Boolean" input-type="Tile" unique="false" name="skip" nullable="true" sql-type="tinyint" is-system="true"/>
+            <field column="skip_config" data-type="Json" is-display="true" display-for="{list:true,form:true}" display-name="跳过配置" display-order="102" field-type="SingleLineText" unique="false" length="500" name="skipConfig" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="freestyle" data-type="Boolean" default-value="false" is-display="true" display-name="是否自由流" display-order="6" field-type="Boolean" input-type="Tile" unique="false" name="freestyle" nullable="true" sql-type="tinyint" is-system="true"/>
+            <field column="proc_end_remind" data-type="Boolean" default-value="false" is-display="true" display-name="流程结束是否提醒" display-order="6" field-type="Boolean" input-type="Tile" unique="false" name="procEndRemind" nullable="true" sql-type="tinyint" is-system="true"/>
+            <field column="task_complete_remind" data-type="Boolean" default-value="false" is-display="true" display-name="待办完成是否提醒" display-order="6" field-type="Boolean" input-type="Tile" unique="false" name="taskCompleteRemind" nullable="true" sql-type="tinyint" is-system="true"/>
+            <field column="task_remind_ignore" data-type="Boolean" default-value="false" is-display="true" display-name="待办完成是否过滤" display-order="6" field-type="Boolean" input-type="Tile" unique="false" name="taskRemindIgnore" nullable="true" sql-type="tinyint" is-system="true"/>
+            <many-to-many display-name="流程管理员" is-abstract="false" is-display="false" join-entity="WfProcUser" name="user" optional="true" target-entity="User"/>
+            <many-to-one display-name="流程定义" field="procDefId" field-order="2" field-ref="id" is-abstract="true" is-display="false" name="WfProcDef" optional="false" target-entity="WfProcDef"/>
+            <many-to-one display-name="业务归属分类" field="procCatagoryId" field-order="1" field-ref="procCatagoryId" is-abstract="true" is-display="false" name="wfProcCatagory" optional="false" target-entity="WfProcCatagory"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:false}" display-name="流程参与者" inherits-persistence="PerEntity" name="WfActor" pack="workflow" is-system="false" table="wf_actor">
+            <field column="app_code" data-type="String" is-display="true" display-name="appCode" display-order="1" field-type="SingleLineText" unique="false" length="36" name="appCode" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="proc_inst_id" data-type="Guid" is-display="true" display-name="procInstId" display-order="2" field-type="SingleLineText" unique="false" length="36" name="procInstId" nullable="false" ref-entity="WfProcInst" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="task_id" data-type="Guid" is-display="true" display-name="taskId" display-order="3" field-type="SingleLineText" unique="false" length="36" name="taskId" nullable="true" ref-entity="WfTask" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="notify_id" data-type="Guid" is-display="true" display-name="notifyId" display-order="4" field-type="SingleLineText" unique="false" length="36" name="notifyId" nullable="true" ref-entity="WfNotify" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="usage_" data-type="SmallInt" default-value="0" is-display="true" display-name="usage" display-order="5" field-type="SmallInt" unique="false" name="usage" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="type_" data-type="String" is-display="true" display-name="type" display-order="6" field-type="SingleLineText" unique="false" length="20" name="type" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="identity_" data-type="String" is-display="true" display-name="identity" display-order="7" field-type="SingleLineText" unique="false" length="150" name="identity" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="value_" data-type="String" is-display="true" display-name="格式" display-order="8" field-type="SingleLineText" unique="false" length="350" name="value" nullable="false" sql-type="varchar" is-system="true"/>
+            <id column="id_" data-type="Guid" is-display="false" display-name="id" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+            <many-to-one display-name="FK_WF_ACTOR_TASK" field="taskId" field-order="3" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_ACTOR_TASK" optional="true" target-entity="WfTask"/>
+            <many-to-one display-name="FK_WF_ACTOR_PROC_INST" field="procInstId" field-order="2" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_ACTOR_PROC_INST" optional="false" target-entity="WfProcInst"/>
+            <many-to-one display-name="FK_WF_ACTOR_NOTIFY" field="notifyId" field-order="4" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_ACTOR_NOTIFY" optional="true" target-entity="WfNotify"/>
+        </entity>
+        <entity is-display="false" display-for="{manage:false}" display-name="相关附件" inherits-persistence="PerEntity" name="formAttachment" pack="workflow" is-system="false" table="wf_form_attachment">
+            <field column="name" length="300" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="名称" display-order="2" field-type="SingleLineText" unique="false" name="name" nullable="false" semantics="Title" sql-type="varchar" is-system="true"/>
+            <field column="created_by" data-type="Guid" default-value="@{env.User.id}" is-display="false" display-for="{list:true,form:false}" display-name="创建人" display-order="2" field-type="SingleLineText" unique="false" length="36" name="createdBy" nullable="true" ref-entity="User" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="created_time" data-type="DateTime" default-value="@{env.Now}" is-display="false" display-for="{list:true,form:false}" display-name="创建时间" display-order="2" field-type="DateTime" unique="false" name="createdTime" nullable="true" semantics="Created" sql-type="timestamp" is-system="true"/>
+            <field column="modified_by" data-type="Guid" default-value="@{env.User.id}" is-display="false" display-for="{list:true,form:false}" display-name="修改人" display-order="2" field-type="SingleLineText" unique="false" length="36" name="modifiedBy" nullable="true" ref-entity="User" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="modified_time" data-type="DateTime" default-value="@{env.Now}" is-display="false" display-for="{list:true,form:false}" display-name="修改时间" display-order="2" field-type="DateTime" unique="false" name="modifiedTime" nullable="true" semantics="Updated" sql-type="timestamp" is-system="true"/>
+            <field column="creator" data-type="String" default-value="@{getEntity('user',createdBy).name}" is-display="true" display-for="{list:true,form:true}" display-name="创建人" display-order="100" field-type="SingleLineText" unique="false" length="150" name="creator" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="150"/>
+                </field-type-params>
+            </field>
+            <field column="business_id" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="业务标志" display-order="100" field-type="SingleLineText" unique="false" length="36" name="businessId" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="url" length="350" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="地址" display-order="100" field-type="Upload" unique="false" name="url" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="fileSuffix" value="*"/>
+                    <param name="maxSize" value="100"/>
+                </field-type-params>
+            </field>
+            <id column="id" data-type="Guid" is-display="false" display-name="主键" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="type_" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="附件类型" display-order="2" field-type="SingleOption" unique="false" length="20" name="type" nullable="true" sql-type="varchar" is-system="true">
+            	<options>
+                    <item name="网盘" value="disk"/>
+                    <item name="文件服务器" value="file"/>
+                </options>
+            </field>
+            <many-to-one display-name="创建人" field="createdBy" field-order="2" field-ref="id" is-abstract="true" is-display="true" name="user" optional="false" target-entity="User"/>
+            <many-to-one display-name="修改人" field="modifiedBy" field-order="2" field-ref="id" is-abstract="true" is-display="true" name="user1" optional="false" target-entity="User"/>
+        </entity>
+        <entity is-display="false" display-for="{list:true,manage:false,form:false}" display-name="流程管理员" inherits-persistence="PerEntity" name="WfProcUser" pack="workflow" is-system="false" table="wf_proc_manager">
+            <composite-id>
+                <field column="proc_id" data-type="Guid" is-display="false" display-for="{list:true,form:true}" display-name="事项标志" display-order="0" unique="false" length="36" name="wfProcProcId" nullable="false" ref-entity="WfProc" ref-to="procId" sql-type="varchar" is-system="true">
+                    <field-type-params>
+                        <param name="length" value="36"/>
+                    </field-type-params>
+                </field>
+                <field column="user_id" data-type="Guid" is-display="false" display-name="userId" display-order="0" unique="false" length="36" name="userId" nullable="false" ref-entity="User" ref-to="id" sql-type="varchar" is-system="true"/>
+            </composite-id>
+        </entity>
+        <entity is-display="false" persistent="false" display-for="{manage:false}" display-name="无人处理任务" inherits-persistence="PerEntity" name="VWfDeadTask" pack="workflow" is-system="false" table="v_wf_dead_task">
+            <field column="act_title" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="当前环节" display-order="1" field-type="SingleLineText" unique="false" length="300" name="actTitle" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="300"/>
+                </field-type-params>
+            </field>
+            <field column="act_name" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="当前环节名称" display-order="2" field-type="SingleLineText" unique="false" length="150" name="actName" nullable="false" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="150"/>
+                </field-type-params>
+            </field>
+            <field column="creator_id" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="提交人id" display-order="3" field-type="SingleLineText" unique="false" length="36" name="creatorId" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="starter_id" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="提交人id" display-order="3" field-type="SingleLineText" unique="false" length="36" name="starterId" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="creator_name" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="提交人" display-order="4" field-type="SingleLineText" unique="false" length="150" name="creatorName" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="150"/>
+                </field-type-params>
+            </field>
+            <field column="starter_name" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="提交人" display-order="4" field-type="SingleLineText" unique="false" length="150" name="starterName" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="150"/>
+                </field-type-params>
+            </field>
+            <field column="start_time" data-type="Timestamp" is-display="true" display-for="{list:true,form:true}" display-name="提交时间" display-order="5" field-type="Timestamp" unique="false" name="startTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="expire_time" data-type="Timestamp" is-display="true" display-for="{list:true,form:true}" display-name="过期时间" display-order="6" field-type="Timestamp" unique="false" name="expireTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="pre_task_id" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="上一任务" display-order="7" field-type="SingleLineText" unique="false" length="36" name="preTaskId" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="proc_name" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="类型" display-order="8" field-type="SingleLineText" unique="false" length="150" name="procName" nullable="false" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="150"/>
+                </field-type-params>
+            </field>
+            <field column="proc_id" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="流程标志" display-order="9" field-type="SingleLineText" unique="false" length="36" name="procId" nullable="false" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="proc_inst_id" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="流程实例标志" display-order="10" field-type="SingleLineText" unique="false" length="36" name="procInstId" nullable="false" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="title_" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="标题" display-order="11" field-type="SingleLineText" unique="false" length="300" name="title" nullable="false" semantics="Title" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="300"/>
+                </field-type-params>
+            </field>
+            <field column="dead_actor_value" data-type="String" is-display="true" display-name="deadActorValue" display-order="12" field-type="SingleLineText" unique="false" name="deadActorValue" nullable="false" sql-type="varchar" is-system="true"/>
+            <id column="id_" data-type="String" is-display="true" display-name="id" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:true}" display-name="流程实例" inherits-persistence="PerEntity" name="WfProcInst" pack="workflow" is-system="false" table="wf_proc_inst">
+            <field column="app_code" data-type="String" is-display="true" display-name="appCode" display-order="1" field-type="SingleLineText" unique="false" length="36" name="appCode" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="revision_" data-type="Integer" default-value="0" is-display="true" display-name="事务版本" display-order="2" field-type="Integer" unique="false" name="revision" nullable="false" sql-type="integer" is-system="true"/>
+            <field column="root_inst_id" data-type="Guid" is-display="true" display-name="rootInstId" display-order="3" field-type="SingleLineText" unique="false" length="36" name="rootInstId" nullable="true" ref-entity="WfProcInst" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="path_" data-type="String" is-display="true" display-name="path" display-order="4" field-type="SingleLineText" unique="false" length="50" name="path" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="calling_path" data-type="String" is-display="true" display-name="callingPath" display-order="5" field-type="SingleLineText" unique="false" length="50" name="callingPath" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="proc_def_id" data-type="Guid" is-display="true" display-name="所属流程" display-order="6" field-type="SingleLineText" unique="false" length="36" name="procDefId" nullable="false" ref-entity="WfProcDef" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="proc_def_key" data-type="String" is-display="true" display-name="procDefKey" display-order="7" field-type="SingleLineText" unique="false" length="150" name="procDefKey" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="parent_id" data-type="Guid" is-display="true" display-name="parentId" display-order="8" field-type="SingleLineText" unique="false" length="36" name="parentId" nullable="true" ref-entity="WfProcInst" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="form_key" data-type="String" is-display="true" display-name="formKey" display-order="9" field-type="SingleLineText" unique="false" length="150" name="formKey" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="business_id" data-type="String" is-display="true" display-name="businessId" display-order="10" field-type="SingleLineText" unique="false" length="36" name="businessId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="business_data" data-type="String" is-display="true" display-name="businessData" display-order="11" field-type="SingleLineText" unique="false" length="4000" name="businessData" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="title_" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="流程标题" display-order="12" field-type="SingleLineText" unique="false" length="500" name="title" nullable="false" semantics="Title" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="priority_" data-type="SmallInt" default-value="5" is-display="true" display-name="紧急程度" display-order="13" field-type="SmallInt" unique="false" name="priority" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="starter_id" data-type="String" is-display="true" display-name="拟稿人Id" display-order="14" field-type="SingleLineText" unique="false" length="36" name="starterId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="starter_name" data-type="String" is-display="true" display-name="拟稿人姓名" display-order="15" field-type="SingleLineText" unique="false" length="150" name="starterName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="starter_dept_id" data-type="String" is-display="true" display-name="starterDeptId" display-order="16" field-type="SingleLineText" unique="false" length="36" name="starterDeptId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="starter_dept_name" data-type="String" is-display="true" display-name="starterDeptName" display-order="17" field-type="SingleLineText" unique="false" length="150" name="starterDeptName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="starter_identity_id" data-type="String" is-display="true" display-name="starterIdentityId" display-order="18" field-type="SingleLineText" unique="false" length="36" name="starterIdentityId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="starter_identity_name" data-type="String" is-display="true" display-name="starterIdentityName" display-order="19" field-type="SingleLineText" unique="false" length="150" name="starterIdentityName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="agent_id" data-type="String" is-display="true" display-name="agentId" display-order="20" field-type="SingleLineText" unique="false" length="36" name="agentId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="agent_name" data-type="String" is-display="true" display-name="agentName" display-order="21" field-type="SingleLineText" unique="false" length="150" name="agentName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="agent_dept_id" data-type="String" is-display="true" display-name="agentDeptId" display-order="22" field-type="SingleLineText" unique="false" length="36" name="agentDeptId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="agent_dept_name" data-type="String" is-display="true" display-name="agentDeptName" display-order="23" field-type="SingleLineText" unique="false" length="150" name="agentDeptName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="agent_identity_id" data-type="String" is-display="true" display-name="agentIdentityId" display-order="24" field-type="SingleLineText" unique="false" length="36" name="agentIdentityId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="agent_identity_name" data-type="String" is-display="true" display-name="agentIdentityName" display-order="25" field-type="SingleLineText" unique="false" length="150" name="agentIdentityName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="create_time" data-type="Timestamp" is-display="true" display-name="创建时间" display-order="26" field-type="Date" unique="false" name="createTime" nullable="false" sql-type="timestamp" is-system="true"/>
+            <field column="update_time" data-type="Timestamp" is-display="true" display-name="更新时间" display-order="27" field-type="Date" unique="false" name="updateTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="expire_time" data-type="Timestamp" is-display="true" display-name="过期时间" display-order="28" field-type="Date" unique="false" name="expireTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="start_time" data-type="Timestamp" is-display="true" display-for="{list:true,form:true}" display-name="提交时间" display-order="29" field-type="Timestamp" unique="false" name="startTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="end_time" data-type="Timestamp" is-display="true" display-for="{list:true,form:true}" display-name="完成时间" display-order="30" field-type="Timestamp" unique="false" name="endTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="duration_" data-type="BigInt" is-display="true" display-name="耗时" display-order="31" field-type="BigInt" unique="false" name="duration" nullable="true" sql-type="numeric" is-system="true"/>
+            <field column="status_" data-type="SmallInt" is-display="true" display-for="{list:true,form:true}" display-name="流程状态" display-order="32" field-type="SingleOption" input-type="Dropdown" unique="false" name="status" nullable="false" sql-type="smallint" is-system="true">
+                <options>
+                    <item name="已提交" value="1"/>
+                    <item name="审批中" value="2"/>
+                    <item name="已暂停" value="9"/>
+                    <item name="已完成" value="10"/>
+                </options>
+            </field>
+            <field column="end_reason" data-type="SmallInt" is-display="true" display-name="endReason" display-order="33" field-type="SmallInt" unique="false" name="endReason" nullable="true" sql-type="smallint" is-system="true"/>
+            <field column="end_comment" data-type="String" is-display="true" display-name="endComment" display-order="34" field-type="SingleLineText" unique="false" length="500" name="endComment" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="deleted_" data-type="SmallInt" default-value="0" is-display="true" display-name="deleted" display-order="35" field-type="SmallInt" unique="false" name="deleted" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="deleted_time" data-type="Timestamp" is-display="true" display-name="deletedTime" display-order="36" field-type="Date" unique="false" name="deletedTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="deleted_comment" data-type="String" is-display="true" display-name="deletedComment" display-order="37" field-type="SingleLineText" unique="false" length="36" name="deletedComment" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="exec_seq" data-type="Integer" default-value="0" is-display="true" display-name="execSeq" display-order="38" field-type="Integer" unique="false" name="execSeq" nullable="false" sql-type="integer" is-system="true"/>
+            <field column="act_seq" data-type="Integer" default-value="0" is-display="true" display-name="actSeq" display-order="39" field-type="Integer" unique="false" name="actSeq" nullable="false" sql-type="integer" is-system="true"/>
+            <field column="task_seq" data-type="Integer" default-value="0" is-display="true" display-name="taskSeq" display-order="40" field-type="Integer" unique="false" name="taskSeq" nullable="false" sql-type="integer" is-system="true"/>
+            <field column="actor_seq" data-type="Integer" default-value="1" is-display="true" display-name="actorSeq" display-order="41" field-type="Integer" unique="false" name="actorSeq" nullable="false" sql-type="integer" is-system="true"/>
+            <field column="notify_seq" data-type="Integer" default-value="0" is-display="true" display-name="notifySeq" display-order="42" field-type="Integer" unique="false" name="notifySeq" nullable="false" sql-type="integer" is-system="true"/>
+            <field column="var_seq" data-type="Integer" default-value="0" is-display="true" display-name="varSeq" display-order="43" field-type="Integer" unique="false" name="varSeq" nullable="false" sql-type="integer" is-system="true"/>
+            <field column="child_seq" data-type="Integer" is-display="true" display-name="childSeq" display-order="44" field-type="Integer" unique="false" name="childSeq" nullable="true" sql-type="integer" is-system="true"/>
+            <field column="batch_seq" data-type="Integer" default-value="0" is-display="true" display-name="batchSeq" display-order="45" field-type="Integer" unique="false" name="batchSeq" nullable="false" sql-type="integer" is-system="true"/>
+            <field column="business_type" data-type="String" is-display="true" display-name="businessType" display-order="46" field-type="SingleLineText" unique="false" length="50" name="businessType" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="proposer_id" data-type="String" is-display="true" display-name="proposerId" display-order="47" field-type="SingleLineText" unique="false" length="36" name="proposerId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="proposer_name" data-type="String" is-display="true" display-name="proposerName" display-order="48" field-type="SingleLineText" unique="false" length="150" name="proposerName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="proposer_dept_id" data-type="String" is-display="true" display-name="proposerDeptId" display-order="49" field-type="SingleLineText" unique="false" length="36" name="proposerDeptId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="proposer_dept_name" data-type="String" is-display="true" display-name="proposerDeptName" display-order="50" field-type="SingleLineText" unique="false" length="150" name="proposerDeptName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="current_activity_name" data-type="String" is-display="true" display-name="currentActivityName" display-order="50" field-type="SingleLineText" unique="false" length="50" name="currentActivityName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="current_activity_title" data-type="String" is-display="true" display-name="currentActivityTitle" display-order="50" field-type="SingleLineText" unique="false" length="500" name="currentActivityTitle" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="end_user_name" data-type="String" is-display="true" display-name="endUserName" display-order="50" field-type="SingleLineText" unique="false" length="150" name="endUserName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="proposer_identity_id" data-type="String" is-display="true" display-name="proposerIdentityId" display-order="51" field-type="SingleLineText" unique="false" length="36" name="proposerIdentityId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="end_user_id" data-type="String" is-display="true" display-name="endUserId" display-order="51" field-type="SingleLineText" unique="false" length="36" name="endUserId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="proposer_identity_name" data-type="String" is-display="true" display-name="proposerIdentityName" display-order="52" field-type="SingleLineText" unique="false" length="150" name="proposerIdentityName" nullable="true" sql-type="varchar" is-system="true"/>
+            <id column="id_" data-type="Guid" is-display="false" display-name="流程标志" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+            <many-to-one display-name="根流程" field="rootInstId" field-order="3" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_PRC_INST_ROOT" optional="true" target-entity="WfProcInst"/>
+            <many-to-one display-name="所属流程" field="procDefId" field-order="6" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_PROC_INST_DEF" optional="false" target-entity="WfProcDef"/>
+            <many-to-one display-name="父流程" field="parentId" field-order="8" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_PROC_INST_PARENT" optional="true" target-entity="WfProcInst"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:true}" display-name="流程统计分类" inherits-persistence="PerEntity" name="WfProcStatistics" pack="workflow" is-system="false" table="wf_proc_statistics">
+            <field column="parent_id" data-type="Guid" is-display="true" display-for="{list:true,form:true}" display-name="父ID" display-order="1" field-type="SingleLineText" unique="false" length="36" name="parentId" nullable="true" ref-entity="WfProcStatistics" ref-to="procStatiId" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="stati_name" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="分类名称" display-order="2" field-type="SingleLineText" unique="false" length="150" name="statiName" nullable="true" semantics="Title" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="150"/>
+                </field-type-params>
+            </field>
+            <field column="stati_desc" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="分类描述" display-order="3" field-type="SingleLineText" unique="false" length="500" name="statiDesc" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="level_type" data-type="Integer" default-value="1" is-display="true" display-for="{list:true,form:true}" display-name="分类的层级" display-order="4" field-type="Integer" unique="false" name="levelType" nullable="false" sql-type="integer" is-system="true">
+                <field-type-params>
+                    <param name="unit" value=""/>
+                </field-type-params>
+            </field>
+            <field column="exp_duration" data-type="Integer" default-value="0" is-display="true" display-for="{list:true,form:true}" display-name="经验耗时" display-order="5" field-type="Integer" unique="false" name="expDuration" nullable="true" sql-type="integer" is-system="true">
+                <field-type-params>
+                    <param name="unit" value=""/>
+                </field-type-params>
+            </field>
+            <id column="proc_stati_id" data-type="Guid" is-display="false" display-for="{list:true,form:true}" display-name="流程统计分类ID" display-order="0" unique="false" length="36" name="procStatiId" nullable="false" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </id>
+            <many-to-one display-name="父分类" field="parentId" field-order="1" field-ref="procStatiId" is-abstract="false" is-display="true" name="fk_proc_stati_parent" optional="true" target-entity="WfProcStatistics"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:true}" display-name="流程业务归属分类" inherits-persistence="PerEntity" name="WfProcCatagory" pack="workflow" is-system="false" table="wf_proc_catagory">
+            <field column="PARENT_ID" data-type="Guid" is-display="true" display-name="父分类" display-order="1" field-type="SingleLineText" unique="false" length="36" name="parentId" nullable="true" ref-entity="WfProcCatagory" ref-to="procCatagoryId" sql-type="varchar" is-system="true"/>
+            <field column="CATAGORY_NAME" length="150" data-type="String" is-display="true" display-name="分类名称" display-order="2" field-type="SingleLineText" unique="false" name="catagoryName" nullable="false" semantics="Title" sql-type="varchar" is-system="true"/>
+            <field column="CATAGORY_DESC" length="500" data-type="String" is-display="true" display-name="描述" display-order="3" field-type="SingleLineText" unique="false" name="catagoryDesc" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="APP_CODE" length="36" data-type="String" is-display="true" display-name="应用编码" display-order="4" field-type="SingleLineText" unique="false" name="appCode" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="cata_order" data-type="Integer" default-value="0" is-display="true" display-name="排序" display-order="2" field-type="Integer" unique="false" name="cataOrder" nullable="true" sql-type="integer" is-system="true"/>
+            <id column="PROC_CATAGORY_ID" data-type="Guid" is-display="false" display-name="流程分类标志" display-order="0" unique="false" name="procCatagoryId" nullable="false" sql-type="varchar" is-system="true"/>
+            <many-to-one display-name="父分类" field="parentId" field-order="1" field-ref="procCatagoryId" is-abstract="false" is-display="true" name="FK_PROC_CATAGORY_PARENT" optional="true" target-entity="WfProcCatagory"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:false}" display-name="流程用户角色" inherits-persistence="PerEntity" name="WfUserRole" pack="workflow" is-system="false" table="wf_user_role">
+            <field column="user_id" data-type="Guid" is-display="true" display-name="用户" display-order="1" field-type="SingleLineText" unique="false" length="36" name="userId" nullable="false" ref-entity="User" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="org_id" data-type="Guid" is-display="true" display-name="组织" display-order="2" field-type="SingleLineText" unique="false" length="36" name="orgId" nullable="false" ref-entity="uamOrganization" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="role_id" data-type="Guid" is-display="true" display-name="角色" display-order="3" field-type="SingleLineText" unique="false" length="36" name="roleId" nullable="false" ref-entity="Role" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="created_by" length="50" data-type="String" default-value="@{env.User.Name}" is-display="true" display-name="创建人" display-order="4" field-type="SingleLineText" unique="false" name="createdBy" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="created_date" data-type="DateTime" default-value="@{env.Now}" is-display="true" display-name="创建时间" display-order="5" field-type="DateTime" unique="false" name="createdDate" nullable="false" sql-type="timestamp" is-system="true"/>
+            <field column="last_updated_by" length="50" data-type="String" default-value="@{env.User.Name}" is-display="true" display-name="修改人" display-order="6" field-type="SingleLineText" unique="false" name="lastUpdatedBy" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="last_updated_date" data-type="DateTime" default-value="@{env.Now}" is-display="true" display-name="修改时间" display-order="7" field-type="DateTime" unique="false" name="lastUpdatedDate" nullable="false" sql-type="timestamp" is-system="true"/>
+            <id column="id" data-type="Guid" is-display="false" display-name="id" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+            <many-to-one display-name="角色" field="roleId" field-order="3" field-ref="id" is-abstract="false" is-display="true" name="fk_wf_user__reference_sec_role" optional="false" target-entity="Role"/>
+            <many-to-one display-name="用户" field="userId" field-order="1" field-ref="id" is-abstract="false" is-display="true" name="fk_wf_user_role_userid" optional="false" target-entity="User"/>
+            <many-to-one display-name="组织" field="orgId" field-order="2" field-ref="id" is-abstract="false" is-display="true" name="fk_wf_user__reference_sec_orga" optional="false" target-entity="uamOrganization"/>
+        </entity>
+        <entity is-display="false" persistent="false" display-for="{manage:false}" display-name="流程用户角色视图" inherits-persistence="PerEntity" name="VWfUserRole" pack="workflow" is-system="false" table="v_wf_user_role">
+            <field column="role_name" data-type="String" is-display="true" display-name="角色名称" display-order="1" field-type="SingleLineText" unique="false" name="roleName" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="org_name" data-type="String" is-display="true" display-name="组织名称" display-order="3" field-type="SingleLineText" unique="false" name="orgName" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="org_id" data-type="Guid" is-display="true" display-for="{list:true,manage:true,form:false}" display-name="组织" display-order="100" field-type="SingleLineText" unique="false" length="36" name="orgId" nullable="false" ref-entity="uamOrganization" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="role_id" data-type="Guid" is-display="true" display-for="{list:true,manage:true,form:false}" display-name="角色" display-order="100" field-type="SingleLineText" unique="false" length="36" name="roleId" nullable="false" ref-entity="Role" ref-to="id" sql-type="varchar" is-system="true"/>
+            <many-to-one display-name="组织" field="orgId" field-order="100" field-ref="id" is-abstract="true" is-display="false" name="organization" optional="false" target-entity="uamOrganization"/>
+            <many-to-one display-name="角色" field="roleId" field-order="100" field-ref="id" is-abstract="true" is-display="false" name="role" optional="false" target-entity="Role"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:true}" display-name="委托事项" inherits-persistence="PerEntity" name="WfProxy" pack="workflow" is-system="false" table="wf_proxy">
+            <field column="PROC_ID" data-type="Guid" is-display="true" display-for="{list:true,form:true}" display-name="委托流程" display-order="1" field-type="SingleLineText" unique="false" length="36" name="procId" nullable="false" ref-entity="WfProc" ref-to="procId" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="ACTIVITY_NAMES" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="委托环节" display-order="2" field-type="SingleLineText" unique="false" length="500" name="activityNames" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="ACTIVITY_TITLES" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="委托环节" display-order="3" field-type="SingleLineText" unique="false" length="500" name="activityTitles" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="ASSIGNEE_ID" data-type="String" default-value="@{env.User.Id}" is-display="true" display-for="{list:true,form:true}" display-name="委托人" display-order="4" field-type="SingleLineText" unique="false" length="36" name="assigneeId" nullable="false" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="ASSIGNEE_NAME" data-type="String" default-value="@{env.User.Name}" is-display="true" display-for="{list:true,form:true}" display-name="委托人" display-order="5" field-type="SingleLineText" unique="false" length="150" name="assigneeName" nullable="false" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="150"/>
+                </field-type-params>
+            </field>
+            <field column="AGENT_ID" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="被委托人" display-order="6" field-type="SingleLineText" unique="false" length="36" name="agentId" nullable="false" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="AGENT_NAME" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="被委托人" display-order="7" field-type="SingleLineText" unique="false" length="150" name="agentName" nullable="false" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="150"/>
+                </field-type-params>
+            </field>
+            <field column="START_DATE" data-type="Timestamp" is-display="true" display-for="{list:true,form:true}" display-name="开始日期" display-order="8" field-type="Date" unique="false" name="startDate" nullable="false" sql-type="timestamp" is-system="true"/>
+            <field column="END_DATE" data-type="Timestamp" is-display="true" display-for="{list:true,form:true}" display-name="结束日期" display-order="9" field-type="Date" unique="false" name="endDate" nullable="false" sql-type="timestamp" is-system="true"/>
+            <field column="LAST_UPDATED_TIME" data-type="Timestamp" default-value="@{env.Now}" is-display="true" display-for="{list:true,form:true}" display-name="最后更新时间" display-order="10" field-type="Date" unique="false" name="lastUpdatedTime" nullable="false" sql-type="timestamp" is-system="true"/>
+            <field column="APP_CODE" data-type="String" is-display="true" display-name="appCode" display-order="11" field-type="SingleLineText" unique="false" name="appCode" nullable="true" sql-type="varchar" is-system="true"/>
+            <id column="PROXY_ID" data-type="Guid" is-display="false" display-for="{list:true,form:true}" display-name="委托标志" display-order="0" unique="false" name="proxyId" nullable="false" sql-type="varchar" is-system="true"/>
+            <many-to-one display-name="委托流程" field="procId" field-order="1" field-ref="procId" is-abstract="false" is-display="true" name="FK_PROXY_PROC_ID" optional="false" target-entity="WfProc"/>
+        </entity>
+        <entity is-display="true" display-for="{manage:true}" display-name="通知" inherits-persistence="PerEntity" name="WfNotify" pack="workflow" is-system="false" table="wf_notify">
+            <field column="app_code" data-type="String" is-display="true" display-name="appCode" display-order="1" field-type="SingleLineText" unique="false" length="36" name="appCode" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="revision_" data-type="Integer" default-value="0" is-display="true" display-name="事务版本" display-order="2" field-type="Integer" unique="false" name="revision" nullable="false" sql-type="integer" is-system="true"/>
+            <field column="batch_" data-type="Integer" is-display="true" display-name="batch" display-order="3" field-type="Integer" unique="false" name="batch" nullable="true" sql-type="integer" is-system="true"/>
+            <field column="proc_def_id" data-type="Guid" is-display="true" display-name="procDefId" display-order="4" field-type="SingleLineText" unique="false" name="procDefId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="proc_inst_id" data-type="Guid" is-display="true" display-name="procInstId" display-order="5" field-type="SingleLineText" unique="false" length="36" name="procInstId" nullable="true" ref-entity="WfProcInst" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="root_inst_id" data-type="Guid" is-display="true" display-name="rootInstId" display-order="6" field-type="SingleLineText" unique="false" name="rootInstId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="execution_id" data-type="Guid" is-display="true" display-name="executionId" display-order="7" field-type="SingleLineText" unique="false" name="executionId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="act_inst_id" data-type="Guid" is-display="true" display-name="actInstId" display-order="8" field-type="SingleLineText" unique="false" name="actInstId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="task_id" data-type="Guid" is-display="true" display-name="taskId" display-order="9" field-type="SingleLineText" unique="false" name="taskId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="parent_id" data-type="Guid" is-display="true" display-name="parentId" display-order="10" field-type="SingleLineText" unique="false" length="36" name="parentId" nullable="true" ref-entity="WfNotify" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="type_" data-type="SmallInt" default-value="0" is-display="true" display-name="type" display-order="11" field-type="SmallInt" unique="false" name="type" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="title_" data-type="String" is-display="true" display-name="名称" display-order="12" field-type="SingleLineText" unique="false" length="300" name="title" nullable="false" semantics="Title" sql-type="varchar" is-system="true"/>
+            <field column="message_" data-type="String" is-display="true" display-name="message" display-order="13" field-type="SingleLineText" unique="false" length="4000" name="message" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="priority_" data-type="SmallInt" default-value="5" is-display="true" display-name="priority" display-order="14" field-type="SmallInt" unique="false" name="priority" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="act_name" data-type="String" is-display="true" display-name="actName" display-order="15" field-type="SingleLineText" unique="false" length="150" name="actName" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="act_title" data-type="String" is-display="true" display-name="actTitle" display-order="16" field-type="SingleLineText" unique="false" length="300" name="actTitle" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="passer_id" data-type="String" is-display="true" display-name="passerId" display-order="17" field-type="SingleLineText" unique="false" length="36" name="passerId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="passer_name" data-type="String" is-display="true" display-name="传递人" display-order="18" field-type="SingleLineText" unique="false" length="150" name="passerName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="passer_dept_id" data-type="String" is-display="true" display-name="passerDeptId" display-order="19" field-type="SingleLineText" unique="false" length="36" name="passerDeptId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="passer_dept_name" data-type="String" is-display="true" display-name="passerDeptName" display-order="20" field-type="SingleLineText" unique="false" length="150" name="passerDeptName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="assignee_id" data-type="String" is-display="true" display-name="assigneeId" display-order="21" field-type="SingleLineText" unique="false" length="36" name="assigneeId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="assignee_name" data-type="String" is-display="true" display-name="assigneeName" display-order="22" field-type="SingleLineText" unique="false" length="150" name="assigneeName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="assignee_dept_id" data-type="String" is-display="true" display-name="assigneeDeptId" display-order="23" field-type="SingleLineText" unique="false" length="36" name="assigneeDeptId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="assignee_dept_name" data-type="String" is-display="true" display-name="assigneeDeptName" display-order="24" field-type="SingleLineText" unique="false" length="150" name="assigneeDeptName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="assignee_identity_id" data-type="String" is-display="true" display-name="assigneeIdentityId" display-order="25" field-type="SingleLineText" unique="false" length="36" name="assigneeIdentityId" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="assignee_identity_name" data-type="String" is-display="true" display-name="assigneeIdentityName" display-order="26" field-type="SingleLineText" unique="false" length="150" name="assigneeIdentityName" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="expire_time" data-type="Timestamp" is-display="true" display-name="expireTime" display-order="27" field-type="Timestamp" unique="false" name="expireTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="start_time" data-type="Timestamp" is-display="true" display-name="提交时间" display-order="28" field-type="Timestamp" unique="false" name="startTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="read_time" data-type="Timestamp" is-display="true" display-name="readTime" display-order="29" field-type="Timestamp" unique="false" name="readTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="end_time" data-type="Timestamp" is-display="true" display-name="endTime" display-order="30" field-type="Timestamp" unique="false" name="endTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="duration_" data-type="BigInt" is-display="true" display-name="duration" display-order="31" field-type="BigInt" unique="false" name="duration" nullable="true" sql-type="numeric" is-system="true"/>
+            <field column="status_" data-type="SmallInt" default-value="1" is-display="true" display-name="status" display-order="32" field-type="SmallInt" unique="false" name="status" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="end_reason" data-type="SmallInt" default-value="0" is-display="true" display-name="endReason" display-order="33" field-type="SmallInt" unique="false" name="endReason" nullable="true" sql-type="smallint" is-system="true"/>
+            <field column="end_comment" data-type="String" is-display="true" display-name="endComment" display-order="34" field-type="SingleLineText" unique="false" length="500" name="endComment" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="user_comment" data-type="String" is-display="true" display-name="userComment" display-order="35" field-type="SingleLineText" unique="false" length="500" name="userComment" nullable="true" sql-type="varchar" is-system="true"/>
+            <field column="deleted_" data-type="SmallInt" default-value="0" is-display="true" display-name="deleted" display-order="36" field-type="SmallInt" unique="false" name="deleted" nullable="false" sql-type="smallint" is-system="true"/>
+            <field column="deleted_time" data-type="Timestamp" is-display="true" display-name="deletedTime" display-order="37" field-type="Date" unique="false" name="deletedTime" nullable="true" sql-type="timestamp" is-system="true"/>
+            <field column="deleted_comment" data-type="String" is-display="true" display-name="deletedComment" display-order="38" field-type="SingleLineText" unique="false" name="deletedComment" nullable="true" sql-type="varchar" is-system="true"/>
+            <id column="id_" data-type="Guid" is-display="false" display-name="待阅编号" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+            <many-to-one display-name="FK_WF_NOTIFY_PARENT" field="parentId" field-order="10" field-ref="id" is-abstract="false" is-display="true" name="FK_WF_NOTIFY_PARENT" optional="true" target-entity="WfNotify"/>
+            <many-to-one display-name="流程实例" field="procInstId" field-order="5" field-ref="id" is-abstract="true" is-display="false" name="wfProcInst" optional="true" target-entity="WfProcInst"/>
+        </entity>
+        <entity pack="workflow" is-display="true" display-for="{manage:false}" display-name="WfEventConfig" inherits-persistence="PerEntity" name="WfEventConfig" is-system="false" table="wf_event_config">
+            <field column="proc_id" data-type="String" is-display="true" display-name="流程" display-order="1" field-type="SingleLineText" unique="false" length="36" name="procId" nullable="true" sql-type="varchar" summary="流程" is-system="true"/>
+            <field column="act_name" data-type="String" is-display="true" display-name="环节" display-order="2" field-type="SingleLineText" unique="false" length="150" name="actName" nullable="true" sql-type="varchar" summary="环节" is-system="true"/>
+            <field column="event_type" data-type="String" is-display="true" display-name="事件类型" display-order="3" field-type="SingleLineText" unique="false" length="150" name="eventType" nullable="true" sql-type="varchar" summary="事件类型" is-system="true"/>
+            <field column="event_operation" data-type="String" is-display="true" display-name="事件操作" display-order="4" field-type="SingleLineText" unique="false" length="150" name="eventOperation" nullable="true" sql-type="varchar" summary="事件操作" is-system="true"/>
+            <field column="business_data" data-type="String" is-display="true" display-name="业务数据" display-order="5" field-type="SingleLineText" unique="false" length="2000" name="businessData" nullable="true" sql-type="varchar" summary="业务数据" is-system="true"/>
+            <id column="id" data-type="Guid" is-display="false" display-name="主键" display-order="0" unique="false" length="36" name="id" nullable="false" sql-type="varchar" summary="主键" is-system="true"/>
+        	<field field-type="SingleLineText" data-type="Guid"  name="createdBy" display-name="创建人" is-display="false" is-system="true" column="created_by"  update="false" default-value="@{env.User.id}"   nullable="true" display-for="{list:true, form:false}"></field>
+			<field field-type="DateTime" name="createdTime" display-name="创建时间" is-display="false" is-system="true" column="created_time" update="false" semantics="Created"  default-value="@{env.Now}" nullable="true" display-for="{list:true, form:false}"></field>
+			<field field-type="SingleLineText" data-type="Guid" name="modifiedBy" display-name="修改人" is-display="false" is-system="true" column="modified_by" default-value="@{env.User.id}" nullable="true" display-for="{list:true, form:false}"></field>
+			<field field-type="DateTime" name="modifiedTime" display-name="修改时间" is-display="false" is-system="true" column="modified_time" semantics="Updated" default-value="@{env.Now}"  nullable="true" display-for="{list:true, form:false}"></field>
+        </entity>
+        <entity pack="workflow" is-display="true" display-for="{manage:false}" display-name="WfProcPermission" inherits-persistence="PerEntity" name="WfProcPermission" is-system="false" table="wf_proc_permission">
+            <field column="proc_id" data-type="String" is-display="true" display-name="流程" display-order="1" field-type="SingleLineText" unique="false" length="36" name="procId" nullable="false" sql-type="varchar" summary="流程" is-system="true"/>
+            <field column="act_name" data-type="String" is-display="true" display-name="环节名" display-order="2" field-type="SingleLineText" unique="false" length="150" name="actName" nullable="true" sql-type="varchar" summary="环节名" is-system="true"/>
+            <field column="entity_name" data-type="String" is-display="true" display-name="实体名" display-order="3" field-type="SingleLineText" unique="false" length="38" name="entityName" nullable="true" sql-type="varchar" summary="实体名" is-system="true"/>
+            <field column="name" data-type="String" is-display="true" display-name="权限名称" display-order="4" field-type="SingleLineText" unique="false" length="38" name="name" nullable="false" semantics="Title" sql-type="varchar" summary="权限名称" is-system="true"/>
+            <field column="type" data-type="String" is-display="true" display-name="权限类型" display-order="5" field-type="SingleLineText" unique="false" length="38" name="type" nullable="true" sql-type="varchar" summary="权限类型" is-system="true"/>
+            <field column="permission" data-type="String" is-display="true" display-name="权限" display-order="6" field-type="SingleLineText" unique="false" length="50" name="permission" nullable="false" sql-type="varchar" summary="权限" is-system="true"/>
+            <id column="id" data-type="Guid" is-display="false" display-name="主键" display-order="0" unique="false" length="36" name="id" nullable="false" sql-type="varchar" summary="主键" is-system="true"/>
+        	<field field-type="SingleLineText" data-type="Guid"  name="createdBy" display-name="创建人" is-display="false" is-system="true" column="created_by"  update="false" default-value="@{env.User.id}"   nullable="true" display-for="{list:true, form:false}"></field>
+			<field field-type="DateTime" name="createdTime" display-name="创建时间" is-display="false" is-system="true" column="created_time" update="false" semantics="Created"  default-value="@{env.Now}" nullable="true" display-for="{list:true, form:false}"></field>
+			<field field-type="SingleLineText" data-type="Guid" name="modifiedBy" display-name="修改人" is-display="false" is-system="true" column="modified_by" default-value="@{env.User.id}" nullable="true" display-for="{list:true, form:false}"></field>
+			<field field-type="DateTime" name="modifiedTime" display-name="修改时间" is-display="false" is-system="true" column="modified_time" semantics="Updated" default-value="@{env.Now}"  nullable="true" display-for="{list:true, form:false}"></field>
+        </entity>
+        <entity pack="workflow" is-display="true" display-for="{manage:false}" display-name="WfActConfig" inherits-persistence="PerEntity" name="WfActConfig" is-system="false" table="wf_act_config">
+            <field column="proc_id" data-type="Guid" is-display="true" display-for="{list:true,form:true}" display-name="流程" display-order="1" field-type="SingleLineText" unique="false" length="36" name="procId" nullable="false" ref-entity="WfProc" ref-to="procId" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="act_name" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="环节名" display-order="2" field-type="SingleLineText" unique="false" length="150" name="actName" nullable="false" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="150"/>
+                </field-type-params>
+            </field>
+            <field column="entity_name" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="实体名" display-order="3" field-type="SingleLineText" unique="false" length="38" name="entityName" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="38"/>
+                </field-type-params>
+            </field>
+            <field column="form_url" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="表单url" display-order="4" field-type="SingleLineText" unique="false" length="500" name="formUrl" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="approve_for" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="审批操作" display-order="5" field-type="SingleLineText" unique="false" length="150" name="approveFor" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="150"/>
+                </field-type-params>
+            </field>
+            <field column="is_need_approve" data-type="Boolean" is-display="true" display-for="{list:true,form:true}" display-name="是否需要审批" display-order="6" field-type="Boolean" input-type="Tile" unique="false" length="1" name="isNeedApprove" nullable="true" sql-type="bit" is-system="true"/>
+            <field column="is_need_opinion" data-type="Boolean" is-display="true" display-for="{list:true,form:true}" display-name="是否需要用户意见" display-order="7" field-type="Boolean" input-type="Tile" unique="false" length="1" name="isNeedOpinion" nullable="true" sql-type="bit" is-system="true"/>
+            <field column="businessData" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="业务数据" display-order="8" field-type="SingleLineText" unique="false" length="2000" name="businessdata" nullable="true" sql-type="varchar" is-system="true">
+                <field-type-params>
+                    <param name="length" value="2000"/>
+                </field-type-params>
+            </field>
+            <id column="id" data-type="Guid" is-display="false" display-name="id" display-order="0" unique="false" length="36" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+            <field field-type="SingleLineText" data-type="Guid"  name="createdBy" display-name="创建人" is-display="false" is-system="true" column="created_by"  update="false" default-value="@{env.User.id}"   nullable="true" display-for="{list:true, form:false}"></field>
+			<field field-type="DateTime" name="createdTime" display-name="创建时间" is-display="false" is-system="true" column="created_time" update="false" semantics="Created"  default-value="@{env.Now}" nullable="true" display-for="{list:true, form:false}"></field>
+			<field field-type="SingleLineText" data-type="Guid" name="modifiedBy" display-name="修改人" is-display="false" is-system="true" column="modified_by" default-value="@{env.User.id}" nullable="true" display-for="{list:true, form:false}"></field>
+			<field field-type="DateTime" name="modifiedTime" display-name="修改时间" is-display="false" is-system="true" column="modified_time" semantics="Updated" default-value="@{env.Now}"  nullable="true" display-for="{list:true, form:false}"></field>
+            <field column="can_not_skip" data-type="Boolean" default-value="false" is-display="true" display-name="不允许跳过" display-order="6" field-type="Boolean" input-type="Tile" unique="false" name="canNotSkip" nullable="false" sql-type="tinyint" is-system="true"/>
+            <many-to-one display-name="流程" field="procId" field-order="1" field-ref="procId" is-abstract="false" is-display="true" name="FK_wf_act_config_proc" optional="false" target-entity="WfProc"/>
+        </entity>
+        <entity pack="workflow" is-display="false" display-for="{manage:true}" display-name="流程变量配置" inherits-persistence="PerEntity" name="wfBusinessVarsConfig" is-system="false" table="wf_business_vars_config">
+            <field column="created_by" data-type="Guid" default-value="@{env.User.id}" is-display="false" display-for="{list:true,form:false}" display-name="创建人" display-order="2" field-type="SingleLineText" unique="false" length="36" name="createdBy" nullable="true" ref-entity="User" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="created_time" data-type="DateTime" default-value="@{env.Now}" is-display="false" display-for="{list:true,form:false}" display-name="创建时间" display-order="2" field-type="DateTime" unique="false" name="createdTime" nullable="true" semantics="Created" sql-type="timestamp" is-system="true"/>
+            <field column="modified_by" data-type="Guid" default-value="@{env.User.id}" is-display="false" display-for="{list:true,form:false}" display-name="修改人" display-order="2" field-type="SingleLineText" unique="false" length="36" name="modifiedBy" nullable="true" ref-entity="User" ref-to="id" sql-type="varchar" is-system="true"/>
+            <field column="modified_time" data-type="DateTime" default-value="@{env.Now}" is-display="false" display-for="{list:true,form:false}" display-name="修改时间" display-order="2" field-type="DateTime" unique="false" name="modifiedTime" nullable="true" semantics="Updated" sql-type="timestamp" is-system="true"/>
+            <field column="proc_id" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="流程" display-order="100" field-type="SingleLineText" unique="false" length="36" name="procId" nullable="false" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="36"/>
+                </field-type-params>
+            </field>
+            <field column="type" data-type="String" length="20" is-display="true" display-for="{list:true,form:true}" display-name="类型" display-order="100" field-type="SingleOption" input-type="Dropdown" unique="false" name="type" nullable="false" sql-type="varchar" is-system="false">
+                <options>
+                    <item name="表单字段" value="Form"/>
+                    <item name="请求参数" value="Url"/>
+                </options>
+            </field>
+            <field column="to_name" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="映射名称" display-order="100" field-type="SingleLineText" unique="false" length="38" name="toName" nullable="false" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="38"/>
+                </field-type-params>
+            </field>
+            <field column="from_name" data-type="String" is-display="true" display-for="{list:true,form:true}" display-name="原始名称" display-order="100" field-type="SingleLineText" unique="false" length="38" name="fromName" nullable="false" semantics="Title" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="38"/>
+                </field-type-params>
+            </field>
+            <id column="id" data-type="Guid" is-display="false" display-name="主键" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" summary="Primary key, identity of a record!" is-system="true"/>
+            <many-to-one display-name="创建人" field="createdBy" field-order="2" field-ref="id" is-abstract="true" is-display="true" name="user" optional="false" target-entity="User"/>
+            <many-to-one display-name="修改人" field="modifiedBy" field-order="2" field-ref="id" is-abstract="true" is-display="true" name="user1" optional="false" target-entity="User"/>
+        </entity>
+    </entities>
+</metadata>

@@ -1,0 +1,40 @@
+<div th:id="${viewId}" style="min-width:850px;min-height:400px;">
+	<div class="ui-dialog-title" th:switch="${action}">
+        <span th:case="'EDIT'" th:text="'修改'+${metaEntity.displayName}"/>
+        <span th:case="'CREATE'" th:text="'新建'+${metaEntity.displayName}"/>
+        <span th:case="'VIEW'" th:text="'查看'+${metaEntity.displayName}"/>
+        <span th:case="*" th:text="'无此action：'+${action}"/>
+      </div>
+	<div class="form-con">
+	</div>
+	 <div class="ui-dialog-buttonset">
+        <button class="btn closeBtn" name="close"
+          th:text="(${action} != 'VIEW')?'取消':'关闭'" type="button">
+					取 消</button>
+        <button class="btn blue saveBtn" name="save"
+          th:if="${action} != 'VIEW'" type="button">保 存<i class="m-icon-swapright m-icon-white"></i>
+					</button>
+      </div>
+<script th:inline="javascript">
+//<![CDATA[
+;(function($){
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+	   	var context=/*[['#'+${viewId}]]*/;
+	   	var formUrl=/*[[${formUrl}]]*/;
+	   	CommonLoader.loadData($(".form-con",context),formUrl,function(){
+	   	});
+	   	$(".saveBtn",context).click(function(){
+	   	 	var form=$("form",context);
+		    var pass=Form.validateForm(form);
+		    if(pass){
+		    	form.submit();
+		    }else{
+		    	return false;
+		    }
+	   	});
+	});
+}(jQuery)); 	         
+//]]>
+</script>
+</div>

@@ -1,0 +1,46 @@
+<div class="container-fluid" style="padding:0px">
+	<div th:id="'toolbar_'+${jqgrid.id}" class="grid-toolbar-container">
+		<div class="tabsAppHead">
+			<div class="tabsAppHeadOption" >
+		        <ul>
+		            <li th:each="btn,itStat:${jqgrid.customToolBarSetting}" th:attr="data-func=${btn.onClick}"
+								th:id="'toolbar_'+${btn.name}+'_'+${jqgrid.id}" class="table-toolbar-icon-item">
+		            <a href="javascript://" th:title="${btn.toolTip}"><i class="icon">
+		            <!-- <img th:src="${themes.icon(btn.buttonIcon)}"/> -->
+		            <img th:if="${#strings.isEmpty(btn.cssClass)}" th:src="${themes.icon(btn.buttonIcon)}" />
+					<i th:unless="${#strings.isEmpty(btn.cssClass)}" th:class="${btn.cssClass}" style="width:32px;height:32px;display:block;"></i>
+						
+		            
+		            </i><span th:text="${btn.text}"></span>
+		            </a></li>
+		        </ul>
+		    </div>
+		    <div class="tabsAppHeadSearch"  th:if="${jqgrid.quickSearch != null and #lists.size(jqgrid.quickSearch.column)>0}">
+		        <div class="searchBar">
+		            <input name="searchString" type="text" th:placeHolder="${jqgrid.quickSearch.getPlaceHolderText()}"
+							class="input-medium search-query pull-left" />
+					<input name="searchField" value="_quickSearch" type="hidden"/>
+					<a href="javascript://" style="color: #0d638f;" name="btSingleSearch" >搜索</a>
+		        </div>
+		        <a href="javascript://" class="btn searchToggle">更多搜索<i class="icon-arrow-down"></i></a>
+		    </div>
+	    </div>
+		<div class="simple-search-area tipsBox hide">
+           <a href="javascript://" class="Collapse searchToggle">收起</a>
+           <div class="tipsContent" th:object="${jqgrid}">
+               <ul>
+                   <li th:each="row:${doubleSearchLayout}">
+                       <div class="searchKey"><span th:text="${row['fieldDisplayName']}"></span></div>
+                       <div class="searchBar">
+                           <input th:id="${row['id']}" meta:searchField="${row['fieldName']}"/>
+                       </div>
+                   </li>
+               </ul>
+           </div>
+           <div class="tipsFoot">
+           	<a href="javascript://" class="resetBtn">清空所有</a>
+               <a href="javascript://" class="btn-search searchBtn">综合搜索</a>
+           </div>
+       </div>
+	</div>
+</div>

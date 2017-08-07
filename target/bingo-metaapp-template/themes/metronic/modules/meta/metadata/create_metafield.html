@@ -1,0 +1,439 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width: 950px;">
+<style type="text/css">
+.useExistedSetFalse .btn-toolbar {
+	margin-bottom: 0px;
+	margin-top: 0px;
+	height: 24px;
+}
+</style>
+<div id="createFieldTable" class="container-fluid ">
+	<form  id="createFieldForm" class="form-horizontal" data-widget="validator" th:action="${requestUri}">
+	<input id="defaultValue-hidden" type="hidden"  th:value="${field.defaultValue}" />
+			<!-- 基本信息 -->
+			<div class="portlet box tea-green">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-reorder"></i><span th:text="#{common.baseInfo}"></span>
+					</div>
+					<div class="tools">
+						<a href="javascript:;" class="collapse"></a> 
+						<!-- <a href="javascript:;" class="reload"></a> -->
+					</div>
+				</div>
+				<div class="portlet-body form-bordered">
+					<table class="form-table col2-fluid">
+						<tbody>
+							<tr>
+								<th><label th:text="#{common.displayName}+':'"></label></th>
+								<td>
+									<input type="text" id="displayName" name="displayName" class="input-large" 
+										th:placeholder="#{validation.string36}"
+										data-validator="required,length[1,36]" th:value="${field.displayName}"/>
+									<input type="hidden" id="entity" name="entity" th:value="${field.entity}"/>
+								</td>
+							</tr>
+							<tr>
+								<th><label th:text="#{common.name}+':'"></label></th>
+								<td>
+								<input type="hidden" id="isIdentity" name="isIdentity" th:value="${field.isIdentity}"/>
+								<input type="text" th:if="${action=='edit'}" id="name" name="name" disabled="true" class="input-large" th:value="${field.name}"/>
+								<meta:placeholder th:unless="${action=='edit'}">
+								<input  type="text" id="name" name="name" class="input-large" 
+									th:placeholder="#{validation.autoByDisplayName}"
+									data-validator="required,length[1,36],name,func[fieldNameUnique]"/>
+								<span class="label label-info" th:text="#{validation.nameSpec}"></span>
+								</meta:placeholder>
+								</td>
+							</tr>
+							<tr>
+								<th><label th:text="#{metadata.field.requiredOrNot}+':'"></label></th>
+								<td>
+								<meta:placeholder th:if="${field.isColumnNullable!=false}">
+									<label class="radio inline">
+									<input type="radio" id="isNullable" th:checked="${field.isNullable==false}" name="isNullable" value="false"/><span th:text="#{common.yes}"></span>
+									</label>
+									<label class="radio inline">
+									<input type="radio" id="isNullable" th:checked="${field.isNullable!=false}" name="isNullable" value="true"/><span th:text="#{common.no}"></span>
+									</label>
+								</meta:placeholder>
+								<meta:placeholder th:if="${field.isColumnNullable==false}">
+									<label  class="radio inline">
+									<input type="radio" id="isNullable" checked="checked" name="isNullable" disabled="true" value="false"/><span th:text="#{common.yes}"></span>
+									</label>
+									<label class="radio inline">
+									<input type="radio" id="isNullable" name="isNullable" disabled="true" value="true"/><span th:text="#{common.no}"></span>
+									</label>
+								</meta:placeholder>
+								</td>
+							</tr>
+							<tr>
+								<th><label th:text="#{metadata.field.uniqueOrNot}+':'"></label></th>
+								<td>
+								<meta:placeholder th:if="${action=='create'}">
+									<label class="radio inline">
+									<input type="radio" id="isUnique" name="isUnique" value="true"/><span th:text="#{common.yes}"></span>
+									</label>
+									<label class="radio inline">
+									<input type="radio" id="isUnique" checked="checked" name="isUnique" value="false"/><span th:text="#{common.no}"></span>
+									</label>
+								</meta:placeholder>
+								<meta:placeholder th:unless="${action=='create'}">
+									<label class="radio inline">
+									<input type="radio" id="isUnique" th:checked="${field.isUnique==true}" name="isUnique" disabled="true" value="true"/><span th:text="#{common.yes}"></span>
+									</label>
+									<label class="radio inline">
+									<input type="radio" id="isUnique" th:checked="${field.isUnique==false}" name="isUnique" disabled="true" value="false"/><span th:text="#{common.no}"></span>
+									</label>
+								</meta:placeholder>
+								<span class="label label-info">字段唯一表示数据库创建此字段时会添加唯一性约束，值不允许重复，仅仅文本和数字类型支持唯一</span>
+								</td>
+							</tr>
+							<tr>
+							<th><label th:text="#{common.description}+':'"></label></th>
+								<td>
+								<textarea id="summary" name="summary" class="shortArea" 
+								 	data-validator="length[0,1000]"
+									th:placeholder="#{validation.string1000Sec}" th:text="${field.summary}"/>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!-- 显示信息 -->
+			<div class="portlet box tea-green">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-reorder"></i><span th:text="#{metadata.field.displayInfo}"/>
+					</div>
+					<div class="tools">
+						<a href="javascript:;" class="collapse"></a> 
+						<!-- <a href="javascript:;" class="reload"></a> -->
+					</div>
+				</div>
+				<div class="portlet-body form-bordered">
+					<table class="form-table col2-fluid">
+						<tbody>
+							<tr>
+								<th><label th:text="#{metadata.field.semantics}+':'"></label></th>
+								<td><span th:text="#{metadata.field.semantics.descPrefix}"></span>
+									<select id="semantics"  name="semantics" 
+											class="input input-large">
+										<option value="" th:text="#{metadata.field.semantics.normal}"></option>
+										<hr/>
+										<option th:each="se:${semantics}" th:value="${se.key}" th:text="${se.value}" th:selected="${se.key==field.semantics}"></option>
+									</select>
+									<a href="javascript://" rel="popover" th:attr="data-content=#{metadata.field.semantics.desc},data-original-title=#{metadata.field.semantics.descTitle}" id="semanticsTip"
+										><i class="icon-question-sign"></i></a>
+									<span class="tips"></span>
+								</td>
+							</tr>
+							<tr th:style="${queryString[type]=='workflow'}?'display:none;'">
+								<th><label th:text="#{metadata.field.defaultDisplay}+':'"></label></th>
+								<td>
+									<label class="checkbox inline">
+										<input id="displayFor1" name="displayFor" type="checkbox" value="form"/>
+										<span th:text="#{metadata.field.defaultDisplay.form}"></span>
+									</label>
+									<label class="checkbox inline">
+										<input id="displayFor2" name="displayFor" type="checkbox" value="list"/>
+										<span th:text="#{metadata.field.defaultDisplay.view}"></span>
+									</label>									
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!-- 字段属性 -->
+			<div class="portlet box tea-green">
+				<div class="portlet-title ">
+					<div class="caption">
+						<i class="icon-reorder"></i><span th:text="#{metadata.field.selectFieldType}"/>
+					</div>
+					<div class="tools">
+						<a href="javascript:;" class="collapse"></a> 
+						<!-- <a href="javascript:;" class="reload"></a> -->
+					</div>
+				</div>
+				<div class="portlet-body form-bordered">
+					<table class="form-table col4-fluid dataTypeTableDetail">
+						<tbody class="fieldTypeDetail">
+							<tr class="hide">
+								<th><label th:text="#{metadata.field.selectFieldType.dataType}+':'"></label></th>
+								<td colspan="3">
+								<input type="text" disabled="true" id="dataType" name="dataType" th:value="${field.dataType}"/>
+								</td>
+							</tr>
+							<tr class="fieldType">
+								<th><label th:text="#{metadata.field.selectFieldType.fieldType}+':'"></label></th>
+								<td colspan="3">
+									<select id="fieldType" name="fieldType">
+									<option value="" th:label="#{common.optionNullText}"/>
+									<option th:each="ft:${fieldTypesMap}" th:selected="${ft.key==field.fieldType}" th:value="${ft.key}" th:text="${ft.value}"></option>
+									</select>
+								</td>
+							</tr>
+							<tr class="formatType hide">
+								<th><label th:text="#{metadata.field.selectFieldType.format}+':'"></label></th>
+								<td colspan="3">
+									<select name="fieldFormat">
+									<option value=""></option>
+									</select>
+								</td>
+							</tr>
+							<tr class="inputType hide">
+								<th><label th:text="#{metadata.field.selectFieldType.inputType}+':'"></label></th>
+								<td colspan="3">
+									<select name="inputType">
+									<option value="">  </option>
+									</select>
+								</td>
+							</tr>
+						</tbody>
+						<tbody class="dataTypeDetail">
+							<tr class='defaultValueInput'>
+								<th><label th:text="#{common.defaultValue}+':'"></label></th>
+								<td colspan="3" id="changingColspan">
+								<input type="text" id="defaultValue1" name="defaultValue" th:value="${field.defaultValue}" th:placeholder="#{metadata.field.defaultValue.placeholder}"/>
+								<button id="expressionButton" class="btn btn-mini" type="button" th:text="#{metadata.field.defaultValue.desc}"></button>
+								</td>
+								
+								<th class="expression">
+									<label><i class="icon-arrow-left"></i> <span th:text="#{metadata.field.expression}"></span>:</label>
+								</th>
+								<td class="expression">
+								<select>
+									<option value="" th:text="#{metadata.field.expression.null}"></option>
+									<option value="@{env.Now}" th:text="#{metadata.field.expression.currentTime}"></option>
+									<option value="@{env.User.Id}" th:text="#{metadata.field.expression.currentUserId}"></option>
+									<option value="@{env.User.Name}" th:text="#{metadata.field.expression.currentUserName}"></option>
+									<option value="@{env.UserEntity.userNum}">当前用户工号</option>
+									<option value="@{env.UserEntity.email}">当前用户邮箱</option>
+									<option value="@{env.UserEntity.orgId}">当前用户部门id</option>
+									<option value="@{env.UserEntity.organization.name}">当前用户部门名称</option>
+									<option value="@{env.UserEntity.loginId}">当前用户登录名</option>
+									<option value="@{env.UserEntity.birthday}">当前用户生日</option>
+									<option value="@{env.UserEntity.mobile}">当前用户移动电话1</option>
+									<option value="@{env.UserEntity.mobile2}">当前用户移动电话2</option>
+									<option value="@{env.UserEntity.mobile3}">当前用户移动电话3</option>
+									<option value="@{env.UserEntity.telephone}">当前用户工作电话</option>
+									<option value="@{env.UserEntity.homeTelephone}">当前用户家庭电话</option>
+									<option value="@{env.UserEntity.postDescription}">当前用户岗位</option>
+									<option value="@{sum(childEntity.field)}">汇总</option>
+									<option value="@{getEntity('target_entity_name',tid_field).t_field}">关联对象属性</option>
+									<option value="@{env.Guid}" th:text="#{metadata.field.expression.guid}"></option>
+								</select>
+								</td>
+							</tr>
+						</tbody>
+						<tbody class="fieldTypeAttrs">
+						</tbody>
+						<tbody class="dataTypeDetail">
+							<tr class="cascadeOption">
+								<th><label th:text="#{metadata.field.cascade.datasource}+':'"></label></th>
+								<td colspan="3">
+									<!-- <label class="radio inline">
+										<input type="radio" checked="checked" name="optionSource" value="optionSet"/><span th:text="#{metadata.optionset}"></span>
+									</label> -->
+									<label class="radio inline">
+										<input type="radio" checked="checked" name="optionSource" value="entity"/><span th:text="#{metadata.entity}"></span>
+									</label>
+									
+								</td>
+							</tr>
+							<tr class="cascadeOption-entity">
+								<th><label th:text="#{metadata.refentity}+':'"></label></th>
+								<td colspan="3">
+									<select id="lookupValue" name="lookupValue">
+									<option value="" th:label="#{metadata.field.selectFieldType.fieldType}"/>
+									<option th:each="em:${entityMap}" th:selected='${field.lookupValue==em.key}' th:text="${em.value}" th:value="${em.key}"></option>
+									</select>
+								</td>
+							</tr>
+							<tr class="picklist">
+								<th><label th:text="#{metadata.field.cascade.useExistedOptionset}+':'"></label></th>
+								<td colspan="3">
+									<label class="radio inline">
+									<input type="radio" name="useExistedSet" th:checked='${field.useExistedSet==true}' value="true"/><span th:text="#{common.yes}"></span>
+									</label>
+									<label class="radio inline">
+									<input type="radio" name="useExistedSet" th:checked='${field.useExistedSet==false or field.useExistedSet==null}' value="false"/><span th:text="#{common.no}"></span>
+									</label>
+								</td>
+							</tr>
+							<tr class="picklist useExistedSetTrue cascadeOptionParent-optionSet">
+								<th><label th:text="#{metadata.optionset}+':'"></label></th>
+								<td colspan="3">
+									<select id="optionSetName" name="optionSetName" th:title="${field.optionSetName}">
+										<option value="" th:label="#{metadata.field.selectFieldType}"/>
+										<option th:each="om:${optionSetsMap}" th:selected="${om.key==field.optionSetName}" th:value="${om.key}" th:text="${om.value}"/>
+									</select>
+									<div class="btn-group" style="display:inline-block;vertical-align: middle;">
+										<button class="btn btn-mini itemOperationEdit dropdown-toggle" data-toggle="dropdown">
+			                			<i class="icon-edit"></i><span th:text="#{common.edit}"></span><span class="caret"></span></button>
+			              				<ul class="dropdown-menu">
+			                 				<li><a id="listOptionsetEdit" data-url="/metadata/optionset/create" href="javascript://" th:text="#{common.as}+#{metadata.optionset.listType}"></a></li>
+			                  				<li><a id="treeOptionsetEdit" data-url="/metadata/optionset/create" href="javascript://" th:text="#{common.as}+#{metadata.optionset.treeType}"></a></li>
+			                			</ul>
+									</div>
+									<div class="btn-group" style="display:inline-block;vertical-align: middle;">
+			                			<button class="btn btn-mini itemOperationCreate dropdown-toggle" data-toggle="dropdown">
+			                			<i class="icon-plus-sign"></i><span th:text="#{common.create}"></span><span class="caret"></span></button>
+			              				<ul class="dropdown-menu">
+			                 				<li><a id="listOptionsetCreate" data-url="/metadata/optionset/create?type=list" href="javascript://" th:text="#{metadata.optionset.listType}"></a></li>
+			                  				<li><a id="treeOptionsetCreate" data-url="/metadata/optionset/create?type=tree" href="javascript://" th:text="#{common.as}+#{metadata.optionset.treeType}"></a></li>
+			                			</ul>
+			              			</div>
+								</td>
+							</tr>
+						</tbody>
+						<tbody class="dataTypeDetail">	
+							<tr class="picklist useExistedSetFalse hide" >
+								<th><label th:text="#{metadata.optionset.manageOptionItems}+':'"></label></th>
+								<td colspan="1" width="30%">
+									<div class="btn-toolbar" style="margin-bottom: 10px;margin-top: 0px">
+									  <div class="btn-group">
+									    <a class="btn" href="javascript://" id="addOptionItem" th:title="#{common.add}" style="border-radius:0;">
+									    	<i class="icon-plus"></i></a>
+									    <a class="btn" href="javascript://" id="delOptionItem" th:title="#{common.remove}">
+									    	<i class="icon-minus"></i></a>
+									    <a class="btn" href="javascript://" id="upOptionItem" th:title="#{common.up}">
+									    	<i class="icon-arrow-up"></i></a>
+									    <a class="btn" href="javascript://" id="downOptionItem" th:title="#{common.down}">
+									    	<i class="icon-arrow-down"></i></a>
+									    <a class="btn" href="javascript://" id="emptyOptionItem" th:title="#{common.clear}" style="border-radius:0;">
+									    	<i class="icon-ban-circle"></i></a>
+									  </div>
+									</div>
+									<div class="optionItemsTableCon"  style="overflow-y: scroll;overflow-x: hidden;">
+										<table class="optionItemsTable form-table">
+											<thead>
+												<tr>
+													<th width="60%" class="item-thead" th:text="#{common.tag}" style="text-align:left;background-color: #eee;"></th>
+													<th class="item-thead" th:text="#{common.value}" style="text-align:left;background-color: #eee;"></th>
+												</tr>
+											</thead>
+											<tbody id="optionSetsItem">
+												<tr class="optionItem">
+													<td class="itemName"></td>
+													<td class="itemValue"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</td>
+								<td>
+									<div id="createOptionItemForm" >
+										<table class="form-table" id="itemTable" style="border:solid 1px #e4e4e4;margin-top: 10px;">
+											<tbody>
+												<tr>
+													<th><label th:text="#{common.tag}+':'"></label></th>
+													<td><input type="text" name="itemName" value="" id="itemName" /></td>
+												</tr>
+												<tr>
+													<th><label th:text="#{common.value}+':'"></label></th>
+													<td><input type="text" name="itemValue" value="" id="itemValue"/></td>
+												</tr>
+												<tr>
+													<th><label th:text="#{common.description}+':'"></label></th>
+													<td><textarea name="itemDescn" id="itemDesc"></textarea></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+						<tbody class="dataTypeDetail">
+							<tr class="picklist yesOrNo">
+								<th><label th:text="#{common.defaultValue}+':'"></label></th>
+								<td id="defaultValueTd" colspan="3">
+									<select id="defaultValue" name="defaultValue">
+										<option value="" th:label="#{common.notAssignValue}"/>
+									</select>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			
+	<div class="ui-dialog-buttonset">
+		<button th:if="${action!='view'}" type="button" class="btn  purple saveMetaField">
+			<span th:text="#{common.save}"></span>
+			<i class="m-icon-swapright m-icon-white"></i>
+		</button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+	</form>
+</div>
+
+<script th:inline="javascript">
+	/*<![CDATA[*/	
+$(function(){
+	var action = /*[[${action}]]*/;
+	var context = /*[['#'+${viewId}]]*/;
+	var optionsJson=/*[[${field.options}]]*/;
+	var options=JSON.parse(optionsJson);
+	var entityName=/*[[${entity}]]*/;
+	var optionSetsJson=/*[[${optionSets}]]*/;
+	var optionSets=JSON.parse(optionSetsJson);
+	var dataTypesJson=/*[[${dataTypes}]]*/;
+	var dataTypes=JSON.parse(dataTypesJson);
+	var fieldTypesJson=/*[[${fieldTypesJson}]]*/;//字段类型详细信息
+	var fieldTypes=JSON.parse(fieldTypesJson);
+	var displayForJson = /*[[${_displayFor}]]*/;
+	var displayFor=JSON.parse(displayForJson);
+	var fieldDisplayName = /*[[${field.displayName}]]*/;
+	var fieldName = /*[[${field.name}]]*/;
+	var fieldDataType = /*[[${field.dataType}]]*/;
+	var fieldFieldType = /*[[${field.fieldType}]]*/;
+	var fieldInputType = /*[[${field.inputType}]]*/;
+	var fieldOptionSource = /*[[${field.optionSource}]]*/;
+	var fieldDefaultValue=/*[[${field.defaultValue}]]*/;
+	var classifiedCascadeFieldsJson=/*[[${classifiedCascadeFields}]]*/;
+	var classifiedCascadeFields=JSON.parse(classifiedCascadeFieldsJson);
+	var manyToOneEntityUrl=Global.contextPath+"/metadata/field/manyToOneEntityNamesMap";
+	
+	var _options={action:action,context:context,options:options,entityName:entityName,
+			classifiedCascadeFields:classifiedCascadeFields,
+			manyToOneEntityUrl:manyToOneEntityUrl,
+			optionSets:optionSets,dataTypes:dataTypes,
+			fieldTypes:fieldTypes,displayFor:displayFor,
+			field:{displayName:fieldDisplayName,name:fieldName,dataType:fieldDataType,fieldType:fieldFieldType,
+				inputType:fieldInputType,optionSource:fieldOptionSource,defaultValue:fieldDefaultValue}};
+	//consolelog(_options);
+	
+	reqModule(["module/metadata/create_metafield"],function(MetaFieldManager){
+		MetaFieldManager.createNew(_options);
+	});
+});
+
+
+function fieldNameUnique(caller) {
+	var context = /*[['#'+${viewId}]]*/;
+	var myEntity = /*[[${field.entity}]]*/;
+	var myField = $(caller, context).val();
+	var result = {isError:false,errorInfo:""};
+	$.ajax({
+		url		:	Global.contextPath + "/validation/field_name_unique",
+		data	:	{
+						entity : myEntity,
+						field  : myField
+					},
+		async	:	false,
+		success	:	function(data){
+						if (data == false) {
+							result = {isError:true,errorInfo:i18n.t("metafield.nameAlreadyExist")};
+						} else {
+							result = {isError:false,errorInfo:""};
+						}
+					}
+	});
+	return result;
+};
+/*]]>*/
+</script>
+</div>

@@ -1,0 +1,436 @@
+<div class="row-fluid" th:id="${viewId}">
+	<div class="process-history-title">处理轨迹</div>
+	<div class="process-history">
+		<div th:if="${queryString[freestyle]=='true'}" th:each="h,st:${taskHistory}" th:with="bd=${x.decodeToMap(h.businessData)}">
+			<div th:if="${st.index==0 and h.status==10}">
+				<div class="step" >
+					<dl>
+						<dt>
+							<i class="number" th:text="${counter.incrementAndGet(1)}"></i>
+						</dt>
+						<dd>
+							<div class="step-cont">
+								<div class="arrow">
+									<div class="s-line">◆</div>
+									<div class="s-bg">◆</div>
+								</div>
+								<div class="stepDetail">
+									<div class="stepDinfo">
+										<p>
+											<span th:if="${bd[nextIsCountersign]}" th:text="${h.creatorName}+'提交给'+${bd[nextCanditatesNames]}+'会签'"></span>
+											<span th:unless="${bd[nextIsCountersign]}" th:text="${h.creatorName}+'提交给'+${bd[nextCanditatesNames]}"></span>
+											<span th:if="${bd[nextCcCanditatesNames]}" th:text="',并抄送给'+${bd[nextCcCanditatesNames]}"></span>
+										</p>
+									</div>
+								</div>
+							</div>
+						</dd>
+					</dl>
+				</div>
+			</div>
+			<div th:if="${st.index!=0 and h.status==10}">
+				<div class="step">
+					<dl>
+						<dt>
+							<i class="number" th:text="${counter.incrementAndGet(1)}"></i>
+						</dt>
+						<dd>
+							<div class="step-cont">
+								<div class="arrow">
+									<div class="s-line">◆</div>
+									<div class="s-bg">◆</div>
+								</div>
+								<div class="stepDetail">
+									<img th:src="${x.userPicturePath(h.assigneeId)}" th:attr="onerror='this.src=\''+${themes.statics('images/soft.png')}+'\''"/>
+									<div class="stepDinfo">
+										<p th:if="${h.endReason==8 || h.endReason==9}">
+											<span th:text="${procInst.endUserName}+'结束了协作'"></span>
+										</p>
+										<p th:unless="${h.endReason==8 || h.endReason==9}">
+											<span th:text="${h.assigneeName}"></span>
+										</p>
+										<p th:text="${h.endTime}?${#dates.format(h.endTime, 'yyyy-MM-dd HH:mm')}:''"></p>
+										<p th:utext="${#strings.unescapeJava(h.userComment)}"></p>
+									</div>
+								</div>
+							</div>
+						</dd>
+					</dl>
+				</div>
+				<div class="step" th:if="${bd[nextCanditatesNames]}">
+					<dl>
+						<dt>
+							<i class="number" th:text="${counter.incrementAndGet(1)}"></i>
+						</dt>
+						<dd>
+							<div class="step-cont">
+								<div class="arrow">
+									<div class="s-line">◆</div>
+									<div class="s-bg">◆</div>
+								</div>
+								<div class="stepDetail">
+									<div class="stepDinfo">
+										<p>
+											<span th:if="${bd[nextIsCountersign]}" th:text="${h.assigneeName}+'提交给'+${bd[nextCanditatesNames]}+'会签'"></span>
+											<span th:unless="${bd[nextIsCountersign]}" th:text="${h.assigneeName}+'提交给'+${bd[nextCanditatesNames]}"></span>
+											<span th:if="${bd[nextCcCanditatesNames]}" th:text="',并抄送给'+${bd[nextCcCanditatesNames]}"></span>
+										</p>
+									</div>
+								</div>
+							</div>
+						</dd>
+					</dl>
+				</div>
+			</div>
+			<div th:if="${h.status==10 and x.notNullOrFalse(bd[nextIsCountersign])}">
+				<div class="step">
+					<dl>
+						<dt>
+							<i class="number" th:text="${counter.incrementAndGet(1)}"></i>
+						</dt>
+						<dd>
+							<div class="step-cont">
+								<div class="arrow">
+									<div class="s-line">◆</div>
+									<div class="s-bg">◆</div>
+								</div>
+								<div class="stepDetail">
+									<div class="stepDinfo">
+										<p>正在会签......</p>
+									</div>
+								</div>
+								<div class="step-meeting">
+									<div th:each="ch,cst:${h.countersigns}" th:with="cbd=${x.decodeToMap(h.businessData)}">
+									<div class="step" th:if="${ch.status==10}">
+										<dl>
+											<!-- <dt>
+												<i class="number" th:text="${cst.index+1}"></i>
+											</dt> -->
+											<dd class="inner">
+												<div class="step-cont">
+													<div class="arrow">
+														<div class="s-line">◆</div>
+														<div class="s-bg">◆</div>
+													</div>
+													<div class="stepDetail">
+														<img th:src="${x.userPicturePath(ch.assigneeId)}"  th:attr="onerror='this.src=\''+${themes.statics('images/soft.png')}+'\''"/>
+														<div class="stepDinfo">
+															<p th:if="${ch.endReason==8 || ch.endReason==9}">
+																<span th:text="${procInst.endUserName}+'结束了协作'"></span>
+															</p>
+															<p th:unless="${ch.endReason==8 || ch.endReason==9}">
+																<span th:text="${ch.assigneeName}"></span>
+															</p>
+															<p th:text="${ch.endTime}?${#dates.format(ch.endTime, 'yyyy-MM-dd HH:mm')}:''"></p>
+															<p th:utext="${#strings.unescapeJava(ch.userComment)}"></p>
+														</div>
+													</div>
+												</div>
+											</dd>
+										</dl>
+									</div>
+									<div th:if="${ch.siblings}" th:each="sch:${ch.siblings}" style="margin-left:15px;">
+									<div class="step"  th:if="${sch.status==10}">
+										<dl>
+											<!-- <dt>
+												<i class="number" th:text="${cst.index+1}"></i>
+											</dt> -->
+											<dd class="inner">
+												<div class="step-cont">
+													<div class="arrow">
+														<div class="s-line">◆</div>
+														<div class="s-bg">◆</div>
+													</div>
+													<div class="stepDetail">
+														<img th:src="${x.userPicturePath(sch.assigneeId)}"  th:attr="onerror='this.src=\''+${themes.statics('images/soft.png')}+'\''"/>
+														<div class="stepDinfo">
+															<p th:if="${sch.endReason==8 || sch.endReason==9}">
+																<span th:text="${procInst.endUserName}+'结束了协作'"></span>
+															</p>
+															<p th:unless="${sch.endReason==8 || sch.endReason==9}">
+																<span th:text="${sch.assigneeName}"></span>
+															</p>
+															<p th:text="${sch.endTime}?${#dates.format(sch.endTime, 'yyyy-MM-dd HH:mm')}:''"></p>
+															<p th:utext="${#strings.unescapeJava(sch.userComment)}"></p>
+														</div>
+													</div>
+												</div>
+											</dd>
+										</dl>
+									</div>
+									</div>
+									</div>
+								</div>
+							</div>
+						</dd>
+					</dl>
+				</div>
+				<div class="step" th:if="${h.contersignCompleted}">
+					<dl>
+						<dt>
+							<i class="number" th:text="${counter.incrementAndGet(1)}"></i>
+						</dt>
+						<dd>
+							<div class="step-cont">
+								<div class="arrow">
+									<div class="s-line">◆</div>
+									<div class="s-bg">◆</div>
+								</div>
+								<div class="stepDetail">
+									<div class="stepDinfo">
+										<span>会签结束，结果返回给</span><span th:text="${h.assigneeName}"></span>
+									</div>
+								</div>
+							</div>
+						</dd>
+					</dl>
+				</div>
+			</div>
+		</div>
+		<div th:unless="${queryString[freestyle]=='true'}" th:each="h,st:${taskHistory}" th:with="bd=${x.decodeToMap(h.businessData)}">
+			<div th:if="${st.index==0 and h.status==10}">
+				<div class="step" >
+					<dl>
+						<dt>
+							<i class="number" th:text="${counter.incrementAndGet(1)}"></i>
+						</dt>
+						<dd>
+							<div class="step-cont">
+								<div class="arrow">
+									<div class="s-line">◆</div>
+									<div class="s-bg">◆</div>
+								</div>
+								<div class="stepDetail">
+									<div class="stepDinfo">
+										<p>
+											<span th:if="${x.isNotEmpty(bd[nextCanditatesNames]) and (x.nullOrFalse(bd[nextIsCountersign]))}" th:text="${h.creatorName}+'提交给'+${bd[nextCanditatesNames]}"></span>
+											<span th:if="${x.isEmpty(bd[nextCanditatesNames])}" th:text="${h.creatorName}+'发起了协作'"></span>
+											<span th:if="${x.notNullOrFalse(bd[nextIsCountersign])}" th:text="${h.creatorName}+'提交给'+${bd[nextCanditatesNames]}+'会签'"></span>
+											<span th:if="${x.isNotEmpty(bd[nextCcCanditatesNames])}" th:text="',并抄送给'+${bd[nextCcCanditatesNames]}"></span>
+										</p>
+									</div>
+								</div>
+							</div>
+						</dd>
+					</dl>
+				</div>
+			</div>
+			<div th:if="${st.index!=0 and h.status==10}">
+				<div class="step">
+					<dl>
+						<dt>
+							<i class="number" th:text="${counter.incrementAndGet(1)}"></i>
+						</dt>
+						<dd>
+							<div class="step-cont">
+								<div class="arrow">
+									<div class="s-line">◆</div>
+									<div class="s-bg">◆</div>
+								</div>
+								<div class="stepDetail">
+									<p class="act-title" th:text="${h.actTitle}"></p>
+									<img th:src="${x.userPicturePath(h.assigneeId)}" th:attr="onerror='this.src=\''+${themes.statics('images/soft.png')}+'\''"/>
+									<div class="stepDinfo">
+										<p>
+											<span th:if="${h.endReason==8 || h.endReason==9}" th:text="${procInst.endUserName}+'结束了协作'"></span>
+											<span th:unless="${h.endReason==8 || h.endReason==9}" th:text="${h.assigneeName}"></span>
+											<span th:if="${h.type==3}" th:text="':&nbsp;来自'+${h.creatorName}+'的转办'"></span>
+											<span th:if="${h.type==4}" th:text="':&nbsp;由'+${h.creatorName}+'退回'"></span>
+											<span class="label label-info" style="line-height: 18px;" th:if="${h.endReason==4}" th:text="'转办'"></span>
+											<span class="label label-info" style="line-height: 18px;" th:if="${h.endReason==9}" th:text="'退回'"></span>
+										</p>
+										<p th:text="${h.endTime}?${#dates.format(h.endTime, 'yyyy-MM-dd HH:mm')}:''"></p>
+										<p th:utext="${#strings.unescapeJava(h.userComment)}"></p>
+									</div>
+								</div>
+							</div>
+						</dd>
+					</dl>
+				</div>
+				<div class="step" th:if="${bd[nextCanditatesNames]}">
+					<dl>
+						<dt>
+							<i class="number" th:text="${counter.incrementAndGet(1)}"></i>
+						</dt>
+						<dd>
+							<div class="step-cont">
+								<div class="arrow">
+									<div class="s-line">◆</div>
+									<div class="s-bg">◆</div>
+								</div>
+								<div class="stepDetail">
+									<div class="stepDinfo">
+										<p>
+											<span th:if="${x.nullOrFalse(bd[nextIsCountersign])}" th:text="${h.assigneeName}+'提交给'+${bd[nextCanditatesNames]}"></span>
+											<span th:unless="${x.nullOrFalse(bd[nextIsCountersign])}" th:text="${h.assigneeName}+'提交给'+${bd[nextCanditatesNames]}+'会签'"></span>
+											<span th:if="${bd[nextCcCanditatesNames]}" th:text="',并抄送给'+${bd[nextCcCanditatesNames]}"></span>
+										</p>
+									</div>
+								</div>
+							</div>
+						</dd>
+					</dl>
+				</div>
+			</div>
+			<div th:if="${st.index!=0 and h.status==1}">
+				<div class="step">
+					<dl>
+						<dt>
+							<i class="number" th:text="${counter.incrementAndGet(1)}"></i>
+						</dt>
+						<dd>
+							<div class="step-cont">
+								<div class="arrow">
+									<div class="s-line">◆</div>
+									<div class="s-bg">◆</div>
+								</div>
+								<div class="stepDetail">
+									<p class="act-title" th:text="${h.actTitle}"></p>
+									<div class="stepDinfo">
+										<span th:if="${h.status==1}" th:attr="data-task-id=${h.id}" class="task-user dropdown">
+											<span class="approve-actors" th:include="'/themes/' + ${theme} + '/modules/workflow/approve/history_approve_actor' :: 'actor'"></span>
+										</span>
+									</div>
+								</div>
+							</div>
+						</dd>
+					</dl>
+				</div>
+			</div>
+			<div th:if="${h.status==10 and x.notNullOrFalse(bd[nextIsCountersign])}">
+				<div class="step">
+					<dl>
+						<dt>
+							<i class="number" th:text="${counter.incrementAndGet(1)}"></i>
+						</dt>
+						<dd>
+							<div class="step-cont">
+								<div class="arrow">
+									<div class="s-line">◆</div>
+									<div class="s-bg">◆</div>
+								</div>
+								<div class="stepDetail">
+									<div class="stepDinfo">
+										<p>正在会签......</p>
+									</div>
+								</div>
+								<div class="step-meeting">
+									<div th:each="ch,cst:${h.countersigns}" th:with="cbd=${x.decodeToMap(h.businessData)}">
+									<div class="step" th:if="${ch.status==10}">
+										<dl>
+											<!-- <dt>
+												<i class="number" th:text="${cst.index+1}"></i>
+											</dt> -->
+											<dd class="inner">
+												<div class="step-cont">
+													<div class="arrow">
+														<div class="s-line">◆</div>
+														<div class="s-bg">◆</div>
+													</div>
+													<div class="stepDetail">
+														<img th:src="${x.userPicturePath(ch.assigneeId)}"  th:attr="onerror='this.src=\''+${themes.statics('images/soft.png')}+'\''"/>
+														<div class="stepDinfo">
+															<p th:if="${ch.endReason==8 || ch.endReason==9}">
+																<b th:text="${procInst.endUserName}+'结束了协作'"></b>
+															</p>
+															<p th:unless="${ch.endReason==8 || ch.endReason==9}">
+																<b th:text="${ch.assigneeName}"></b>
+															</p>
+															<p th:text="${ch.endTime}?${#dates.format(ch.endTime, 'yyyy-MM-dd HH:mm')}:''"></p>
+															<p th:utext="${#strings.unescapeJava(ch.userComment)}"></p>
+														</div>
+													</div>
+												</div>
+											</dd>
+										</dl>
+									</div>
+									<div th:if="${ch.siblings}" th:each="sch:${ch.siblings}" style="margin-left:15px;">
+									<div class="step"  th:if="${sch.status==10}">
+										<dl>
+											<!-- <dt>
+												<i class="number" th:text="${cst.index+1}"></i>
+											</dt> -->
+											<dd class="inner">
+												<div class="step-cont">
+													<div class="arrow">
+														<div class="s-line">◆</div>
+														<div class="s-bg">◆</div>
+													</div>
+													<div class="stepDetail">
+														<img th:src="${x.userPicturePath(sch.assigneeId)}"  th:attr="onerror='this.src=\''+${themes.statics('images/soft.png')}+'\''"/>
+														<div class="stepDinfo">
+															<p th:if="${sch.endReason==8 || sch.endReason==9}">
+																<b th:text="${procInst.endUserName}+'结束了协作'"></b>
+															</p>
+															<p th:unless="${sch.endReason==8 || sch.endReason==9}">
+																<b th:text="${sch.assigneeName}"></b>
+															</p>
+															<p th:text="${sch.endTime}?${#dates.format(sch.endTime, 'yyyy-MM-dd HH:mm')}:''"></p>
+															<p th:utext="${#strings.unescapeJava(sch.userComment)}"></p>
+														</div>
+													</div>
+												</div>
+											</dd>
+										</dl>
+									</div>
+									</div>
+									</div>
+								</div>
+							</div>
+						</dd>
+					</dl>
+				</div>
+				<div class="step" th:if="${h.contersignCompleted}">
+					<dl>
+						<dt>
+							<i class="number" th:text="${counter.incrementAndGet(1)}"></i>
+						</dt>
+						<dd>
+							<div class="step-cont">
+								<div class="arrow">
+									<div class="s-line">◆</div>
+									<div class="s-bg">◆</div>
+								</div>
+								<div class="stepDetail">
+									<div class="stepDinfo">
+										<span>会签结束，结果返回给</span><span th:text="${h.assigneeName}"></span>
+									</div>
+								</div>
+							</div>
+						</dd>
+					</dl>
+				</div>
+			</div>
+		</div>
+		<div class="step step-end" th:if="${procInst.status==10}" th:switch="${procInst.endReason}">
+			<dl>
+				<dt>
+					<i class="number" th:text="${counter.incrementAndGet(1)}"></i>
+				</dt>
+				<dd>
+					<div class="step-cont">
+						<div class="arrow">
+							<div class="s-line">◆</div>
+							<div class="s-bg">◆</div>
+						</div>
+						<div class="stepDetail">
+							<div class="stepDinfo">
+								<p th:case="8" colspan="6" style="font-weight: bold;color: #0d638f;">本次协作已强制结束</p>
+								<p th:case="9" colspan="6" style="font-weight: bold;color: #0d638f;">本次协作已作废</p>
+								<p th:case="*" colspan="6" style="font-weight: bold;color: #0d638f;">本次协作结束<span th:if="${isSubprocess and not parentComplete}">,父流程未完成</span></p>
+							</div>
+						</div>
+					</div>
+				</dd>
+			</dl>
+		</div>
+	</div>
+
+	<script th:inline="javascript">
+//<![CDATA[ 
+$(function(){
+	var context = /*[['#'+${viewId}]]*/;
+});
+//]]>
+</script>
+</div>

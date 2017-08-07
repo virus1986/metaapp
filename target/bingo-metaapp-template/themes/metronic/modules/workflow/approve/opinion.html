@@ -1,0 +1,68 @@
+<div class="hr-line"></div>
+<div class="row-fluid" th:id="${viewId}">
+	<h4>
+		审批意见&nbsp;&nbsp;
+	</h4>
+	<div th:if="${queryString['tododraft']!='1' and !reject}" style="margin-bottom: 10px;padding-left:10px;">
+		<label class="radio inline">
+		<input type="radio" id="approveValue" th:name="'approveValue'+${viewId}" value="1"/>
+		通过
+		</label>
+		<label class="radio inline">
+		<input type="radio" id="approveValue" th:name="'approveValue'+${viewId}" value="0"/>
+		驳回
+		</label>
+		<select class="reject-to-con" name="rejectToAct" style="margin-bottom: 0px;border-top: none;border-left: none;border-right: none;">
+			<!-- <option value="-1" selected="selected">发起人</option> -->
+			<option value="-2">上一步</option>
+			<option th:each="hisTask,stat:${historyTasks}"
+				 th:value="${hisTask.activityInstanceId}" th:selected="${stat.index==0}"
+				  th:text="${hisTask.title}+'['+${hisTask.assigneeName}+']'"></option>
+		</select>
+		<span class="reapprove-block">
+			<label class="reject-to-con checkbox inline">
+				驳回处理后
+				<select name="reapprove">
+					<option value="0">直接返回到当前步骤</option>
+					<option value="1">重走审批流程</option>
+				</select>
+			</label>
+		</span>
+	</div>
+
+	<!-- <label class="radio inline" style="margin-bottom: 5px"><input type="radio" name="approveValue" value="-1"/>&nbsp;不同意，退回上一步</label><br /> -->
+	<div class="userCommentCon" style="position: relative;">
+		<button class="btn mini green userCommentSelectHat" style="position: absolute;top:-5px;left:0px;">
+			<i class="icon-asterisk">选择常用意见</i>
+		</button>
+		<button class="btn mini tea-green addCommonOpinion" style="position: absolute;top:-5px;left:100px;">
+		  	<i class="icon-asterisk">设为常用意见</i>
+		</button>
+		<div class="pop-select hide">
+			<select name="selectForUserComment" style="position: absolute;left:75px;">
+				<option value="">--选择常用意见--</option>
+				<option th:each="opi:${opinions}" th:value="${opi['content']}" th:text="${opi['content']}"></option>
+			</select>
+		</div>
+		<textarea name="userComment" required="required" class="m-wrap bg-white" style="width: 98%;margin-top:10px;" rows="3" placeholder="请输入领导审批意见"></textarea>
+	</div>
+	<script th:inline="javascript">
+	//<![CDATA[
+	    $(function(){
+	    	var viewId=/*[[${viewId}]]*/;
+	    	var context = $('#'+viewId);
+	    	var approveValueName = 'approveValue'+viewId;
+	    	var approveValue = $("input[name="+approveValueName+"]",context);
+	    	approveValue.change(function(){
+	    		if($(this).val()==0){
+	    			$("select.reject-to-con",context).fadeIn();
+	    			$("span.reapprove-block",context).fadeIn();
+	    		}else if($(this).val()==1){
+	    			$("select.reject-to-con",context).fadeOut();
+	    			$("span.reapprove-block",context).fadeOut();
+	    		}
+	    	});
+	    });
+	//]]>
+	</script>
+</div>

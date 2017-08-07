@@ -1,0 +1,198 @@
+<div class="ui-dialog-content ui-dialog-content-margin container-fluid" th:id="${viewId}">
+	<div class="row-fluid">
+		<div class="portlet ">
+			<div class="portlet-title">
+				<div class="caption">导入进度：</div>
+			</div>
+			<div class="portlet-body">
+				<ul class="feeds">
+					<li th:each="task,itStat:${importer.tasks}" th:id="${task.id}">
+						<div class="col1">
+							<div class="cont">
+								<div class="cont-col1" th:switch="${task.status}">
+									<div th:case="1" class="label label-info">
+										<i class="icon-play"></i>
+									</div>
+									<div th:case="2" class="label label-warning">
+										<i class="icon-warning-sign"></i>
+									</div>
+									<div th:case="3" class="label label-success">
+										<i class="icon-ok"></i>
+									</div>
+									<div th:case="*" class="label">
+										<i class="icon-arrow-right"></i>
+									</div>
+								</div>
+								<div class="cont-col2">
+									<div class="desc" th:text="${task.title}">任务内容</div>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>	
+				<br/>
+				<div th:if="${isComplete==0}" class="progress progress-striped active">
+					<div style="width:0%;" class="bar">导入中..</div>
+				</div>
+				<div th:if="${isComplete==1}" class="progress">
+					<div style="width:100%;" class="bar">完成</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row-fluid">
+		<div class="portlet ">
+			<div class="portlet-title">
+				<div class="caption">摘要信息：</div>
+			</div>
+			<div class="portlet-body">
+				<table id="summary" class="table table-striped table-advance table-hover">
+					<thead>
+						<tr>
+							<th>实体</th>
+							<th>创建</th>
+							<th>更新</th>
+							<th>错误</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="summary,itStat:${importer.report.summaryReport.values()}" >
+							<td th:text="${summary.entityDisplayName}">实体</td>
+							<td th:text="${summary.created}">实体</td>
+							<td th:text="${summary.updated}">实体</td>
+							<td th:text="${summary.error}">实体</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="alert alert-info"  th:if="${isComplete==1 and not #strings.isEmpty(importer.report.reportFilePath)}">
+					<a class="close" data-dismiss="alert"> </a>
+					<p style="margin-bottom: 0px">导入报告已生成，<a th:href="${x.downloadPath(importer.report.reportFilePath)}">点击下载 <i class="m-icon-swapdown"></i></a>
+					</p>
+				</div>
+				<div class="alert alert-info" th:if="${isComplete==1 and importer.exception!=null}">
+					<a class="close" data-dismiss="alert"> </a>
+					<p style="margin-bottom: 0px">导入错误信息：
+					<span th:text="${importer.exception.getMessage()}"></span>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+    <!--格式校验错误展示-->
+    <div class="row-fluid" th:if="${isComplete==1 and entitySummary.error>0}">
+        <div class="portlet ">
+            <div class="portlet-title">
+                <div class="caption" style="font-weight: bold;color:red">错误信息：</div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-advance table-hover">
+                    <thead>
+                    <tr>
+                        <th nowrap="nowrap" th:each="header,itStat:${importer.report.errorReport.headerTexts}" th:text="${header}">标题</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="row,itStat:${importer.report.errorReport.rows}" >
+                        <td th:each="data,dStat:${row}">
+								<span th:if="${dStat.first}">
+									<img th:src="${themes.statics('/images/error.png')}" />
+								</span>
+								<span th:if="${not dStat.first}" th:text="${data}">
+									内容
+								</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+	<div class="row-fluid" th:if="${isComplete==1 and entitySummary.error>0}">
+		<div class="portlet ">
+			<div class="portlet-title">
+				<div class="caption">错误信息：</div>
+			</div>
+			<div class="portlet-body">
+				<table class="table table-striped table-advance table-hover">
+					<thead>
+						<tr>
+							<th nowrap="nowrap" th:each="header,itStat:${importer.report.entityReport.headerTexts}" th:text="${header}">标题</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="row,itStat:${importer.report.entityReport.rows}" th:if="${row[0]==2}" >
+							<td th:each="data,dStat:${row}">
+								<span th:if="${dStat.first}">
+									<img th:src="${themes.statics('/images/error.png')}" />
+								</span>
+								<span th:if="${not dStat.first}" th:text="${data}">
+									内容
+								</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<div class="ui-dialog-buttonset">
+        <button class="btn closeBtn" name="close" type="button" th:text="#{common.close}">
+		</button>
+     </div>
+	
+	<script id="summaryTemplate" type="text/x-jquery-tmpl">
+   		<tr>
+			<td>${entityDisplayName}</td>
+			<td>${created}</td>
+			<td>${updated}</td>
+			<td>${error}</td>
+		</tr>
+	</script>
+
+	<script th:inline="javascript" type="text/javascript">
+	//<![CDATA[ 
+	    $(function(){
+			var viewId=/*[[${viewId}]]*/;
+			var sId=/*[[${sid}]]*/;
+			var entityName=/*[[${metaEntity.name}]]*/;
+			var isComplete=/*[[${isComplete}]]*/;
+			var context = "#" + viewId;		
+			var container = $('#' + viewId);
+			
+			function refreshProgress(){
+				var url=Global.contextPath+'/entities/'+entityName+'/import-progress?sid='+sId;
+				jQuery.restGet(url,null,function(reVal){
+					if(reVal["isComplete"]==1){
+						$(container).dialogReload();
+						return false;
+					}
+					var curTask=null;
+					$.each(reVal["task"],function(i,item){
+						if(item["progress"]!=100){
+							curTask=item;
+							return false;
+						}
+					});
+					if(curTask!=null){
+						$(".progress .bar",container).width(curTask.progress+"%").html(curTask.title);
+					}else{
+						$(".progress .bar",container).width("100%");
+					}
+					$("#summary tbody",context).html($("#summaryTemplate",context).tmpl(reVal.summary));
+					window.setTimeout(function(){
+						refreshProgress();
+					},2000);
+				},{isShowLoading:false});
+			}
+			
+			Page.init(container);
+			if(isComplete==0){
+				refreshProgress();
+			}
+	    });
+	//]]>
+	</script>
+</div>

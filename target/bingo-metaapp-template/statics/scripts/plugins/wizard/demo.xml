@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Root>
+	<!--  分类 -->
+	<category>
+		<demo name="基本向导" url="demo/base_demo.html"/>
+	</category>
+
+</Root>

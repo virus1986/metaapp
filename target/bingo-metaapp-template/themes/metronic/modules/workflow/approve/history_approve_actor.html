@@ -1,0 +1,16 @@
+<div th:fragment="actor">
+	<span>
+		<a href="javascript://" class="dropdown-toggle" data-toggle="dropdown" data-close-others="true">
+		 	<span class="task-user-list"></span>
+		 	<i class="icon-angle-down"></i>
+		</a>
+		<ul class="dropdown-menu" th:if="${queryString['type']=='role'}" meta:sec="${sec.isOperationAllowed('WfProcInst:Manage')}">
+           <li><a href="javascript://" class="reasignuser"><i class="icon-user"></i> 重设参与者</a></li> 
+           <li class="divider"></li>
+           <li><a href="javascript://" class="rejectToStarter0"><i class="icon-double-angle-right"></i> 退回拟稿人</a></li>
+           <li><a href="javascript://" class="rejectToStarter"><i class="icon-double-angle-right"></i> 退回拟稿人(重走)</a></li>
+       		<li class="divider"></li>
+           <li><a href="javascript://" class="jumpTo"><i class="icon-double-angle-right"></i> 流程跳转</a></li>
+       </ul>
+     </span>
+</div>

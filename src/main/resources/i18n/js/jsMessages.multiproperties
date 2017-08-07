@@ -1,0 +1,1652 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<MultiProperties xmlns="hu.skzs.multiproperties">
+    <Version>1.1</Version>
+    <Name>jsMessages</Name>
+    <Description></Description>
+    <Handler>Java Properties Handler</Handler>
+    <Columns>
+        <Key>
+            <Width>221</Width>
+        </Key>
+        <Column>
+            <Name>zh_CN</Name>
+            <Description></Description>
+            <Width>320</Width>
+            <HandlerConfiguration>/bingo-metaapp-template/src/main/resources/i18n/js/jsMessages_zh_CN.properties|false|false|false|false</HandlerConfiguration>
+        </Column>
+        <Column>
+            <Name>en</Name>
+            <Description></Description>
+            <Width>150</Width>
+            <HandlerConfiguration>/bingo-metaapp-template/src/main/resources/i18n/js/jsMessages_en.properties|false|false|false|false</HandlerConfiguration>
+        </Column>
+        <Column>
+            <Name></Name>
+            <Description></Description>
+            <Width>150</Width>
+            <HandlerConfiguration>/bingo-link-web/src/main/resources/i18n/js/jsMessages.properties|false|false|false|false</HandlerConfiguration>
+        </Column>
+    </Columns>
+    <Records>
+        <Property>
+            <Name>common.select</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>select</DefaultValue>
+            <Value disabled="false">选择</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.processing</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Processing,please wait a moment...</DefaultValue>
+            <Value disabled="false">处理中，请稍后。</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.submiting</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Submitting data,please wait a moment...</DefaultValue>
+            <Value disabled="false">正在提交数据，请稍后。</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.yes</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>yes</DefaultValue>
+            <Value disabled="false">是</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.no</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>no</DefaultValue>
+            <Value disabled="false">否</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.hide</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>hide</DefaultValue>
+            <Value disabled="false">隐藏</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.searchInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please input keywords</DefaultValue>
+            <Value disabled="false">请输入搜索关键字!</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.new</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>new</DefaultValue>
+            <Value disabled="false">新建</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.add</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>add</DefaultValue>
+            <Value disabled="false">新增</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.edit</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>edit</DefaultValue>
+            <Value disabled="false">修改</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.delete</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>delete</DefaultValue>
+            <Value disabled="false">删除</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.complete</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>complete</DefaultValue>
+            <Value disabled="false">完成</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.view</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>view</DefaultValue>
+            <Value disabled="false">查看</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.deleteInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please select row to be deleted</DefaultValue>
+            <Value disabled="false">请选择待删除行！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.editInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please select row to be edited</DefaultValue>
+            <Value disabled="false">请选中要修改的行！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.deleteConfirm</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Confirm delete?</DefaultValue>
+            <Value disabled="false">确认删除吗？</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.deleteActionError</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Delete failed, please check the data will be deleted!</DefaultValue>
+            <Value disabled="false">删除出现异常，请检查您删除的数据！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.selectRow</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please select a row!</DefaultValue>
+            <Value disabled="false">您还没有选择任何数据，请选择一行数据！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.selectEditRow</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please select a row!</DefaultValue>
+            <Value disabled="false">请选中要修改的行！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.none</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>none</DefaultValue>
+            <Value disabled="false">无</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.more</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>more</DefaultValue>
+            <Value disabled="false">更多</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.content</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>content</DefaultValue>
+            <Value disabled="false">内容</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.closeOthers</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Close Others</DefaultValue>
+            <Value disabled="false">关闭其它</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.closeAll</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Close All</DefaultValue>
+            <Value disabled="false">关闭所有</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.linkUnspecifiedContainerId</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>linkUnspecifiedContainerId</DefaultValue>
+            <Value disabled="false">链接未指定容器id！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.ui.tip.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>tips</DefaultValue>
+            <Value disabled="false">提示</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.ui.tip.content</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>null content</DefaultValue>
+            <Value disabled="false">无内容</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.date.year</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Year</DefaultValue>
+            <Value disabled="false">年</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.date.month</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Month</DefaultValue>
+            <Value disabled="false">月</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.date.day</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Day</DefaultValue>
+            <Value disabled="false">日</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.remove</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>remove</DefaultValue>
+            <Value disabled="false">移除</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.detailSetup</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Setup details</DefaultValue>
+            <Value disabled="false">详细设置</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.preview</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>preview</DefaultValue>
+            <Value disabled="false">预览</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.contentNotChanged</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>form content not changed, not need to save.</DefaultValue>
+            <Value disabled="false">当前表单内容无变更，无需保存。</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>common.pk</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>primary key</DefaultValue>
+            <Value disabled="false">主键</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metadata.field</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>metafield</DefaultValue>
+            <Value disabled="false">字段</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metadata.view</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>view</DefaultValue>
+            <Value disabled="false">视图</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metadata.form</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>form</DefaultValue>
+            <Value disabled="false">窗体</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metadata.relation</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>relation</DefaultValue>
+            <Value disabled="false">关系</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metadata.operation</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>operation</DefaultValue>
+            <Value disabled="false">操作</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metadata.security</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>security</DefaultValue>
+            <Value disabled="false">安全</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metafield.createTitle</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>create metafield for &lt;span class='title-keyword'&gt;{0}&lt;/span&gt;</DefaultValue>
+            <Value disabled="false">为 &lt;span class='title-keyword'&gt;{0}&lt;/span&gt; 实体新建字段</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metafield.editTitle</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Edit field &lt;span class='title-keyword'&gt;{1}&lt;/span&gt; of entity &lt;span class='title-keyword'&gt;{0}&lt;/span&gt;</DefaultValue>
+            <Value disabled="false">修改 &lt;span class='title-keyword'&gt;{0}&lt;/span&gt; 实体的&lt;span class='title-keyword'&gt;{1}&lt;/span&gt; 字段</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metafield.notAssignValue</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>not assign value</DefaultValue>
+            <Value disabled="false">未分派值</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metafield.inputtype.tile</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>tile</DefaultValue>
+            <Value disabled="false">平铺</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metafield.inputtype.dropdown</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>dropdown</DefaultValue>
+            <Value disabled="false">下拉</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metafield.inputtype.popup</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>popup</DefaultValue>
+            <Value disabled="false">弹出</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metafield.nameAlreadyExist</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>nameAlreadyExist</DefaultValue>
+            <Value disabled="false">此字段名已存在</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metafield.sysFieldNotAllowedDelete</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>system field, not allowed delele!</DefaultValue>
+            <Value disabled="false">为系统字段，无法删除！请重新选择！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metafield.setPk</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>set primary key</DefaultValue>
+            <Value disabled="false">设为主键</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metafield.cancelPk</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>cancel primary key</DefaultValue>
+            <Value disabled="false">取消主键</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metaentity.entityAlreadyExist</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>entityAlreadyExist</DefaultValue>
+            <Value disabled="false">实体名称已经存在</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metaentity.create.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>new entity</DefaultValue>
+            <Value disabled="false">新建实体</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metaentity.edit.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>edit entity</DefaultValue>
+            <Value disabled="false">修改实体 </Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metaentity.sysEntityNotAllowedDelete</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>system entity, not allowed delele!</DefaultValue>
+            <Value disabled="false">为系统实体，无法删除！请重新选择！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metaentity.delete.errorSum</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>delete not work,reasons as follows:&lt;br/&gt;</DefaultValue>
+            <Value disabled="false">由于以下原因，删除操作无法进行：&lt;br/&gt;</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metaentity.delete.errorRelationExist</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>entity&lt;b&gt;{0}&lt;/b&gt;has relation not deleted</DefaultValue>
+            <Value disabled="false">实体&lt;b&gt;{0}&lt;/b&gt;还存在关系</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metaentity.delete.errorRelationRefBy2</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>,and was referenced by</DefaultValue>
+            <Value disabled="false">，而且还被引用于</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metaentity.delete.errorRelationRefBy</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>entity&lt;b&gt;{0}&lt;/b&gt; was referenced by</DefaultValue>
+            <Value disabled="false">实体&lt;b&gt;{0}&lt;/b&gt;被引用于</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>metaentity.delete.errorDb</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>database delete error</DefaultValue>
+            <Value disabled="false">数据库删除错误</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>relation.targetEntityIdentity</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>targetEntityIdentity</DefaultValue>
+            <Value disabled="false">目标实体主键</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>relation.autocreateField</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>autoGenerate</DefaultValue>
+            <Value disabled="false">自动创建字段</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>relation.edit.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Edit relation for&lt;span class='title-keyword'&gt;{0}&lt;/span&gt;</DefaultValue>
+            <Value disabled="false">为 &lt;span class='title-keyword'&gt;{0}&lt;/span&gt; 修改关系</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>relation.create.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Create relation for&lt;span class='title-keyword'&gt;{0}&lt;/span&gt;</DefaultValue>
+            <Value disabled="false">为 &lt;span class='title-keyword'&gt;{0}&lt;/span&gt; 创建关系</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>relation.oneToOne</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>OneToOne</DefaultValue>
+            <Value disabled="false">一对一</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>relation.oneToMany</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>OneToMany</DefaultValue>
+            <Value disabled="false">一对多</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>relation.manyToOne</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>ManyToOne</DefaultValue>
+            <Value disabled="false">多对一</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>relation.manyToMany</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>ManyToMany</DefaultValue>
+            <Value disabled="false">多对多</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.nameAlreadyExist</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>nameAlreadyExist</DefaultValue>
+            <Value disabled="false">此选项集名称已经存在</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.sysNotAllowedDelete</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>system optionset not allowed delete</DefaultValue>
+            <Value disabled="false">当前选中项中存在系统选项集，无法删除！请重新选择！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.sysNotAllowedEdit</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>system optionset not allowed edit</DefaultValue>
+            <Value disabled="false">当前选中项中存在系统选项集，无法编辑！请重新选择！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.option.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>options</DefaultValue>
+            <Value disabled="false">选项</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.option.itemNameDesc</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please input item displayname</DefaultValue>
+            <Value disabled="false">请输入标签显示名称</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.option.add.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>add option</DefaultValue>
+            <Value disabled="false">添加选项</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.option.edit.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>edit option</DefaultValue>
+            <Value disabled="false">编辑选项</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.option.selectOne</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please select one option node!</DefaultValue>
+            <Value disabled="false">请选择一个选项节点！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.option.valueMustUnique</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>value [{0}] existed, please change to anther value!</DefaultValue>
+            <Value disabled="false">值必须唯一，[{0}]已经存在，请改为其他值！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.option.selectOneNotRoot</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please select one option node, not root!</DefaultValue>
+            <Value disabled="false">请选择一个选项节点,不是根节点！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.option.addSub.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>add suboption</DefaultValue>
+            <Value disabled="false">添加子选项</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.option.itemValueDesc</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>item code value</DefaultValue>
+            <Value disabled="false">标签编码值，可根据标签生成</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.option.itemDesc</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>less than 300 characters</DefaultValue>
+            <Value disabled="false">为此标签添加描述，300个字符以内</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.option.defaultValueChangeAlert</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>optionset default value changed,please reset default.</DefaultValue>
+            <Value disabled="false">选项集的默认值被修改！请重新指定选项集的默认值。</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.option.defaultValueDeleteAlert</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>optionset default value deleted,please reset default.</DefaultValue>
+            <Value disabled="false">选项集的默认值被删除！请重新指定选项集的默认值。</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.new</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>new optionset</DefaultValue>
+            <Value disabled="false">新建选项集</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.newTreeType</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>new tree type optionset</DefaultValue>
+            <Value disabled="false">新建树型选项集</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.edit</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>edit optionset &lt;span class='title-keyword'&gt;{0}&lt;/span&gt;</DefaultValue>
+            <Value disabled="false">修改 &lt;span class='title-keyword'&gt;{0}&lt;/span&gt; 选项集</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.lengthWarn</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>{0} less than{1}, please modify!</DefaultValue>
+            <Value disabled="false">{0}不得超过{1}，请修改！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.name</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>name</DefaultValue>
+            <Value disabled="false">选项名</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.value</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>value</DefaultValue>
+            <Value disabled="false">选项值</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.desc</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>description</DefaultValue>
+            <Value disabled="false">选项描述</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>optionset</DefaultValue>
+            <Value disabled="false">选项</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.refEditAlert</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>optionset may be referenced by some record, confirm edit?</DefaultValue>
+            <Value disabled="false">现有记录可能引用此选项。如果修改此选项值，将无法更新这些引用。是否确定修改？</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.refDeleteAlert</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>optionset may be referenced by some record, confirm delete?</DefaultValue>
+            <Value disabled="false">现有记录可能引用此选项。如果删除此选项，将无法更新这些引用。是否确定删除？</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.clearAllAlert</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>confirm clear? Can not undo, please be careful!</DefaultValue>
+            <Value disabled="false">是否确定清空所有选项？此操作无法撤销，请慎重选择！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>optionset.optionsNotLegal</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>optionsNotLegal</DefaultValue>
+            <Value disabled="false">treeOptionSet Formatter 值 options不是合法json数据！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>permission.turnoffAlert</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Turn off permission control, permission datas will be all deleted, please be careful!</DefaultValue>
+            <Value disabled="false">关闭权限控制后，相关的权限数据将被删除，是否继续？</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>permission.turnonInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please turnon permission control</DefaultValue>
+            <Value disabled="false">请开启权限控制</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>role.select</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>select role</DefaultValue>
+            <Value disabled="false">选择角色</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>role.add</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>add role</DefaultValue>
+            <Value disabled="false">添加角色</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>role.assign</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>assign role</DefaultValue>
+            <Value disabled="false">分配角色</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>role.user.manage</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>user manage</DefaultValue>
+            <Value disabled="false">用户管理</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>role.savingEntityPermission</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>savingEntityPermission...</DefaultValue>
+            <Value disabled="false">正在保存实体权限...</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>role.savingMenuPermission</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>savingMenuPermission...</DefaultValue>
+            <Value disabled="false">正在保存导航权限...</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>permissionrule.new</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>new permission rule</DefaultValue>
+            <Value disabled="false">新建规则</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>permissionrule.manage</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>manage permission rule</DefaultValue>
+            <Value disabled="false">规则管理</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>ajax.urlNotExist</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>specified url not exist</DefaultValue>
+            <Value disabled="false">指定的地址不存在</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>ajax.refreshInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>local session timeout, please refresh page!</DefaultValue>
+            <Value disabled="false">本地会话超时，请重新刷新网页！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>ajax.requestAborted</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>server no response, request aborted!</DefaultValue>
+            <Value disabled="false">服务器没响应，请求被中止！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>error.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>sorry, operation failed</DefaultValue>
+            <Value disabled="false">很抱歉，操作失败</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>error.content</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>&lt;strong&gt;error code:&lt;/strong&gt;{0}&lt;br/&gt;&lt;strong&gt;error message:&lt;/strong&gt;{1},{2}</DefaultValue>
+            <Value disabled="false">&lt;strong&gt;错误代码：&lt;/strong&gt;{0}&lt;br/&gt;&lt;strong&gt;错误信息：&lt;/strong&gt;{1}，{2}</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>error.loadError</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>load error,click again</DefaultValue>
+            <Value disabled="false">加载出错，请点击重试</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>error.valueDuplicate</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>value duplicate</DefaultValue>
+            <Value disabled="false">此值与已有值重复</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>error.operationUndefined</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>operationUndefined</DefaultValue>
+            <Value disabled="false">操作未定义!</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>error.uploadErrorInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please confirm your cliend enabled flash(version above 11)!</DefaultValue>
+            <Value disabled="false">请确认浏览器启用flash(建议11以上版本)！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>relation.objextNotSetSelectList</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>objextNotSetSelectList</DefaultValue>
+            <Value disabled="false">对象未设置选择列表！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>tool.selectEntityToExport</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>selectEntityToExport</DefaultValue>
+            <Value disabled="false">请选中要导出的实体!</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>tool.functionNotFinished</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>functionNotFinished</DefaultValue>
+            <Value disabled="false">该功能尚未完成!</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>icon.desc</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>{0}×{1}</DefaultValue>
+            <Value disabled="false">{0}×{1} 的图标</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>icon.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>icon</DefaultValue>
+            <Value disabled="false">图标</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>code.edit</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>edit code</DefaultValue>
+            <Value disabled="false">编辑代码</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>code.preview</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>preview code</DefaultValue>
+            <Value disabled="false">预览代码</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>uitemplate.versionView.selectInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please select a version to view!</DefaultValue>
+            <Value disabled="false">请选择要查看版本的记录！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>uitemplate.versionMange.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>version {0} manage </DefaultValue>
+            <Value disabled="false">{0}版本管理</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>uitemplate.formEditTitle</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>edit form {0}</DefaultValue>
+            <Value disabled="false">{0}窗体编辑</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>uitemplate.deleteSelectInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please select a template to delete!</DefaultValue>
+            <Value disabled="false">请选择要删除的模板！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>uitemplate.publishSelectInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please select a template to publish!</DefaultValue>
+            <Value disabled="false">请选择要发布的模板！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>uitemplate.formEditSelectInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please select a form to edit!</DefaultValue>
+            <Value disabled="false">请选择要编辑的窗体！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>uitemplate.publishRepeatError</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>current template already published, not allowed to publish again!</DefaultValue>
+            <Value disabled="false">当前模板已经发布，不需重复发布!</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>uitemplate.mobileOnlyOne</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Only on mobile workflow form is allowed</DefaultValue>
+            <Value disabled="false">只允许一个移动审批表单，无法复制</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>uitemplate.deleteFailSystem</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>system template can not be deleted!</DefaultValue>
+            <Value disabled="false">当前模板为系统模板，无法删除！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>form.deleteFailSystem</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>system form can not be deleted!</DefaultValue>
+            <Value disabled="false">为系统窗体，无法删除！请重新选择！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>form.custom.updateTitle</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>form attributes update</DefaultValue>
+            <Value disabled="false">窗体属性更新</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>form.custom.toHtmlAlert</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>can not edit xml config after transform to html!</DefaultValue>
+            <Value disabled="false">转换为html编辑后，将无法进行可视化设计！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>form.custom.doubleClickEdit</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>doubleClickEdit</DefaultValue>
+            <Value disabled="false">双击可编辑</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>form.custom.sectionName</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>section name</DefaultValue>
+            <Value disabled="false">选项卡名称</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>form.custom.lastSectionCanNotDelete</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>lastSectionCanNotDelete</DefaultValue>
+            <Value disabled="false">最后一个选项卡不能删除！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>form.select.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>select form</DefaultValue>
+            <Value disabled="false">选择窗体</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.deleteFailSystem</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>system view can not be deleted!</DefaultValue>
+            <Value disabled="false">为系统视图，无法删除！请重新选择！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.custom.hideColTitle</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>the column is hidden</DefaultValue>
+            <Value disabled="false">此列是隐藏列</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.custom.updateTitle</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>view attributes update</DefaultValue>
+            <Value disabled="false">视图属性更新</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.custom.configOrderTitle</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>config order</DefaultValue>
+            <Value disabled="false">配置排序</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.custom.configQuickSearchTitle</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>config quick search</DefaultValue>
+            <Value disabled="false">配置快捷搜索字段</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.custom.colDisplayOrderTitle</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>the column display order</DefaultValue>
+            <Value disabled="false">列显示顺序</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.custom.addColumn</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>add column</DefaultValue>
+            <Value disabled="false">添加列</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.custom.removeColumn</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>remove column</DefaultValue>
+            <Value disabled="false">移除列</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.custom.configNull</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>config is null</DefaultValue>
+            <Value disabled="false">配置文件为空</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.publish.selectInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please select the view to publish</DefaultValue>
+            <Value disabled="false">请选择要发布的视图！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.preview.selectInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please select the view to preview</DefaultValue>
+            <Value disabled="false">请选择要预览的视图！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.copy.selectInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please select the view to copy</DefaultValue>
+            <Value disabled="false">请选择要复制的视图！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.publish.draftNotAllowedPublish</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>draftNotAllowedPublish</DefaultValue>
+            <Value disabled="false">请先发布当前视图，草稿不允许发布！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.publish.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>publish view</DefaultValue>
+            <Value disabled="false">发布视图</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.preview.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>preview</DefaultValue>
+            <Value disabled="false">预览</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.copy.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>copy view</DefaultValue>
+            <Value disabled="false">复制视图</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>view.sendToMenu.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>send to menu</DefaultValue>
+            <Value disabled="false">发送到导航</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>style.align.left</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>left</DefaultValue>
+            <Value disabled="false">左对齐</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>style.align.right</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>right</DefaultValue>
+            <Value disabled="false">右对齐</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>style.align.center</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>center</DefaultValue>
+            <Value disabled="false">居中</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>advanceSearch.entityfieldDesc</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>{1} of {0}</DefaultValue>
+            <Value disabled="false">{0}的{1}</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>validation.endTimeMustGreatThanBeginTime</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>endTimeMustGreatThanBeginTime</DefaultValue>
+            <Value disabled="false">结束时间应该大于开始时间！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>uioperation.create.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>create operation for entity &lt;span class='title-keyword'&gt;{0}&lt;/span&gt;</DefaultValue>
+            <Value disabled="false">为 &lt;span class='title-keyword'&gt;{0}&lt;/span&gt; 实体新建操作</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>uioperation.edit.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>edit operation &lt;span class='title-keyword'&gt;{1}&lt;/span&gt; for entity &lt;span class='title-keyword'&gt;{0}&lt;/span&gt;</DefaultValue>
+            <Value disabled="false">修改 &lt;span class='title-keyword'&gt;{0}&lt;/span&gt; 实体的 &lt;span class='title-keyword'&gt;{1}&lt;/span&gt; 操作</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>uioperation.nameAlreadyExist</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>operation name AlreadyExist</DefaultValue>
+            <Value disabled="false">此操作名称已存在</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>uioperation.scriptLibReadonly</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>scriptLibReadonly</DefaultValue>
+            <Value disabled="false">此脚本库为系统只读脚本库。</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>uioperation.delete.defaultError</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>default operation not allowed delete!</DefaultValue>
+            <Value disabled="false">当前选中项中存在默认操作，无法删除！请重新选择！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>permissionRule.editList.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>rule[{0}] list</DefaultValue>
+            <Value disabled="false">[{0}]规则列表</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>scriptlib.nameAlreadyExist</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>scriptlib name already exist</DefaultValue>
+            <Value disabled="false">此脚本名称已存在</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>scriptlib.create.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>new scriptlib</DefaultValue>
+            <Value disabled="false">新建脚本库</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>scriptlib.edit.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>edit scriptlib &lt;span class='title-keyword'&gt;{0}&lt;/span&gt;</DefaultValue>
+            <Value disabled="false">修改脚本库&lt;span class='title-keyword'&gt;{0}&lt;/span&gt;</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>scriptlib.view.title</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>view scriptlib &lt;span class='title-keyword'&gt;{0}&lt;/span&gt;</DefaultValue>
+            <Value disabled="false">查看脚本库&lt;span class='title-keyword'&gt;{0}&lt;/span&gt;</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>tool.exporeRecord.sum</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>page {0}, sum {1} records</DefaultValue>
+            <Value disabled="false">当前为第 {0} 页，一共有 {1} 条记录。</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>tool.exporeRecord.selectedInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>{1} records selected.</DefaultValue>
+            <Value disabled="false">当前选中了 {0} 条记录。</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>tool.exporeRecord.allInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>sum {1} records.</DefaultValue>
+            <Value disabled="false">一共有 {0} 条记录。</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>tool.importRecord.selectInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>please select datafile to import</DefaultValue>
+            <Value disabled="false">请先选择并上传要导入的数据文件</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>tool.importRecord.confirmInfo</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Confirm import data?</DefaultValue>
+            <Value disabled="false">确认导入该数据吗？</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>tool.loading</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>start loading...</DefaultValue>
+            <Value disabled="false">开始载入...</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>tool.generating</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>start generating...</DefaultValue>
+            <Value disabled="false">开始生成...</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>tool.relation.sum</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>loading finished! sum {0} relations.</DefaultValue>
+            <Value disabled="false">载入完成！一共载入{0}条关系。</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>tool.commentToDisplayName</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>loading 'comment' to 'displayName' finished</DefaultValue>
+            <Value disabled="false">载入'comment'为'displayName'完成！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>tool.advanceSearch.reload.success</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>reload advance search config finished!</DefaultValue>
+            <Value disabled="false">重新加载高级查询配置完成！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+        <Property>
+            <Name>tool.updateTableFromMetaentity.success</Name>
+            <Description></Description>
+            <Disabled>false</Disabled>
+            <DefaultValue>Update tables from metaentity finished!</DefaultValue>
+            <Value disabled="false">从元数据实体生成数据库表完成！</Value>
+            <Value disabled="true"></Value>
+            <Value disabled="true"></Value>
+        </Property>
+    </Records>
+</MultiProperties>

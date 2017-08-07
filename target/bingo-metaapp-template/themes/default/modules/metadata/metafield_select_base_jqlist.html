@@ -1,0 +1,84 @@
+<div th:id="${viewId}" >
+<div class="ui-dialog-title hide" th:switch="${action}">
+	<span th:text="#{metafield.selectField}"></span>
+</div>
+<div>
+	<table  th:id="'grid_metafield_select_base_'+${entity}"></table>
+	<div th:id="'grid_metafield_select_base_pager_'+${entity}"></div>
+	<script th:inline="javascript">
+	//<![CDATA[	
+	$(function() {
+		var __context = /*[['#'+${viewId}]]*/;
+		var viewId = /*[[${viewId}]]*/ ;
+		var entity=/*[[${entity}]]*/;
+		var gridUrl=/*[[@{/metadata/field/query_paged(entity=${entity})}]]*/;
+		var gridCreateUrl=/*[[@{/metadata/field/create(entity=${entity})}]]*/;
+		var gridEditUrl=/*[[@{/metadata/field/create(entity=${entity},action='edit')}]]*/;
+		var gridDeleteUrl=/*[[@{/metadata/field/delete(entity=${entity})}]]*/;
+		var gridId=  "grid_metafield_select_base_"+entity;
+		var pagerId="grid_metafield_select_base_pager_"+entity;
+		var col1=/*[[#{metafield.sysField}]]*/;
+		var col2=/*[[#{common.name}]]*/;
+		var col3=/*[[#{common.displayName}]]*/;
+		var col4=/*[[#{metafield.entity}]]*/;
+
+ 		$("#"+gridId,__context).jqGrid({
+			url : gridUrl,
+			mtype : 'POST',
+			datatype : 'json',
+			page : 1,
+			rowNum : 50,
+			rownumbers : false,
+			multiselect : true,
+			pager:__context+' #'+pagerId,
+			rowList : [ 10, 50, 100 ],
+			colNames : ["",col1,col2,col3,col4],
+			jsonReader : {
+				id : "name",
+				repeatitems : false
+			},
+			shrinkToFit :true,
+			prmNames : {
+				id : "name",
+				search: "search"
+			},
+			autowidth : false,
+			height : '300px',
+			colModel : [
+						{name:'isIdentity',index:'isIdentity', hidden: true},
+						{name:'isSystem',index:'isSystem', hidden: true},
+						{name:'name',index:'name',key:true,width:150},
+						{name:'displayName',index:'displayName', width:150},
+						{name:'entity',index:'entity' }
+					]
+		}) ;;
+		
+		$("#"+viewId+" .closeBtn").click(function(){
+			$.dialogReturnValue(null) ;
+			$(this).dialogClose();
+		}) ;
+
+		$("#"+viewId+" .selectColumn").click(function(){
+			var selectId=$("#"+gridId,__context).jqGrid("getGridParam","selarrrow") ;
+
+			var rows = [] ;
+			$(selectId).each(function(){
+				var row=$("#"+gridId,__context).getRowData(this);
+				rows.push(row) ;
+			}) ;
+
+			$.dialogReturnValue(rows) ;
+			$(this).dialogClose();
+		}) ;
+	}); 
+	//]]>
+	</script>
+</div>
+
+<div class="ui-dialog-buttonset">
+	<button type="button" class="btn btn-primary selectColumn" th:text="#{common.save}"></button>
+	<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+</div>
+
+
+</div>

@@ -1,0 +1,456 @@
+<div class="row-fluid" th:id="${viewId}">
+	
+	<h2 style="font-size: 15px;border-bottom: 1px solid #CADF91;">动态用户<button class="clearAllBtn btn mini green" style="float:right;margin-right:30px;margin-top:10px;">清除已选</button></h2>
+	<div class="user select-dynamic" style="font-size: 14px;">
+		<label class="radio inline">
+			<input type="radio" name="dynamicExpression" value="orgUser" style="margin:13px;"/>
+		</label>&nbsp;&nbsp;
+		<input type="text" name="actTitle" value="申请人"/>
+		部门负责人
+	</div>
+	<div class="user select-dynamic" style="font-size: 14px;">
+		<label class="radio inline">
+			<input type="radio" name="dynamicExpression" value="upOrgUser" style="margin:13px;"/>
+		</label>&nbsp;&nbsp;
+		<input type="text" name="actTitle" value="上一步"/>
+		处理人上级部门的负责人
+	</div>
+	<div class="user select-dynamic" style="font-size: 14px;">
+		<label class="radio inline">
+			<input type="radio" name="dynamicExpression" value="actUser" style="margin:13px;"/>
+		</label>&nbsp;&nbsp;
+		<input type="text" name="actTitle" value="申请人"/>
+		(申请人或某个环节处理人)
+	</div>
+	<div class="user select-dynamic" style="font-size: 14px;">
+		<label class="radio inline">
+			<input type="radio" name="dynamicExpression" value="fieldUser" style="margin:13px;"/>
+		</label>&nbsp;&nbsp;
+		<input type="text" name="form-field-name" value=""/>
+		(处理人来自表单的某个字段)
+	</div>
+	<h2 style="font-size: 15px;border-bottom: 1px solid #CADF91;">动态岗位</h2>
+	<div class="financialdept duty select-dynamic" style="font-size: 14px;">
+		<label class="radio inline">
+			<input type="radio" name="dynamicExpression" value="deptDuty" style="margin:13px;"/>
+		</label>&nbsp;&nbsp;
+		<input type="text" name="activity" value="申请人"/>
+		<div class="label-header" title="审批上级部门">审批上级部门的</div>
+		<span><input name="dutyName" type="text" required="required"
+		    data-widget="inputimg"
+			data-validator="required"
+			data-options="{type:'class',src:'icon-search',title:'Query',event:{click:SelectForm.selectField}}"
+			data-selecturl="/entities/uamduty/select"
+			data-selectfield="name" /><input name="duty"
+			type="hidden" /></span>职务
+	</div>
+	<div class="dept duty select-dynamic" style="font-size: 14px;">
+		<label class="radio inline">
+			<input type="radio" name="dynamicExpression" value="deptDuty" style="margin:13px;"/>
+		</label>&nbsp;&nbsp;
+		<input type="text" name="activity" value="申请人"/>
+		<div class="label-header">所在部门的</div>
+		<span><input name="dutyName" type="text" required="required"
+		    data-widget="inputimg"
+			data-validator="required"
+			data-options="{type:'class',src:'icon-search',title:'Query',event:{click:SelectForm.selectField}}"
+			data-selecturl="/entities/uamduty/select"
+			data-selectfield="name" /><input name="duty"
+			type="hidden" /></span>职务
+	</div>
+	<div class="center duty select-dynamic" style="font-size: 14px;">
+		<label class="radio inline">
+			<input type="radio" name="dynamicExpression" value="centerDuty" style="margin:13px;"/>
+		</label>&nbsp;&nbsp;
+		<input type="text" name="activity" value="申请人"/>
+		<div class="label-header">所在中心的</div>
+		<span><input name="dutyName" type="text" required="required"
+		    data-widget="inputimg"
+			data-validator="required"
+			data-options="{type:'class',src:'icon-search',title:'Query',event:{click:SelectForm.selectField}}"
+			data-selecturl="/entities/uamduty/select"
+			data-selectfield="name" /><input name="duty"
+			type="hidden" /></span>职务
+	</div>
+	<div class="subcompany duty select-dynamic" style="font-size: 14px;">
+		<label class="radio inline">
+			<input type="radio" name="dynamicExpression" value="subcompanyDuty" style="margin:13px;"/>
+		</label>&nbsp;&nbsp;
+		<input type="text" name="activity" value="申请人"/>
+		<div class="label-header">所在分公司的</div>
+		<span><input name="dutyName" type="text" required="required"
+		    data-widget="inputimg"
+			data-validator="required"
+			data-options="{type:'class',src:'icon-search',title:'Query',event:{click:SelectForm.selectField}}"
+			data-selecturl="/entities/uamduty/select"
+			data-selectfield="name" /><input name="duty"
+			type="hidden" /></span>职务
+	</div>
+	<div class="subcompanyDept duty select-dynamic" style="font-size: 14px;">
+		<label class="radio inline">
+			<input type="radio" name="dynamicExpression" value="subcompanyDeptDuty" style="margin:13px;"/>
+		</label>&nbsp;&nbsp;
+		<input type="text" name="activity" value="申请人"/>
+		<div class="label-header">所在分公司的</div>
+		<input name="org" type="text" required="required"/>部门的
+		<span><input name="dutyName" type="text" required="required"
+		    data-widget="inputimg"
+			data-validator="required"
+			data-options="{type:'class',src:'icon-search',title:'Query',event:{click:SelectForm.selectField}}"
+			data-selecturl="/entities/uamduty/select"
+			data-selectfield="name" /><input name="duty"
+			type="hidden" /></span>职务
+	</div>
+	<h2 style="font-size: 15px;border-bottom: 1px solid #CADF91;">动态角色</h2>
+	<div class="financialdept role select-dynamic" style="font-size: 14px;">
+		<label class="radio inline">
+			<input type="radio" name="dynamicExpression" value="deptRole" style="margin:13px;"/>
+		</label>&nbsp;&nbsp;
+		<input type="text" name="activity" value="申请人"/>
+		<div class="label-header" title="审批上级部门">审批上级部门的</div>
+		<span><input name="roleName" type="text" required="required"
+		    data-widget="inputimg"
+			data-validator="required"
+			data-options="{type:'class',src:'icon-search',title:'Query',event:{click:SelectForm.selectField}}"
+			data-selecturl="/entities/role/select"
+			data-selectfield="name" /><input name="role"
+			type="hidden" /></span>角色
+	</div>
+	<div class="dept role select-dynamic" style="font-size: 14px;">
+		<label class="radio inline">
+			<input type="radio" name="dynamicExpression" value="deptRole" style="margin:13px;"/>
+		</label>&nbsp;&nbsp;
+		<input type="text" name="activity" value="申请人"/>
+		<div class="label-header">所在部门的</div>
+		<span><input name="roleName" type="text" required="required"
+		    data-widget="inputimg"
+			data-validator="required"
+			data-options="{type:'class',src:'icon-search',title:'Query',event:{click:SelectForm.selectField}}"
+			data-selecturl="/entities/role/select"
+			data-selectfield="name" /><input name="role"
+			type="hidden" /></span>角色
+	</div>
+	<div class="subcompany role select-dynamic" style="font-size: 14px;">
+		<label class="radio inline">
+			<input type="radio" name="dynamicExpression" value="subcompanyRole" style="margin:13px;"/>
+		</label>&nbsp;&nbsp;
+		<input type="text" name="activity" value="申请人"/>
+		<div class="label-header">所在分公司的</div>
+		<span><input name="roleName" type="text" required="required"
+		    data-widget="inputimg"
+			data-validator="required"
+			data-options="{type:'class',src:'icon-search',title:'Query',event:{click:SelectForm.selectField}}"
+			data-selecturl="/entities/role/select"
+			data-selectfield="name" /><input name="role"
+			type="hidden" /></span>角色
+	</div>
+	<div class="subcompanyDept role select-dynamic" style="font-size: 14px;">
+		<label class="radio inline">
+			<input type="radio" name="dynamicExpression" value="subcompanyDeptRole" style="margin:13px;"/>
+		</label>&nbsp;&nbsp;
+		<!-- <select name="activity">
+			<option value="">当前拟稿人</option>
+			<option value="1">申请人</option>
+			<option value="-1">上一步处理人</option>
+			<option th:each="act:${userActivities}" th:value="${act['value']}" th:text="${act['value']+'环节处理人'}"></option>
+		</select> -->
+		<input type="text" name="activity" value="申请人"/>
+		<div class="label-header">所在分公司的</div>
+		<input name="org" type="text" required="required"/>部门的
+		<span><input name="roleName" type="text" required="required"
+		    data-widget="inputimg"
+			data-validator="required"
+			data-options="{type:'class',src:'icon-search',title:'Query',event:{click:SelectForm.selectField}}"
+			data-selecturl="/entities/role/select"
+			data-selectfield="name" /><input name="role"
+			type="hidden" /></span>角色
+	</div>
+	<div style="height:80px;"></div>
+	<!-- <div class="ui-dialog-buttonset">
+		<button type="button" class="btn saveBtn purple" th:text="#{common.save}"></button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div> -->
+	<style type="text/css">
+	.select-dynamic .label-header{width:110px;text-align: right;display:inline-block;}
+	</style>
+	<script type="text/javascript" th:inline="javascript">
+//<![CDATA[ 
+;(function($){
+	$(function(){
+		var viewId = /*[[${viewId}]]*/;
+		var view = /*[[${view}]]*/;
+		var context="#"+viewId;
+		var mode=/*[[${queryString['mode']}]]*/;
+		$(context).uiwidget();
+		
+		$("input[name=actTitle]",context).typeahead({
+			source:["上一步","申请人"],
+			matcher:function(item){
+				return true;
+			}
+		});
+		$("input[name=activity],input[name=actTitle]",context).click(function(){
+			var input=$(this);
+			var value=input.val();
+			input.val('a');
+			input.typeahead('lookup');
+			input.val(value);
+		});
+		$("input[name=activity]",context).typeahead({
+			source:["当前拟稿人","申请人","上一步处理人"],
+			matcher:function(item){
+				return true;
+			}
+		});
+		$(".select-dynamic",context).click(function(){
+			var self=$(this);
+			if(!self.find("input:radio").prop("checked")){
+				self.find("input:radio").prop("checked",true);
+			}
+		});
+		function getDutyOrRoleConfig($selectCon){
+			var orgJqDom=$selectCon.find("[name=org]");
+			var orgName=orgJqDom.val();
+			if(orgJqDom.length){
+				if(!orgName){
+					$.messageBox.warning({message:"请填写部门名称!"});
+					return false;
+				}
+			}
+			var dutyJqDom=$selectCon.find("[name=duty]");
+			var dutyName=$selectCon.find("[name=dutyName]").val();
+			var roleJqDom=$selectCon.find("[name=role]");
+			var roleName=$selectCon.find("[name=roleName]").val();
+			var dutyId=dutyJqDom.val();
+			var roleId=roleJqDom.val();
+			var action,id,name,prefix;
+			if(dutyJqDom.length){
+				action="duty";
+				if(!dutyId){
+					$.messageBox.warning({message:"请选择职务!"});
+					return false;
+				}
+				id=dutyId;
+				name=dutyName;
+				prefix="postActor";
+			}else if(roleJqDom.length){
+				action="role";
+				if(!roleId){
+					$.messageBox.warning({message:"请选择角色!"});
+					return false;
+				}
+				id=roleId;
+				name=roleName;
+				prefix="roleActor";
+			}else{
+				return null;
+			}
+			return {action:action,id:id,name:name,orgName:orgName,prefix:prefix};
+		};
+		function setDescription(reVal,$selectCon){
+			var activityId=$selectCon.find("[name=activity]").val();
+			if(activityId==="申请人"){
+				reVal.description__="申请人";
+			}else if(activityId==="上一步处理人"){
+				reVal.description__="上一步处理人";
+			}else if(activityId=='当前拟稿人'){
+				reVal.description__="当前拟稿人";
+			}else{//其他环节处理人相关
+				reVal.description__=activityId+"环节处理人";
+			} 
+			if($selectCon.hasClass("financialdept")){
+				reVal.description__+="所在审批上级部门的";
+			}else if($selectCon.hasClass("dept")){
+				reVal.description__+="所在部门的";
+			}else if($selectCon.hasClass("subcompany")){
+				reVal.description__+="所在分公司的";
+			}else if($selectCon.hasClass("subcompanyDept")){
+				var orgName=$selectCon.find("[name=org]").val();
+				reVal.description__+="所在分公司的"+orgName+"部门的";
+			}else if($selectCon.hasClass("center")){
+				reVal.description__+="所在中心的";
+			}
+			if($selectCon.hasClass("role")){
+				var roleName=$selectCon.find("[name=roleName]").val();
+				reVal.description__+=roleName+"角色";
+			}else if($selectCon.hasClass("duty")){
+				var dutyName=$selectCon.find("[name=dutyName]").val();
+				reVal.description__+=dutyName+"职务";
+			}
+		};
+		function setUserScriptExpression(reVal,method){
+			reVal.actorType__="scriptUser";
+			reVal.userScriptExpression="${BEANS.dynamicActorResolveService."+method+"}";
+		};
+		function getParam(res,activityId){
+			var param="(";
+			if(activityId){
+				param+="'"+activityId+"',";
+			}
+			if(res.orgName){
+				param+="'"+res.orgName+"',";
+			}
+			param+="'"+res.id+"','"+res.name+"')";
+			return param;
+		};
+		function setScriptForBase(reVal,$selectCon,suffix,activityId){
+			var res=getDutyOrRoleConfig($selectCon);
+			var action,param,prefix;
+			if(res){
+				action=res.action;
+				prefix=res.prefix;
+				param=getParam(res,activityId);
+			}else{
+				return false;
+			}
+			var method=prefix;
+			if($selectCon.hasClass("financialdept")){
+				method+="Financial";
+			}else if($selectCon.hasClass("dept")){
+				method+="Dept";
+			}else if($selectCon.hasClass("subcompany")){
+				method+="Company";
+			}else if($selectCon.hasClass("subcompanyDept")){
+				method+="CompanyOrg";
+			}else if($selectCon.hasClass("center")){
+				method+="CompanyCenter";
+			}
+			method+=suffix;
+			setUserScriptExpression(reVal,method+param);
+			return true;
+		}
+		function setScriptForStarter(reVal,$selectCon){
+			return setScriptForBase(reVal,$selectCon,"ByStarter");
+		};
+		function setScriptForProposer(reVal,$selectCon){
+			return setScriptForBase(reVal,$selectCon,"ByProposer");
+		};
+		function setScriptForLastAssignee(reVal,$selectCon){
+			return setScriptForBase(reVal,$selectCon,"ByLastAssignee");
+		};
+		function setScriptForAct(reVal,$selectCon){
+			var activityId=$selectCon.find("[name=activity]").val();
+			return setScriptForBase(reVal,$selectCon,"ByAct",activityId);
+		};
+		function setUser(reVal,$selectCon,selectConVal){
+			if("fieldUser"===selectConVal){
+				var formFieldName=$selectCon.find("[name=form-field-name]").val();
+				if(!formFieldName){
+					$.messageBox.warning({message:"请填写主表单字段名称!"});
+					return false;
+				}
+				setUserScriptExpression(reVal,"userActorByFormField('"+formFieldName+"')");
+				reVal.description__+="表单字段["+formFieldName+"]设置的用户";
+				return true;
+			}
+			var actTitle=$selectCon.find("[name=actTitle]").val();
+			if(!actTitle){
+				$.messageBox.warning({message:"请选择或填写环节名称!"});
+				return false;
+			}
+			var method="",param="";
+			if(actTitle=="申请人"){
+				param="()";
+				if(selectConVal=="upOrgUser"){
+					method="userActorHigherOrgPrincipleByProposer";
+				}else if(selectConVal=="orgUser"){
+					method="userActorDeptPrincipleByProposer";
+				}else if(selectConVal=="actUser"){
+					method="userActorByProposer";
+				}
+			}else if(actTitle=="上一步"){
+				param="()";
+				if(selectConVal=="upOrgUser"){
+					method="userActorHigherOrgPrincipleByLastAssignee";
+				}else if(selectConVal=="orgUser"){
+					method="userActorDeptPrincipleByLastAssignee";
+				}else if(selectConVal=="actUser"){
+					method="userActorByLastAssignee";
+				}
+			}else{
+				param="('"+actTitle+"')";
+				if(selectConVal=="upOrgUser"){
+					method="userActorHigherOrgPrincipleByAct";
+				}else if(selectConVal=="orgUser"){
+					method="userActorDeptPrincipleByAct";
+				}else if(selectConVal=="actUser"){
+					method="userActorByAct";
+				}
+			}
+			setUserScriptExpression(reVal,method+param);
+			reVal.description__+=actTitle;
+			if(actTitle!=="申请人"){
+				if(actTitle==="上一步"){
+					reVal.description__+="处理人";
+				}else{
+					reVal.description__+="环节处理人";
+				}
+			}
+			if(selectConVal=="upOrgUser"){
+				reVal.description__+="上级部门的负责人";
+			}else if(selectConVal=="orgUser"){
+				reVal.description__+="所在部门的负责人";
+			}
+			return true;
+		};
+		function setScript(reVal,$selectCon){
+			var activityId=$selectCon.find("[name=activity]").val();
+			var ok=false;
+			if(activityId==="申请人"){
+				ok=setScriptForProposer(reVal,$selectCon);
+			}else if(activityId==="上一步处理人"){
+				ok=setScriptForLastAssignee(reVal,$selectCon);
+			}else if(activityId=='当前拟稿人'){
+				ok=setScriptForStarter(reVal,$selectCon);
+			}else{//其他环节处理人相关
+				ok=setScriptForAct(reVal,$selectCon);
+			}  
+			return ok;
+		};
+		function getActor(){
+			debugger;
+			var selected=$("[name=dynamicExpression]:checked");
+			if (selected.length==0){ 											
+				//$.messageBox.warning({message:i18n.t("common.selectRow")});
+				return false;
+			}
+			var selectConVal=selected.val();
+			var reVal={actorType__:null,description__:""};
+			var $selectCon=selected.closest(".select-dynamic");
+			
+			var ok=true;
+			if($selectCon.hasClass("user")){//动态用户
+				ok=setUser(reVal,$selectCon,selectConVal)
+			}else if($selectCon.hasClass("role")||$selectCon.hasClass("duty")){//动态职务和动态角色
+				ok=setScript(reVal,$selectCon);
+				if(!ok){
+					//return false;
+					return -1;
+				}
+				setDescription(reVal,$selectCon);
+			}
+			if(!ok){
+				//return false;
+				return -1;
+			}
+			return reVal;
+		};
+		$(context).closest("#actor-select-dynamic").data("getActor",getActor);
+		$(".saveBtn",context).click(function(){
+			var reVal=getActor();
+			if(!reVal){
+				return false;
+			}
+			$(context).dialogClose(reVal);
+		});
+		$(".closeBtn",context).click(function(){
+			$(context).dialogClose();
+		});	
+		$(".clearAllBtn",context).click(function(){
+			$(":input").attr("checked",false);
+		});
+	});           
+}(jQuery)); 
+//]]> 
+</script>
+</div>

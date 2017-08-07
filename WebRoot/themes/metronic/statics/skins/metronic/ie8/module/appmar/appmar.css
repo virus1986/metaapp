@@ -1,0 +1,528 @@
+@charset utf-8;
+
+body.index {
+background:#fff;
+font-family:'Microsoft YaHei',微软雅黑, Verdana, Simsun, 'Open Sans', sans-serif, 'Arial Unicode MS', Mingliu, Arial, Helvetica;
+}
+
+.appamr-page {
+margin:20px;
+}
+
+.appamr-page .pannel-title {
+background:#f0f0f0;
+padding:15px;
+}
+
+.apptitle .appico {
+width:81px;
+height:81px;
+line-height:81px;
+overflow:hidden;
+float:left;
+background:url(images/appico-bg.png) no-repeat;
+}
+
+.apptitle .appico a {
+display:block;
+width:50px;
+height:55px;
+margin:0 auto;
+}
+
+.apptitle .appico a img {
+width:50px;
+height:55px;
+}
+
+.apptitle .appico-content {
+margin-left:100px;
+}
+
+.apptitle .appico-content p span {
+margin-right:15px;
+}
+
+.apptitle h2 {
+font-size:14px;
+font-weight:700;
+}
+
+.apptitle h2 span {
+font-size:12px;
+font-weight:400;
+color:#4165af;
+padding-left:3px;
+}
+
+.apptable thead th {
+background:#f0f0f0;
+text-align:center;
+}
+
+.text-center {
+text-align:center!important;
+}
+
+.grid-title {
+border-bottom:solid 1px #d3d7d9;
+padding:2px 0;
+}
+
+.Version .panel {
+border:0;
+}
+
+.Version .panel-head {
+background:#f1f1f1 url(images/contentbg.png) right bottom no-repeat;
+height:auto;
+border-bottom:1px solid #e5e5e5;
+overflow:visible;
+}
+
+.Version .panel-head .row-fluid {
+padding:20px 15px 12px;
+}
+
+.appico-content ul {
+list-style:none;
+margin-left:0;
+}
+
+.appico-content ul li.ty span {
+color:#3e8ed2;
+font-size:12px;
+}
+
+.appico-content a.drop {
+background:url(images/cert.png) no-repeat;
+display:inline-block;
+width:23px;
+height:13px;
+vertical-align:-2px;
+margin-left:10px;
+}
+
+div.Adrop-cont {
+position:absolute;
+right:0;
+top:100%;
+width:238px;
+height:264px;
+padding-top:6px;
+z-index:99;
+background:url(images/app-dlog-bg.png) no-repeat;
+}
+
+div.Adrop-cont div.Adrop-list {
+height:220px;
+overflow:auto;
+margin-right:3px;
+margin-top:4px;
+margin-bottom:5px;
+}
+
+div.Adrop-cont div.Adrop-list ul {
+list-style:none;
+margin:0 2px 0 1px;
+}
+
+div.Adrop-cont div.Adrop-list ul li {
+line-height:38px;
+display:list-item;
+}
+
+div.Adrop-cont div.Adrop-list ul li i {
+display:inline-block;
+width:25px;
+height:27px;
+background:url(images/appicon-samll.png) no-repeat;
+vertical-align:middle;
+margin:0 12px 0 17px;
+}
+
+div.Adrop-cont div.Adrop-list ul li a {
+color:#5c5b5b;
+}
+
+div.Adrop-cont div.Adrop-list ul li a:hover {
+color:#08C;
+text-decoration:none;
+}
+
+div.Adrop-cont .create-item input[type=text] {
+width:155px;
+margin:0 5px;
+}
+
+div.Adrop-cont .create-item .btn {
+background:#f7f7f7;
+}
+
+.Version .panel-content {
+padding:0;
+}
+
+.Version .panel-content .grid-title {
+background:#f2f2f2;
+}
+
+.Version .panel-content .grid-title h2 {
+text-indent:24px;
+}
+
+.Version .panel-content .grid-title .btn {
+background:url(images/btn-bg.png) repeat-x;
+color:#8b8b8b;
+border:1px solid #d5d5d5;
+padding:3px 10px;
+}
+
+.Version .panel-content .grid-title .btn:hover {
+color:#f60;
+}
+
+.btn-drop ul {
+list-style:none;
+position:absolute;
+left:0;
+top:100%;
+min-width:166px;
+z-index:9;
+background:#fff;
+border:solid 1px #fcab63;
+border-radius:3px;
+-moz-border-radius:3px;
+-webkit-border-radius:3px;
+-o-border-radius:3px;
+margin:8px 0 0;
+}
+
+.btn-drop ul li {
+display:list-item;
+}
+
+.btn-drop ul li a {
+display:block;
+line-height:32px;
+padding-left:10px;
+color:#b03e3e;
+}
+
+.btn-drop ul li a:hover {
+text-decoration:none;
+background:#feeea4;
+}
+
+.Version .panel-content .grid-title .clientbtn {
+background:url(images/Client-bg.png) repeat-x;
+border:1px solid #ffb66f;
+color:#d2524b;
+margin-left:0;
+}
+
+.Version .panel-content .grid-title .clientbtn span {
+background:url(images/Client-arrow.png) right center no-repeat;
+display:inline-block;
+padding-right:15px;
+}
+
+.Version .panel-content .grid-title a.line {
+border-right:1px solid #d5d5d5;
+margin:0 10px;
+padding:4px 0;
+}
+
+.Version .panel-content .apptable th {
+background:url(images/th-bg.png) repeat-x;
+height:35px;
+line-height:35px;
+border-bottom:1px solid #d2d8db;
+border-top:1px solid #d2d8db;
+color:#3d3d3d;
+padding:0;
+}
+
+.Version .panel-content .apptable td {
+border-bottom:1px solid #e4e8e9;
+}
+
+.Version .panel-content .apptable td img {
+margin:0 5px;
+}
+
+.tr-cont td {
+background:#fff;
+padding:0;
+}
+
+.vers-item .item-top {
+width:87.5%;
+height:7px;
+background:url(images/expand-arrow.png) no-repeat right top;
+position:absolute;
+top:-7px;
+}
+
+.vers-item .item-main {
+padding-top:13px;
+padding-bottom:20px;
+overflow:hidden;
+}
+
+.vers-item .item-main ul li {
+display:inline;
+float:left;
+margin-left:16px;
+}
+
+.column-box {
+width:157px;
+border:solid 1px #d3d7da;
+background:url(images/column-box-bg.png) repeat-x left bottom;
+border-radius:3px;
+-moz-border-radius:3px;
+-webkit-border-radius:3px;
+-o-border-radius:3px;
+padding:5px 0;
+}
+
+.column-box h3 {
+font-size:12px;
+font-weight:400;
+text-align:left;
+padding-left:11px;
+}
+
+.column-box h3.normal {
+height:14px;
+text-align:right;
+}
+
+.column-box h3.normal i {
+display:inline-block;
+width:14px;
+height:14px;
+background:url(images/normalicon.png) no-repeat;
+margin:4px 7px 0 0;
+}
+
+.column-box h3.ybs {
+color:#758abe;
+}
+
+.btn-bushu {
+background:url(images/btn-bushu-bg.png) repeat-x;
+text-shadow:none;
+border:solid 1px #589cb7;
+margin-left:10px;
+padding:1px 10px;
+}
+
+.btn-bushu:hover {
+background:url(images/btn-bushu-bg.png) repeat-x;
+}
+
+.btn-bushu span {
+color:#fff;
+font-family:宋体;
+}
+
+.btn-addapp {
+display:inline-block;
+width:48px;
+height:48px;
+background:url(images/addapp.png) no-repeat;
+margin-left:20px;
+margin-top:30px;
+}
+
+.btn-addapp:hover {
+background:url(images/addapp-hover.png) no-repeat;
+}
+
+.appadd {
+width:620px;
+margin:0 auto;
+}
+
+.appadd .panel-content {
+padding:20px 0 0;
+}
+
+.upload {
+float:left;
+width:620px;
+margin-bottom:20px;
+}
+
+.inphoto {
+float:left;
+width:200px;
+}
+
+.photo img {
+border:1px solid #cecece;
+}
+
+.photo p {
+color:#4394ca;
+}
+
+.formlist {
+float:left;
+width:400px;
+}
+
+.form-horizontal input.input-xlarge,textarea.Remark,input.upload-pic {
+border-radius:0;
+-webkit-box-shadow:none;
+-moz-box-shadow:none;
+box-shadow:none;
+background:#f8f8f8;
+}
+
+input.upload-pic {
+width:90px;
+height:30px;
+color:#fff;
+display:inline-block;
+background:#0096e9;
+line-height:30px;
+text-decoration:none;
+border:none;
+font-family:微软雅黑;
+padding:0;
+}
+
+.form-horizontal fieldset {
+width:400px;
+}
+
+.form-horizontal label.control-label {
+width:100px;
+}
+
+.form-horizontal div.control-group {
+width:400px;
+margin-bottom:15px;
+}
+
+.form-horizontal .controls {
+margin-left:110px;
+}
+
+.client {
+padding-left:32px;
+float:left;
+}
+
+.client h3 {
+font-size:14px;
+color:#555;
+font-weight:400;
+line-height:48px;
+}
+
+.client ul {
+float:left;
+margin:20px 10px;
+}
+
+.client ul li {
+list-style:none;
+float:left;
+font-size:14px;
+margin:0 10px;
+}
+
+.client ul li a {
+border-radius:3px;
+width:98px;
+background-color:#f8f8f8;
+display:block;
+line-height:35px;
+color:#585858;
+border:1px solid #d1d1d1;
+text-decoration:none;
+}
+
+.client ul li a:hover {
+border-color:#ff6701;
+}
+
+.client ul li.active a {
+background:#f8f8f8 url(images/client-select.png) right bottom no-repeat;
+border-radius:3px 3px 0 3px;
+border-color:#ff6701;
+}
+
+.client ul li a span {
+text-indent:32px;
+display:block;
+}
+
+.client ul li.Virtual a span {
+background:url(images/Virtual.png) 10px center no-repeat;
+}
+
+.client ul li.Web a span {
+background:url(images/Web.png) 10px center no-repeat;
+}
+
+.client ul li.Iphone a span {
+background:url(images/Iphone.png) 10px center no-repeat;
+}
+
+.client ul li.Android a span {
+background:url(images/Android.png) 10px center no-repeat;
+}
+
+.Remark {
+background:#f8f8f8;
+width:550px;
+margin-bottom:20px;
+}
+
+.upload-btn {
+text-align:center;
+margin-bottom:20px;
+}
+
+.upload-btn input {
+margin:0 10px;
+}
+
+.Version .panel-content .nodata tbody tr td {
+border:0;
+padding-top:20px;
+}
+
+.nodata tbody tr td:hover {
+background:#fff;
+}
+
+.index .wrapper,.appico-content p {
+font-size:12px;
+}
+
+.grid-title h2,.appico-content ul li.ty {
+font-size:14px;
+}
+
+.appico-content ul li,ul.list-operation li {
+display:inline;
+}
+
+.appico-content ul li.ty-drop,.btn-drop,.vers-item {
+position:relative;
+}
+
+ul.list-operation,.vers-item .item-main ul {
+list-style:none;
+margin:0;
+}
+
+.Version .panel-content .apptable th,.Version .panel-content .apptable td,.photo {
+text-align:center;
+}

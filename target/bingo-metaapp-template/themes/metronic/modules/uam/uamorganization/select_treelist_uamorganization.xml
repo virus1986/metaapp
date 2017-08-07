@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" createUrl="~/entities/uamOrganization/create" dataUrl="~/entities/uamOrganization/query_paged" deleteUrl="~/entities/uamOrganization/delete" editUrl="~/entities/uamOrganization/edit" entityName="uamOrganization" height="230px" id="grid_d5e9739f-3809-40b3-a6f7-12bd2d5d8962" isSwitchView="false" multiSelect="true" multiSelectKey="None" shrinkToFit="true" type="normal" view="associcate" width="100%">
+    <addDialogSettings caption="" showType="pop-up"/>
+    <appearanceSettings alternateRowBackground="true" caption="选择部门" highlightRowsOnHover="true" rightToLeft="false" rowNumbersColumnWidth="25" scrollBarOffset="18" showFooter="false" showRowNumbers="true" shrinkToFit="true"/>
+    <columns>
+        <column dataField="id" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="false" width="150"/>
+        <column dataField="name" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="120"/>
+        <column dataField="orgNum" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="80"/>
+        <column dataField="parentId" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="120"/>
+        <column dataField="companyId"  editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="120"/>
+    </columns>
+    <contextButtons>
+    </contextButtons>
+    <customSettings/>
+    <toolBarSetting>
+        <button isInMoreBtns="true" cssClass="" name="fresh" buttonIcon="main/button-load.png" onClick="grid.refreshGrid" text="刷新" toolTip="刷新"/>
+    </toolBarSetting>
+    <editDialogSettings caption="" showType="pop-up"/>
+    <filter groupOp="and">
+        <filters>
+        </filters>
+        <rules>
+        </rules>
+    </filter>
+    <groupSettings collapseGroups="false"/>
+    <orderby/>
+    <quickSearch searchColNum="4">
+        <column dataField="name"/>
+        <column dataField="orgNum"/>
+    </quickSearch>
+    <joinEntities>
+    </joinEntities>
+    <scriptBlock/>
+    <treeGridSettings enabled="false"/>
+    <viewDialogSettings caption="" showType="pop-up"/>
+</grid>

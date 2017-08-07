@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 毫秒格式化 -->
+<column dataField="duration" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="80">
+	<millisecondFormatter unit="m"/>
+</column>
+<!-- String.format:format="start:{0}" -->
+<column format="start:{0}" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="120" dataField="startTime"/>
+<!-- 格式化模板，jsrender模板语法 -->
+<column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="120" dataField="startTime">
+	<templateFormatter>
+		<template>
+ 	<![CDATA[
+ 		<a href='#'>hello22</a><p>{{>starterName}}:::{{>startTime}}</p>
+ 	]]>
+		</template>
+	</templateFormatter>
+</column>

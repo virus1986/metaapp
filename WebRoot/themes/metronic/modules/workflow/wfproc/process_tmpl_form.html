@@ -1,0 +1,107 @@
+<div th:id="${viewId}" data-widget="validator">
+	<table class="form-table form-bordered col4-fluid">
+		<tbody>
+			<tr>
+				<th><label>是否发布为服务:</label></th>
+				<td colspan="3">
+					<label>
+						<input name="publishAsService" type="checkbox" value="1" th:checked="${true}"/>
+						<span class="label label-info">将流程发布为服务后，移动端link可发现和使用流程服务</span>
+					</label>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<form class="form-horizontal ajaxpost proc-entity"
+		th:object="${procEntity}">
+		<div class="portlet box tea-green">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-reorder"></i> <span>流程基本信息</span>
+				</div>
+			</div>
+			<div class="portlet-body form-bordered">
+				<table class="form-table form-bordered col4-fluid">
+					<tbody>
+						<tr>
+							<th><label>流程名称</label></th>
+							<td colspan="3"><input meta:field="procName"
+								style="width: 427px;" /> <input type="hidden" name="entityName" />
+							</td>
+						</tr>
+						<tr>
+							<th><label>业务归属分类</label></th>
+							<td colspan="3"><input meta:field="procCatagoryId" /></td>
+						</tr>
+						<tr>
+							<th><label>业务管理员</label></th>
+							<td colspan="3" class="proc-manager-con"><input
+								meta:ref="user::user" /></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</form>
+	<!-- th:style="${queryString[publishAsService]=='true'}?'':'display:none;'" -->
+	<form class="form-horizontal ajaxpost es-service-entity"
+		th:object="${esServiceEntity}">
+		<div class="portlet box tea-green">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-reorder"></i> <span>服务基本信息</span>
+				</div>
+			</div>
+			<div class="portlet-body form-bordered">
+				<table class="form-section form-table col4-fluid">
+					<tbody>
+						<tr>
+							<th><label>服务名称</label></th>
+							<td colspan="1"><input meta:field="name" /></td>
+							<th rowspan="3"><label>移动端图标</label></th>
+							<td colspan="1" rowspan="3" align="left"><input
+								meta:field="icon" /></td>
+						</tr>
+						<tr>
+							<th><label>服务分类</label></th>
+							<td colspan="1"><input meta:field="category"
+								placeholder="服务分类" /></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</form>
+	<script th:inline="javascript">
+	//<![CDATA[ 
+;(function($){
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;
+		var userId = /*[[${user.id}]]*/;
+		var userName = /*[[${user.name}]]*/;
+		var userjson=null;
+		if(userId){
+			userjson={id:userId,name:userName};
+		}
+		Page.init(context);
+		var _options={
+			context:context,
+			action:"CREATE",
+			userjson:userjson
+		};
+		reqModule(["module/workflow/wfproc_manager"],function(WfprocManager){
+			var wfprocManager=WfprocManager.createNew(_options);
+		});
+		$(context).dialogResize();
+	});
+}(jQuery)); 
+	//]]>
+	</script>
+</div>
+
+
+
+
+
+
+

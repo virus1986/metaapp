@@ -1,0 +1,154 @@
+<div th:id="${viewId}" class="panel apply-panel" style="width:800px;height:500px;">
+	<table class="form-table">
+		<tbody>
+			<tr>
+			<td style="vertical-align: top;width:200px;">
+			<div><span class="label label-important" th:text="#{portalMenu.publishTitle}"></span></div>
+			<div id="menuTree" class="tree-menu"></div>
+			</td>
+			<td style="vertical-align: top;">
+				<form id="createTreeMenuItemForm" data-widget="validator" th:action="${requestUri}">
+				<table class="form-table" style="width:99%;">
+					<caption th:text="#{portalMenu.submenuCaption}"></caption>
+					<tbody>
+						<tr>
+							<th style="width:80px;"><label><meta:display-name field="portalmenu.name"/>:</label></th>
+							<td colspan="3">
+							<input type="hidden" name="menuSourceId" th:value="${menuSourceId}"/>
+							<input type="hidden" name="menuSource" th:value="${menuSource}"/>
+							<input name="name" type="text" style="width:95%;" th:value="${entityDisplayName}" data-validator="required,length[1,50]"/>
+							</td>
+						</tr>
+						<tr>
+							<th style="width:80px;"><label><meta:display-name field="portalmenu.parentId"/>:</label></th>
+							<td colspan="3">
+							<input type="hidden" name="parentId"/>
+							<span class="parentId"></span>
+							</td>
+						</tr>
+						<tr>
+							<th style="width:80px;"><label><meta:display-name field="portalmenu.url"/>:</label></th>
+							<td colspan="3">
+							<input name="url" type="text" disabled="true" style="width:95%;" th:value="${url}" data-validator="length[1,500]"/>
+							</td>
+						</tr>
+						<tr>
+							<th style="width:80px;"><label><meta:display-name field="portalmenu.icon"/>:</label></th>
+							<td colspan="3">
+							<input name="icon" id="icon" type="hidden" />
+							<img id="iconImage" alt="" src="" />
+							<button type="button" id="showIconSet" class="btn btn-info" th:text="#{icon.selectIcon}"></button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="ui-dialog-buttonset">
+					<button type="button" class="btn btn-primary saveTreeMenuItem" th:text="#{common.save}"></button>
+					<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+				</div>
+			</form>
+			</td>
+			</tr>
+		</tbody>
+	</table>
+
+<script th:inline="javascript">
+//<![CDATA[ 
+$(function(){
+	var context = /*[['#'+${viewId}]]*/;
+	Form.init(context,"#createTreeMenuItemForm");
+	var entityName=/*[[${entityName}]]*/;
+	var viewName=/*[[${viewName}]]*/;
+	var url=/*[[${url}]]*/;
+	var menuTreeUrl=/*[[@{/treemodels/portal/menutree}]]*/;
+	//$("#iconImage", context).hide();
+	function initIcon(){
+		var url="led-icons/plugin.png";
+		$("#iconImage", context).show().attr("src", Global.iconPath + url);
+		$("#icon", context).val(url);
+	};
+	initIcon();
+	
+	$("button#showIconSet", context).selectIcon(function(url){
+		if (url != null){
+			$("#iconImage", context).show().attr("src", Global.iconPath + url);
+			$("#icon", context).val(url);
+		}
+	});
+	
+	$("#menuTree").tree({
+		source : 'remote',
+		method : 'get',
+		nodeFormat : function(record) {
+			return record;
+		},
+		url : menuTreeUrl,
+		onNodeClick:function(id, text, record,node){
+			$("[name=parentId]").val(record.id);
+			if(record.id=="menuTreeRoot"){
+				$("[name=parentId]").val(null);
+			}
+			$(".parentId").text(record.text);
+		},
+		contextMenuEventType:'click',
+		contextMenu:function( record ){
+			var imageRoot=Global.themePath+"/statics/images/icons/led-icons";
+			var parentId=record.id;
+			if('menuTreeRoot'===parentId){
+				parentId='';
+			}
+			var parentName=record.text;
+			function menuAddAction(){
+				var _menuCreateUrl=Global.contextPath+"/portal/menu/createSimple?parentId="+parentId+"&parentName="+parentName;
+				$.openLink(_menuCreateUrl,{showType:'pop-up'},function(){
+					var response=jQuery.dialogReturnValue();
+					if(response){
+						$("#menuTree").tree().reload();
+						if($("a span","div[nodeid="+response.id+"]").length>0){
+							$("a span","div[nodeid="+response.id+"]").trigger("click");
+						}else{
+							$("a span","div[nodeid=menuTreeRoot]").trigger("click");
+						}
+					}
+				});
+			};
+			return { 
+				width: 100, 
+				items: [
+                         { text: i18n.t("common.add"), icon:imageRoot+"/add.png",id: record.id, action: menuAddAction}
+                      ]
+                } ;
+		}
+	});
+	$(".saveTreeMenuItem",context).click(function(){
+		var valInfo = $.validation.validate("#createTreeMenuItemForm") ;
+		if( valInfo.isError ) {
+			return false;
+		}
+		var btnSelf=$(this);
+		btnSelf.attr("disabled","disabled");
+		btnSelf.addClass("disabled");
+		var url=$("#createTreeMenuItemForm", context).attr("action");
+		var data=$("#createTreeMenuItemForm", context).toJson();
+		jQuery.restPost(url,data,function(response){
+			if(response){
+				reloadNav();
+				$(context).dialogClose(response);
+			}
+		},{
+			beforeSend:function(xhr){
+				CommonUtil.showLoading(context,i18n.t("common.processing"));
+				btnSelf.attr("disabled","disabled");
+				btnSelf.addClass("disabled");
+			  },complete:function(xhr,textStatus){
+					CommonUtil.hiddenLoading();
+					btnSelf.removeAttr("disabled");
+					btnSelf.removeClass("disabled");
+			  }
+		});
+	});
+	$("a span","div[nodeid=menuTreeRoot]").trigger("click");
+	});
+//]]>
+</script>
+</div>

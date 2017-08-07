@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:meta="http://www.bingosoft.net">
+<head th:fragment="head">
+    <meta charset="utf-8"/>
+    <title th:text="${config != null?config['Profile.App.Title']:#messages.msg('master.notSetup')}"></title>
+	<meta http-equiv="pragma" content="no-cache" />
+	<meta http-equiv="cache-control" content="no-cache" />
+    	
+    <wro:link th:href="${contextPath}+'/wro/themes_'+${theme}+'_'+${skin}+'.css'" rel="stylesheet" type="text/css"/>
+    	
+    <link rel="stylesheet" type="text/css"
+			th:href="${themes.css('module/error/error.css')}"  />
+    <link rel="stylesheet"
+    	th:href="${themes.css('module/baseframe/baseframe.css')}"/>
+    <link rel="stylesheet"
+    	th:href="${themes.css('module/common/master.css')}"/>
+	<wro:link  th:href="${contextPath}+'/wro/plugins_css.css'" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" th:href="${themes.css('override.css')}"/>
+
+	<wro:script th:src="${contextPath}+'/wro/base.js'" type="text/javascript"></wro:script>
+	<!--[if lt IE 9]>
+	  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<style>
+     /* 去掉后台系统的滚动条 */
+        html
+        {
+            overflow: hidden;
+        }
+	</style>
+	
+	<script type="text/javascript" th:inline="javascript">
+		window.Global=$.extend(true,{
+			contextPath:/*[[${contextPath}]]*/,	
+			themePath:/*[[${themePath}]]*/,	
+			statics:/*[[${statics}]]*/,			
+			iconPath:/*[[${iconPath}]]*/,
+			server:/*[[${server}]]*/,
+		},window.Global);
+		var dynRequire=require.config({
+			context:"dynamic module require",
+			baseUrl:Global.contextPath+"/scriptlib/download/"
+		});
+		var reqModule=require.config({
+			context:"dynamic module in themes/static/scripts folder",
+			baseUrl:Global.statics+"scripts/"
+		});
+		window.UEDITOR_HOME_URL=Global.contextPath+"/statics/scripts/plugins/ueditor/";
+	</script>
+	<script th:src="${themes.js('plugins/i18n.js')}" type="text/javascript"></script>
+</head>
+<body id="user-master">
+
+	<!-- 页脚 
+	<div th:fragment="footer" class="user-footer" style="vertical-align: middle;display: inline-block;">
+		Copyright © 2002-2012 <a href="http://www.bingosoft.net"
+			target="_blank">品高软件</a> <a href="http://www.bingocloud.cn/"
+			target="_blank" title="品高云"> <img
+			src="../../Statics/images/cloud.jpg" /></a> Powered By Bingo Cloud<br />
+		ICP备案编号：粤ICP备05028607号-2<br />
+	</div>-->
+
+	<div th:fragment="scripts"  style="display: none">
+		<wro:script th:src="${contextPath}+'/wro/plugins_i18n_'+${lang}+'.js'" type="text/javascript"></wro:script>
+		<wro:script th:src="${contextPath}+'/wro/plugins.js'" type="text/javascript"></wro:script>
+		<script th:src="${themes.js('plugins/calendar/WdatePicker.js')}" type="text/javascript"></script>
+		<wro:script th:src="${contextPath}+'/wro/themes_'+${theme}+'.js'" type="text/javascript"></wro:script>
+		<wro:script th:src="${contextPath}+'/wro/plugins_big.js'" type="text/javascript"></wro:script>
+		<!-- ace  -->
+		<script th:src="${themes.js('plugins/ace/src-min-noconflict/ace.js')}" 
+			type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+		/* (function() {
+            ace.require(["ace/config"], function(aceconfig) {
+            	var basePath=Global.contextPath+"/statics/scripts/plugins/ace/src-min-noconflict";
+            	aceconfig.set("basePath",basePath);
+            	// aceconfig.set("workerPath",basePath);
+            	//aceconfig.set("modePath",basePath);
+            	//aceconfig.set("themePath",basePath); 
+            });
+        })(); */
+		</script>
+	</div>
+</body>
+</html>

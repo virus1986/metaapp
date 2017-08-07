@@ -1,0 +1,50 @@
+<div class="panel apply-panel" style="padding:0px;width:100%;height:200px" th:id="${viewId}" >
+<style>
+#table_select_form tr {
+	cursor: pointer;
+}
+
+.trSelected {
+	background-color: orange;
+}
+</style>
+	<div>
+	<div style="margin:0px;padding:0px">
+		<table id="table_select_form" class="table table-hover table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th th:text="#{common.displayName}"></th>
+                  <th th:text="#{common.name}"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:attr="data-url='~/entities/' + ${entityName} + '/' + ${actionType}">
+                  <td>1</td>
+                  <td th:text="#{form.defaultMainForm}"></td>
+                  <td>main</td>
+                </tr>
+                <tr th:each="one : ${names}" th:attr="data-url='~/entities/' + ${entityName} + '/' + ${actionType} + '?view=' + ${one['name']}">
+                  <td th:text="${oneStat.index + 2}"></td>
+                  <td th:text="${one['displayName']}"></td>
+                  <td th:text="${one['name']}"></td>
+                </tr>
+              </tbody>
+		</table>
+	</div>
+	</div>
+	<div class="ui-dialog-buttonset">
+	</div>
+<script th:inline="javascript">
+//<![CDATA[
+$(function(){
+	var context = /*[['#'+${viewId}]]*/ "";
+	
+	$("#table_select_form tr", context).click(function(){
+		var tr = $(this);
+		$(context).dialogClose(tr.data("url"));
+	});
+});
+//]]>
+</script>
+</div>

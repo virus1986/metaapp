@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata xmlns="http://schemas.bingosoft.net/metabase/metadata"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://schemas.bingosoft.net/metabase/metadata http://schemas.bingosoft.net/metabase/1.0/metadata.xsd">
+
+	<data-types>
+		<add name="String_10" 	  base-type="String"   length="10"/>
+		<add name="String_20" 	  base-type="String"   length="20"/>
+		<add name="String_30" 	  base-type="String"   length="30"/>
+		<add name="String_50" 	  base-type="String"   length="50"/>
+		<add name="String_100" 	  base-type="String"   length="100"/>
+		<add name="String_150" 	  base-type="String"   length="150"/>
+		<add name="String_300" 	  base-type="String"   length="300"/>
+		<add name="String_500" 	  base-type="String"   length="500"/>
+		<add name="String_1000"   base-type="String"   length="1000"/>
+		<add name="String_1500"   base-type="String"   length="1500"/>
+		<add name="String_2000"   base-type="String"   length="2000"/>
+		<add name="String_3000"   base-type="String"   length="3000"/>
+		<add name="String_4000"   base-type="String"   length="4000"/>
+		<add name="String_8000"   base-type="String"   length="8000"/>
+		<add name="Boolean_False" base-type="Boolean"   default-value="0"/>
+		<add name="Boolean_True"  base-type="Boolean"   default-value="1"/>
+		<add name="Code"   		  base-type="String"   length="8000"/>
+		<add name="Name"   		  base-type="String"   length="150"/>
+		<add name="Now"           base-type="Timestamp" generator="Now"/>
+	</data-types>
+	
+	<field-types>
+		<!--文本 -->
+		<add name="Text" 		   display-name="文本" data-types="String,Text,Clob,Guid,Json" display-order="10"/>
+		<add name="SingleLineText" display-name="单行文本" data-types="String,Guid,Json" group="Text" display-order="11">
+			<params>
+				<param name="length" display-name="长度" default-value="500" type="Integer"></param>
+			</params>
+		</add>
+		<add name="MultiLineText"  display-name="多行文本" data-types="String,Text,Json" group="Text" display-order="12">
+			<params>
+				<param name="length" display-name="长度" default-value="2000" type="Integer" ></param>
+			</params>
+		</add>
+		<add name="RichText" 	   display-name="富文本"   data-types="String,Text,Clob" group="Text" display-order="13">
+			<params>
+				<param name="length" display-name="长度" default-value="5000" type="Integer"></param>
+				<param name="mode" display-name="编辑器模式" default-value="large" type="String">
+					<options>
+						<item name="完全版" value="large" is-default="true"/>
+						<item name="普通版" value="middle"/>
+						<item name="精简版" value="small"/>
+					</options>
+					<summary>
+						编辑器模式是根据编辑器操作图标的多少来衡量的。
+					</summary>
+				</param>
+			</params>
+		</add>
+		<!--日期和时间 -->
+		<add name="Temporal"       display-name="日期和时间" data-types="Date,DateTime,Time,Timestamp" display-order="15"/>
+		<add name="Date" 		   display-name="日期" 	   data-types="Timestamp,Date"   group="Temporal" display-order="16">
+			<params>
+				<param name="format" display-name="format串" default-value="yyyy-MM-dd" type="String">
+					<options>
+						<item name="年-月-日" value="yyyy-MM-dd" is-default="true"/>
+						<item name="年-月" value="yyyy-MM"/>
+						<item name="年" value="yyyy"/>
+					</options>
+					<summary>
+						用来设置客户端日期类型的格式化字符串
+					</summary>
+				</param>
+			</params>
+		</add>
+		<add name="DateTime" 	   display-name="日期时间"  data-types="DateTime" group="Temporal" display-order="17">
+			<params>
+				<param name="format" display-name="format串" default-value="yyyy-MM-dd HH:mm:ss" type="String">
+					<options>
+						<item name="年-月-日 时:分:秒" value="yyyy-MM-dd HH:mm:ss" is-default="true"/>
+						<item name="年-月-日 时:分" value="yyyy-MM-dd HH:mm"/>
+						<item name="年-月-日 时" value="yyyy-MM-dd HH"/>
+					</options>
+					<summary>
+						用来设置客户端日期时间类型的格式化字符串
+					</summary>
+				</param>
+			</params>
+		</add>
+		<add name="Time" 	   	   display-name="时间"     data-types="Time"     group="Temporal" display-for="{manage:true}" display-order="18">
+			<params>
+				<param name="format" display-name="format串" default-value="HH:mm:ss" type="String">
+					<options>
+						<item name="时:分:秒" value="HH:mm:ss" is-default="true"/>
+						<item name="时:分" value="HH:mm"/>
+						<item name="时" value="HH"/>
+					</options>
+					<summary>
+						用来设置客户端日期时间类型的格式化字符串
+					</summary>
+				</param>
+			</params>
+		</add>
+		<add name="Timestamp"      display-name="时间戳" data-types="Timestamp" group="Temporal" display-for="{manage:true}" display-order="19">
+			<params>
+				<param name="format" display-name="format串" default-value="yyyy-MM-dd HH:mm:ss" type="String">
+					<options>
+						<item name="年-月-日 时:分:秒" value="yyyy-MM-dd HH:mm:ss" is-default="true"/>
+						<item name="年-月-日 时:分" value="yyyy-MM-dd HH:mm"/>
+						<item name="年-月-日 时" value="yyyy-MM-dd HH"/>
+					</options>
+					<summary>
+						用来设置客户端日期时间类型的格式化字符串
+					</summary>
+				</param>
+			</params>
+		</add>
+		<!--选项 -->
+		<add name="SingleOption"  	   display-name="单选项" data-types="String,Integer,Char,Byte,SmallInt,BigInt,Decimal" input-types="Dropdown,Tile" display-order="20"/>
+		<add name="MultiOptions" 	   display-name="多选项" data-types="String" input-types="Dropdown,Tile" display-order="25"/>
+		<add name="CascadeOption" 	   display-name="联动项" data-types="String,Guid" input-types="popup,Dropdown" display-order="30">
+			<params>
+				<param name="parentField" display-name="父字段" type="String"></param>
+				<param name="handleUnusedChild" display-name="数据为空时" default-value="disable" type="String">
+					<options>
+						<item name="子字段不可编辑" value="disable" is-default="true"/>
+						<item name="子字段隐藏" value="hide"/>
+						<item name="子字段为空选项" value="none"/>
+					</options>
+				</param>
+				<param name="condition" display-name="过滤条件" type="String"></param>
+				<param name="orderBy" display-name="排序条件" type="String"></param>
+			</params>
+		</add>
+		<!--整数 -->
+		<add name="Int" display-name="整数" data-types="Integer,Byte,SmallInt,BigInt" display-order="35">
+		</add>
+		<add name="Integer" display-name="整数" 	   data-types="Integer"   group="Int" display-order="36">
+			<params>
+				<param name="unit" display-name="数量单位" type="String">
+					<summary>可选，请尽量简短，一个字为宜</summary>
+				</param>
+			</params>
+		</add>
+		<add name="Byte" 	display-for="{manage:false}"	   display-name="字节整数" 	   data-types="Byte"   group="Int" display-order="37"/>
+		<add name="SmallInt" 		   display-name="短整数" 	   data-types="SmallInt"   group="Int" display-order="38"/>
+		<add name="BigInt" 		   display-name="长整数" 	   data-types="BigInt"   group="Int" display-order="39"/>
+		<!--浮点数-->
+		<add name="FloatNumber" display-name="浮点数" data-types="Double,Float" display-order="40"/>
+		<add name="Double" 		   display-name="双精度" 	   data-types="Double"   group="FloatNumber" display-order="41">
+			<params>
+				<param name="precision" display-name="精度" default-value="19" type="Integer"></param>
+				<param name="scale" display-name="小数位" default-value="2" type="Integer"></param>
+			</params>
+		</add>
+		<add name="Float" 		   display-name="单精度" 	   data-types="Float"   group="FloatNumber" display-order="42">
+			<params>
+				<param name="precision" display-name="精度" default-value="19" type="Integer"></param>
+				<param name="scale" display-name="小数位" default-value="2" type="Integer"></param>
+			</params>
+		</add>
+		<!--是否-->
+		<add name="Boolean" display-name="是否" data-types="Boolean,Integer,Byte,SmallInt,BigInt" input-types="Tile" display-order="45"/>
+		<!--邮件-->
+		<add name="Email" display-name="邮件" data-types="String" display-order="50"/>
+		<!--电话-->
+		<add name="Telephone" display-name="电话" data-types="String" display-order="50"/>
+		<!--密码-->
+		<add name="Password" 		display-name="密码" data-types="String" display-order="55"/>
+		<!--数字-->
+		<add name="Decimal" display-name="数字" data-types="Decimal" display-order="60">
+			<params>
+				<param name="precision" display-name="长度" default-value="19" type="Integer"></param>
+				<param name="scale" display-name="小数位" default-value="2" type="Integer"></param>
+			</params>
+		</add>
+		<!--Url-->
+		<add name="Url" display-name="url" data-types="String" display-order="65"/>
+		<!--文件上传-->
+		<add name="UploadGroup" display-name="文件上传" data-types="String,String_8000,Text" display-order="70"/>
+		<add name="Upload" display-name="单文件上传" data-types="String"  group="UploadGroup" display-order="71">
+			<params>
+				<param name="maxSize" display-name="最大上传文件大小" default-value="10" type="Integer">
+					<summary>文件大小以MB为单位。</summary>
+				</param>
+				<param name="fileSuffix" display-name="允许文件后缀" default-value="*" type="String">
+					<summary>空格分隔，*表示所有类型。</summary>
+				</param>
+				<param name="length" display-name="长度" default-value="500" type="Integer"></param>
+			</params>
+		</add>
+		<add name="MultiUpload" display-name="多文件上传" data-types="String_8000,String,Text"  group="UploadGroup" display-order="72"/>
+		<!-- 照片 -->
+		<add name="PhotoGroup" display-name="图片" data-types="String,String_8000,Text" display-order="75"/>
+		<add name="Photo" display-name="单图片" data-types="String" group="PhotoGroup" display-order="76">
+			<params>
+				<param name="width" display-name="宽" default-value="100" type="Integer"></param>
+				<param name="height" display-name="高" default-value="100" type="Integer"></param>
+				<param name="length" display-name="长度" default-value="500" type="Integer"></param>
+			</params>
+		</add>
+		<add name="MultiPhoto" display-name="多图片" data-types="String_8000,String,Text" group="PhotoGroup" display-order="77"/>
+		<!-- 图标 -->
+		<add name="Icon" display-name="图标" data-types="String" display-order="80">
+			<params>
+				<param name="width" display-name="宽" type="Integer"></param>
+				<param name="height" display-name="高" type="Integer"></param>
+			</params>
+		</add>
+		<!--计算类型-->
+		<add name="caculate" display-name="计算字段" data-types="String,Integer,Double,Money,Decimal" display-order="85">
+			<params>
+				<param name="expression" display-name="计算公式" type="String">
+					<summary>根据计算公式里变量的变化计算该字段的值</summary>
+				</param>
+				<param name="dataType" display-name="数据类型" default-value="String" type="String">
+					<options>
+						<item name="整数" value="Integer" />
+						<item name="小数" value="Decimal"/>
+						<item name="字符串" value="String"/>
+					</options>
+					<summary>选择数据类型</summary>
+				</param>
+			</params>
+		</add>
+		<!--单号类型-->
+		<add name="AutoCode" display-name="单号" data-types="String" display-order="90">
+			<params>
+				<param name="codeRule" display-name="单号规则" type="String" control-type="TextArea">
+					<summary>根据单号规则自动生成单号</summary>
+				</param>
+			</params>
+		</add>
+		<!--百分比-->
+		<add name="Percent" display-name="百分比" data-types="Decimal,Float" display-order="95"/>
+		<!--货币-->
+		<add name="Money" display-name="货币" data-types="Decimal,Double" display-order="100">
+			<params>
+				<param name="unit" display-name="单位" default-value="元" type="String"></param>
+			</params>
+		</add>
+		<!-- 代码 -->
+		<add name="Code" display-name="代码" data-types="Code" display-order="105"/>
+		<!-- 可选值输入框 -->
+		<add name="ComboBox" display-name="可选值输入框" data-types="String" display-order="115">
+			<params>
+				<param name="data" display-name="候选项" type="String">
+					<summary>以空格分隔各个候选项</summary>
+				</param>
+			</params>
+		</add>
+		<add name="Addition" display-name="追加输入框" data-types="String,Text" display-order="120">
+			<params>
+				<!-- 追加的数据格式 
+				<param name="dataFormat" display-name="数据格式" type="String">
+					<summary>JSON格式描述，默认定为：{'id', 'url', 'time', 'content', 'createdBy'}</summary>
+				</param> -->
+				<param name="showField" display-name="显示数据字段" type="String" default-value="time content">
+					<summary>以空格分隔各个字段</summary>
+				</param>
+				<param name="showInput" display-name="显示输入框" type="Boolean" default-value="true">
+					<summary>在表单上展现时是否显示输入框</summary>
+				</param>
+				<param name="listMoreUrl" display-name="更多链接的URL" type="String">
+					<summary>在列表上展现，点击查看更多的URL(“～”会被自动转为contextPath，并在参数中附上当前记录ID, 参数名叫id)</summary>
+				</param>
+				<param name="listShowCount" display-name="列表显示记录数" type="Integer" default-value="5">
+					<summary>在列表上展现时显示的最多记录数</summary>
+				</param>
+				<param name="formOrder" display-name="表单内容排序" type="String" default-value="desc">
+					<summary>在表单上展现时显示的排序</summary>
+					<options>
+						<item name="降序" value="desc" is-default="true"/>
+						<item name="升序" value="asc"/>
+					</options>
+				</param>
+				<param name="listOrder" display-name="列表内容排序" type="String" default-value="desc">
+					<summary>在列表上展现时显示的排序</summary>
+					<options>
+						<item name="降序" value="desc" is-default="true"/>
+						<item name="升序" value="asc"/>
+					</options>
+				</param>
+			</params>
+		</add>
+		<!--附件-->
+		<add name="Attachment" display-name="附件" display-for="{manage:false}" data-types="Blob,Binary" display-order="147"/>
+		<add name="Video" 		   display-name="视频" 	display-for="{manage:false}"   data-types="Binary"   group="Attachment" display-order="148"/>
+		<add name="File" 		   display-name="文件" 	display-for="{manage:false}"   data-types="Blob"   group="Attachment" display-order="145"/>
+		<add name="Picture" 		   display-name="图片" display-for="{manage:false}"	   data-types="Blob"   group="Attachment" display-order="146"/>
+	</field-types>
+</metadata>

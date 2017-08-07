@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head
+	th:substituteby="'/themes/'+${theme}+'/modules/common/statics'::head"></head>
+<body class="container-index">
+	<div class="wrapper master-page">
+		<div class="wrapper">
+			<!-- 顶部信息 -->
+			<div id="header" class="header">
+				<div class="navbar">
+					<div class="navbar-inner">
+						<div class="container">
+							<a class="btn btn-navbar" data-toggle="collapse"
+								data-target=".nav-collapse"><span class="icon-bar"></span><span
+								class="icon-bar"></span><span class="icon-bar"></span> </a><a
+								class="brand" href="javascript://"></a>
+							<div class="nav-collapse pull-right">
+								<ul class="nav">
+								</ul>
+								<ul class="nav pull-right">
+									<li class="dropdown"><a href="javascript://" class="dropdown-toggle"
+										data-toggle="dropdown">
+											<span th:text="#{welcome.test}">欢迎您，张三</span>
+											 <b class="caret"></b></a>
+										<ul class="dropdown-menu">
+											<li><a href="javascript://">个人信息</a></li>
+											<li><a href="javascript://">修改密码</a></li>
+											<li><a href="javascript://">我的购物车</a></li>
+
+											<li><a href="javascript://">其他设置</a></li>
+										</ul></li>
+								</ul>
+							</div>
+							<div>
+					
+				  </div> 
+							<!-- /.nav-collapse -->
+						</div>
+					</div>
+					
+					<!-- /navbar-inner -->
+				</div>
+				
+				<!-- /navbar -->
+			</div>
+			<!-- 内容区域 -->			
+			<div class="contentLeftNoMargin" style="height:500px,margin-left:0px;">			
+				<div id="installArea" data-widget="wizard" data-options="{title:'数据库初始化'}"  style="height:500px;">
+						<div class="hide" style="text-align: center;" data-wizard="{name:'baseinfo',title:'元数据初始化',onleave:'installMeta'}">
+							<h2 th:text="'即将初始化数据库：'+${connectionString}"></h2>
+							<!-- <button id="initializeMeta" class="btn btn-primary">初始化</button> -->
+							<h2>请点击下一步，开始初始化</h2>
+							<div id="initMetaInfoSpan" class="label label-info" style="height:200px;"></div>
+						</div>
+						<div class="hide" data-wizard="{name:'details-info',title:'导入物理表',onleave:'importTables'}">
+							<table id="importTablesTable" class="table table-bordered import-tables">
+								<thead>
+									<tr>
+										<th><input type="checkbox"  class="selectAll"/>全选</th>
+										<th>物理表名</th>
+										<th>转换为实体</th>
+										<th><input type="checkbox"  class="prefixToggleAll"/>去掉前缀</th>
+										<th><input type="checkbox" checked="checked"  class="displayForAll"/>可管理</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="table:${tables}">
+										<td><input type="checkbox" name="name" class="tableNameToggle" th:value="${table}"/></td>
+										<td class="nameTd" th:text="${table}"></td>
+										<td class="entityNameTd" contenteditable="true" th:text="${table}"></td>
+										<td><input type="checkbox" name="entityName" class="prefixToggle"/></td>
+										<td class="displayForTd"><input type="checkbox" checked="checked" name="manage" class="displayFor"/></td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- <button id="importTableBtn" class="btn btn-primary">开始导入</button> -->
+						</div>			  
+				</div>
+			</div>
+			<div id="footer" class="footer">
+				<p>品高软件 版权所有 2012 (c) All Rights Reserved</p>
+			</div>
+		</div>
+	</div>
+
+	<script
+		th:substituteby="'/themes/'+${theme}+'/modules/common/statics'::scripts"></script>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		function installMeta(){
+			$("#initMetaInfoSpan").show();
+			var success=false;
+			$("#initMetaInfoSpan").append("正在初始化...<br/>元数据初始化开始...！");
+			$.restGet(Global.contextPath+"/install/initialize-meta",function(resp){
+				if("success"==resp){
+					success=true;
+					$("#initMetaInfoSpan").append("<br/>元数据初始化完成！");
+				}else{
+					$("#initMetaInfoSpan").append("<br/>元数据初始化失败！");
+				}
+			},{dataType:'text',async:false});
+			$("#initMetaInfoSpan").append("<br/>菜单数据初始化开始...！");
+			$.restGet(Global.contextPath+"/install/filldata-menu",function(resp){
+				if("success"==resp){
+					success=success&&true;
+					$("#initMetaInfoSpan").append("<br/>菜单数据初始化完成！");
+				}else{
+					success=success&&false;
+					$("#initMetaInfoSpan").append("<br/>菜单数据初始化失败！");
+				}
+			},{dataType:'text'});
+			$("#initMetaInfoSpan").append("<br/>操作数据初始化开始...！");
+			$.restGet(Global.contextPath+"/install/filldata-operation",function(resp){
+				if("success"==resp){
+					success=success&&true;
+					$("#initMetaInfoSpan").append("<br/>操作数据初始化完成！");
+				}else{
+					success=success&&false;
+					$("#initMetaInfoSpan").append("<br/>操作数据初始化失败！");
+				}
+			},{dataType:'text'});
+			if(success){
+				return true ;
+			}
+		};
+		function importTables(){
+			var tables=[];
+			$(".tableNameToggle:checked","#importTablesTable").each(
+					function(){
+						var entityName=$(this).parent().siblings(".entityNameTd").text();
+						var manageDom=$(this).parent().siblings(".displayForTd").find("[name=manage]:checked");
+						var manage=false;
+						if(manageDom&&manageDom.length==1){
+							manage=true;
+						}
+						var table={name:$(this).val(),entityName:entityName,manage:manage};
+						tables.push(table);
+					}
+			);
+			if(tables.length>0){
+				var url=Global.contextPath+"/rest/metadata/entities/import_existed_tables";
+				$.restPost(url,tables,function(response){
+					window.location.href=Global.contextPath+"/home/";
+				});
+			}else{
+				window.location.href=Global.contextPath+"/home/";
+			}
+		};
+		$(function(){
+			window.setTimeout(function(){
+				var contentHei = $(window).height() - $("#header").height()	- $("#footer").height();
+				$(".contentLeftNoMargin").height(contentHei);
+			},100);
+			/* $("#initializeMeta").click(function(){
+				var _self=$(this);
+				_self.attr("disabled","disabled");
+				_self.next("span.label").show();
+				$.get(Global.contextPath+"/install/initialize-meta",function(resp){
+					if("success"==resp){
+						_self.next("span.label").text("初始化完成！");
+					}
+				});
+			}); */
+			$(".selectAll","#importTablesTable").click(function(){
+				var checked=$(this).attr("checked");
+				if(checked){
+					$(".tableNameToggle","#importTablesTable").attr("checked","checked");
+				}else{
+					$(".tableNameToggle","#importTablesTable").removeAttr("checked");
+				}
+			});
+			$(".prefixToggleAll","#importTablesTable").click(function(){
+				var checked=$(this).attr("checked");
+				if(checked){
+					$(".prefixToggle","#importTablesTable").attr("checked","checked");
+					$(".entityNameTd","#importTablesTable").each(function(){
+						var _name=$(this).siblings(".nameTd").text();
+						$(this).text(Strings.upperCamel(_name,"_",true));
+					});
+				}else{
+					$(".prefixToggle","#importTablesTable").removeAttr("checked");
+					$(".entityNameTd","#importTablesTable").each(function(){
+						var _name=$(this).siblings(".nameTd").text();
+						$(this).text(Strings.upperCamel(_name,"_"));
+					});
+				}
+			});
+			$(".displayForAll","#importTablesTable").click(function(){
+				var checked=$(this).attr("checked");
+				if(checked){
+					$(".displayFor","#importTablesTable").attr("checked","checked");
+				}else{
+					$(".displayFor","#importTablesTable").removeAttr("checked");
+				}
+			});
+			$(".prefixToggle","#importTablesTable").click(function(){
+				var _target=$(this);
+				var checked=_target.attr("checked");
+				var _name=_target.parent().siblings(".nameTd").text();
+				if(checked){
+					_target.parent().siblings(".entityNameTd").text(Strings.upperCamel(_name,"_",true));
+				}else{
+					_target.parent().siblings(".entityNameTd").text(Strings.upperCamel(_name,"_"));
+				}
+			});
+			/* $("#importTableBtn").click(function(){
+				var tables=[];
+				$(".tableNameToggle:checked","#importTablesTable").each(
+						function(){
+							var entityName=$(this).parent().siblings(".entityNameTd").text();
+							var manageDom=$(this).parent().siblings(".displayForTd").find("[name=manage]:checked");
+							var manage=false;
+							if(manageDom&&manageDom.length==1){
+								manage=true;
+							}
+							var table={name:$(this).val(),entityName:entityName,manage:manage};
+							tables.push(table);
+						}
+				);
+				if(tables.length>0){
+					var url=Global.contextPath+"/rest/metadata/entities/import_existed_tables";
+					$.restPost(url,tables,function(response){
+						console.log(response);
+						window.location.href=Global.contextPath+"/home/";
+					});
+				}
+			}); */
+		});
+		/*]]>*/
+	</script>
+</body>
+</html>

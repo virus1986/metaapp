@@ -1,0 +1,70 @@
+<div id="selectIcon" style="min-width:900px">
+<style>
+#selectIcon{
+	margin: 5px;
+}
+.nav{
+	padding-top: 0px;
+}
+.icons{
+	padding: 8px;
+	cursor: pointer;
+}
+.icons_hover{
+	padding:7px;
+	border:1px solid #ccc;
+}
+</style>
+	<div id="iconSet">
+		<span class="label" th:text="#{icon.selectTitle}"></span>
+		<ul class="nav nav-pills" id="myTab" th:remove="all-but-first">
+		  <li th:each="iconSet : ${iconSets}">
+		  	<a href="#home" th:href="'#' + ${iconSet.name}" th:text="${iconSet.name}">Home</a>
+		  </li>
+		  <li><a href="#profile" th:text="#{icon.profile}">Profile</a></li>
+		  <li><a href="#messages" th:text="#{icon.messages}">Messages</a></li>
+		  <li><a href="#settings" th:text="#{icon.settings">Settings</a></li>
+		</ul>
+		<div class="tab-content" th:remove="all-but-first">
+		  <div th:each="iconSet : ${iconSets}" class="tab-pane" id="home" th:id="${iconSet.name}">
+		  	 <img class="icons" th:each="icon : ${iconSet.icons}" alt="" th:alt="${icon.name}"
+		  	 	th:title="${icon.name}" src="" th:src="${themes.icon(icon.url)}" th:attr="data-url=${icon.url}"/>
+		  </div>
+		  <div class="tab-pane" id="profile">...</div>
+		  <div class="tab-pane" id="messages">...</div>
+		  <div class="tab-pane" id="settings">...</div>
+		</div>
+	</div>
+	<div class="ui-dialog-buttonset">
+	</div>
+<script type="text/javascript">
+$(function(){
+	var context = "#selectIcon";
+	var selected = "icon-selected";
+	var hover = "icon-hover";
+	
+	function init(){
+		$(".tab-pane:first, #myTab li:first", context).addClass("active");
+	};
+	init();
+	
+	$('#myTab a', context).click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+	})
+	
+	$(".icons", context).hover(
+		function(){
+			$(this).addClass("icons_hover");
+		},
+		function(){
+			$(this).removeClass("icons_hover");
+		}
+	).click(function(){
+		var url = $(this).attr("data-url");
+		jQuery.dialogReturnValue(url);
+		$(context).dialogClose();
+	});
+});
+</script>
+</div>

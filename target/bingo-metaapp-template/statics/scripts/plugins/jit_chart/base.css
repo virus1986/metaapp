@@ -1,0 +1,64 @@
+html{-webkit-text-size-adjust: none;}
+
+.jit-chart {
+	/*background: 0px 0px rgb(34, 34, 34);*/
+	margin: 0px auto auto;
+	padding: 3px;
+	/*border-radius: 8px;*/
+	/*border: 1px solid rgb(68, 68, 68);*/
+	width: 785px;
+	height: 420px;
+	overflow: auto;
+	position: relative;
+	z-index: 300;
+	/*border:1px solid red;*/
+	/*box-shadow: 0px 0px 10px #aaa;*/
+	
+	margin:0px;
+	padding:0px;
+}
+
+
+.jit-chart li {
+	list-style: none;
+	float: left;
+	position: relative;
+	cursor: pointer;
+}
+
+.jit-chart-node{
+	background: #449BE4;
+	/*height:42px;
+	width:100px;*/
+	text-align:center;
+	border-radius: 5px;
+	font-weight:bold;
+	color:#FFF;
+	padding-top:0px;
+	overflow:hidden;
+	line-height:12px;
+	
+}
+
+.jit-chart-node table{
+	/*height:42px;
+	width:100px;*/
+	width:100%;
+	height:100%;
+	line-height: 13pt;
+	
+}
+
+.jit-chart-node table .orgchartnode{
+	font-size:11.5px;
+}
+
+.jit-chart-node table tr td{
+	vertical-align: middle; ;
+}
+
+.jit-chart-node.current{
+	background: #00AD0C;
+	color:#FFF;
+	border:1px solid #EEE:
+}

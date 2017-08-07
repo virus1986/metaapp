@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" createUrl="~/entities/User/create" viewUrl="~/entities/User/view" dataUrl="~/entities/User/query_paged" deleteUrl="~/entities/User/delete" editUrl="~/entities/User/edit" entityName="User" height="230px" id="grid_52d9820f-f707-42de-b660-4f105fb5d3e7" isSwitchView="false" multiSelect="true" multiSelectKey="None" shrinkToFit="true" type="normal" view="associcate" width="100%">
+    <addDialogSettings caption="" showType="pop-up"/>
+    <appearanceSettings alternateRowBackground="true" caption="" highlightRowsOnHover="true" rightToLeft="false" rowNumbersColumnWidth="25" scrollBarOffset="18" showFooter="false" showRowNumbers="true" shrinkToFit="true"/>
+    <columns>
+        <column dataField="id" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="false" width="10"/>
+        <column dataField="name" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="80"/>
+        <column dataField="userNum" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="80"/>
+        <column dataField="orgId" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="120"/>
+        <column dataField="costOrgNum" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="120"/>
+        <column dataField="GangWeiMiaoShu" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="150"/>
+    </columns>
+    <contextButtons>
+        <button buttonIcon="mini/icon_tool_022.gif" cssClass="" isInMoreBtns="true" name="edit" onClick="grid.editRecord" text="修改" toolTip="修改"/>
+        <button buttonIcon="mini/icon_tool_060.gif" cssClass="" isInMoreBtns="true" name="delete" onClick="grid.delRecord" text="删除" toolTip="删除"/>
+    </contextButtons>
+    <customSettings/>
+    <toolBarSetting>
+        <button isInMoreBtns="true" cssClass="" name="link" buttonIcon="main/search-add.png" onClick="grid.addRelation" text="选择" toolTip="选择"/>
+        <button isInMoreBtns="true" cssClass="" name="create" buttonIcon="main/button-add.png" onClick="grid.addRecord" text="新建" toolTip="新建"/>
+        <button isInMoreBtns="true" cssClass="" name="edit" buttonIcon="main/comment-edit.png" onClick="grid.editRecord" text="修改" toolTip="修改"/>
+        <button isInMoreBtns="true" cssClass="" name="delete" buttonIcon="main/button-white-remove.png" onClick="grid.delRecord" text="删除" toolTip="删除"/>
+        <button isInMoreBtns="true" cssClass="" name="fresh" buttonIcon="main/button-load.png" onClick="grid.refreshGrid" text="刷新" toolTip="刷新"/>
+        <button isInMoreBtns="true" cssClass="" name="search" buttonIcon="main/search-add.png" onClick="grid.advanceSearch" text="查询" toolTip="查询"/>
+        <button isInMoreBtns="true" cssClass="" name="export" buttonIcon="main/file-send.png" onClick="grid.exportGrid" text="导出" toolTip="导出"/>
+        <button isInMoreBtns="true" cssClass="" name="import" buttonIcon="main/box-up.png" onClick="grid.importData" text="导入" toolTip="导入"/>
+        <button isInMoreBtns="true" cssClass="" name="config" buttonIcon="main/cog.png" onClick="grid.configGrid" text="配置" toolTip="配置视图"/>
+    </toolBarSetting>
+    <editDialogSettings caption="" showType="pop-up"/>
+    <filter groupOp="and">
+        <filters>
+        </filters>
+        <rules>
+        </rules>
+    </filter>
+    <groupSettings collapseGroups="false"/>
+    <orderby/>
+    <quickSearch searchColNum="4">
+        <column dataField="name"/>
+        <column dataField="name"/>
+        <column dataField="name"/>
+    </quickSearch>
+    <joinEntities>
+    </joinEntities>
+    <scriptBlock/>
+    <treeGridSettings enabled="false"/>
+    <viewDialogSettings caption="" showType="pop-up"/>
+</grid>

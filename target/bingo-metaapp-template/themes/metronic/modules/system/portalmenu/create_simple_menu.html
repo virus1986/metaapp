@@ -1,0 +1,92 @@
+<div th:id="${viewId}" class="panel apply-panel" style="width:500px;height:300px;">
+<div class="ui-dialog-title hide">
+	<span th:text="#{portalMenu.createSimpleTitle}"></span>
+</div>
+<form id="createSimpleTreeMenuItemForm" data-widget="validator">
+<table class="form-table" style="width:99%;">
+	<tbody>
+		<tr>
+			<th style="width:80px;"><label><meta:display-name field="portalmenu.name"/>:</label></th>
+			<td >
+			<input name="name" type="text" style="width:95%;" data-validator="required,length[1,50]"/>
+			</td>
+		</tr>
+		<tr>
+			<th style="width:80px;"><label><meta:display-name field="portalmenu.parentId"/>:</label></th>
+			<td >
+			<input type="hidden" name="parentId" th:value="${parentId}"/>
+			<span class="parentId" th:text="${parentName}"></span>
+			</td>
+		</tr>
+		<tr>
+			<th style="width:80px;"><label><meta:display-name field="portalmenu.icon"/>:</label></th>
+				<td >
+				<div data-widget="icon">
+								<img id="iconImage" alt="" src="" />
+								<input name="icon" id="icon" type="hidden" />
+								<div class="btn-group">
+									<button type="button" class="btn dropdown-toggle" data-toggle="dropdown"  >
+										<span class="btn-select" th:text="#{icon.selectIcon}"></span> <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu pull-right" style="min-width: 85px">
+										<li>
+											<a href="javascript://" class="btn-remove"><i class="icon-remove"></i> <span>清空</span></a>
+										</li>						
+									</ul>
+								</div>					
+							</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="ui-dialog-buttonset">
+		<button type="button" class="btn purple saveTreeMenuItem" th:text="#{common.save}"></button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+</form>
+			
+
+<script th:inline="javascript">
+//<![CDATA[ 
+$(function(){
+	var context = /*[['#'+${viewId}]]*/;
+	Page.init(context);
+	var menuCreateUrl=Global.contextPath+'/portal/menu/create';
+	//$("#iconImage", context).hide();
+	function initIcon(){
+		var url="led-icons/plugin.png";
+		$("#iconImage", context).show().attr("src", Global.iconPath + url);
+		$("#icon", context).val(url);
+	};
+	initIcon();
+	
+	$(".saveTreeMenuItem",context).click(function(){
+		var valInfo = $.validation.validate("#createSimpleTreeMenuItemForm") ;
+		if( valInfo.isError ) {
+			return false;
+		}
+		var btnSelf=$(this);
+		btnSelf.attr("disabled","disabled");
+		btnSelf.addClass("disabled");
+		var url=menuCreateUrl;
+		var data=$("#createSimpleTreeMenuItemForm", context).toJson();
+		jQuery.restPost(url,data,function(response){
+			if(response){
+				jQuery(context).dialogClose(response);
+			}
+		},{
+			beforeSend:function(xhr){
+				CommonUtil.showLoading(context,i18n.t("common.processing"));
+				btnSelf.attr("disabled","disabled");
+				btnSelf.addClass("disabled");
+			  },complete:function(xhr,textStatus){
+					CommonUtil.hiddenLoading();
+					btnSelf.removeAttr("disabled");
+					btnSelf.removeClass("disabled");
+			  }
+		});
+	});
+});
+//]]>
+</script>
+</div>

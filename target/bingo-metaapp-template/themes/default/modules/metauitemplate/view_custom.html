@@ -1,0 +1,217 @@
+<div th:id="${viewId}" class="panel apply-panel" style="width:1000px;">
+	<div class="ui-dialog-title hide" th:switch="${action}">
+		<span th:case="*" th:inline="text">[[#{view.custom.title}]]<span class='win-title'></span></span>
+	</div>
+	<form id="createViewLayoutForm" data-widget="validator" th:action="${requestUri}">
+	<input type="hidden" name="id" th:value="${layout.id}" />
+	<input type="hidden" name="entityName" th:value="${layout.entityName}"/>
+	<input type="hidden" name="url" th:value="${layout.url}" />
+	<input type="hidden" name="version" th:value="${layout.version}" />
+	<input type="hidden" name="name" th:value="${layout.name}" />
+	<input type="hidden" name="displayName" th:value="${layout.displayName}" />
+	<div class="container-fluid">
+		
+		<div class="row-fluid">
+			<div class="span10 first">
+				<div class='toolbar-template'>
+				</div>
+				<div class='grid-template' style="overflow:auto;">
+					<table id="grid_custom__"></table>
+					<div id="grid_custom___pager" style="display:none;"></div>
+				</div>
+				<!-- grid编辑区域start -->
+				<!-- grid编辑区域end -->
+			</div>
+			<div class="span2">
+				<!-- 设置操作区域start -->
+				<ul class="dropdown-menu" style="display:block;position:relative;min-width:140px;">
+					<li><a href="javascript://" class="order-column-action" th:inline="text"><img th:src="${themes.statics('images/icons/mini/icon_tool_197.gif')}" src=""/> [[#{view.custom.colOrder}]]</a></li>
+					<li><a href="javascript://" class="select-column-action" th:inline="text"><img th:src="${themes.statics('images/icons/mini/icon_tool_204.gif')}" src=""/> [[#{view.custom.addColumn}]]</a></li>
+					<li><a href="javascript://" class="remove-column-action" th:inline="text"><img th:src="${themes.statics('images/icons/mini/icon_tool_204.gif')}" src=""/> [[#{view.custom.removeColumn}]]</a></li>
+					<li class="divider"></li>
+					<li><a href="javascript://" class="prop-view-action" th:inline="text"><img th:src="${themes.statics('images/icons/mini/icon_tool_001.gif')}" src=""/> [[#{metadata.view}+#{common.properties}]]</a></li>
+					<li><a href="javascript://" class="filter-column-action" th:inline="text"><img th:src="${themes.statics('images/icons/mini/item-centre.gif')}" src=""/> [[#{view.custom.configFilter}]]</a></li>
+					<li><a href="javascript://" class="orderby-column-action" th:inline="text"><img th:src="${themes.statics('images/icons/mini/icon_tool_194.gif')}" src=""/> [[#{view.custom.configOrder}]]</a></li>
+					<li><a href="javascript://" class="quicksearch-column-action" th:inline="text"><img th:src="${themes.statics('images/icons/mini/icon_tool_063.gif')}" src=""/> [[#{view.custom.configQuickSearch}]]</a></li>
+					<li><a href="javascript://" class="form-column-action" th:inline="text"><img th:src="${themes.statics('images/icons/mini/icon_tool_100.gif')}" src=""/> [[#{view.custom.formConfig}]]</a></li>
+					<li><a href="javascript://" class="refentity-config-action" th:inline="text"><img th:src="${themes.statics('images/icons/mini/icon_tool_185.gif')}" src=""/> [[#{view.custom.refEntityConfig}]]</a></li>
+					<li class="divider"></li>
+					<li><a href="javascript://" class="xml-action" th:inline="text"><img th:src="${themes.statics('images/icons/mini/icon_tool_204.gif')}" src=""/> [[#{view.custom.xmlView}]]</a></li>
+					<li class="divider"></li>
+				</ul>
+				<!-- 设置操作区域end -->
+			</div>
+			
+		</div>
+	</div>
+	<textarea name="configData" class="hide" th:text="${layout.configData}"></textarea>
+	<input type="hidden" name="layoutId" value="" th:value="${layout.id}" />
+	</form>
+
+	<div class="ui-dialog-buttonset">
+		<button th:attr="data-setUp=${setUp}" type="button" class="btn btn-primary saveEntityView" th:text="#{common.saveDraft}"></button>
+		<button th:if="${setUp}==1" type="button" class="btn btn-info saveAndPublishEntityView" th:text="#{common.saveAndPublish}"></button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+	<style type="text/css">
+		.ui-dialog-content .row-fluid {
+			overflow-x: none;
+		}
+		
+		.toolbar-action-dragging{
+			 filter:alpha(opacity=100);
+			 -moz-opacity:1;
+			 -khtml-opacity: 1;
+			  opacity: 1;
+			  background-color:#EEE;
+		}
+		
+		.toolbar-action-hover{
+			border-left:2px solid blue;
+			margin-left:2px;
+		}
+		
+		.table-img-icon{
+			filter:alpha(opacity=80);
+			 -moz-opacity:0.8;
+			 -khtml-opacity: 0.8;
+			 opacity: 0.8;
+		}
+	</style>
+	
+	
+	<script th:inline="javascript">
+	//<![CDATA[
+		$(function(){
+			 var listEntity = {
+						toolbar:null,
+						filter:null,
+						orderby:null,
+						script:null ,
+						idFields:null,
+						quickSearch:null,
+						operations:null,
+						gridColumns:null
+					};
+					
+					var __context = /*[['#'+${viewId}]]*/;
+					var layoutName = /*[[${layout.displayName}]]*/;
+					
+					var viewId 				 = /*[[${viewId}]]*/;
+					var selectColumnUrl		 = /*[[@{/metadata/field/select(entity=${entityName},joinEntities=${joinEntities})}]]*/;
+					var fieldFilterListUrl 	 = /*[[@{/metadata/field/select_filter(entity=${entityName})}]]*/;
+					var entityName 			 = /*[[${entityName}]]*/;
+					var imageRoot  			 = /*[[${themes.statics('images/icons/mini/')}]]*/ ;
+					var urlRoot 			 = Global.contextPath+"/entities";
+					var orderColumnUrl = /*[[@{/metadata/uitemplate/view_custom_order_column(entity=${entityName})}]]*/;
+					var viewCreateBaseUrl = /*[[@{/metadata/uitemplate/view_create_base(entity=${layout.entityName},layout='view',action='edit',id=${layout.id})}]]*/;
+					var orderbyConfigUrl = /*[[@{/metadata/uitemplate/view_custom_order_data(entity=${entityName})}]]*/;
+					var xmlEditUrl = /*[[@{/metadata/uitemplate/xmlconfig}]]*/;
+					var formConfigUrl = /*[[@{/metadata/uitemplate/viewFormConfig(entity=${entityName})}]]*/;
+					var loadGridByXmlConfigUrl = /*[[@{/metadata/uitemplate/custom_load_xmlconfig(entity=${entityName})}]]*/;
+					var searchConfig=/*[[${searchConfig}]]*/;
+					
+					var gridColumns 	=  /*[[${columns}]]*/;
+					var toolbarTemplate     = /*[[${toolbarTemplate}]]*/;
+					var toolbarSettings     = /*[[${toolbarSettings}]]*/;
+					var filter 				= /*[[${filter}]]*/;
+					var orderbyString 			= /*[[${orderby}]]*/;
+					var orderby=JSON.parse(orderbyString);
+					var idFields			= /*[[${idFields}]]*/ ;
+					var quickSearch			= /*[[${quickSearch}]]*/;
+					var operations			= /*[[${operations}]]*/;
+					var addDialogSettings	= /*[[${addDialogSettings}]]*/;
+					var editDialogSettings	= /*[[${editDialogSettings}]]*/;
+					var viewDialogSettings	= /*[[${viewDialogSettings}]]*/;
+					//多对一关联实体配置
+					var refEntities	= /*[[${refEntities}]]*/; 
+					var manyToOneRefEntities	= /*[[${manyToOneRefEntities}]]*/;
+					var refentityConfigUrl = /*[[@{/metadata/uitemplate/refentityConfig}]]*/;
+					
+					
+					//grid xml配置
+					var viewXmlConfig = /*[[${layout.configData}]]*/;
+					var viewJsonConfig=JSON.parse(xml2json(viewXmlConfig)).grid;
+					
+					var gridDefaults = {
+							url : viewJsonConfig._dataUrl,
+							createurl : viewJsonConfig._createUrl,
+							editurl : viewJsonConfig._editUrl,
+							viewurl : viewJsonConfig._viewUrl,
+							deleteurl: viewJsonConfig._deleteUrl,
+							entityName: entityName,
+							mtype : 'POST',
+							datatype: "local",
+							page : 1,
+							rowNum : 50,
+							rownumbers : false,
+							multiselect : false,
+							multiboxonly: false,
+							pager:'#grid_custom___pager',
+							rowList : [ 10, 50, 100 ],
+							jsonReader : {
+								records:[{'id':'-'}]
+							},
+							prmNames : {
+								id : "name",
+								search: "search"
+							},
+							autowidth : false,
+							height : '0px',
+							shrinkToFit: false,
+							searchDialogOptions : JSON.parse(searchConfig)
+					} ;
+					gridDefaults.colNames = [];
+					gridDefaults.colModel = [] ;
+					function getCol(key){
+						var _ = null ;
+						$( gridDefaults.colModel ).each(function(){
+							if(this.name == key){
+								_ = this ;
+								return false;
+							}
+						}) ;
+						return _ ;
+				 	};
+				 	
+					listEntity.idFields = idFields ;
+					listEntity.filter = filter ;
+					listEntity.orderby = orderby ;
+					listEntity.quickSearch = quickSearch;
+					listEntity.operations = operations;
+					//listEntity.addDialogSettings = addDialogSettings;
+					//listEntity.editDialogSettings = editDialogSettings;
+					//listEntity.viewDialogSettings = viewDialogSettings;
+					listEntity.gridColumns=gridColumns;
+					listEntity.manyToOneRefEntities=manyToOneRefEntities;
+					//初始化视图设计需要的变量
+					var _options={
+							gridDefaults:gridDefaults,
+							viewJsonConfig:viewJsonConfig,
+							listEntity:listEntity,
+							imageRoot:imageRoot,
+							toolbarTemplate:toolbarTemplate,
+							viewId:viewId,
+							viewUrls:{
+								orderColumnUrl:orderColumnUrl,
+								selectColumnUrl:selectColumnUrl,
+								viewCreateBaseUrl:viewCreateBaseUrl,
+								orderbyConfigUrl:orderbyConfigUrl,
+								formConfigUrl:formConfigUrl,
+								xmlEditUrl:xmlEditUrl,
+								refentityConfigUrl:refentityConfigUrl
+							}
+						};
+					
+			reqModule(["custom_view"],function(CustomViewManager){
+				var  customViewManager =CustomViewManager.createNew();
+				
+				customViewManager.initParams(_options);
+				//初始化设计页面
+				customViewManager.initPage();
+			});
+		});
+			
+	//]]>
+	</script>
+</div>

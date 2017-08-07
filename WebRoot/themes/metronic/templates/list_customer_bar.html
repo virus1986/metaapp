@@ -1,0 +1,51 @@
+<div style='display: none;' th:id="'toolbar_'+${jqgrid.id}" class="table-toolbar row-fluid">
+		<div class="grid-headerline">
+			<i class="icon-hand-right icon-animated-hand-pointer"></i>
+			<span th:text="${#strings.isEmpty(jqgrid.appearanceSettings.caption)?jqgrid.metaEntity.DisplayName:jqgrid.appearanceSettings.caption}" class="grid-headtext"></span>
+		</div>
+		<div class="pull-right ">
+			<div class="btn-group "  th:if="${jqgrid.quickSearch != null and #lists.size(jqgrid.quickSearch.column)>0}">
+				<input name="searchString" type="text" 
+						class="m-wrap input-medium search-query pull-left" />
+				<input name="searchField" value="_quickSearch" type="hidden"/>
+				<button class="btn blue" name="btSingleSearch" ><i class="icon-search"></i></button>
+				<span class="arrow"></span>
+			</div>
+	
+			<div class="btn-group">
+				<button id="sample_editable_1_new" class="btn green table-toolbar-icon-item"
+					th:attr="data-func=${jqgrid.customToolBarSetting[0].onClick}"
+					>
+					<span th:text="${jqgrid.customToolBarSetting[0].text}">添加</span>
+					<i class="icon-plus"></i>
+				</button>
+			</div>
+			<div th:if="${#lists.size(jqgrid.customToolBarSetting)>1}" class="btn-group">
+				<button class="btn dropdown-toggle" data-toggle="dropdown">更多操作 <i class="icon-angle-down"></i>
+				</button>
+				<ul class="dropdown-menu pull-right table-toolbar-icon">
+					<li th:each="btn,itStat:${jqgrid.customToolBarSetting}" 
+					    class="table-toolbar-icon-item"
+					    th:if="${itStat.index>0}"
+						th:attr="data-func=${btn.onClick}"
+						th:id="'toolbar_'+${btn.name}+'_'+${jqgrid.id}">
+						<a href="javascript://" th:title="${btn.toolTip}">
+						<img th:if="${#strings.isEmpty(btn.cssClass)}" style="width:22px;height:22px;margin-right:20px;" th:src="${themes.icon(btn.buttonIcon)}" />
+						<i th:unless="${#strings.isEmpty(btn.cssClass)}" th:class="${btn.cssClass}" style="width:22px;height:22px;margin-right:20px;"></i>
+						<span th:text="${btn.text}">文本</span></a>
+					</li>
+				</ul>
+			</div>
+		
+			<div th:id="'contextmenu_'+${jqgrid.id}" class="btn-group navbar" style="display:none">
+				<ul class="dropdown-menu" style="display:block;position: relative;">
+					<li id="edit"><a href="#"><i class="icon-pencil"></i> Edit</a></li>
+					<li id="del"><a href="#"><i class="icon-trash"></i> Delete</a></li>
+					<li id="ban"><a href="#"><i class="icon-ban-circle"></i> Ban</a></li>
+					<li class="divider"></li>
+					<li id="search"><a href="#"><i class="icon-search"></i> Make admin</a></li>
+				</ul>
+			</div>
+		
+		</div>
+	</div>

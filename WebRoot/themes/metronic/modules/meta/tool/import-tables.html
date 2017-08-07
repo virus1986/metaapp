@@ -1,0 +1,127 @@
+<div th:id="${viewId}" style="min-width: 950px;">
+	<div class="ui-dialog-title hide">
+		<span th:text="#{tool.import.importTables}"></span>
+	</div>
+	
+	<table class="table table-bordered import-tables">
+		<thead>
+			<tr>
+				<th><input type="checkbox"  class="selectAll"/><span th:text="#{tool.importTables.selectAll}"></span></th>
+				<th th:text="#{tool.importTables.tableName}"></th>
+				<th th:text="#{tool.importTables.db}"></th>
+				<th th:text="#{tool.importTables.toEntity}"></th>
+				<th><input type="checkbox"  class="prefixToggleAll"/><span th:text="#{tool.importTables.trimPrefix}"></span></th>
+				<th><input type="checkbox" checked="checked"  class="displayForAll"/><span th:text="#{tool.importTables.managed}"></span></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="tbl:${tables}">
+				<td><input type="checkbox" name="name" class="tableNameToggle" th:value="${tbl['name']}"/></td>
+				<td class="nameTd" th:text="${tbl['name']}"></td>
+				<td class="schemaTd" th:text="${tbl['schema']}"></td>
+				<td class="entityNameTd" contenteditable="true" th:text="${tbl['name']}"></td>
+				<td><input type="checkbox" name="entityName" class="prefixToggle"/></td>
+				<td class="displayForTd"><input type="checkbox" checked="checked" name="manage" class="displayFor"/></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<div class="ui-dialog-buttonset">
+		<button type="button" class="btn btn-primary importSelectedTables" th:text="#{common.save}"></button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+	
+<script th:inline="javascript">
+//<![CDATA[
+$(function(){
+	var viewId=/*[[${viewId}]]*/;
+	var context = "#" + viewId;       
+    $(".entityNameTd",context).each(function(){
+		var _name=$(this).siblings(".nameTd").text();
+		$(this).text(Strings.upperCamel(_name,"_"));
+	});
+    $(".selectAll",context).click(function(){
+    	var checked=$(this).attr("checked");
+		if(checked){
+			$(".tableNameToggle",context).attr("checked","checked");
+		}else{
+			$(".tableNameToggle",context).removeAttr("checked");
+		}
+    });
+    $(".prefixToggleAll",context).click(function(){
+    	var checked=$(this).attr("checked");
+		if(checked){
+			$(".prefixToggle",context).attr("checked","checked");
+			$(".entityNameTd",context).each(function(){
+				var _name=$(this).siblings(".nameTd").text();
+				$(this).text(Strings.upperCamel(_name,"_",true));
+			});
+		}else{
+			$(".prefixToggle",context).removeAttr("checked");
+			$(".entityNameTd",context).each(function(){
+				var _name=$(this).siblings(".nameTd").text();
+				$(this).text(Strings.upperCamel(_name,"_"));
+			});
+		}
+    });
+    $(".displayForAll",context).click(function(){
+    	var checked=$(this).attr("checked");
+		if(checked){
+			$(".displayFor",context).attr("checked","checked");
+		}else{
+			$(".displayFor",context).removeAttr("checked");
+		}
+    });
+    $(".prefixToggle",context).click(function(){
+    	var _target=$(this);
+		var checked=_target.attr("checked");
+		var _name=_target.closest("td").siblings(".nameTd").text();
+		if(checked){
+			_target.closest("td").siblings(".entityNameTd").text(Strings.upperCamel(_name,"_",true));
+		}else{
+			_target.closest("td").siblings(".entityNameTd").text(Strings.upperCamel(_name,"_"));
+		}
+    });
+    $(".importSelectedTables",context).click(function(){
+    	var btnSelf=$(this);
+    	var tables=[];
+		$(".tableNameToggle:checked",context).each(
+				function(){
+					var entityName=$(this).closest("td").siblings(".entityNameTd").text();
+					var schema=$(this).closest("td").siblings(".schemaTd").text();
+					var manageDom=$(this).closest("td").siblings(".displayForTd").find("[name=manage]:checked");
+					var manage=false;
+					if(manageDom&&manageDom.length==1){
+						manage=true;
+					}
+					var table={name:$(this).val(),entityName:entityName,manage:manage,schema:schema};
+					tables.push(table);
+				}
+		);
+		//consolelog("now import tables:");
+		//consolelog(tables);
+		if(tables.length>0){
+			var url=Global.contextPath+"/metadata/tool/import_existed_tables";
+			jQuery.restPost(url,tables,function(response){
+				$(context).dialogClose(response);
+			},{beforeSend:function(xhr){
+				CommonUtil.showLoading(context,i18n.t("common.processing"));
+				btnSelf.attr("disabled","disabled");
+				btnSelf.addClass("disabled");
+			  },complete:function(xhr,textStatus){
+					CommonUtil.hiddenLoading();
+					btnSelf.removeAttr("disabled");
+					btnSelf.removeClass("disabled");
+			  }
+			});
+		}
+    });
+    
+    $(".closeBtn",context).click(function(){
+    	$(context).dialogClose();
+    });
+});
+	
+//]]>
+</script>
+</div>

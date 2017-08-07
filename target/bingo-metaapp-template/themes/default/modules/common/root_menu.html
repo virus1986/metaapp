@@ -1,0 +1,19 @@
+<div th:fragment="rootmenu">
+<div class="secmenu-list" style="height:800px">
+	<div th:each="menu : ${siteMap.menus}" id="customer-tree" class="tree-menu hidden"
+		th:id="${menu.id} + '-tree'" th:text="#{master.noMenu}">
+	</div>
+</div>
+<ul id="root-menu" class="rootmenu" style="width: 100%; overflow: hidden;">
+	<li  class="current" th:each="menu : ${siteMap.menus}" th:attr="data-menuid=${menu.id}" th:class="${menuStat.first}? 'current'">
+	<a th:if="${menu!=null}" href="#customer-tree" th:href="'#' + ${menu.id} + '-tree'"
+		data-url="" class="root" th:attr="data-url=${menu.submenuSource},data-id=${menu.id}">
+		<span>
+			<img src="../../statics/images/icons/menu/home.png"
+			th:src="${themes.icon(menu.icon)}" alt="" />
+		</span>
+		<span th:text="${menu.text}"></span>
+	</a>
+</li>
+</ul>
+</div>

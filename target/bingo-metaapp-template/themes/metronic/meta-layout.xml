@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layouts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<views>
+		<!-- <view type="main" name="done" displayName="已办" entityName="wftask" xmlPath="wftask/done.xml" url="~/entities/wftask/list?view=done"/> -->
+	</views>
+	<forms>
+		<!--工作流表单 converter="form_template_workflow"
+		<form displayName="测试表单1" name="workflow" type="main" entityName="test" converter="form_template_workflow" templatePath="modules/test/workflow.html"/>
+		-->
+	</forms>
+</layouts>

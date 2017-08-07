@@ -1,0 +1,290 @@
+<div th:attr="data-url=${requestUrl}"  th:id="${viewId}">
+	<div class="breadcrumbs" id="breadcrumbs">
+		<ul class="breadcrumb">		
+		</ul>
+	</div>
+	<div class="container-fluid  m-top10">
+		<div style="margin:0px;padding:0px;">
+			<table id="grid_metaentity"></table>
+			<div id="grid_metaentity_pager"></div>
+			
+			<div id="toolbar_grid_metaentity" class="table-toolbar row-fluid" style="display: none">
+				<div class="grid-headerline">
+					<i class="icon-hand-right icon-animated-hand-pointer"></i>
+					<span class="grid-headtext">实体管理</span>
+				</div>
+				<div class="pull-right ">					
+					<div class="btn-group">
+						<input name="searchString" type="text" class="m-wrap input-medium search-query pull-left" />
+						<input name="searchField" value="_quickSearch" type="hidden" />
+						<button class="btn blue" name="btMultiSearch"><i class="icon-search"></i></button>
+						<span class="arrow"></span>
+					</div>
+					<div class="btn-group">
+						<button id="toolbar_add_grid_metaentity" class="btn green table-toolbar-icon-item" data-func="grid.addRecord">
+							<span th:text="#{common.create}">新建</span>
+							<i class="icon-plus"></i>
+						</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn dropdown-toggle" data-toggle="dropdown">更多操作 <i class="icon-angle-down"></i>
+						</button>
+						<ul class="dropdown-menu pull-right table-toolbar-icon">
+							<li id="toolbar_edit_grid_metaentity" data-func="grid.editRecord" class="table-toolbar-icon-item">
+								<a href="javascript://">
+								<img th:src="${themes.icon('main/comment-edit.png')}" />
+								<span th:text="#{common.edit}"></span></a></li>
+							<li id="toolbar_del_grid_metaentity" data-func="grid.delRecord" class="table-toolbar-icon-item">
+								<a href="javascript://">
+								<img th:src="${themes.icon('main/button-white-remove.png')}" />
+								<span th:text="#{common.delete}"></span></a></li>
+							<li id="toolbar_reflesh_grid_metaentity" data-func="grid.refreshGrid" class="table-toolbar-icon-item">
+								<a href="javascript://">
+								<img th:src="${themes.icon('main/button-load.png')}" />
+								<span th:text="#{common.refresh}"></span></a></li>
+							<li id="toolbar_export_grid_metaentity" data-func="grid.exportEntity" class="table-toolbar-icon-item">
+								<a href="javascript://">
+								<img th:src="${themes.icon('main/file-send.png')}" />
+								<span th:text="#{common.export}"></span></a></li>
+						</ul>
+					</div>
+				</div>		
+			</div>
+		</div>
+	</div>
+
+	<script th:inline="javascript">
+	//<![CDATA[
+	$(function() {
+		var gridUrl=/*[[@{/metadata/entity/query_paged}]]*/;
+		var gridCreateUrl=/*[[@{/metadata/entity/create}]]*/;
+		var gridEditUrl=/*[[@{/metadata/entity/create(action='edit')}]]*/;
+		var gridDeleteUrl=/*[[@{/metadata/entity/delete}]]*/;
+		var isSystemIcon=/*[[${themes.icon('mini/icon_tool_371.gif')}]]*/;
+		var imageRoot=Global.themePath+"/statics/images/icons/mini";
+		var context=/*[['#'+${viewId}]]*/;
+		var col1=/*[[#{common.displayName}]]*/;
+		var col2=/*[[#{common.name}]]*/;
+		var col3=/*[[#{metaentity.sysEntity}]]*/;
+		var col4=/*[[#{metaentity.database}]]*/;
+		var col5=/*[[#{metaentity.summary}]]*/;
+		function isSystem(cellvalue, options, rowObject)
+		{
+			var reVal=cellvalue;
+			if(rowObject.isSystem){
+				reVal=i18n.t("common.yes");
+			}else{
+				reVal=i18n.t("common.no");
+			}
+			return reVal;
+		};
+		$('#grid_metaentity').jqGrid({
+			url : gridUrl,
+			createurl : gridCreateUrl,
+			editurl : gridEditUrl,
+			deleteurl: gridDeleteUrl,
+			mtype : 'POST',
+			datatype : 'json',
+			page : 1,
+			rowNum : 50,
+			isShowContextMenu:true,
+			rownumbers : true,
+			multiselect : true,
+			multiboxonly: true,
+			loadonce:true,
+			pager:'#grid_metaentity_pager',
+			altRows: true,
+			rowList : [ 10, 50, 100 ],
+			colNames : [col1,col2,col3,col4,col5,"pack"],
+			jsonReader : {
+				id : "name",
+				repeatitems : false
+			},
+			viewrecords: true,
+			scrollrows: false,
+			prmNames : {
+				id : "name",
+				search: "search"
+			},
+			toolbar: [true, 'top'],
+			headertitles: true,
+			autowidth : true,
+			height : '100%',
+			colModel : [
+			{name:'displayName',index:'displayName', width:100,formatter:'titleField'},
+            {name:'name',index:'name',key:true,width:50},
+            {name:'isSystem',index:'isSystem',width:30,formatter:isSystem},
+			{name:'schema',index:'schema', width:40},
+			{name:'summary',index:'summary', width:80},
+			{name:'pack',index:'pack', width:80}
+			],
+			searchDialogOptions : {
+				multipleSearch : true,
+				"recreateForm" : true,
+				"height" : 400,
+				"width" : 700,
+				"left" : 350,
+				"top" : 100
+			},
+			gridComplete:function(){
+				Page.gridComplete.call(this);
+				var $grid=$('#grid_metaentity');
+				$("[name=btMultiSearch]",context).off("click");
+				$("[name=btMultiSearch]",context).click(function(){
+					
+					var searchString=$("[name=searchString]",context).val();
+					var rules=[{"field":"displayName","op":"cn","data":searchString},{"field":"name","op":"cn","data":searchString}];
+					setTimeout(function(){
+						$grid.multiFieldsQuickSearch(rules,'OR');
+					},300);
+				});
+			},
+			onBeforeDelete:function($grid){
+				var selectIds=$grid.jqGrid('getGridParam','selarrrow');
+				var sysIds=[];
+				for(var i=0;i<selectIds.length;++i){
+					var row=$grid.getRowData(selectIds[i]);
+					if(row.isSystem==i18n.t("common.yes")){
+						sysIds.push(selectIds[i]);
+					}
+				}
+				if(sysIds.length>0){
+					$.messageBox.warning({message:sysIds.join(",")+i18n.t("metaentity.sysEntityNotAllowedDelete")});
+					return false;
+				}
+				return true;
+			},
+			onAfterDelete:function($grid,response){
+				var map = response;
+				if(map.success == false){
+					var info = i18n.t("metaentity.delete.errorSum");
+					if(null != map.errorEntity){
+						var temp = "";
+						for ( var i = 0; i < map.errorEntity.length; i++) {
+							var entity = map.errorEntity[i];
+							var addComma = false;
+							if(null != entity.hasRelations && entity.hasRelations == true){
+								temp += i18n.t("metaentity.delete.errorRelationExist",entity.name);
+								addComma = true;
+							}
+							if(null != entity.hasReferers){
+								if(addComma == true){
+									temp += i18n.t("metaentity.delete.errorRelationRefBy2");
+								} else {
+									temp += i18n.t("metaentity.delete.errorRelationRefBy",entity.name);
+								}
+								for ( var j = 0; j < entity.hasReferers.length; j++) {
+									var referer = entity.hasReferers[j];
+									temp += "<b>" + referer + "</b>";
+									if(j < entity.hasReferers.length - 1) temp += "，";
+								}
+							}
+							temp = i + 1 + "." + temp;
+							if(i < map.errorEntity.length - 1) temp += "；<br/>";
+							else temp += "。";
+							info += temp;
+							temp = "";
+						}
+					} else {
+						info += i18n.t("metaentity.delete.errorDb");
+					}
+					$.messageBox.warning({
+						message : info
+					});
+				} else {
+					//$("#menuadmin-tree").tree().reload();
+					reqModule(["module/common/master_manager"],function(MasterManager){
+						MasterManager.navigator.reloadMenu("menumetadata");
+					});
+				}
+			},
+			onAfterAdd:function($grid,reVal){
+				//$("#menuadmin-tree").tree().reload();
+				if(reVal){
+					//Navigator.navigateToMenu(reVal.name);
+					reqModule(["module/common/master_manager"],function(MasterManager){
+						MasterManager.navigator.reloadMenu("menumetadata",reVal.name);
+					});
+				}
+			}
+		}).navGrid('#grid_metaentity_pager',{
+			"add" : false,
+			"cloneToTop" : false,
+			"del" : false,
+			"edit" : false,
+			"position" : "center",
+			"refresh" : false,
+			"search" : false,
+			"view" : false,
+			"toggle" : false
+		},jQuery('#grid_metaentity').getGridParam('editDialogOptions'),
+		jQuery('#grid_metaentity').getGridParam('addDialogOptions'),
+		jQuery('#grid_metaentity').getGridParam('delDialogOptions'),
+		jQuery('#grid_metaentity').getGridParam('searchDialogOptions')).bindKeys().initCustom().initCustToolBar("toolbar_grid_metaentity");
+	
+		var imageRoot=Global.themePath+"/statics/images/icons/mini";
+		var $grid=$('#grid_metaentity');
+		$grid.jqGrid("setGridParam",
+				{exContextMenu:	[
+					{text: i18n.t("common.edit"),icon:imageRoot+"/icon_tool_022.gif",  action: function(){
+						$grid.jqGrid().editRecord();
+					}},
+					 {text: i18n.t("common.delete"),icon:imageRoot+"/icon_tool_060.gif",  action: function(){
+						 $grid.jqGrid().delRecord();
+					}},   	 
+				    {type: "splitLine" },
+			    	{text: i18n.t("metadata.field"),icon:imageRoot+"/icon_tool_100.gif",   action: function(){
+			    		var id=$grid.jqGrid('getGridParam','selrow');
+			    		var row=$grid.getRowData(id);
+			    		//Navigator.navigateToMenu(row.name,'fields');
+			    		reqModule(["module/common/master_manager"],function(MasterManager){
+							MasterManager.navigator.navigateToEntity(row.name,'fields');
+						});
+			    	}},
+			    	{text: i18n.t("metadata.view"),icon:imageRoot+"/icon_tool_103.gif",   action: function(){
+			    		var id=$grid.jqGrid('getGridParam','selrow');
+			    		var row=$grid.getRowData(id);
+			    		//Navigator.navigateToMenu(row.name,'views');
+			    		reqModule(["module/common/master_manager"],function(MasterManager){
+							MasterManager.navigator.navigateToEntity(row.name,'views');
+						});
+			    	}},
+			    	{text: i18n.t("metadata.form"),icon:imageRoot+"/icon_tool_095.gif",   action: function(){
+			    		var id=$grid.jqGrid('getGridParam','selrow');
+			    		var row=$grid.getRowData(id);
+			    		//Navigator.navigateToMenu(row.name,'grids');
+			    		reqModule(["module/common/master_manager"],function(MasterManager){
+							MasterManager.navigator.navigateToEntity(row.name,'grids');
+						});
+			    	}},
+			    	{text: i18n.t("metadata.relation"),icon:imageRoot+"/icon_tool_074.gif",   action: function(){
+			    		var id=$grid.jqGrid('getGridParam','selrow');
+			    		var row=$grid.getRowData(id);
+			    		//Navigator.navigateToMenu(row.name,'relation');
+			    		reqModule(["module/common/master_manager"],function(MasterManager){
+							MasterManager.navigator.navigateToEntity(row.name,'relation');
+						});
+			    	}},
+			    	{text: i18n.t("metadata.operation"),icon:imageRoot+"/icon_tool_136.gif",   action: function(){
+			    		var id=$grid.jqGrid('getGridParam','selrow');
+			    		var row=$grid.getRowData(id);
+			    		//Navigator.navigateToMenu(row.name,'operation');
+			    		reqModule(["module/common/master_manager"],function(MasterManager){
+							MasterManager.navigator.navigateToEntity(row.name,'operation');
+						});
+			    	}},
+			    	{text: i18n.t("metadata.security"),icon:imageRoot+"/icon_tool_190.gif",   action: function(){
+			    		var id=$grid.jqGrid('getGridParam','selrow');
+			    		var row=$grid.getRowData(id);
+			    		//Navigator.navigateToMenu(row.name,'security');
+			    		reqModule(["module/common/master_manager"],function(MasterManager){
+							MasterManager.navigator.navigateToEntity(row.name,'security');
+						});
+			    	}}
+			    ]}
+		);
+	}); 
+	
+	//]]>
+	</script>
+</div>

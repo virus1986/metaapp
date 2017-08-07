@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" height="100%" multiSelect="true" multiSelectKey="None" shrinkToFit="true" editUrl="~/entities/WfDraft/edit" viewFunc="system/workflow.startProcItemByDraft" deleteUrl="~/entities/WfDraft/delete" createUrl="~/entities/WfDraft/create" dataUrl="~/entities/WfDraft/query_paged" entityName="WfDraft" id="grid_cb60bd77-fec7-45dc-8c29-05717333c432">
+    <columns>
+        <column visible="false" width="1" primaryKey="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="draftId"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="procId"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="businessId"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="businessData"/>
+        <column text="主题" width="232"  editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="title"/>
+        <column text="流程名称" dataField="WfProc.procName" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="150"/>
+        <column text="保存时间" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="120" dataField="createdDate"/>
+    </columns>
+    <contextButtons>
+        <button name="sendDraft"/>
+        <button name="delete"/>
+    </contextButtons>
+    <toolBarSetting>
+        <button name="sendDraft"/>
+        <button isInMoreBtns="false" cssClass="" name="delete" buttonIcon="main/button-white-remove.png" onClick="grid.delRecord"/>
+        <button isInMoreBtns="false" cssClass="" name="fresh" buttonIcon="main/button-load.png" onClick="grid.refreshGrid"/>
+        <button isInMoreBtns="false" cssClass="" name="search" buttonIcon="main/search-add.png" onClick="grid.advanceSearch"/>
+        <button isInMoreBtns="false" cssClass="" name="export" buttonIcon="main/file-send.png" onClick="grid.exportGrid"/>
+    </toolBarSetting>
+    <joinEntities>
+        <entity name="WfProc" joinType="Left"/>
+    </joinEntities>
+    <filter groupOp="AND">
+        <filters/>
+        <rules>
+            <rule data="@{env.User.id}" field="WfDraft.ownerId" op="eq"/>
+        </rules>
+    </filter>
+    <orderby>
+        <rule direction="Desc" field="WfDraft.createdDate"/>
+    </orderby>
+    <quickSearch>
+        <column dataField="title"/>
+    </quickSearch>
+    <addDialogSettings/>
+    <editDialogSettings/>
+    <viewDialogSettings/>
+</grid>

@@ -1,0 +1,171 @@
+<!-- 导航 -->
+<div class="header">
+	<div class="logo">
+		<a href="/index.html"></a>
+	</div>
+	<div class="nav">
+		<ul>
+			<li><a href="/#page2">功能</a></li>
+			<li><a href="/price.html">购买</a></li>
+			<li><a href="/#page5">客户</a></li>
+			<li><a href="/#page6">下载</a></li>
+			<li><a href="##">帮助</a></li>
+		</ul>
+	</div>
+	<div class="navigation">
+		<ul>
+			<li><a href="./register"><img
+					th:src="${contextPath}+'/themes/metronic/modules/install/images/btn-reg2.png'" /></a></li>
+			<li><a href="/webos"><img
+					th:src="${contextPath}+'/themes/metronic/modules/install/images/btn-login2.png'" /></a></li>
+		</ul>
+	</div>
+</div>
+<!-- 正文 -->
+<div class="register-wrapper">
+	<div class="main-body">
+		<div class="main-header">
+			<h2>最后一步</h2>
+		</div>
+		<div class="login-group"
+			style="font-size: 20px; padding: 50px 130px 0px 130px;">
+			您的注册申请已成功提交, 约3-5分钟后您的企业将成功开通Link, 请注意查收注册邮箱中收到的激活邮件！</div>
+		<div class="main-content">
+			<form style="margin-top: 20px; width: 368px;">
+				<input type="hidden" id="id" name="id" th:value="${enterpriseId}" />
+				<div class="login-group" style="margin-bottom: 5px;">
+					<label for=""
+						style="width: 100px; text-align: right; margin-left: 40px;">管理员帐号：</label>
+					<div class="group-text" style="margin: 8px 0 0 8px;">
+						<span th:text="${admin}">xxxxxx</span>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="login-group modify-info"
+			style="margin-top: 50px; padding: 50px 130px 0px 130px;">
+			<span style="margin-left: 0px;">没收到邮件？您也可以更换其他邮箱重新发送邮件激活:</span>
+		</div>
+		<div class="main-content">
+			<form style="margin-top: 20px;">
+				<div class="login-group modify-email">
+					<label for="">邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱：</label>
+					<div class="modify-emial-body">
+						<div class="edit-area">
+							<span id="email" name="email" th:text="${email}">xxxxxx</span>
+						</div>
+					</div>
+					<a href="javascript://" class="edit-mail">修改</a>
+				</div>
+				<div style="display: flex; margin-top: 50px;">
+					<a href="javascript://" class="email-send" title="重新发送邮件">重新发送邮件</a>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript" th:inline="javascript">
+		/*<![CDATA[*/
+		$(function() {
+	
+			$('.edit-mail').click(function() {
+				var email = null;
+	
+				if (!$(this).data("isEdit")) {
+					$(this).data("isEdit", true);
+	
+					email = $('#email').text();
+					$('#email').remove();
+					$('.edit-area')
+							.html(
+									"<input id='email' style='margin: 0;width: 200px;' name='email' value='"+email+"'/>");
+	
+					$('.email-send').css("background", "#54C58B");
+	
+					$(this).html("确定");
+				} else {
+					email = $('#email').val();
+					var pattern = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+					if (!pattern.test(email)) {
+						$("#email").focus();
+						$.messageBox.info({
+							message : "请输入正确的邮箱地址！",
+							title : "提示"
+						});
+						return;
+					}
+					$(this).data("isEdit", false);
+					$('#email').remove();
+					$('.edit-area').html(
+							"<span id='email' name='email'>"
+									+ email + "</span>");
+	
+					$('.email-send').removeAttr("style");
+					;
+	
+					$(this).html("修改");
+				}
+			});
+	
+			$('.email-send').click(function() {
+				if ($('.edit-mail').data("isEdit"))
+					return;
+		
+				var data = {
+					id : $('#id').val(),
+					email : $('#email').text()
+				}
+		
+				if (data.email.length < 1) {
+					$("#email").focus();
+					$.messageBox.info({
+						message : "邮箱不能为空！",
+						title : "提示"
+					});
+					return;
+				}
+		
+				$.messageBox.confirm({
+					message : "将向邮箱发送激活信息，是否继续？",
+					title : "提示",
+					okButton : "确定",
+					cancelButton : "取消",
+					callback : function(ret) {
+		
+						if (ret) {
+							var requestParams = {
+								type : "POST",
+								data : data,
+								success : function(response) {
+									Loader.hideLoader();
+									//if('true' == response)
+									//$.messageBox.info({message:"已经向您的邮箱发送信息，请注意查收！",title:"提示"});
+		
+									window.setTimeout(function() {
+										window.location.href = contextPath
+												+ "/install/point?status="
+												+ response;
+										Loader.hideLoader();
+									}, 200);
+								},
+								error : function(xhr, textStatus,
+										errorThrown) {
+									$.messageBox.info({
+										message : xhr.responseText,
+										title : "Erorr!"
+									});
+									window.setTimeout(function() {
+										Loader.hideLoader();
+									}, 200);
+								}
+							};
+							Loader.showLoader('数据提交中，请稍等...');
+							installModule.ajaxConn(requestParams, 'reSendMail');
+						}
+					}
+				});
+			});
+	
+		});
+		/*]]>*/
+	</script>
+</div>

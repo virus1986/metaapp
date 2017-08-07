@@ -1,0 +1,115 @@
+<div th:id="${viewId}" class=" ui-corner-all permissions" style="border: 0px">
+			<table	class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th style="width:150px"><span></span></th>
+						<th class="width100" th:text="#{security.permissionControl}"></th>
+						<th style="width:200px"><span th:text="#{security.role}"></span>[<a class="add-roles" href="javascript://" th:text="#{common.add}"></a>]</th>
+						<th style="width:50px;" th:text="#{security.permission}"></th>
+						<th width="*" th:text="#{security.permissionRule}"></th>
+					</tr>
+				</thead>
+				<tbody th:each="permission:${permissions}" th:id="${permission.code}"
+					th:switch="${!permission.isInControl or (permission.isInControl and (#lists.size(roles)==0))}?'0':'1'">
+					<!-- 不受控 -->
+					<tr th:case="'0'">
+						<td th:text="${permission.name}"></td>
+						<td>
+							<div class="switch switch-small" data-on="success" data-off="warning">
+							    <input th:id="${permission.code}" type="checkbox" name="isInControl"  th:checked="${permission.isInControl}"/>
+							</div>
+						</td>
+						<td >
+							<span th:if="${!permission.isInControl}"></span>
+							<a class="add-roles" href="javascript://" th:if="${permission.isInControl}" th:text="#{security.addRole}"></a>
+						</td>
+						<td></td>
+						<td></td>
+					</tr>					
+					<!-- 受控，且设置了角色 -->
+					<tr th:case="*" 
+						th:each="role,iterStat:${roles}" 
+						th:with="rolePermission=${rolePermissions[permission.code+'_'+role.id]}"
+						th:id="${role.id}">
+						<td th:if="${iterStat.index==0}" th:rowspan="${iterStat.size}" th:text="${permission.name}" style="vertical-align:middle;"></td>
+						<td th:if="${iterStat.index==0}" th:rowspan="${iterStat.size}" style="vertical-align:middle">
+							<div class="switch switch-small" data-on="success" data-off="warning">
+							    <input th:id="${permission.code}" type="checkbox" name="isInControl" th:checked="${permission.isInControl}" />
+							</div>
+						</td>
+						<td th:text="${role.name}"></td>
+						<td th:switch="${#objects.nullSafe(rolePermission,'_none_')}" style="text-align: center;">
+							<a th:case="'_none_'" class="role-permission"  th:attr="data-status=0" ><img th:src="${themes.icon('led-icons/cross.png')}"/></a>
+							<a th:case="*"        class="role-permission"  th:attr="data-status=1" ><img th:src="${themes.icon('led-icons/accept.png')}"/></a>
+						</td>
+						<td>
+							<div th:if="${rolePermission==null or rolePermission.permissionRule==null}"></div>
+							<a th:if="${rolePermission!=null and  rolePermission.permissionRule!=null}" 
+								th:attr="data-ruleId=${rolePermission.ruleId}"
+								class="permission-rule" href="javascript://">
+								<span th:text="${rolePermission.permissionRule.name}"></span>
+								<b class="caret" style="vertical-align: middle;"></b>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+	<script th:inline="javascript">
+	//<![CDATA[
+		$(function(){
+			var options={
+				viewId:/*[[${viewId}]]*/,
+				roles:/*[[${roles}]]*/,
+				rules:/*[[${rules}]]*/,
+				entityName:/*[[${entityName}]]*/,
+			};
+			
+			reqModule(["module/security/entitypermission"],function(module){
+				var entitySec=module.createNew(options);
+				$('.switch',entitySec.context)['bootstrapSwitch']();
+				$('.switch',entitySec.context).on('switch-change',function (e, data) {
+			        var $el=$(data.el);
+			        var self=$(this);
+		        	self.bootstrapSwitch("setActive",false);
+			        var permissionId=$el.attr("id");
+			        if(data.value){
+			        	entitySec.turnOnPermission(self,permissionId);
+			        }else{
+			        	entitySec.turnOffPermission(self,permissionId);
+			        }
+			  	});
+				
+				entitySec.context.on("click",".add-roles",function(e){
+					var self=$(this);
+					entitySec.addRoles(self);
+				});
+				
+				entitySec.context.on("click",".role-permission",function(e){
+					var self=$(this);
+					var status=self.attr("data-status");
+					if(status=="0"){
+						entitySec.addPermission(self);
+					}else{
+						entitySec.delPermission(self);
+					}
+				});
+				
+				//规则弹出菜单
+				entitySec.context.on("click",".permission-rule",function(evt){
+					var self=$(this);
+					entitySec.populateRuleMenu(self,evt);
+				});	
+				
+				//订阅父页面的事件
+		    	entitySec.context.closest(".entity-permission").on("add-roles",function(e,data){
+		    		var roles=data.roles;
+		    		var tableEl=$("table",entitySec.context);
+		    		entitySec.addRolesToUI(tableEl,roles);
+		    	});
+		    	
+			});
+		});
+	    
+	//]]>
+	</script>
+</div>

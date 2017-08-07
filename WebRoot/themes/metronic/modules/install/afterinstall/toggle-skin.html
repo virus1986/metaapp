@@ -1,0 +1,77 @@
+<div th:id="${viewId}" style="min-width:600px;height:200px;">
+	<div class="ui-dialog-title hide">
+		<span>切换主题</span>
+	</div>
+	<div style="padding:10px 70px;">
+		<ul class="thumbnails" style="width:100%;list-style:none;">
+			<li class="skinLi" data-status="selected"  data-name="default" style="position:relative;">
+				<div href="javascript://" class="thumbnail" style="border-color:#007E00">
+                  <img class="skinLiImg" th:src="${themes.file('/modules/install/imgs/default.png')}"  style="width:180px;cursor: pointer;"/>
+                </div>
+                <img class="statusImg" th:src="${themes.icon('mini/icon_tool_092.gif')}"  style='position:absolute;left:3px;top:3px;'/>
+                <div style="text-align: center;">default</div>
+			</li>
+			<li class="skinLi" data-status="unselected"  data-name="metro" style="position:relative;">
+				<div href="javascript://" class="thumbnail">
+                  <img class="skinLiImg" th:src="${themes.file('/modules/install/imgs/metro.png')}"  style="width: 180px; cursor: pointer;"/>
+                </div>
+                <img class="statusImg" th:src="${themes.icon('mini/icon_tool_092.gif')}"  style='position:absolute;left:3px;top:3px;display:none;'/>
+				<div style="text-align: center;">metro</div>
+			</li>
+		</ul>
+	</div>
+	<div class="ui-dialog-buttonset">
+		<button type="button" class="btn btn-primary toggleSkin">确&nbsp;定</button>
+		<button type="button" class="btn closeBtn">取&nbsp;消</button>
+	</div>
+<script th:inline="javascript">
+//<![CDATA[
+$(function(){
+	var context = /*[['#'+${viewId}]]*/;
+	var currentSkin=/*[[${currentSkin}]]*/;
+	
+	$(".skinLiImg",context).click(function(){
+		var parentLi=$(this).closest(".skinLi");
+		var parentSiblings=parentLi.siblings(".skinLi");
+		var statusImg=parentLi.find(".statusImg");
+		parentLi.attr("data-status","selected");
+		statusImg.show();
+		$(this).parent().css({'border-color':'#007E00'});
+		unselectOthers(parentSiblings);
+	});
+	function unselectOthers(jqObj){
+		var skinLiImg=$(jqObj).find(".skinLiImg");
+		var statusImg=$(jqObj).find(".statusImg"); 
+		$(jqObj).attr("data-status","unselected");
+		statusImg.hide();
+		skinLiImg.parent().css({'border-color':'#ddd'});
+	}
+	$(".skinLi[data-name="+currentSkin+"]").find(".skinLiImg").trigger("click");
+	$(".toggleSkin",context).click(function(){
+		var btnSelf=$(this);
+		var _skin=$(".skinLi[data-status=selected]").attr("data-name");
+		var url=Global.contextPath+"/install/toggleSkin?skin="+_skin;
+		var data=[];
+			
+		jQuery.restPost(url,data,function(response){
+			$(context).dialogClose(response);
+			window.location.reload();
+		},{beforeSend:function(xhr){
+			CommonUtil.showLoading(context,"皮肤切换中..");
+			btnSelf.attr("disabled","disabled");
+			btnSelf.addClass("disabled");
+		  },complete:function(xhr,textStatus){
+				CommonUtil.hiddenLoading();
+				btnSelf.removeAttr("disabled");
+				btnSelf.removeClass("disabled");
+		  }
+		});
+	});
+	
+	$(".closeBtn",context).click(function(){
+		$(context).dialogClose();
+	});
+});
+//]]>
+</script>
+</div>

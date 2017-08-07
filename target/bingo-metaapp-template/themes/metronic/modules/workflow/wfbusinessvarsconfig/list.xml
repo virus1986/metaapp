@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" height="280" multiSelect="true" multiSelectKey="None" shrinkToFit="true" editUrl="~/entities/wfBusinessVarsConfig/edit" deleteUrl="~/entities/wfBusinessVarsConfig/delete" createUrl="~/entities/wfBusinessVarsConfig/create?procId=@{Request('procId')}" dataUrl="~/entities/wfBusinessVarsConfig/query_paged" entityName="wfBusinessVarsConfig" id="grid_eca0699c-4d3c-4716-bd0c-3cbca62be89f">
+    <columns>
+        <column width="30" primaryKey="true" visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="id"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="procId"/>
+        <column width="120" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="fromName"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="120" dataField="toName"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="type"/>
+    </columns>
+    <contextButtons>
+        <button name="edit"/>
+        <button name="delete"/>
+    </contextButtons>
+    <toolBarSetting>
+   		<button name="create"/>
+        <button name="edit"/>
+        <button name="delete"/>
+        <button name="fresh"/>
+    </toolBarSetting>
+    <joinEntities>
+    </joinEntities>
+    <filter groupOp="AND">
+        <filters>
+        </filters>
+        <rules>
+        	<rule data="@{Request('procId')}" field="procId" op="eq"/>
+        </rules>
+    </filter>
+    <orderby/>
+    <quickSearch>
+        <column dataField="fromName"/>
+    </quickSearch>
+    <addDialogSettings/>
+    <editDialogSettings/>
+    <viewDialogSettings/>
+</grid>

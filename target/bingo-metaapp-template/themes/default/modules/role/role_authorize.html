@@ -1,0 +1,216 @@
+ <div th:id="${viewId}" style="min-width:1100px;height:500px;">
+	<style type="text/css">
+	#entityResourceTree a span{
+	border:none;
+	}
+	</style>
+	<div class="ui-dialog-title hide">
+	<span th:text="${#messages.msg('security.role.assignPermissionDesc',roleName)}"></span>
+	</div>
+	<div>
+		<table style="width:100%;">
+		<tbody>
+			<tr>
+			<td style="width: 200px;vertical-align: top">
+				<div id="entityResourceTree" style="height:495px;overflow:auto;"></div>
+			</td>
+			<td style="vertical-align: top">
+				<div id="entityPermissionDiv"></div>
+				<div id="navPermissionDiv"></div>
+			</td>
+			</tr>
+		</tbody>
+		</table>
+	</div>
+	<div class="ui-dialog-buttonset">
+		<button type="button" class="btn btn-primary saveRoleEntityPermission" th:text="#{common.save}"></button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+	<script th:inline="javascript">
+	//<![CDATA[
+    $(function(){
+    	var context=/*[['#'+${viewId}]]*/;
+    	var roleId=/*[[${roleId}]]*/;
+    	var entity=null;
+    	var navPer = window._navPer = {}; 
+    	
+    	var entityResourceTreeUrl=Global.contextPath+"/sec/entity_permission/entityresources?roleId=" + roleId;
+    	$("#entityResourceTree",context).tree({
+    		rootId : 'root',
+			source : 'remote',
+			method : 'get',
+			asyn:false,
+			nodeFormat : function(record) {
+				return record;
+			},
+			expandLevel:3,
+			url : entityResourceTreeUrl,
+			/* onCheck:function(id, text,checked, record,node){
+				if(checked){
+					loadNodeResourceRule(record,function(){
+						$(context+" #entityResourceOperationRules").find(":radio").removeAttr("disabled");
+						$(context+" #entityResourceOperationRules").find(":radio:eq(0)").attr("checked","checked");
+					});
+				}else{
+					$(context+" #entityResourceOperationRules").find(":radio").attr("disabled","disabled");
+				}
+			}, */
+			onNodeClick:function(id, text, record,node){
+				var type=record.type;
+				if(type=="entityResourceNode"){
+					entity=record.id;
+					var entityAuthorizeUrl=Global.contextPath+"/sec/entity_permission/loadEntityPermission";
+					entityAuthorizeUrl=Urls.urlParam(entityAuthorizeUrl,[{key:"entity",value:entity},{key:"role",value:roleId}]);
+					$.openLink(entityAuthorizeUrl,{showType:"div",target:context+" #entityPermissionDiv"},function(){
+						$(".entityResourceTree",context).css({height:'453px',overflow:'auto'});
+					});
+					$('#navPermissionDiv', context).hide();
+					$('#entityPermissionDiv', context).show();
+				} else if(type == 'naviPer') {
+					var naviAuthorizeUrl=Global.contextPath+"/sec/navigation/loadNaviPermission";
+					naviAuthorizeUrl=Urls.urlParam(naviAuthorizeUrl,[{key:"roleId",value:roleId}]);
+					if($('#navPermissionDiv').is(':empty')){
+						$.openLink(naviAuthorizeUrl,{showType:"div",target:context+" #navPermissionDiv"},function(){
+							$(".navResourceTree",context).css({height:'453px',overflow:'auto'});
+						});
+					}
+					$('#navPermissionDiv', context).show();
+					$('#entityPermissionDiv', context).hide();
+				}
+				//loadNodeResourceRule(record);
+			}
+		});
+    	/* function loadNodeResourceRule(record,callback){
+    		var type=record.type;
+    		var entity=null;
+    		var resourceName=null;
+    		var resourceType=null;
+    		if(type=="operationResourceNode"){
+				entity=record.parent.parent.id;
+				resourceName=record.id;
+				resourceType="entity";
+				loadRule(entity,resourceType,resourceName,callback);
+			}else{
+				$(context+" #entityResourceOperationRules").empty();
+			}
+    	};
+    	function loadRule(entity,resourceType,resourceName,callback){
+    		var ruleSelectUrl=Global.contextPath+"/sec/entity_permission/rule/select";
+    		ruleSelectUrl=Urls.urlParam(ruleSelectUrl,[{key:"entity",value:entity},{key:"resourceType",value:resourceType},{key:"resourceName",value:resourceName}]);
+			$.openLink(ruleSelectUrl,{showType:"div",target:context+" #entityResourceOperationRules"},callback);
+    	}; */
+    	setTimeout(function() {
+    		//$("#entityResourceTree_entity_resource_tree_root",context).addClass("hide");
+    		$(".bbit-tree-node-leaf:eq(0) a span",context).trigger("click");
+		}, 300);
+    	$(".saveRoleEntityPermission",context).click(function(){
+    		var btnSelf=$(this);
+    		var url=Global.contextPath+"/sec/entity_permission/createEntityPermission";
+    		url=Urls.urlParam(url,[{key:"entity",value:entity},{key:"role",value:roleId}]);
+    		var data=[];
+    		//计算实体的权限数据
+    		if(window._entityPermissionsTree) {
+        		var entityResourceNodes = window._entityPermissionsTree.getSelectNodes()||[];
+        		var operationNodes=[],viewNodes=[],fieldNodes=[];
+        		for(var i=0;i<entityResourceNodes.length;++i){
+        			var record=entityResourceNodes[i];
+        			var type=record.type;
+        			if(type=="operation"){
+        				operationNodes.push(record);
+        			}else if(type=="view"){
+        				viewNodes.push(record);
+        			}else if(type=="field"){
+        				fieldNodes.push(record);
+        			}
+        		}
+        		for(var i=0;i<operationNodes.length;++i){
+        			var optNode=operationNodes[i];
+        			var _operationId=optNode.id;
+        			var optRolePermission={roleId:roleId,operationId:_operationId};
+        			if(window._entityOperationRules[_operationId]){
+        				optRolePermission.ruleId=window._entityOperationRules[_operationId];
+        			}
+        			data.push(optRolePermission);
+        		}
+        		//计算视图的权限数据
+        		for(var i=0;i<viewNodes.length;++i){
+        			var viewNode=viewNodes[i];
+        			data.push({roleId:roleId,operationId:viewNode.id});
+        		}
+        		//计算字段的权限数据
+        		for(var i=0;i<fieldNodes.length;++i){
+        			var fieldNode=fieldNodes[i];
+        			data.push({roleId:roleId,operationId:fieldNode.id});
+        		}
+        		//return false;
+        		jQuery.restPost(url,data,function(response){
+        			window._entityPermissionsTree=null;
+        			window._entityOperationRules=null;
+        			$(context).dialogClose();
+        		},{beforeSend:function(xhr){
+        			CommonUtil.showLoading(context,i18n.t("role.savingEntityPermission"));
+        			btnSelf.attr("disabled","disabled");
+        			btnSelf.addClass("disabled");
+        		  },complete:function(xhr,textStatus){
+        				CommonUtil.hiddenLoading();
+        				btnSelf.removeAttr("disabled");
+        				btnSelf.removeClass("disabled");
+        		  }
+        		});
+    		}
+    		if(window._naviPermissionsTree) {
+        		var navUrl = Global.contextPath + '/sec/navigation/';
+        		$.restPost(navUrl, formatterNavs(window._navs), function(){
+        			//consolelog('navs permission saved!');
+        			window._naviPermissionsTree=null;
+        			window._navs=null;
+        			$(context).dialogClose();
+        		},{beforeSend:function(xhr){
+        			CommonUtil.showLoading(context,i18n.t("role.savingMenuPermission"));
+        			btnSelf.attr("disabled","disabled");
+        			btnSelf.addClass("disabled");
+        		  },complete:function(xhr,textStatus){
+        				CommonUtil.hiddenLoading();
+        				btnSelf.removeAttr("disabled");
+        				btnSelf.removeClass("disabled");
+        		  }
+        		});
+    		}
+			
+    	}); 
+    	
+    	
+    	$(".closeBtn",context).click(function(){
+    		$(context).dialogClose();
+    	});
+    	
+    	function formatterNavs(navs){
+    		var selectedIds = window._naviPermissionsTree.getSelectedIds();;
+    		for(var i = 0; i < navs.length; i++){
+    			var id = navs[i].menuId, $node = navPer.getNodeOfNav(id), isLock = $node.data('lock');
+    			if(isLock){//受控
+    				if(navPer.getNodeIsSelected(id)) navs[i].status = 'access';
+    				else navs[i].status = 'deny';
+    			} else {//不受控
+    				navs[i].status = 'free';
+    			}
+    		}
+    		return navs;
+    	}
+    	
+    	function _isSelected(id, selectedIds){
+    		for(var i = 0; i < selectedIds.length; i++){
+    			if(selectedIds[i] == id) return true;
+    		}
+    		return false;
+    	}
+    	navPer.getNodeOfNav = function(id){return $('div[nodeid=' + id + ']', '.navResourceTree');}
+    	navPer.getNodeIsSelected = function(id) {
+    		var $node = navPer.getNodeOfNav(id), cb = $node.find('.bbit-tree-node-cb');
+    		if(cb.hasClass('bbit-tree-checkbox0')) return false;
+    		return true;
+    	}
+    });
+	//]]>
+	</script>
+</div>

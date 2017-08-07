@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:substituteby="'/themes/'+${theme}+'/modules/common/statics'::head"></head>
+<style>
+body{
+	background-color: #fff!important;
+}
+</style>
+<body class="container-index">
+	<div th:substituteby="${contentPage}"></div>
+	<script	th:substituteby="'/themes/'+${theme}+'/modules/common/statics'::scripts"></script>
+</body>
+</html>
+

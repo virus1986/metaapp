@@ -1,0 +1,45 @@
+<!-- <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+	<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+		<button class="btn btn-small btn-success">
+			<i class="icon-signal"></i>
+		</button>
+
+		<button class="btn btn-small btn-info">
+			<i class="icon-pencil"></i>
+		</button>
+
+		<button class="btn btn-small btn-warning">
+			<i class="icon-group"></i>
+		</button>
+
+		<button class="btn btn-small btn-danger">
+			<i class="icon-cogs"></i>
+		</button>
+	</div>
+
+	<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+		<span class="btn btn-success"></span> <span class="btn btn-info"></span>
+
+		<span class="btn btn-warning"></span> <span class="btn btn-danger"></span>
+	</div>
+</div> -->
+<!--#sidebar-shortcuts-->
+<ul class="nav nav-list" pd-nav-list-toggle style="height:580px;overflow:auto;">
+
+	<li ng-repeat="item in items">
+		<a href="{{item.href}}" class="dropdown-toggle"> <i class="{{item.icon}}"></i> <span class="menu-text"> {{item.html}} </span>
+		<b ng-show="{{item.items.length>0}}" class="arrow icon-angle-down"></b></a>
+		<ul ng-show="{{item.items.length>0}}" class="submenu" ng-class="{'open':menuMini}">
+			<li ng-repeat="subItem in item.items"  pd-palette-item="{{subItem.name}}"><a ng-href="{{subItem.href}}"> <i
+					class="icon-double-angle-right"></i> <span ng-bind-html="trustSnippet('{{subItem.html}}')"></span>
+			</a></li>
+		</ul>
+	</li>
+	
+</ul>
+<!--/.nav-list-->
+
+<div class="sidebar-collapse" id="sidebar-collapse"
+	ng-click="collapse()">
+	<i class="icon-double-angle-left" ng-class="{'icon-double-angle-right':menuMini}"></i>
+</div>

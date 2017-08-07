@@ -1,0 +1,142 @@
+<div th:id="${viewId}"  style="min-width:600px">
+<div class="ui-dialog-title hide" th:switch="${action}">
+	<span th:text="#{metafield.selectField}"></span>
+</div>
+<div th:id="'toolbar_grid_metafield_select_'+${entity}"
+	class="table-toolbar row-fluid" style="display: none">
+	<div class="span4 table-toolbar-search">
+		<div class="btn-group search-box">
+			<button class="btn dropdown-toggle" data-toggle="dropdown">
+				<span class="current_field" th:text="#{metafield.searchField}"></span> <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li data-field="name"><a href="javascript://" th:text="#{common.name}"></a></li>
+				<li data-field="displayName"><a href="javascript://" th:text="#{common.displayName}"></a></li>
+			</ul>
+			<input name="searchString" type="text" style="width: 120px;float:left;" /> <input
+				name="searchField" type="hidden" /> <input name="searchOper"
+				value="cn" type="hidden" /> <input name="btSingleSearch"
+				type="button" class="btn" th:value="#{common.search}" />
+		</div>
+	</div>
+</div>
+<div>
+	<table  th:id="'grid_metafield_select_'+${entity}"></table>
+	<div th:id="'grid_metafield_select_pager_'+${entity}"></div>
+	<script th:inline="javascript">
+	//<![CDATA[	
+	;(function($){
+		$(function() {
+			var args = jQuery.dialogAraguments() ;
+			var colKeys = args.colKeys ;
+			var type = args.type||"" ;
+			var quickSearch = args.quickSearch ;
+	
+	
+			var __context = /*[['#'+${viewId}]]*/;
+			var viewId = /*[[${viewId}]]*/ ;
+			var entity=/*[[${entity}]]*/;
+			var gridUrl=/*[[@{/metadata/field/query_select_paged(entity=${entity},joinEntities=${joinEntities})}]]*/;
+			var gridCreateUrl=/*[[@{/metadata/field/create(entity=${entity})}]]*/;
+			var gridEditUrl=/*[[@{/metadata/field/create(entity=${entity},action='edit')}]]*/;
+			var gridDeleteUrl=/*[[@{/metadata/field/delete(entity=${entity})}]]*/;
+			var isSystemIcon=/*[[${themes.statics('images/icons/mini/icon_tool_371.gif')}]]*/;
+			var gridId=  "grid_metafield_select_"+entity;
+			var pagerId="grid_metafield_select_pager_"+entity;
+			var toolbarId="toolbar_grid_metafield_select_"+entity;
+			var col1=/*[[#{metafield.sysField}]]*/;
+			var col2=/*[[#{common.name}]]*/;
+			var col3=/*[[#{common.displayName}]]*/;
+			var col4=/*[[#{metafield.entity}]]*/;
+	
+	
+	 		$("#"+gridId,__context).jqGrid({
+				url : gridUrl,
+				mtype : 'POST',
+				datatype : 'json',
+				page : 1,
+				rowNum : 100,
+				rownumbers : false,
+				multiselect : true,
+				loadonce:true,
+				//pager:__context+' #'+pagerId,
+				rowList : [ 10, 50, 100 ],
+				colNames : ["",col1,col2,col3,col4],
+				jsonReader : {
+					id : "name",
+					repeatitems : false
+				},
+				shrinkToFit :true,
+				prmNames : {
+					id : "name",
+					search: "search"
+				},
+				autowidth : true,
+				width:'100%',
+				height : '400px',
+				colModel : [
+							{name:'isIdentity',index:'isIdentity', hidden: true},
+							{name:'isSystem',index:'isSystem', hidden: true},
+							{name:'name',index:'name',key:true,width:150},
+							{name:'displayName',index:'displayName', width:150},
+							{name:'entity',index:'entity' }
+						],
+				loadComplete:function(){
+					if(typeof quickSearch == 'undefined'){
+						if( type != 'removeColumn' ){
+							 $(colKeys).each(function(index){
+								var key = this ;
+								$("tr#"+key,__context).remove() ;
+								//$("tr#"+key,__context).addClass("ui-state-disabled").attr("disabled",true).find(":checkbox").attr("disabled",true) ;
+					 	 	 }) ;
+						}else{
+							$("tr:first",__context).addClass("hasrender") ;
+							 $(colKeys).each(function(index){
+								var key = this ;
+								$("tr[id='"+key+"']",__context).addClass("hasrender") ;
+							 }) ;
+							$(".ui-jqgrid-btable tr.jqgrow:not(.hasrender)",__context).remove() ;
+						}
+					}else{
+						var column = quickSearch?quickSearch.column:[] ;
+						$(column||[]).each(function(){
+							var key = this.dataField ;
+							$("tr#"+key,__context).find(":checkbox").trigger("click").attr("checked",true) ;
+						}) ;
+					}
+				}
+			}) ;;
+			
+			$("#"+viewId+" .closeBtn").click(function(){
+				$.dialogReturnValue(null) ;
+				$(this).dialogClose();
+			}) ;
+	
+			$("#"+viewId+" .selectColumn").click(function(){
+				var selectId=$("#"+gridId,__context).jqGrid("getGridParam","selarrrow") ;
+	
+				var rows = [] ;
+				$(selectId).each(function(){
+					var row=$("#"+gridId,__context).getRowData(this);
+					rows.push(row) ;
+				}) ;
+	
+				$.dialogReturnValue(rows) ;
+				$(this).dialogClose();
+			}) ;
+		}); 
+	}(jQuery)); 
+	//]]>
+	</script>
+</div>
+
+<div class="ui-dialog-buttonset">
+	<button type="button" class="btn purple selectColumn" >
+		<span th:text="#{common.save}"></span>
+		<i class="m-icon-swapright m-icon-white"></i>
+	</button>
+	<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+</div>
+
+
+</div>

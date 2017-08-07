@@ -1,0 +1,51 @@
+<div th:id="${viewId}" class="container-fluid" style="min-width:900px">
+	<div class="row-fluid" style="margin-top:80px;">
+		<div class="span4">&nbsp;</div>
+		<div class="span4">
+			<div class="alert alert-info">
+				<h4 th:text="#{security.role.turnOnTitle}"></h4>
+				<span class="label-info2 br-block" style="margin:10px 0px;" th:text="#{security.role.turnOnDesc}"></span>
+				<button id="turnOnPermission" class="btn btn-primary btn-large" th:text="#{security.role.turnOnButton}"></button>
+			</div>
+		</div>
+		<div class="span4">&nbsp;</div>
+	</div>
+	
+	<script th:inline="javascript">
+	//<![CDATA[
+    $(function(){
+    	var context=/*[['#'+${viewId}]]*/;
+    	var entity=/*[[${entity}]]*/;
+    	var roleId=/*[[${roleId}]]*/;
+		
+    	$("#turnOnPermission",context).click(function(){
+    		var btnSelf=$(this);
+    		var turnOnEntityPermissionUrl=Global.contextPath+"/sec/entity_permission/turnonEntityPermission?entity="+entity;
+    		var data={};
+    		jQuery.restPost(turnOnEntityPermissionUrl,data,
+    			function(response){
+	    			if(response){
+	    				var entityAuthorizeUrl=Global.contextPath+"/sec/entity_permission/loadEntityPermission";
+						entityAuthorizeUrl=Urls.urlParam(entityAuthorizeUrl,[{key:"entity",value:entity},{key:"role",value:roleId}]);
+						var _container=$(context).parent();
+						$.openLink(entityAuthorizeUrl,{showType:"div",target:_container},function(){
+							
+						});
+	    			}
+    			},{
+    				beforeSend:function(xhr){
+		    			CommonUtil.showLoading(context,i18n.t("common.processing"));
+		    			btnSelf.attr("disabled","disabled");
+		    			btnSelf.addClass("disabled");
+    		  		},complete:function(xhr,textStatus){
+	    				CommonUtil.hiddenLoading();
+	    				btnSelf.removeAttr("disabled");
+	    				btnSelf.removeClass("disabled");
+	    		  	}
+    			}
+    		);
+    	});
+    });
+	//]]>
+	</script>
+</div>

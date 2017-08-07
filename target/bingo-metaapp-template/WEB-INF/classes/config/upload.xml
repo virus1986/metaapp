@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>文件上传配置信息</comment>
+	
+	<entry key="upload_cache_timeout"></entry>
+	<!-- 网上邻居配置注意：文件夹使用（/）而不是（\），兼容windows及linux，用户名和密码不支持@符号，与samba协议中的@冲突 -->
+	<!-- <entry key="upload_folder">\\10.201.76.115/fileserver/</entry> -->
+	<entry key="upload_folder">e:/fileserver/</entry>
+	<entry key="upload_domain"></entry>
+	<entry key="upload_username">fileserver</entry>
+	<entry key="upload_password">file|123</entry>
+	<!--传文件Id到文件路径的缓存清理时间间隔,以秒为单位-->
+	<entry key="UPLOAD_CACHE_REFRESH_TIME">600</entry>
+	<!--
+		上传策略实现，实现接口bingo.ui.upload.IUploadPolicy
+	-->
+	<entry key="upload_policy">bingo.metaapp.web.upload.UploadPolicy</entry>
+	<!-- 上传文件白名单配置 *:代表允许所有 逗号分隔的如：exe,psd,css,jsp 表示允许这四个后缀的文件上传-->
+	<entry key="upload.file.whitelist">*</entry>
+</properties>

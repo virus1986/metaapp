@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>云应用平台安装向导</title>
+<link rel="stylesheet"
+	th:href="${themes.file('modules/install/style/style.css')}" />
+</head>
+<body>
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="btn btn-navbar" data-toggle="collapse"
+					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span>
+				</a> <a class="brand" href="index.html"> <img
+					th:src="${themes.file('modules/install/style/logo.png')}"
+					alt="logo" />
+				</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav pull-right">
+						<li><a href="javascript://">功能特性</a></li>
+						<li><a href="http://developer.bingosoft.net/blog">博客</a></li>
+						<li><a href="javascript://">联系我们</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="box_sign">
+		<div class="container">
+			<div class="span12 box_wrapper">
+				<div class="span12 head-info">
+					<i class="i_loading"></i>云应用平台安装
+				</div>
+				<div class="span12 box">
+					<div>
+						<div class="head">
+							<h4>我的应用</h4>
+						</div>
+						<div class="form">
+							<form th:if="${hasApp}" th:action="${url}" target="_self" method="get">
+								<div class="row-fluid">
+									<div class="span4">
+										<img
+											th:src="${themes.file('modules/install/style/images/wxts.gif')}" />
+									</div>
+									<div class="span8">
+										<p>
+											您已经创建了应用，请通过下面的链接访问你创建的系统：<br /> <a th:href="${url}"
+												th:text="${url}">http://test.appgo.bingosoft.net/boss</a><br/>
+										</p>
+									</div>
+								</div>
+								<input type="button" id="delApp" class="btn btn-danger" value="删除系统" />&nbsp;&nbsp;&nbsp;&nbsp; <input type="submit" class="btn btn-success" value="进入系统" />
+							</form>
+							<form th:if="${!hasApp}" th:action="${url}" target="_self" method="get">
+								<div class="row-fluid">
+									<div class="span4">
+										<img
+											th:src="${themes.file('modules/install/style/images/wxts.gif')}" />
+									</div>
+									<div class="span8">
+										<p>您尚未创建任何应用，请点击下面的按钮创建应用。</p>
+									</div>
+								</div>
+								<input type="submit" class="btn btn-success" value="创建应用" />
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer id="footer" style="margin-top: 270px">
+		<div class="container">
+			<hr />
+			<div class="row copyright">
+				<div class="span4">
+					<h3>Relation</h3>
+					<a href="javascript://" class="social fb"> <i class="i_facebook"></i>
+					</a> <a href="javascript://" class="social tw"> <i class="i_twitter"></i>
+					</a> <a href="javascript://" class="social yt"> <i class="i_youtube"></i>
+					</a>
+				</div>
+				<div class="span3 offset5 copy">
+					<p>2012 - developer.bingosoft.net</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<script type="text/javascript"
+		th:src="${themes.file('modules/install/scripts/jquery.js')}"></script>
+	<script type="text/javascript"
+		th:src="${themes.file('modules/install/scripts/bootstrap.min.js')}"></script>
+	<script type="text/javascript"
+		th:src="${themes.file('modules/install/scripts/theme.js')}"></script>
+		
+	<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	$(function(){
+		var userId=/*[[${user.loginId}]]*/;
+		var contextPath=/*[[${contextPath}]]*/"";
+		$("#delApp").click(function(){
+			var self=$(this);
+			if(!confirm("即将删除应用所在数据库，该数据库的数据将全部丢失，是否继续")){
+				return false;
+			}
+			var requestParams={
+					url:contextPath+"/install/drop?_tname="+userId+"&date="+new Date().valueOf(),
+					type:"get",
+					success:function(response) {
+						window.setTimeout(function(){
+							window.history.go(0);
+						},1000);
+					},
+					error:function(xhr, textStatus, errorThrown){
+						alert("操作出错!");
+					}
+				};
+				self.attr("disabled","disabled");
+				$.ajax(requestParams);
+				return false;
+		});
+	});
+	/*]]>*/
+	</script>
+</body>
+</html>

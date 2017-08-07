@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<groups xmlns="http://www.isdc.ro/wro"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.isdc.ro/wro wro.xsd">
+ 
+  <group name="base">
+    <js>/statics/scripts/jquery-1.10.2.min.js</js>
+    <js>/statics/scripts/jquery-migrate-1.2.1.min.js</js>
+    <js>/statics/scripts/plugins/jquery-ui-1.10.4.js</js>
+    <js>/statics/scripts/bootstrap.min.js</js>    
+  </group>
+  <group name="base_ex">
+    <js>/statics/scripts/require.min.js</js>
+    <js>/statics/scripts/require_ex.js</js>
+  </group> 
+
+  <group name="plugins_css">
+    <css>/statics/scripts/plugins/settings/settings.css</css>
+    <css>/statics/scripts/plugins/dialog/jquery.dialog.css</css>
+    <css>/statics/scripts/plugins/ueditor/themes/default/ueditor.css</css>
+    <css>/statics/scripts/plugins/tokeninput/styles/token-input-facebook.css</css>
+    <css>/statics/scripts/plugins/switch/bootstrapSwitch.css</css>
+    <css>/statics/scripts/plugins/validator/jquery.validation.css</css>
+    <css>/statics/scripts/plugins/jqgrid/ui.jqgrid.css</css>
+    <css>/statics/scripts/plugins/messagebox/jquery.messagebox.css</css>
+    <css>/statics/scripts/plugins/layout/jquery.layout.css</css>
+    <css>/statics/scripts/plugins/tree/jquery.tree.css</css>
+    <css>/statics/scripts/plugins/contextmenu/jquery.contextmenu.css</css>
+    <css>/statics/scripts/plugins/settings/settings.css</css>
+    <css>/statics/scripts/plugins/zTree/css/zTreeStyle/zTreeStyle.css</css>
+  </group>
+  <group name="plugins_i18n_zh_CN">
+  <js>/statics/scripts/plugins/dialog/i18n/zh_CN.js</js>
+  <js>/statics/scripts/plugins/messagebox/i18n/zh_CN.js</js>
+  <js>/statics/scripts/plugins/validator/i18n/zh_CN.js</js>
+  <js>/statics/scripts/plugins/jqgrid/i18n/grid.locale-cn.js</js>
+  </group>
+  <group name="plugins_i18n_zh_TW">
+  <js>/statics/scripts/plugins/dialog/i18n/zh_CN.js</js>
+  <js>/statics/scripts/plugins/messagebox/i18n/zh_CN.js</js>
+  <js>/statics/scripts/plugins/validator/i18n/zh_CN.js</js>
+  <js>/statics/scripts/plugins/jqgrid/i18n/grid.locale-tw.js</js>
+  </group>
+  <group name="plugins_i18n_en">
+  <js>/statics/scripts/plugins/dialog/i18n/en.js</js>
+  <js>/statics/scripts/plugins/messagebox/i18n/en.js</js>
+  <js>/statics/scripts/plugins/validator/i18n/en.js</js>
+   <js>/statics/scripts/plugins/jqgrid/i18n/grid.locale-en.js</js>
+  </group>
+  <group name="plugins">
+    <js>/statics/scripts/common.js</js>
+    <js>/statics/scripts/json2.js</js>
+    <js>/statics/scripts/browserfix.js</js>
+    <js>/statics/scripts/plugins/jquery.cookie.js</js>
+  	<js>/statics/scripts/plugins/settings/settings.js</js>
+  	<js>/statics/scripts/plugins/jsrender.js</js>
+    <js>/statics/scripts/plugins/jquery.json.js</js>
+    <js>/statics/scripts/plugins/dialog/jquery.dialog.js</js>
+    <js>/statics/scripts/plugins/contextmenu/jquery.contextmenu.js</js>
+    <js>/statics/scripts/plugins/messagebox/jquery.messagebox.js</js>
+    <js>/statics/scripts/plugins/validator/jquery.validation.js</js>
+    <js>/statics/scripts/plugins/combotree/jquery.combotree.js</js>
+    <js>/statics/scripts/plugins/multiselect/jquery.multiselect.js</js>
+    <js>/statics/scripts/plugins/autocomplete/jquery.ui.autocomplete.js</js>
+    <js>/statics/scripts/plugins/inputpro/jquery.inputpro.js</js>
+    <js>/statics/scripts/plugins/jquery.table.addrow.js</js>
+    <js>/statics/scripts/plugins/jquery.form.js</js>
+    <js>/statics/scripts/plugins/jquery.bgiframe.js</js>
+  	<js>/statics/scripts/plugins/jqgrid/jquery.jqGrid.js</js>
+    <js>/statics/scripts/plugins/jqgrid/grid.addons.configfilter.js</js>
+    <js>/statics/scripts/plugins/ueditor/editor_config.js</js>
+    <js>/statics/scripts/plugins/layout/jquery.layout.js</js>
+    <js>/statics/scripts/plugins/tree/jquery.tree.js</js>
+    <js>/statics/scripts/plugins/tab/jquery.ui.tabs.js</js>
+    <js>/statics/scripts/plugins/jquery.collapser.js</js>
+    <js>/statics/scripts/plugins/wizard/jquery.wizard.page.js</js>
+    <js>/statics/scripts/plugins/tokeninput/jquery.tokeninput.js</js>
+  	<js>/statics/scripts/plugins/template/jquery.tmpl.js</js>
+  	<js>/statics/scripts/plugins/switch/bootstrapSwitch.js</js>
+  	<js>/statics/scripts/plugins/sffjs/stringformat.js</js>
+  	<js>/statics/scripts/plugins/sffjs/cultures/stringformat.zh.js</js>
+  	<js>/statics/scripts/plugins/jquery.caculate.js</js>
+  	<js>/statics/scripts/plugins/tablesortable/jquery.table.sortable.js</js>
+  	<!--<js>/statics/scripts/plugins/tablesortable/scrollpagination.js</js>-->
+
+  	<js>/statics/scripts/plugins/zTree/js/jquery.ztree.core-3.5.min.js</js>
+  	<js>/statics/scripts/plugins/zTree/js/jquery.ztree.excheck-3.5.js</js>
+  </group>
+  <group name="plugins_big">
+   	<!-- <js>/statics/scripts/plugins/plupload/plupload.full.js</js> -->
+    <!-- <js>/statics/scripts/plugins/ueditor/editor_all.js</js> -->
+    <js>/statics/scripts/plugins/plupload2/plupload.full.min.js</js>
+
+  </group>
+  <!-- themes_default的相关的脚本及样式-->
+  <group name="themes_default_common">
+  	<js>/themes/default/statics/scripts/module/common_utils.js</js>
+    <js>/themes/default/statics/scripts/module/common_ajaxEx.js</js>
+    <js>/themes/default/statics/scripts/module/common_openLink.js</js>
+    <js>/themes/default/statics/scripts/module/common_formEx.js</js>
+    <js>/themes/default/statics/scripts/module/common_page.js</js>
+    <js>/themes/default/statics/scripts/module/common_uiwidgetEx.js</js>
+    <js>/themes/default/statics/scripts/module/common_jqgridEx.js</js>
+  </group>
+  <group name="themes_default">
+    <js>/themes/default/statics/scripts/plugins/pinyin/jquery.hz2py.js</js>
+    <js>/themes/default/statics/scripts/plugins/xml_json/json2xml.js</js>
+    <js>/themes/default/statics/scripts/plugins/xml_json/xml2json.js</js>
+  </group>
+  <group name="themes_default_metro">
+  	<css>/themes/default/statics/skins/metro/style.css</css>
+  </group>
+  <group name="themes_default_default">
+  	<css>/themes/default/statics/skins/default/style.css</css>
+  </group>
+  <!-- themes_metronic的相关的脚本及样式-->
+  <group name="themes_metronic_common">
+    <js>/themes/metronic/statics/scripts/module/common_utils.js</js>
+    <js>/themes/metronic/statics/scripts/module/common_ajaxEx.js</js>
+    <js>/themes/metronic/statics/scripts/module/common_openLink.js</js>
+    <js>/themes/metronic/statics/scripts/module/common_formEx.js</js>
+    <js>/themes/metronic/statics/scripts/module/common_page.js</js>
+    <js>/themes/metronic/statics/scripts/module/common_uiwidgetEx.js</js>
+    <js>/themes/metronic/statics/scripts/module/common_jqgridEx.js</js>
+  </group>
+  <group name="themes_metronic">
+  	<js>/themes/metronic/statics/scripts/plugins/highcharts/highcharts.js</js>
+  	<js>/themes/metronic/statics/scripts/plugins/highcharts/highcharts-more.js</js>
+  	<js>/themes/metronic/statics/scripts/plugins/highcharts/modules/exporting.js</js>
+    <js>/themes/metronic/statics/scripts/plugins/pinyin/jquery.hz2py.js</js>
+    <js>/themes/metronic/statics/scripts/plugins/xml_json/json2xml.js</js>
+    <js>/themes/metronic/statics/scripts/plugins/xml_json/xml2json.js</js>
+    <js>/themes/metronic/statics/scripts/plugins/reportforms/jquery.reporttable.js</js>
+    <js>/themes/metronic/statics/scripts/plugins/formwizard/form-wizard.js</js>
+    <js>/themes/metronic/statics/scripts/plugins/formwizard/jquery.bootstrap.wizard.js</js>
+    <js>/themes/metronic/statics/scripts/plugins/textarea/jquery.textarea.js</js>
+  </group>
+  <group name="themes_metronic_metronic">
+  	<css>/themes/metronic/statics/skins/metronic/style.css</css>
+  	<css>/themes/metronic/statics/skins/metronic/plugins/uniform/css/uniform.default.css</css>
+  	<css>/themes/metronic/statics/skins/metronic/module/common.css</css>
+  	<css>/themes/metronic/statics/skins/metronic/css/themes/zhenkf.css</css>
+  	<css>/themes/metronic/statics/skins/metronic/module/appmar/appmar.css</css>
+    <css>/themes/metronic/statics/skins/metronic/module/error/error.css</css>
+  	<css>/themes/metronic/statics/skins/metronic/override.css</css>  	
+  </group>
+  <group name="themes_metronic_metronic_ie8">
+  	<css>/themes/metronic/statics/skins/metronic/ie8/plugins/bootstrap/css/bootstrap.min.css</css>
+  	<css>/themes/metronic/statics/skins/metronic/ie8/plugins/font-awesome/css/font-awesome.min.css</css>
+  	<css>/themes/metronic/statics/skins/metronic/ie8/css/style-metro.css</css>
+  	<css>/themes/metronic/statics/skins/metronic/ie8/css/style.css</css>
+  	<css>/themes/metronic/statics/skins/metronic/ie8/plugins/uniform/css/uniform.default.css</css>
+  	<css>/themes/metronic/statics/skins/metronic/ie8/module/common.css</css>
+  	<css>/themes/metronic/statics/skins/metronic/ie8/css/themes/zhenkf.css</css>
+  	<css>/themes/metronic/statics/skins/metronic/module/appmar/appmar.css</css>
+    <css>/themes/metronic/statics/skins/metronic/module/error/error.css</css>
+  	<css>/themes/metronic/statics/skins/metronic/override.css</css>  
+  </group>
+  
+  <group name="wfdesigner_base">
+  	<js>/themes/metronic/modules/workflow_designer/lib/prototype-1.5.1.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/lib/path_parser.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/lib/ext-2.0.2/adapter/ext/ext-base.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/lib/ext-2.0.2/ext-all.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/lib/ext-2.0.2/RowExpander.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/lib/ext-2.0.2/color-field.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/lib/handlebars-1.0.0.beta.6.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/notifications.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/CFInstall.min.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/lib/math.uuid.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/lib/ext_utils.js</js>
+  </group>
+  <group name="wfdesigner_codemirror">
+  	<js>/themes/metronic/modules/workflow_designer/js/CodeMirror/cm.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/CodeMirror/cmxml.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/CodeMirror/cmjs.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/CodeMirror/cmcss.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/CodeMirror/cmclike.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/CodeMirror/cmhtmlmixed.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/CodeMirror/closetags.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/CodeMirror/hint.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/CodeMirror/hintjbpm.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/CodeMirror/cmsearch.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/CodeMirror/cmsearchcursor.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/CodeMirror/cmdialog.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/CodeMirror/cmfold.js</js>
+  </group>
+  <group name="wfdesigner_oryx">
+  	<js>/themes/metronic/modules/workflow_designer/js/kickstart.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/config.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/oryx.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/clazz.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/main.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/utils.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/erdfparser.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/datamanager.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/SVG/editpathhandler.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/SVG/minmaxpathhandler.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/SVG/pointspathhandler.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/SVG/svgmarker.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/SVG/svgshape.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/SVG/label.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/Math/math.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/StencilSet/stencil.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/StencilSet/property.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/StencilSet/propertyitem.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/StencilSet/complexpropertyitem.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/StencilSet/rules.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/StencilSet/stencilset.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/StencilSet/stencilsets.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/command.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/bounds.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/uiobject.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/abstractshape.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/canvas.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/svgDrag.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/shape.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/Controls/control.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/Controls/magnet.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/Controls/docker.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/node.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/edge.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/abstractPlugin.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/abstractLayouter.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Core/abstractDragTracker.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/diff_match_patch.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/itemdeleter.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/jsonpath.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/imageviewer.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/svgviewer.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/panelcollapsedtitle.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/i18n/translation_zh_cn.js</js>
+  </group>
+  <group name="wfdesigner_oryx_plugins">
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/selectssperspective.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/toolbar.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/saveplugin.js</js>
+  	<!-- <js>/themes/metronic/modules/workflow_designer/js/Plugins/uuidRepository.js</js> -->
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/shapemenu.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/shaperepository.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/propertywindow.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/canvasResize.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/view.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/dragdropresize.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/dictionary.js</js>
+  	<!-- <js>/themes/metronic/modules/workflow_designer/js/Plugins/renameShapes.js</js> -->
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/businessPropertySetup.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/arrangement.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/grouping.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/dragDocker.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/addDocker.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/selectionframe.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/shapeHighlighting.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/edit.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/undo.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/keysMove.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/Layouter/edgeLayouter.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/syntaxchecker.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/regexTextEditor.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/constraintExpressionEditor.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/overlay.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/canvastitle.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/DataAssignment/extendedDataAssignmentEditor.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/DataAssignment/FieldDataAssignmentEditors.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/nodeXMLViewer.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/theme.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/dockerCreation.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/taskpropertiesupdater.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/patterncreator.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/notificationsplugin.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/js/Plugins/activenodeshighlighter.js</js>
+  </group>
+  <group name="wfdesigner_base_css">
+  	<css>/themes/metronic/modules/workflow_designer/css/style-all.css</css>
+  </group>
+  <group name="wfdesigner_diagram_css">
+  	<css>/themes/metronic/modules/workflow_designer/diagram-viewer/js/qtip/jquery.qtip.min.css</css>
+  	<css>/themes/metronic/modules/workflow_designer/diagram-viewer/style.css</css>
+  </group>
+  <group name="wfdesigner_diagram_js">
+  	<js>/themes/metronic/modules/workflow_designer/diagram-viewer/js/jstools.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/diagram-viewer/js/lib/raphael_uncompressed.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/diagram-viewer/js/jquery/jquery.progressbar.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/diagram-viewer/js/jquery/jquery.asyncqueue.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/diagram-viewer/js/Color.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/diagram-viewer/js/Polyline.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/diagram-viewer/js/ActivityImpl.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/diagram-viewer/js/ActivitiRest.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/diagram-viewer/js/LineBreakMeasurer.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/diagram-viewer/js/ProcessDiagramGenerator.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/diagram-viewer/js/ThemeCanvas.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/diagram-viewer/js/ThemeHighlight.metro.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/diagram-viewer/js/ProcessDiagramCanvas.js</js>
+  	<js>/themes/metronic/modules/workflow_designer/diagram-viewer/js/qtip/jquery.qtip.min.js</js>
+  </group>
+  <group name="metronic_html_editor_css">
+  	<css>/themes/metronic/modules/html_editor/css/bootstrap-combined.min.css</css>
+  	<css>/themes/metronic/modules/html_editor/css/font-awesome.min.css</css>
+  	<css>/themes/metronic/modules/html_editor/css/jquery-ui.css</css>
+  	<css>/themes/metronic/modules/html_editor/css/designer.min.css</css>
+  	<css>/themes/metronic/modules/html_editor/css/designer-responsive.min.css</css>
+  	<css>/themes/metronic/modules/html_editor/css/designer-skins.min.css</css>
+  	<css>/themes/metronic/modules/html_editor/css/editor.css</css>
+  </group>
+  <group name="metronic_html_editor_js">
+  	<js>/themes/metronic/modules/html_editor/js/lib/angular-loader.js</js>
+  	<js>/themes/metronic/modules/html_editor/js/lib/js-inherit.js</js>
+  </group>
+  <group name="metronic_html_editor_body_js">
+  	<js>/themes/metronic/modules/html_editor/js/lib/jquery.ui.touch-punch.min.js</js>
+  	<js>/themes/metronic/modules/html_editor/js/lib/jquery.htmlClean.js</js>
+  	<js>/themes/metronic/modules/html_editor/js/lib/jquery.removeClass.js</js>
+  	<js>/themes/metronic/modules/html_editor/js/lib/jsrender.js</js>
+  	<js>/themes/metronic/modules/html_editor/ckeditor/ckeditor.js</js>
+  	<js>/themes/metronic/modules/html_editor/ckeditor/config.js</js>
+  	<js>/statics/scripts/plugins/ace/src-min-noconflict/ace.js</js>
+  </group>
+</groups>

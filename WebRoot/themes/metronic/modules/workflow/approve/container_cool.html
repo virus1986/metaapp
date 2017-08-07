@@ -1,0 +1,327 @@
+<div th:id="${viewId}" class="container-fluid workflow-con" style="background:#f5f5f5;">
+	<div class="approve-buttons" th:include="'/themes/' + ${theme} + '/modules/workflow/approve/approve_button_cool' :: 'buttons'"></div>	
+	<!-- 内容区域 -->
+	<div class="content" style="margin:0px;padding:0px 2px;overflow:hidden;">
+		 <div class="tabbable tabbable-custom" th:id="'workflow-approve-tab'+${viewId}">
+            <ul class="nav nav-tabs order-tab" style="margin-bottom: 10px">
+              <li><a th:href="'#baseInfo'+${viewId}">基本信息</a></li>
+              <li th:if="${type!='draft'}"><a th:href="'#workflow-history'+${viewId}">处理轨迹</a></li>
+              <li th:id="'workflow-diagram-tabli'+${viewId}"><a th:href="'#workflow-runtime-diagram'+${viewId}">流程图</a></li>
+            </ul>
+           
+            <div class="tab-pane active" th:id="'baseInfo'+${viewId}">
+            	<div th:if="${type=='draft'}" class="workflow-param-con form-horizontal">
+					  <div class="control-group" th:if="${wfProc.getFreestyle()}">
+					    <label class="control-label"><span class="required-star">*</span>收件人:</label>
+					    <div class="controls">
+					      <span class="inputpro-img input-append workflow-param-length" style="margin-bottom:0px;"> 
+							<input type="text" name="candidatesText" class="workflow-param-inputpro"/>
+							<span class="add-on btn select-candidates-actor" > <i class=" icon-search"></i>
+							</span>
+						  </span>
+						  <label class="checkbox contersignTagLabel" style="display:block;">
+					        <input name="contersignTag" type="checkbox"/> 每个收件人都要处理
+					      </label>
+					    </div>
+					  </div>
+					  <div class="control-group">
+					    <label class="control-label">抄送人:</label>
+					    <div class="controls">
+					      <span th:if="${ccCandidatesDesc==null}" class="inputpro-img input-append workflow-param-length" style="margin-bottom:0px;"> 
+							<input type="text" name="ccCandidatesText" class="workflow-param-inputpro"/>
+							<span class="add-on btn select-ccCandidates-actor" > <i class=" icon-search"></i>
+							</span>
+						  </span>
+						  <div th:if="${ccCandidatesDesc!=null}" th:text="${ccCandidatesDesc}" style="font-size: 14px;padding-top: 2px;"> 
+						  </div>
+					    </div>
+					  </div>
+					  <div class="control-group">
+					    <label class="control-label">主题:</label>
+					    <div class="controls">
+					      <input type="text" name='procTitle' class="workflow-param-input" th:value="${wfProc.getFreestyle()}?${wfProc.procName}:''"/>
+					    </div>
+					  </div>
+            	</div>
+				 <div id="businessFormContainer" style="min-height: 100px">
+				 </div>
+				 <!-- <div id="businessFormAttachment" class="m-top20"></div> -->
+				 <div id="approveContainer" th:if="${type!='draft' and type!='read' and type!='view'  and not(#maps.containsKey(actExProps,'notNeedApprove'))} or ${type=='todo' and todoDraft}"></div>
+				 <div id="flowHistoryContainer" th:if="${type!='draft'}"></div>
+			</div>
+			<div class="tab-pane" th:id="'workflow-history'+${viewId}" th:if="${type!='draft'}">
+			</div>
+			<div class="tab-pane" th:id="'workflow-runtime-diagram'+${viewId}" >
+			</div>
+         </div>
+	</div>
+	<script th:inline="javascript">
+	//<![CDATA[
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var context=/*[['#'+${viewId}]]*/;
+		var businessProcId=/*[[${wfProc.procId}]]*/;
+		var freestyle=/*[[${wfProc.getFreestyle()}]]*/;
+		var procDefId=/*[[${wfProc.procDefId}]]*/;
+		var businessDataId=/*[[${businessDataId}]]*/;
+		var taskId=/*[[${taskId}]]*/;
+		var notifyId=/*[[${notifyId}]]*/;
+		var type=/*[[${type}]]*/;
+		var businessFormUrl=/*[[${businessFormUrl}]]*/;
+		var procInstId=/*[[${procInstId}]]*/;
+		var isadmin=/*[[${queryString['_isadmin']}]]*/;
+		var masterPage=/*[[${queryString['_masterpage']}]]*/;
+		var _inframe=/*[[${queryString['_inframe']}]]*/;
+		var delegatorId=/*[[${delegatorId}]]*/;
+		var todoDraft=/*[[${todoDraft}]]*/;
+		var nextIsNeedSelectUser=/*[[${nextIsNeedSelectUser}]]*/;
+		var nextAllActivity=/*[[${nextAllActivity}]]*/;
+		
+		var countersign=/*[[${countersign}]]*/;
+		var canCountersign=/*[[${canCountersign}]]*/;
+		var canFinish=/*[[${canFinish}]]*/;
+		var creatorId=/*[[${creatorId}]]*/;
+		var creatorName=/*[[${creatorName}]]*/;
+		var wfDraft=/*[[${wfDraft}]]*/;
+		var firstStepActors=/*[[${firstStepActors}]]*/;
+		var replyActor=null;
+		var diagramTabliId='workflow-diagram-tabli'+viewId;
+		var diagramTabDivId="workflow-runtime-diagram"+viewId;
+		if(creatorId){
+			replyActor=[{id:creatorId,name:creatorName,type:"user"}];
+		}
+		
+		if(_inframe=="1"||_inframe==1){
+			masterPage=1;
+		}
+		var isInTab=(masterPage==null);
+		$(".workflow-btns",context).each(function(i,bt){
+			var self=$(bt);
+			var btns=self.find("button");
+			if(!btns.length){
+				self.hide();
+			}
+		});
+		reqModule(["module/workflow/workflow_container_manager"],function(workflowContainerManager){
+			var containerOptions={
+				context:context,
+				viewId:viewId,
+				procInstId:procInstId,
+				procDefId:procDefId,
+				businessFormUrl:businessFormUrl,
+				type:type,
+				businessDataId:businessDataId,
+				todoDraft:todoDraft,
+				isInTab:isInTab,
+				hideAttachment:true
+			};
+			var wfContainerManager=workflowContainerManager.createNew(containerOptions);
+		});
+		
+		var _options={
+				context:context,
+				businessProcId:businessProcId,
+				businessDataId:businessDataId,
+				taskId:taskId,
+				notifyId:notifyId,
+				type:type,
+				procInstId:procInstId,
+				procDefId:procDefId,
+				businessFormUrl:businessFormUrl,
+				isInTab:isInTab,
+				delegatorId:delegatorId,
+				nextIsNeedSelectUser:nextIsNeedSelectUser,
+				nextAllActivity:nextAllActivity,
+				freestyle:freestyle,
+				countersign:countersign,
+				canCountersign:canCountersign,
+				canFinish:canFinish,
+				replyActor:replyActor
+		};
+		reqModule(["module/workflow/workflow_manager"],function(WorkflowManager){
+			var workflowManager=WorkflowManager.createNew(_options);
+			var $ccCandidates=$(".select-ccCandidates-actor",context);
+			var ccCandidatesInput=$("[name='ccCandidatesText']",context);
+			var $candidates=$(".select-candidates-actor",context);
+			var candidatesInput=$("[name='candidatesText']",context);
+			var $contersignTag=$("[name=contersignTag]",context);
+			var $contersignTagLabel=$(".contersignTagLabel",context);
+			var $procTitle=$("[name=procTitle]",context);
+			function setCandidatesDesc(actors,cInput){
+				if(jQuery.isArray(actors)){
+					var desc=[];
+					jQuery.each(actors,function(i,a){
+						desc.push(a.name);
+					});
+					cInput.val(desc.join(","));
+				}
+			};
+			if(type=="draft"){
+				$contersignTagLabel.hide();
+				var needSetFirst=true;
+				if(wfDraft){
+					if(wfDraft.businessData){
+						var draftBData=JSON.parse(wfDraft.businessData);
+						var draftCandidates=draftBData.candidates;
+						var draftCcCandidates=draftBData.ccCandidates;
+						var draftTitle=draftBData.procTitle;
+						if(draftTitle){
+							$procTitle.val(draftTitle);
+						}
+						if(draftCandidates){
+							workflowManager.FlowOpts.setUserToFowardOnlyOutside(draftCandidates);
+							setCandidatesDesc(draftCandidates,candidatesInput);
+							if(draftCandidates.length>1){
+								$contersignTagLabel.show();
+							}
+							needSetFirst=false;
+						}
+						if(draftCcCandidates){
+							workflowManager.FlowOpts.setUserToSendToReadOnlyOutside(draftCcCandidates);
+							setCandidatesDesc(draftCcCandidates,ccCandidatesInput);
+						}
+						if(draftBData.isCounterSign){
+							$contersignTagLabel.show();
+							$contersignTag.attr("checked","checked");
+							$contersignTag.parent().addClass("checked");
+						}
+					}
+				}
+				if(needSetFirst&&jQuery.isArray(firstStepActors)){
+					workflowManager.FlowOpts.setUserToFowardOnlyOutside(firstStepActors);
+					setCandidatesDesc(firstStepActors,candidatesInput);
+					if(firstStepActors.length>1){
+						$contersignTagLabel.show();
+					}
+				}
+				$ccCandidates.click(function(){
+					workflowManager.FlowOpts.setUserToSendToReadOutside(function(actors){
+						if(jQuery.isArray(actors)){
+							setCandidatesDesc(actors,ccCandidatesInput);
+						}
+					});
+				});
+				$candidates.click(function(){
+					workflowManager.FlowOpts.setUserToForwardOutside(function(actors){
+						if(jQuery.isArray(actors)){
+							if(actors.length>1){
+								$contersignTagLabel.show();
+							}else{
+								$contersignTagLabel.hide();
+								$contersignTag.removeAttr("checked");
+								$contersignTag.parent().removeClass("checked");
+							}
+							setCandidatesDesc(actors,candidatesInput);
+						}
+					});
+				});
+				$contersignTag.click(function(){
+					var isChecked=$(this).is(":checked");
+					workflowManager.FlowOpts.setUserToFowardCountersignTagOutside(isChecked);
+				});
+			}
+			if(type=="draft"&&(!todoDraft)){
+				return false;
+			}
+			var taskHistoryUrl=Global.contextPath+"/workflow/process/history";
+			taskHistoryUrl=Urls.appendParam(taskHistoryUrl,"taskId",taskId);
+			taskHistoryUrl=Urls.appendParam(taskHistoryUrl,"type",type);
+			taskHistoryUrl=Urls.appendParam(taskHistoryUrl,"container","history_cool");
+			taskHistoryUrl=Urls.appendParam(taskHistoryUrl,"freestyle",freestyle);
+			var workflowHistoryTab=/*[['#workflow-history'+${viewId}]]*/;
+			CommonLoader.loadData($("#flowHistoryContainer",context),taskHistoryUrl,function(){
+				$(workflowHistoryTab).html($("#flowHistoryContainer",context).html()).find(".process-history-title").hide();
+				var unTaskUsers=[];
+				$(".task-user",context).each(function(){
+					var taskId=$(this).data("taskId");
+					if(!taskId){
+						return;
+					}
+					var isExist=false;
+					$.each(unTaskUsers,function(i,item){
+						if(item==taskId){
+							isExist=true;
+							return false;
+						}
+					});
+					if(!isExist){
+						unTaskUsers.push(taskId);					
+					}
+					
+					$(".reasignuser",this).on("click",function(){
+						/* var btnSelf=$(this);
+						workflowManager.FlowForm.doTransfer(btnSelf,{taskId:taskId,userComment:"管理员手工分配用户"}); */
+						var btnSelf=$(this);
+						var url=Global.contextPath+"/workflow/process/transferTo";
+						$.openLink(url,{},function(res){
+							if(res){
+								workflowManager.FlowForm.doTransfer(btnSelf,$.extend(res,{taskId:taskId}));	
+							}
+						});
+					});
+					$(".rejectToStarter0",this).on("click",function(){
+						var btnSelf=$(this);
+						$.messageBox.confirm({message:"请确认是否将当前步骤退回拟稿人,拟稿人处理完后，直接回到当前步骤?",callback:function(isConfirm){
+							if(isConfirm){
+								var url=Global.contextPath+"/workflow/process/setUserComment";
+								$.openLink(url,{},function(res){
+									if(res){
+										workflowManager.FlowForm.doRejectToStarter(btnSelf,"0",{taskId:taskId,userComment:res.userComment||"管理员退回拟稿人"},true);
+									}
+								});
+							}
+						}});
+					});
+					$(".rejectToStarter",this).on("click",function(){
+						var btnSelf=$(this);
+						$.messageBox.confirm({message:"请确认是否将当前步骤退回拟稿人,拟稿人处理完后，重新走流程?",callback:function(isConfirm){
+							if(isConfirm){
+								var url=Global.contextPath+"/workflow/process/setUserComment";
+								$.openLink(url,{},function(res){
+									if(res){
+										workflowManager.FlowForm.doRejectToStarter(btnSelf,"1",{taskId:taskId,userComment:res.userComment||"管理员退回拟稿人"},true);
+									}
+								});
+							}
+						}});
+					});
+					$(".jumpTo",this).on("click",function(){
+						var btnSelf=$(this);
+						var url=Global.contextPath+"/workflow/process/jumpTo";
+						url=Urls.appendParam(url,"procInstId",_options.procInstId);
+						$.openLink(url,{},function(res){
+							if(res){
+								workflowManager.FlowForm.jumpTo(btnSelf,$.extend(res,{taskId:taskId}));	
+							}
+						});
+					});
+				});	
+				setTaskUser();
+				
+				function setTaskUser(){
+					if(unTaskUsers.length<=0) return;
+					var cur=unTaskUsers.pop();
+					workflowManager.getTaskUsers(cur,function(users){
+						if(users){
+							var html="";
+							$.each(users,function(i,user){	
+								html+="<a href='javascript://' data-user-id='"+user.id+"' data-login-id='"+user.loginId+"'>"+user.name+"</a> ";
+							});
+							
+							$("[data-task-id='"+cur+"'] .task-user-list").on("click","a",function(){
+								var userId=$(this).data("userId");
+								var url=Global.contextPath+"/entities/user/view?id="+userId;
+								$.openLink(url,{showType:"pop-up",title:"用户信息"});
+							}).html(html);
+						}
+						setTaskUser();
+					});
+				}
+			});
+			
+		}); 
+		
+	});
+	//]]>
+	</script>
+</div>

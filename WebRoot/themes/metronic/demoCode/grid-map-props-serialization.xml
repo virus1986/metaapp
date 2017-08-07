@@ -1,0 +1,10 @@
+<customSettings>
+    <entry>
+        <key>testKey</key>
+        <value xsi:type="xs:string">testValue</value>
+    </entry>
+    <entry>
+        <key>testKey1</key>
+        <value xsi:type="xs:string">testValue2</value>
+    </entry>
+</customSettings>

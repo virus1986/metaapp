@@ -1,0 +1,1 @@
+organization实体主键为orgId，系统为id【ref-entity="uamOrganization"，target-entity="uamOrganization"对应refId修复】

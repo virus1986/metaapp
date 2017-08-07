@@ -1,0 +1,110 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:850px;">
+<style>
+<!--
+#createScriptLibForm {
+	height: 400px;
+}
+#scriptContent {
+	height: 350px;
+	border: 1px solid #ccc;
+	font-size:14px;
+}
+-->
+</style>
+  <form id="createScriptLibForm"  th:object="${entity}" data-widget="validator" th:action="${requestUrl}" method="post" class="form-horizontal ajaxpost">
+  <div class="ui-dialog-content container-fluid ">
+	<table class="form-table form-bordered col4-fluid" id="createScriptLibTable">
+		<tbody>
+			<tr>
+				<th><label><meta:display-name field="displayName"/>:</label></th>
+				<td>
+				<input meta:field="displayName" class="input-large" th:attr="data-validator='required,length[1,36]'" th:placeholder="#{validation.string36}"/>
+				</td>
+				
+				<th><label><meta:display-name field="name"/>:</label></th>
+				<td>
+				<input th:if="${action} == 'CREATE'" meta:field="name" th:attr="data-validator='required,length[1,36],name,func[chkLibNameDuplicate]'" 
+						th:placeholder="#{validation.autoByDisplayName}" class="input-large"/>
+				<input th:if="${action} == 'EDIT'" meta:field="name" disabled="true" 
+					 class="input-large"/>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+  	<input type="hidden" meta:field="content"/>
+  	<div id="scriptContent"></div>
+  </div>
+	<div class="ui-dialog-buttonset">
+		<button type="submit" class="btn btn-primary" th:text="#{common.save}"></button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+	</form>
+<script th:inline="javascript">
+//<![CDATA[ 
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var context = "#"+viewId;
+		var action = /*[[${action}]]*/ "CREATE";
+		var contentEditor = "scriptContent";
+		var editor = null;
+		
+		function init(){
+			if(action == "CREATE"){
+				setCurrentTitle(context, i18n.t("scriptlib.create.title"));	
+				$("[name='displayName']", context).keyup(function(){
+					$("[name='name']", context).val($(this).toPinyin().replace(/\s*/g,''));
+				});
+			} else {
+				var name = $("[name='displayName']", context).val();
+				setCurrentTitle(context, i18n.t("scriptlib.edit.title",name));
+			}
+			initEditor(contentEditor);
+			Page.init(context);
+			$("#displayName", context).focus();
+		};
+		
+		reqModule(["ace"],function(){
+			init();
+		});
+		
+		function initEditor(id){
+		    editor = ace.edit(id);
+		    editor.setTheme("ace/theme/eclipse");
+		    editor.getSession().setMode("ace/mode/javascript");
+		    var content = $("#content", context).val();
+		    editor.setValue(content);
+		    editor.setShowPrintMargin(false);
+		    editor.clearSelection();
+		}
+		
+		$("#createScriptLibForm", context).data("beforeSerialize", function(){
+			var editorValue = editor.getValue();
+			$("[name='content']",context).val(editorValue);
+		});
+	});
+	function chkLibNameDuplicate(caller){
+		var viewId=/*[[${viewId}]]*/;
+		var context = "#"+viewId;
+		var action = /*[[${action}]]*/ "CREATE";
+		var name = $(caller, context).val();
+		var result = {isError:false,errorInfo:""};
+		if(action == "EDIT") return result;
+		$.ajax({
+			url		:	Global.contextPath + "/validation/scriptLib_name_unique",
+			data	:	{
+							libName  : name
+						},
+			async	:	false,
+			success	:	function(data){
+							if (data == false) {
+								result = {isError:true,errorInfo:i18n.t("scriptlib.nameAlreadyExist")};
+							} else {
+								result = {isError:false,errorInfo:""};
+							}
+						}
+		});
+		return result;
+	}
+//]]> 
+</script>
+</div>

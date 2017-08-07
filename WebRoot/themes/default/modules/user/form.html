@@ -1,0 +1,83 @@
+<div th:id="${viewId}" class="panel apply-panel"
+	style="min-width: 950px;">
+	<form id="entityForm" th:object="${entity}" th:action="${requestUrl}"
+		method="post" data-widget="validator" class="form-horizontal ajaxpost">
+		<input type="hidden" meta:field="*{id}" />
+		<div class="table-dialog">
+			<div class="ui-dialog-title" th:switch="${action}">
+				<span th:case="'EDIT'" th:text="#{common.edit}+${metaEntity.displayName}"/>
+		        <span th:case="'CREATE'" th:text="#{common.create}+${metaEntity.displayName}"/>
+		        <span th:case="'VIEW'" th:text="#{common.view}+${metaEntity.displayName}"/>
+		        <span th:case="*" th:text="#{common.notExistAction}+${action}"/>
+			</div>
+			<div class="ui-dialog-content container-fluid">
+				<div class="row-fluid">
+					<div class="span2 form-left">
+						<div class="dialog-menu" id="left-navbar"></div>
+						<meta:relation view-container=".form-right"></meta:relation>
+					</div>
+					<div class="span10 form-right" data-spy="scroll"
+						data-target="#left-navbar">
+						<div>
+							<table class="form-section form-table col4-fluid">
+								<caption>
+									<span th:text="#{security.user}"></span>
+								</caption>
+								<tr>
+									<th><label><meta:display-name field="name"/>:</label></th>
+									<td colspan="1"><input  meta:field="name" />
+									</td>
+									<th><label><meta:display-name field="loginId"/>:</label></th>
+									<td colspan="1"><input  meta:field="loginId" />
+									</td>
+								</tr>
+								<tr>
+									<th><label><meta:display-name field="password"/>:</label></th>
+									<td colspan="1"><input  meta:field="password" />
+									</td>
+									<th><label><meta:display-name field="status"/>:</label></th>
+									<td colspan="1"><input  meta:field="status" />
+									</td>
+								</tr>
+								<tr>
+									<th><label><meta:display-name field="email"/>:</label></th>
+									<td colspan="1"><input  meta:field="email" />
+									</td>
+									<th><label><meta:display-name field="mobilePhone"/>:</label></th>
+									<td colspan="1"><input 
+										meta:field="mobilePhone" /></td>
+								</tr>
+								<tr>
+									<th><label><meta:display-name field="sex"/>:</label></th>
+									<td colspan="1"><input  meta:field="sex" />
+									</td>
+									<th><label><meta:display-name field="telephone"/>:</label></th>
+									<td colspan="1"><input 
+										meta:field="telephone" /></td>
+								</tr>
+								<tr>
+									<th><label><meta:display-name relation="Roles"/>:</label></th>
+									<td colspan="3"><input meta:ref="Role::Roles" /></td>
+								</tr>
+							</table>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui-dialog-buttonset">
+				<button th:if="${action} != 'VIEW'" type="submit" name="save"
+					class="btn btn-primary" th:text="#{common.save}"></button>
+				<button type="button" name="close" class="btn closeBtn"
+					th:text="(${action} != 'VIEW')? #{common.cancel} : #{common.close}"></button>
+			</div>
+		</div>
+	</form>
+	<script type="text/javascript" th:inline="javascript">
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		Form.init("#"+viewId,"#entityForm");
+		Page.init("#"+viewId,{isInitFormNav:true});
+	});
+</script>
+</div>

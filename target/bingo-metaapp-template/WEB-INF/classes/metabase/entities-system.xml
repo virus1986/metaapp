@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata xmlns="http://schemas.bingosoft.net/metabase/metadata"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://schemas.bingosoft.net/metabase/metadata http://schemas.bingosoft.net/metabase/1.0/metadata.xsd">
+	<entities>	
+		<entity pack="system" is-display="true" display-name="用户" name="User" is-system="true" table="uam_user">
+            <field column="org_id" data-type="Guid" is-display="true" display-name="默认组织" display-order="1" field-type="SingleLineText" unique="false" name="orgId" nullable="true" ref-entity="uamOrganization" ref-to="id" sql-type="varchar" summary="默认组织" is-system="true"/>
+            <field column="user_num" length="128" data-type="String" is-display="true" display-name="工号" display-order="2" field-type="SingleLineText" unique="false" name="userNum" nullable="true" sql-type="varchar" summary="工号" is-system="true"/>
+            <field column="user_code" length="128" data-type="String" is-display="true" display-name="用户code" display-order="2" field-type="SingleLineText" unique="false" name="userCode" nullable="true" sql-type="varchar" summary="用户code" is-system="true"/>
+            <field column="name" data-type="String" is-display="true" display-name="用户名" display-order="3" field-type="SingleLineText" unique="false" name="name" nullable="false" semantics="Title" sql-type="varchar" summary="用户名" is-system="true"/>
+            <field column="full_name" data-type="String" is-display="true" display-name="用户全名" display-order="4" field-type="SingleLineText" unique="false" name="fullName" nullable="true" sql-type="varchar" summary="用户全名" is-system="true"/>
+            <field column="login_id" data-type="String" is-display="true" display-name="登录名" display-order="5" field-type="SingleLineText" unique="true" name="loginId" nullable="false" sql-type="varchar" summary="登录名" is-system="true"/>
+            <field column="password" length="100" data-type="String" is-display="true" display-for="{form:false,list:false}" display-name="密码" display-order="6" field-type="Password" unique="false" name="password" nullable="true" sql-type="varchar" summary="密码" is-system="true">
+                <field-type-params>
+                    <param name="length" value="100"/>
+                </field-type-params>
+            </field>
+            <field column="domain" data-type="String" is-display="true" display-name="域名称" display-order="7" field-type="SingleLineText" unique="false" name="domain" nullable="true" sql-type="varchar" summary="域名称" is-system="true"/>
+            <field column="type" data-type="SmallInt" default-value="1" is-display="true" display-for="{form:true,list:true}" display-name="用户类型" display-order="8" field-type="SingleOption" input-type="Dropdown" unique="false" name="type" nullable="true" sql-type="smallint" summary="用户类型" is-system="true">
+                <options>
+                    <item name="用户账号" value="1"/>
+                    <item name="系统账号" value="2"/>
+                </options>
+            </field>
+            <field column="status" data-type="SmallInt" default-value="1" is-display="true" display-for="{form:true,list:true}" display-name="用户状态" display-order="9" field-type="SingleOption" input-type="Dropdown" unique="false" name="status" nullable="true" sql-type="smallint" summary="用户状态" is-system="true">
+                <options>
+                    <item name="启用" value="1"/>
+                    <item name="停用" value="0"/>
+                </options>
+            </field>
+            <field column="sex" data-type="SmallInt" default-value="0" is-display="true" display-for="{form:true,list:true}" display-name="性别" display-order="10" field-type="SingleOption" input-type="Dropdown" unique="false" name="sex" nullable="true" sql-type="smallint" summary="性别" is-system="true">
+                <options>
+                    <item name="男" value="1"/>
+                    <item name="女" value="2"/>
+                    <item name="未设置" value="0"/>
+                </options>
+            </field>
+            <field column="rank" data-type="Integer" is-display="true" display-for="{list:true,form:false}" display-name="用户级别" display-order="11" field-type="Integer" unique="false" name="rank" nullable="true" sql-type="integer" summary="用户级别" is-system="true"/>
+            <field column="email" data-type="String" is-display="true" display-name="邮件" display-order="12" field-type="SingleLineText" unique="false" name="email" nullable="true" sql-type="varchar" summary="邮件" is-system="true"/>
+            <field column="mobile" length="255" data-type="String" is-display="true" display-for="{form:true,list:true}" display-name="手机1" display-order="13" field-type="SingleLineText" unique="false" name="mobilePhone" nullable="true" sql-type="varchar" summary="手机" is-system="true">
+                <field-type-params>
+                    <param name="length" value="255"/>
+                </field-type-params>
+            </field>
+            <field column="mobile2" length="500" data-type="String" is-display="true" display-for="{form:true,list:true}" display-name="手机2" display-order="14" field-type="SingleLineText" unique="false" name="mobile2" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="mobile3" length="500" data-type="String" is-display="true" display-for="{form:true,list:true}" display-name="手机3" display-order="15" field-type="SingleLineText" unique="false" name="mobile3" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="telephone" length="255" data-type="String" is-display="true" display-for="{form:true,list:true}" display-name="工作电话" display-order="16" field-type="SingleLineText" unique="false" name="telephone" nullable="true" sql-type="varchar" summary="电话" is-system="true">
+                <field-type-params>
+                    <param name="length" value="255"/>
+                </field-type-params>
+            </field>
+            <field column="home_telephone" length="500" data-type="String" is-display="true" display-for="{form:true,list:true}" display-name="家庭电话" display-order="17" field-type="SingleLineText" unique="false" name="homeTelephone" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="im" data-type="String" is-display="true" display-name="即时通讯" display-order="18" field-type="SingleLineText" unique="false" name="im" nullable="true" sql-type="varchar" summary="即时通讯" is-system="true"/>
+            <field column="birthday" data-type="Timestamp" is-display="true" display-name="生日" display-order="19" field-type="Timestamp" unique="false" name="birthday" nullable="true" sql-type="timestamp" summary="生日" is-system="true"/>
+            <field column="picture" data-type="String" is-display="true" display-for="{form:true,list:true}" display-name="头像" display-order="20" field-type="Photo" unique="false" name="picture" nullable="true" sql-type="varchar" summary="图片" is-system="true">
+                <field-type-params>
+                    <param name="width" value="100"/>
+                    <param name="height" value="100"/>
+                </field-type-params>
+            </field>
+            <field column="order_no" data-type="Integer" default-value="0" is-display="true" display-for="{list:true,form:false}" display-name="排序" display-order="21" field-type="Integer" unique="false" name="orderNo" nullable="true" sql-type="integer" summary="排序" is-system="true"/>
+            <field column="description" length="1000" data-type="String" is-display="true" display-for="{form:true,list:true}" display-name="描述" display-order="22" field-type="MultiLineText" unique="false" name="description" nullable="true" sql-type="varchar" summary="描述" is-system="true">
+                <field-type-params>
+                    <param name="length" value="1000"/>
+                </field-type-params>
+            </field>
+            <field column="created_by" length="500" data-type="String" default-value="@{env.User.Id}" is-display="true" display-for="{form:false,list:false}" display-name="创建人" display-order="23" field-type="SingleLineText" unique="false" name="createdBy" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="created_date" data-type="Timestamp" default-value="@{env.Now}" is-display="true" display-for="{list:true,form:false}" display-name="创建时间" display-order="24" field-type="Timestamp" unique="false" name="createdDate" nullable="true" sql-type="timestamp" is-system="false"/>
+            <field column="disk_quota" length="500" data-type="String" is-display="true" display-for="{form:true,list:true}" display-name="网盘配额" display-order="25" field-type="SingleLineText" unique="false" name="diskQuota" nullable="true" sql-type="varchar" summary="网盘配额" is-system="false">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="app_password" length="500" data-type="String" is-display="true" display-for="{form:false,list:false}" display-name="应用专用密码" display-order="26" field-type="SingleLineText" unique="false" name="appPassword" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="last_updated_date" data-type="Timestamp" default-value="@{env.Now}" is-display="true" display-for="{list:true,form:false}" display-name="最近更新时间" display-order="27" field-type="Timestamp" unique="false" name="lastUpdatedDate" nullable="true" semantics="Updated" sql-type="timestamp" is-system="false"/>
+            <field column="mo_ren_xing_biao" data-type="Boolean" is-display="true" display-for="{form:true,list:true}" display-name="默认星标" display-order="100" field-type="Boolean" input-type="Tile" unique="false" name="MoRenXingBiao" nullable="true" sql-type="boolean" is-system="false"/>
+            <field column="gang_wei_miao_shu" length="500" data-type="String" is-display="true" display-for="{form:true,list:true}" display-name="岗位描述" display-order="100" field-type="SingleLineText" unique="false" name="GangWeiMiaoShu" nullable="true" sql-type="varchar" summary="从AD同步过来的用户岗位描述" is-system="false">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="last_updated_by" length="500" data-type="String" default-value="@{env.User.Id}" is-display="true" display-for="{list:true,form:false}" display-name="最近更新用户" display-order="100" field-type="SingleLineText" unique="false" name="lastUpdatedBy" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="name_pin_yin" length="500" data-type="String" is-display="true" display-for="{form:true,list:true}" display-name="用户名全拼" display-order="100" field-type="SingleLineText" unique="false" name="namePinYin" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <field column="name_p_y" length="500" data-type="String" is-display="true" display-for="{form:true,list:true}" display-name="用户名拼音首字母" display-order="100" field-type="SingleLineText" unique="false" name="namePY" nullable="true" sql-type="varchar" is-system="false">
+                <field-type-params>
+                    <param name="length" value="500"/>
+                </field-type-params>
+            </field>
+            <id column="ID" data-type="Guid" is-display="false" display-name="userId" display-order="0" unique="false" name="id" nullable="false" sql-type="varchar" is-system="true"/>
+            <field column="company_id" data-type="Guid" is-display="false" display-name="所在市场" display-order="0" unique="false" name="companyId" nullable="true" sql-type="varchar" is-system="false"/>
+            <field column="cost_org_num" data-type="String" is-display="true" display-name="费用归属部门编号" display-order="1" field-type="SingleLineText" unique="false" name="costOrgNum" nullable="true" sql-type="varchar" summary="组织编号" is-system="false"/>
+            <field column="cost_org_name" length="128" data-type="String" is-display="true" display-name="费用归属部门名称" display-order="2" field-type="SingleLineText" unique="false" name="costOrgName" nullable="true" sql-type="varchar" summary="组织名" is-system="false">
+            	<field-type-params>
+                    <param name="length" value="128"/>
+                </field-type-params>
+            </field>
+            <field column="cost_company_num" data-type="String" is-display="true" display-name="费用归属公司编号" display-order="1" field-type="SingleLineText" unique="false" name="costCompanyNum" nullable="true" sql-type="varchar" summary="公司编号" is-system="false"/>
+            <field column="cost_company_name" length="128" data-type="String" is-display="true" display-name="费用归属公司名称" display-order="2" field-type="SingleLineText" unique="false" name="costCompanyName" nullable="true" sql-type="varchar" summary="公司名" is-system="false">
+            	<field-type-params>
+                    <param name="length" value="128"/>
+                </field-type-params>
+            </field>
+            <field column="bank" length="200" data-type="String" is-display="true" display-name="开户银行" display-order="1" field-type="SingleLineText" unique="false" name="bank" nullable="true" sql-type="varchar" summary="开户银行" is-system="false">
+            	<field-type-params>
+                    <param name="length" value="200"/>
+                </field-type-params>
+            </field>
+            <field column="bank_cart_num" length="200" data-type="String" is-display="true" display-name="开户银行账号" display-order="1" field-type="SingleLineText" unique="false" name="bankCartNum" nullable="true" sql-type="varchar" summary="开户银行账号" is-system="false">
+            	<field-type-params>
+                    <param name="length" value="200"/>
+                </field-type-params>
+            </field>
+            <many-to-many display-name="岗位" is-abstract="false" is-display="false" join-entity="uamUserPost" name="Posts" optional="true" target-entity="uamPost"/> -->
+            <many-to-many display-name="角色" is-abstract="false" is-display="false" join-entity="UserRole" name="Roles" optional="true" target-entity="Role"/>
+            <many-to-one display-name="所属部门" field="orgId" field-order="1" field-ref="id" is-abstract="false" is-display="false" name="department" optional="true" target-entity="uamOrganization"/>
+            <many-to-one display-name="所属公司" field="companyId" field-order="1" field-ref="id" is-abstract="false" is-display="false" name="company" optional="true" target-entity="uamOrganization"/>
+        </entity>
+    	<entity pack="system" name="PortalMenu" table="portal_menu" is-system="true" is-display="false" display-for="{manage:false}" display-name="导航菜单">
+			<id data-type="Guid" name="id"  column="menu_id" is-display="false" is-system="true" />
+			<field field-type="SingleLineText" length="150"  name="name" is-display="true" display-name="名称" semantics="Title" is-system="true"></field>
+			<field field-type="SingleLineText" length="150" name="code" is-display="true" display-name="编码" is-system="true"></field>
+			<field field-type="SingleLineText" length="350" name="url" is-display="true" display-name="访问地址" ></field>
+			<field field-type="SingleOption" data-type="Integer" name="status" default-value="1" is-display="true" display-name="菜单状态" >
+				<options>
+					<item name="启用" value="1"/>
+					<item name="禁用" value="0"/>
+				</options>			
+			</field>			
+			<field field-type="SingleLineText" length="350"  name="submenuSource" is-display="true" display-name="子菜单获取地址" ></field>
+			<field field-type="SingleOption" length="50" data-type="String" name="submenuSourceType" is-display="true" display-name="子菜单获取方式"  default-value="normal">
+				<options>
+					<item name="静态" value="normal"/>
+					<item name="动态" value="dynamic"/>
+					<item name="异步" value="asyn"/>
+				</options>			
+			</field>
+			<field field-type="Icon" length="300" width="16" height="16" name="icon" is-display="true" display-name="图标" ></field>
+			<field field-type="SingleLineText" length="50"  name="cssStyle" is-display="true" display-name="样式" is-system="true"></field>
+			<field field-type="Integer" name="displayOrder" is-display="true" display-name="显示顺序"  default-value="0"></field>
+			<field field-type="SingleOption" input-type="Dropdown" name="showType" is-display="true" display-name="打开方式"  option-set="LinkOpenType"></field>
+			<field field-type="SingleLineText" length="150" name="menuSource" is-display="true" display-name="导航来源" is-system="true"></field>
+			<field field-type="SingleLineText" length="150" name="menuSourceId" is-display="true" display-name="导航来源id" is-system="true"></field>
+			<field field-type="Integer"  name="level" is-display="true" display-name="层级" is-system="true"></field>
+			<field field-type="SingleLineText" length="150" name="modifiedBy" display-name="修改人" is-display="false" is-system="true" column="modified_by" default-value="@{env.User.Name}" nullable="true" display-for="{list:true, form:false}"></field>
+			<field field-type="DateTime" name="modifiedTime" display-name="修改时间" is-display="false" is-system="true" column="modified_time" semantics="Updated" default-value="@{env.Now}"  nullable="true" display-for="{list:true, form:false}"></field>
+			<field field-type="MultiLineText" length="500" name="description" display-name="备注" is-display="true" is-system="true"></field>
+			<many-to-one name="parentId" is-display="true" display-name="父菜单" target-entity="PortalMenu" >
+				<field column="parent_id" length="36" name="parentId" ref-to="id" is-display="true" display-name="父菜单"></field>
+			</many-to-one>
+		</entity>
+		<entity pack="system" is-display="false" display-name="系统字典" display-for="{manage:true}" inherits-persistence="PerEntity" name="SysDictionary" is-system="false" table="sys_dictionaries">
+            <field column="description" data-type="String" is-display="true" display-name="description" display-order="999" field-type="SingleLineText" unique="false" name="description" is-system="true"/>
+            <field column="code" data-type="String" is-display="true" display-name="code" display-order="999" field-type="SingleLineText" unique="false" name="code" is-system="true"/>
+            <field column="name" data-type="String" is-display="true" display-name="name" display-order="999" field-type="SingleLineText" unique="false" name="name" is-system="true"/>
+            <id column="id" data-type="Guid" is-display="false" display-name="id" display-order="999" unique="false" name="id" nullable="false" is-system="true"/>
+        </entity>
+        <entity pack="system" is-display="false" display-name="系统字典项" display-for="{manage:true}" inherits-persistence="PerEntity" name="SysDictionaryItem" is-system="false" table="sys_dictionary_items">
+            <field column="order_id" data-type="Integer" is-display="true" display-name="orderId" display-order="999" field-type="Integer" unique="false" name="orderId" is-system="true"/>
+            <field column="text" data-type="String" is-display="true" display-name="text" display-order="999" field-type="SingleLineText" unique="false" name="text" is-system="true"/>
+            <field column="dictionary_id" data-type="String" is-display="true" display-name="dictionaryId" display-order="999" field-type="SingleLineText" unique="false" name="dictionaryId" is-system="true"/>
+            <field column="status" data-type="String" is-display="true" display-name="status" display-order="999" field-type="SingleLineText" unique="false" name="status" is-system="true"/>
+            <field column="code" data-type="String" is-display="true" display-name="code" display-order="999" field-type="SingleLineText" unique="false" name="code" is-system="true"/>
+            <field column="description" data-type="String" is-display="true" display-name="description" display-order="999" field-type="SingleLineText" unique="false" name="description" is-system="true"/>
+            <id column="id" data-type="Guid" is-display="false" display-name="id" display-order="999" unique="false" name="id" nullable="false" is-system="true"/>
+        </entity>
+        <entity pack="system" is-display="false" display-name="业务序号" display-for="{manage:true}" inherits-persistence="PerEntity" name="BusinessId" is-system="false" table="sys_business_id">
+            <field column="Serial_No" data-type="Integer" is-display="true" display-name="序号" display-order="999" field-type="Integer" unique="false" name="serialNo" is-system="true"/>
+            <composite-id>
+                <field column="Create_Time" data-type="DateTime" is-display="false" display-name="生成时间" display-order="999" unique="false" name="createTime" nullable="false" is-system="true"/>
+                <field column="Busi_Type" data-type="String" is-display="false" display-name="业务类型" display-order="999" unique="false" name="busiType" nullable="false" is-system="true"/>
+            </composite-id>
+        </entity>
+        <entity pack="system" is-display="true" display-name="记录信息变更日志" name="DataChangeLog" display-for="{manage:false}" is-system="true" table="sys_data_change_log" >
+	    	<id column="id" data-type="Guid" is-display="false" display-name="日志标识" name="id" nullable="false" is-system="true"/>
+	    	<field column="entity_name" length="50" name="entityName" data-type="String" is-display="true" display-name="所属实体名称" field-type="SingleLineText" nullable="false" is-system="true"/>
+	    	<field column="record_id" length="36" name="recordId"  display-name="记录标识" data-type="String" field-type="SingleLineText"   is-display="true" nullable="false" is-system="true"/>
+			<field column="reason" length="250" name="reason"  display-name="变更原因" data-type="String" field-type="RichText" is-display="true" nullable="true" is-system="true"/>
+			<field column="operator" length="50" name="operator"  display-name="操作人" default-value="@{env.User.Name}"  data-type="String" field-type="SingleLineText"   is-display="true"  nullable="false" is-system="true"/>
+			<field column="change_time" name="changeTime"  display-name="变更时间" default-value="@{env.Now}" semantics="Title" data-type="Timestamp" field-type="Timestamp"   is-display="true"  nullable="false" is-system="true" update="false"/>
+	    </entity>
+	    <entity pack="system" is-display="true" display-name="记录信息变更条目" name="DataChangeLogItem" display-for="{manage:false}" is-system="false" table="sys_data_change_log_item" >
+	    	<id column="id" data-type="Guid" is-display="false" display-name="条目标识" name="id" nullable="false" is-system="true"/>
+	    	<field column="field" length="50" name="field" data-type="String" is-display="true" display-name="变更字段" field-type="SingleLineText" nullable="false" is-system="true"/>
+	    	<field column="before" length="300" name="before"  display-name="变更前值" data-type="String" field-type="SingleLineText"   is-display="true" nullable="true" is-system="true"/>
+			<field column="after" length="300" name="after"  display-name="变更后值" data-type="String" field-type="SingleLineText" is-display="true" nullable="true" is-system="true"/>
+			<many-to-one name="logId" is-display="true" display-name="所属日志" target-entity="DataChangeLog" >
+				<field column="log_id" name="logId" ref-to="id" is-display="true" display-name="所属日志"></field>
+			</many-to-one>
+	    </entity>
+	</entities>	
+</metadata>

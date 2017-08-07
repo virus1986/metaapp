@@ -1,0 +1,82 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width: 950px;">
+	<style>
+	#createEntityTable tbody tr textarea {
+		height: 120px;
+		width: 500px;
+	}
+	</style>
+	<form  th:id="'createEntityForm_'+${viewId}" class="form-horizontal" data-widget="validator" th:action="${requestUri}">
+		<div class="ui-dialog-title">
+			<h3 class="page-title">
+				<i class="icon-table"></i><span class="page-title-text">编辑实体</span>
+			</h3>
+		</div>
+	
+		<div class="ui-dialog-content container-fluid ">
+			<table class="form-table form-bordered  col2-fluid"	id="createEntityTable">
+				<tbody>
+					<tr>
+						<th><label th:text="#{common.displayName}+':'"></label></th>
+						<td><input type="text" id="displayName" name="displayName" th:value="${entity.displayName}"
+								class="input-large" th:placeholder="#{validation.string36}"
+								data-validator="required,length[1,36]" /></td>
+
+					</tr>
+					<tr>
+						<th><label th:text="#{common.name}+':'"></label></th>
+						<td th:if="${action=='edit'}">
+							<input type="text" id="name" name="name" readonly="readonly" class="input-large" th:value="${entity.name}"/>
+						</td>
+						<td th:unless="${action=='edit'}">
+								<span th:if="${saas}" th:text="${ecode}+'_'"></span>
+								<input type="text" id="name" name="name" th:value="${entity.name}" class="input-large"
+									th:placeholder="#{validation.autoByDisplayName}"
+									data-validator="required,length[1,36],letterStart,func[entityNameUnique]" />
+								<span class="label label-info" th:text="#{validation.nameSpec}"></span>
+						</td>
+					</tr>
+					<tr>
+						<th><label th:text="#{common.description}+':'"></label></th>
+						<td>
+						<textarea id="summary" name="summary"
+								class="shortArea" data-validator="length[0,1000]"
+								th:placeholder="#{validation.string1000Sec}" th:text="${entity.summary}"/>
+						</td>
+					</tr>					
+				</tbody>
+			</table>
+		</div>
+		<div class="ui-dialog-buttonset">
+				<button th:if="${action!='view'}" type="button" class="btn purple ajaxPostBtn">
+					<span th:text="#{common.save}"></span>
+					<i class="m-icon-swapright m-icon-white"></i>
+				</button>
+			<button type="button" class="btn closeBtn" th:text="#{common.cancel}">
+			</button>
+		</div>
+	</form>
+<script th:inline="javascript">
+//<![CDATA[
+	$(function() {
+		var context=/*[['#'+${viewId}]]*/;
+		var action=/*[[${action}]]*/;
+		var entityDisplayName=/*[[${entity.displayName}]]*/;
+		$("#displayName", context).focus();
+		if (action != "edit") {
+			$(".ui-dialog-title").text(i18n.t("metaentity.create.title"));
+		} else {
+			$(".page-title-text").html(i18n.t("metaentity.edit.title") + entityDisplayName);		
+		}
+		var container = $(context);
+		Page.init(container);
+		if (action != "edit") {
+			$("[name='displayName']", context).keyup(
+					function() {
+						$("[name='name']", context).val(
+								$(this).toPinyin().replace(/\s*/g, ''));
+					});
+		}
+	});
+//]]>
+</script>
+</div>

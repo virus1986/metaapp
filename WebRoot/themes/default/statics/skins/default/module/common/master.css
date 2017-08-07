@@ -1,0 +1,89 @@
+#sidebar ul li li a {
+	text-indent: 12px;
+	line-height: inherit;
+	background: none;
+}
+
+.container-fluid{
+	margin:0px;
+}
+
+.ui-carousel{
+	padding:0px;
+}
+
+
+
+.tree-menu.ui-helper-reset{
+	border:none;
+}
+
+#sidebar ul li ul.bbit-tree-node-ct {
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	-o-box-shadow: none;
+	box-shadow: none;
+}
+#sidebar ul li li a{
+	height:20px;
+}
+.main-icons .menu-icon-select-btn{
+	width:26px;
+	height:26px;
+	display:inline-block;
+}
+.main-icons .menu-icon-select-btn:hover{
+	background-color: #DCE6ED;
+}
+.main-icons .menu-icon-select-btn.current{
+	background-color:#0088CC;
+}
+.menubar-search  .search-query {
+  padding-right: 14px;
+  padding-right: 4px \9;
+  padding-left: 14px;
+  padding-left: 4px \9;
+  /* IE7-8 doesn't have border-radius, so don't indent the padding */
+
+  margin-bottom: 0;
+  -webkit-border-radius: 14px;
+     -moz-border-radius: 14px;
+          border-radius: 14px;
+	
+  padding: 3px 0px 0px 25px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1;
+  color: #333;
+  border: 0px solid #151515;
+  background-color: #599AC4;
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
+     -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
+          box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
+  -webkit-transition: none;
+     -moz-transition: none;
+      -ms-transition: none;
+       -o-transition: none;
+          transition: none;
+		  background:url(icon-search.png) no-repeat 8px center;
+}
+
+.menubar-search .search-query:focus,
+.menubar-search .search-query.focused ,.menubar-search .search-query:hover{
+  /* IE7-8 doesn't have border-radius, so don't indent the padding */
+  margin-bottom: 0;
+  -webkit-border-radius: 14px;
+     -moz-border-radius: 14px;
+          border-radius: 14px;
+	
+  padding: 3px 0px 0px 25px;
+  color: #333333;
+  text-shadow: 0 1px 0 #ffffff;
+  background-color: #ffffff;
+  border: 0;
+  outline: 0;
+  -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+     -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+}

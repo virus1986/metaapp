@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" type="simpleSearch" autoWidth="true" columnReordering="false" height="100%" multiSelect="true" multiSelectKey="None" shrinkToFit="true" editUrl="~/entities/WfTask/edit" viewFunc="system/workflow.itemApprove" deleteUrl="~/entities/WfTask/delete" createUrl="~/entities/WfTask/create" dataUrl="~/entities/WfTask/query_paged" entityName="WfTask" id="grid_766aedb9-104b-4fe2-bf54-f4ba107dfd33">
+    <appearanceSettings caption="我的待办"/>
+    <columns>
+        <column visible="false" width="1" primaryKey="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="id"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="1" dataField="procInstId"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="1" dataField="creatorId"/>
+        <column visible="false" dataField="WfProcInst.businessId" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" width="1"/>
+        <column text="主题" dataField="WfProcInst.title" width="200" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left">
+        	<titleFieldFormatter/>
+        </column>
+        <column text="流程名称" dataField="wfproc.procName" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="150"/>
+        <column text="发起人" dataField="WfProcInst.proposerName" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="100"/>
+        <column text="发起时间" dataField="WfProcInst.startTime" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="120"/>
+        <column text="接收时间" dataField="startTime" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="120"/>
+        <column text="当前环节" dataField="actTitle" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="100"/>
+    	<column text="耗时" dataField="duration" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="false" textAlign="Left" width="80">
+        	<millisecondFormatter unit="m"/>
+        </column>
+    </columns>
+    <contextButtons>
+       	<button isInMoreBtns="false" cssClass="" name="approve"/>
+    </contextButtons>
+    <toolBarSetting>
+        <button isInMoreBtns="false" cssClass="" name="approve"/>
+        <button isInMoreBtns="false" cssClass="" name="fresh" buttonIcon="main/button-load.png" onClick="grid.refreshGrid"/>
+        <button isInMoreBtns="false" cssClass="" name="search" buttonIcon="main/search-add.png" onClick="grid.advanceSearch"/>
+    </toolBarSetting>
+    <joinEntities>
+        <entity name="WfProcInst" alias="WfProcInst" joinExpression="left join WfProcInst WfProcInst on WfProcInst.id=wftask.procInstId"/>
+        <entity name="wfproc" alias="wfproc" joinExpression="left join wfproc wfproc on WfProcInst.businessType=wfproc.procId"/>
+    </joinEntities>
+    <filter groupOp="AND">
+       
+        <rules>
+            <rule data="10" field="WfTask.status" op="ne"/>
+            <rule data="0" field="WfTask.deleted" op="eq"/>
+        </rules>
+    </filter>
+    <orderby>
+        <rule direction="Desc" field="WfTask.startTime"/>
+    </orderby>
+    <quickSearch searchColNum="3">
+        <column dataField="WfTask.title"/>
+        <column dataField="WfProcInst.title"/>
+    </quickSearch>
+    <addDialogSettings/>
+    <editDialogSettings/>
+    <viewDialogSettings/>
+</grid>

@@ -1,0 +1,165 @@
+<div th:id="${viewId}" class="panel apply-panel select-actors-con"
+	style="min-width: 950px;min-height:500px;">
+	<div class="ui-dialog-title">	
+		选择流程参与者
+	</div>
+	
+	 <div class="tabbable tabbable-custom" id="multi-kind-select-tab" style="overflow: auto;">
+            <ul class="nav nav-tabs order-tab" th:with="hidename=${queryString['hidename']==null?'':queryString['hidename']}">
+              <li><a th:href="@{/entities/user/treeList/uamorganization(view='select_tree_list1',refField='orgId',isoutiframe=${queryString['isoutiframe']})}" tabId="actor-select-user">选择用户</a></li>
+              <li><a th:unless="${#strings.containsIgnoreCase(hidename,'dept')}" th:href="@{/entities/uamorganization/treeList/uamorganization(view='select_tree_list2',refField='parentId',isoutiframe=${queryString['isoutiframe']})}" tabId="actor-select-dept">选择部门</a></li>
+              <li><a th:unless="${#strings.containsIgnoreCase(hidename,'group')}" th:href="@{/entities/uamgroup/select(view='select_for_workflow',mode='multiple',isoutiframe=${queryString['isoutiframe']})}" tabId="actor-select-group">选择群组</a></li>
+            </ul>
+	  </div>
+	<div class="ui-dialog-buttonset">
+		<button type="button" class="btn purple saveAllActorsBtn" th:text="#{common.save}"></button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+<script type="text/javascript" th:inline="javascript">
+//<![CDATA[ 
+;(function($){
+	$(function(){
+		var context=/*[['#'+${viewId}]]*/;
+		var isOutIframe=/*[[${queryString['isoutiframe']}]]*/;
+		if(isOutIframe=='1'){
+			$(context).css({"height":"100%"})
+			$("#multi-kind-select-tab",context).css({"height":"100%"});
+		}
+		var dialogButtonPane=$(context).closest(".ui-dialog").find(".ui-dialog-buttonpane");
+		var tabButtons={};
+		$("#multi-kind-select-tab",context).tabs({
+			carousel : false,
+			cache:true,
+			ajaxOptions:{
+				cache:false
+			},
+			show:function(event,ui){
+			},
+			load:function(event,ui){
+			}
+		});
+		setTimeout(function(){
+			$(context).dialogResize();
+		},200);
+		var actors=null;
+		var actorType={user:"user",group:"group",dept:"dept",expression:"expression"};
+		function parseUserActors(userActors){
+			var actors=[];
+			if(!!userActors){
+				jQuery.each(userActors,function(i,actor){
+					actors.push({id:actor.id,name:actor.name||actor.description__,type:actorType.user});
+				});
+				return actors;
+			}
+			return null;
+		};
+		function parseDeptActors(deptActors){
+			if(!deptActors){
+				return null;
+			}
+			var actors=[];
+			var actorType__=deptActors[0].actorType__;
+			if(actorType__===actorType.dept){
+				var orgIds=[],orgNames=[],description=[];
+				jQuery.each(deptActors,function(i,actor){
+					actors.push({id:actor.id,name:actor.description__,type:actorType.dept});
+				});
+				return actors;
+			}else{
+				return parseDynamicActors(deptActors);
+			}
+		};
+		function parseGroupActors(groupActors){
+			var actors=[];
+			if(!!groupActors){
+				jQuery.each(groupActors,function(i,actor){
+					actors.push({id:actor.id,name:actor.description__,type:actorType.group})
+				});
+				return actors;
+			}
+			return null;
+		};
+		function parseDynamicActors(dynamicActors){
+			var actors=[];
+			if(!!dynamicActors){
+				if(!jQuery.isArray(dynamicActors)){
+					dynamicActors=[dynamicActors];
+				}
+				jQuery.each(dynamicActors,function(i,actor){
+					actors.push({id:actor.userScriptExpression,name:actor.description__,type:actorType.expression});
+				});
+				return actors;
+			}
+			return null;
+		};
+		function errorStop(actors){
+			if(actors===-1){
+				return true;
+			}
+			return false;
+		};
+		function getActors(){
+			var a1=$("#actor-select-user",context).data("getActor");
+			var a4=$("#actor-select-dept",context).data("getActor");
+			var a6=$("#actor-select-group",context).data("getActor");
+			var k=0;
+			if($.isFunction(a1)){
+				var userActors=a1();
+				if(userActors){
+					if(errorStop(userActors)){
+						return false;
+					}
+					k+=1;
+				}
+			}
+			
+			if($.isFunction(a4)){
+				var deptActors=a4();
+				if(deptActors){
+					if(errorStop(deptActors)){
+						return false;
+					}
+					k+=1;
+				}
+			}
+			if($.isFunction(a6)){
+				var groupActors=a6();
+				if(groupActors){
+					if(errorStop(groupActors)){
+						return false;
+					}
+					k+=1;
+				}
+			}
+			if(k===0){
+				$.messageBox.warning({message:i18n.t("common.selectRow")});
+				return false;
+			}
+			var actorList=[];
+			if(userActors){
+				actorList=actorList.concat(parseUserActors(userActors));
+			}
+			if(deptActors){
+				actorList=actorList.concat(parseDeptActors(deptActors));
+			}
+			if(groupActors){
+				actorList=actorList.concat(parseGroupActors(groupActors));
+			}
+			return actorList;
+		}
+		$(".saveAllActorsBtn",context).click(function(){
+			var actors=getActors();
+			if (!actors){ 											
+				return false;
+			}
+			$(context).dialogClose(actors);
+		});
+		$(".closeBtn",context).click(function(){
+			$(context).dialogClose();
+		});
+	});           
+}(jQuery)); 
+//]]> 
+</script>
+
+</div>

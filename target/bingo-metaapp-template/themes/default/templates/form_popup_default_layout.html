@@ -1,0 +1,121 @@
+<div class="lyrow base-form-layout popup" aria-disabled="false" style="display: block;"> 
+	<div class="toolbar">
+		<a href="#close" class="remove label label-important" th:inline="text"><i class="icon-remove icon-white"></i>[[#{common.delete}]]</a> 
+		<span class="drag label" th:inline="text"><i class="icon-move"></i>[[#{common.drag}]]</span>
+	</div>
+	<div class="preview" th:text="#{form.designer.popupTemplate}"></div>
+	<div class="view">
+		<div class="panel apply-panel" style="min-width: 950px;" _th:id="${viewId}">
+		  <div class="lyrow form form-parallel-item">
+			<div class="toolbar">
+			  	<span class="drag label" th:inline="text"><i class="icon-move"></i>[[#{common.drag}]]</span>
+		  	</div>
+		  	<div class="view">
+				  <form class="form-horizontal ajaxpost" data-widget="validator" id="entityForm" method="post" _th:action="${requestUrl}" _th:object="${entity}">
+				    <meta:placeholder th:each="identityField:${identityFields}">
+				    	<input th:attr="_meta:field=${identityField.name}" type="hidden"/>
+				    </meta:placeholder>
+					<div class="table-dialog">
+						<div class="ui-dialog-title" _th:switch="${action}">
+							<span _th:case="'EDIT'" _th:text="#{common.edit}+${metaEntity.displayName}"></span>
+							<span _th:case="'CREATE'" _th:text="#{common.create}+${metaEntity.displayName}"></span> 
+							<span _th:case="'VIEW'" _th:text="#{common.view}+${metaEntity.displayName}"></span>
+							<span _th:case="*" _th:text="#{common.notExistAction}+${action}"></span>
+						</div>
+						<div class="row-fluid">
+				          <div class="span2 column form-left">
+				            <div class="dialog-menu" id="left-navbar"></div>
+				            <div class="box auto-relation box-element">
+				            	<div class="toolbar">
+					            	<span class="configuration">
+					            		<button data-target="#relationConfigModal" role="button" data-toggle="modal" type="button" class="btn btn-mini" th:text="#{form.designer.relationSetup}"></button>
+					            	</span>
+				            	</div>
+				            	<div class="view"> 
+				            		<div data-exclude-relation-names="" class="relations-section"><h2 th:text="#{form.designer.autoRelation}"></h2></div>
+				            	</div>
+				            </div>
+				          </div>
+				          <div class="span10 column form-sections form-right" data-spy="scroll" data-target="#left-navbar">
+				          	<div class="lyrow form-part " style="display: block; position: relative; z-index: 0;">
+								<div class="toolbar">
+									<a href="#close" class="remove label label-important" th:inline="text"><i class="icon-remove icon-white"></i>[[#{common.delete}]]</a>
+									<span class="drag label" th:inline="text"><i class="icon-move"></i>[[#{common.drag}]]</span>
+								</div>
+								<div class="preview" th:text="#{form.designer.formSection}"></div>
+								<div class="view">
+									<div class="form-section ">
+										<div class="lyrow form-table " style="display: block;">
+											<div class="toolbar">
+												<span class="configuration">
+													<div class="btn-group">
+														<button data-toggle="dropdown"
+															class="btn btn-mini dropdown-toggle" th:inline="text">
+															[[#{common.operation}]]<span class="caret"></span>
+														</button>
+														<ul class="dropdown-menu">
+															<li><a class="addTableRow" href="javascript://" th:text="#{form.designer.addRow}"></a></li>
+															<li><a class="deleteTableRow" href="javascript://" th:text="#{form.designer.delRow}"></a></li>
+														</ul>
+													</div>
+			          								<button type="button" class="btn btn-mini" data-target="#simpleEditorModal" role="button" data-toggle="modal" th:text="#{common.edit}"></button> 
+												</span> 
+												<a href="#close" class="remove label label-important" th:inline="text"><i class="icon-remove icon-white"></i>[[#{common.delete}]]</a> 
+												<span class="drag label" th:inline="text"><i class="icon-move"></i>[[#{common.drag}]]</span>
+											</div>
+											<div class="preview"></div>
+											<div class="view">
+												<table class="form-table col4-fluid">
+													<caption contenteditable="true" th:text="#{common.baseInfo}"></caption>
+													<thead></thead>
+													<tbody>
+														<tr th:each="rowData:${layoutFields}">
+												            <meta:placeholder th:each="rowCol,state:${rowData}">
+												            <th><label contenteditable="true" th:if="${rowCol!='blank'}" th:text="${rowCol.displayName}+'：'"></label><label contenteditable="true" th:if="${rowCol=='blank'}"></label></th>
+															<td  class="column field">
+								                  			<div th:if="${rowCol!='blank'}" class="box box-element field-item" th:attr="data-field=${rowCol.name},data-label=${rowCol.displayName}+'：'" aria-disabled="false" style="display: block;"> 
+									                  			<div class="toolbar">
+										                  			<a href="#close" class="remove label label-important" th:inline="text"><i class="icon-remove icon-white"></i>[[#{common.delete}]]</a> 
+										                  			<span class="drag label" th:inline="text"><i class="icon-move"></i>[[#{common.drag}]]</span>
+										                  			<span class="configuration">
+													          			<button type="button" class="btn btn-mini" data-target="#simpleEditorModal" role="button" data-toggle="modal" th:text="#{common.edit}"></button> 
+													          		</span>
+												          		</div>
+													            <div class="preview" th:text="${rowCol.displayName}"></div>
+													            <div class="view">
+																	 <input th:attr="_meta:field=${rowCol.name}" th:placeholder="${rowCol.displayName}"/>
+													            </div>
+												            </div>
+												            </td>
+															</meta:placeholder>
+								                  		</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+				          </div>
+		          		</div>
+					</div>
+					<div class="ui-dialog-buttonset">
+						<button class="btn btn-primary" name="save" _th:if="${action} != 'VIEW'" type="submit" _th:text="#{common.save}"></button>
+						<button class="btn closeBtn" name="close" _th:text="(${action} != 'VIEW')?#{common.cancel} : #{common.close}" type="button"></button>
+					</div>
+				</form>
+		  	</div>
+		  </div>
+		</div>
+		<textarea style="display: none;" id="script">
+	/*<![CDATA[*/
+	$(function(){
+	var viewId=/*[[${viewId}]]*/;
+	var context="#" + viewId;
+	Form.init(context,"#entityForm");
+	Page.init(context,{isInitFormNav:true,isInitRelation:true});
+	});
+	/*]]>*/
+	</textarea>
+	</div>
+  </div>

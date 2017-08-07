@@ -1,0 +1,44 @@
+.ui-jqgrid .ui-jqgrid-hdiv {
+	border-width: 1px 1px 0 0
+}
+
+.ui-jqgrid .ui-jqgrid-labels th {
+	border-right: none !important;
+	border-left: 1px solid #e1e1e1 !important;
+	text-align: right !important
+}
+
+.ui-jqgrid .ui-jqgrid-labels th:first-child {
+	border-right: 1px solid #e1e1e1 !important
+}
+
+.ui-jqgrid-labels th[id*="_cb"]:first-child {
+	text-align: center !important
+}
+
+.ui-jqgrid-sortable {
+	padding-left: 0;
+	padding-right: 4px
+}
+
+.ui-jqdialog-content .searchFilter table {
+	margin-left: auto;
+	margin-right: 4px
+}
+
+.ui-jqdialog-content .searchFilter .add-group,.ui-jqdialog-content .searchFilter .add-rule,.ui-jqdialog-content .searchFilter .delete-group
+	{
+	margin-left: auto !important;
+	margin-right: 4px !important
+}
+
+.ui-jqdialog-content .CaptionTD {
+	text-align: left
+}
+
+.ui-jqdialog .ui-widget-header .ui-jqdialog-title {
+	text-align: right;
+	padding-left: 0;
+	padding-right: 12px;
+	float: right !important
+}

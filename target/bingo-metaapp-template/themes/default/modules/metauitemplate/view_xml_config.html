@@ -1,0 +1,53 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:1100px;height:500px">
+	<div class="ui-dialog-title hide">
+	</div>
+	<form id="viewXmlConfigForm" data-widget="validator">
+	<textarea name="xmlConfig" class="hide" data-validator="required"></textarea>
+	<div id="sourceContainer" style="width: 100%;height:500px;font-size:14px"></div>
+	</form>				
+	<div class="ui-dialog-buttonset">
+		<button type="button" class="btn btn-primary saveXmlConfig" th:text="#{common.sure}"></button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+	
+	<script th:inline="javascript">
+	//<![CDATA[
+	var context = /*[['#'+${viewId}]]*/;
+	$(function(){
+		var args = jQuery.dialogAraguments() ;
+		var xmlConfig = args.xmlConfig;
+		if(!xmlConfig){
+			$.messageBox.error({message:i18n.t("view.custom.configNull"),width:"800px"});
+			return;
+		}
+		var editor=null;
+		
+		function initEditor(){
+		    editor = ace.edit("sourceContainer");
+		    editor.setTheme("ace/theme/eclipse");
+		    editor.getSession().setMode("ace/mode/xml");
+		    editor.setValue(xmlConfig);
+		    editor.setShowPrintMargin(false);
+		    editor.gotoLine(0,0,false);
+		}
+		
+		Form.init(context,"#createViewForm");
+		initEditor();
+		
+		$(".saveXmlConfig", context).click(function(){
+			var xmlContent=editor.getValue();
+			$("[name=xmlConfig]",context).val(xmlContent);
+			var valInfo = $.validation.validate("#viewXmlConfigForm") ;
+			if( valInfo.isError ) {
+				return false;
+			}
+			$(this).attr("disabled","disabled");
+			$(this).addClass("disabled");
+			jQuery.dialogReturnValue(xmlContent);
+			$(context).dialogClose();
+		});
+	
+	});
+	//]]>	
+	</script>
+</div>

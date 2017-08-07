@@ -1,0 +1,6 @@
+${
+$entity.put("name","999");
+$dataManager.update($entityName,$entity);
+BEANS.dataManager.update("test",$entity);
+$dao.update($entity);
+}

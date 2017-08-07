@@ -1,0 +1,86 @@
+<div th:id="${viewId}" class="panel apply-panel">
+	<div class="ui-dialog-title hide">	
+		<span></span>
+	</div>
+	<div class="row-fluid select-tree-list-con">
+	  <div class="span12">
+	      <div class="container-fluid" th:attr="data-url=${requestUrl}" style="padding:0px;"  th:title="${sourceEntityDisplayName+#messages.msg('common.list')}">
+			<div class="outer-toolbar-for-tree-grid"></div>
+			<div class="tree-search-grid-list">
+				<div class="grid-con">
+					<meta:grid id="'grid_'+${entityName}+'_'+${view}+'_'+${viewId}" entityName="${entityName}" view="${treeListView}" />
+				</div>
+				<div class="search-tree">
+					<a href="#" class="btn icn-only black collapsed"><i class="icon-forward m-icon-white"></i></a>
+					<div class="list-tree-head">
+						<div class="head-caption">
+							<i class="icon-sitemap"></i>
+							<span th:text="${relationEntityDisplayName}"></span>
+						</div>
+					</div>
+					<div class="list-tree"></div>
+				</div>
+				
+			</div>
+		  	<div class="selected-rows hide">
+		  	</div>
+		  </div>
+	  </div>
+	</div>
+   <script type="text/javascript" th:inline="javascript">
+	//<![CDATA[ 
+;(function($){
+		$(function(){
+			var mode=/*[[${queryString['mode']}]]*/;
+			var viewId = /*[[${viewId}]]*/;
+			var view = /*[[${view}]]*/;
+			var entityName = /*[[${entityName}]]*/;
+			var entityIdField = /*[[${entityIdField}]]*/;
+			var relationEntity = /*[[${relationEntity}]]*/;
+			var relationFieldName = /*[[${relationFieldName}]]*/;
+			var relationType = /*[[${relationType}]]*/;
+			var joinEntityName = /*[[${joinEntityName}]]*/;
+			var joinEntityTargetField = /*[[${joinEntityTargetField}]]*/;
+			var relationEntityDisplayName = /*[[${relationEntityDisplayName}]]*/ ;
+			var sourceEntityDisplayName = /*[[${sourceEntityDisplayName}]]*/ ;
+			var treeLabelField = /*[[${treeLabelField}]]*/;
+			
+			var context = $("#"+viewId) ;
+			var gridId = 'grid_'+entityName+'_'+view+'_'+viewId ;
+			var $grid=$("#"+gridId);
+			var treeUrl = /*[[@{/treemodels/entity/}]]*/;
+			var treeLoadUrl=treeUrl+relationEntity+"/"+treeLabelField;
+			
+			var treeNavigationSettings=$grid.jqGrid("getGridParam").treeNavigationSettings;
+			if(!treeNavigationSettings.recursiveQueryUrl){
+				treeNavigationSettings.recursiveQueryUrl=/*[[@{'/entities/'+${relationEntity}+'/recursiveQuery/'}]]*/;
+			}			
+			treeNavigationSettings=$.extend(true,
+					{
+						url 		: treeLoadUrl,
+						expandLevel	: 1,
+						params		: {
+							parent	:"parentId",
+							onlyOne	:true
+						}
+					},treeNavigationSettings);
+			
+			var options={viewId:viewId,grid:$grid,context:context,
+					entityName:entityName,
+					entityIdField:entityIdField,
+					relationFieldName:relationFieldName,
+					relationType:relationType,
+					joinEntityName:joinEntityName,
+					joinEntityTargetField:joinEntityTargetField,
+					relationEntityDisplayName:relationEntityDisplayName,
+					sourceEntityDisplayName:sourceEntityDisplayName,
+					treeNavigationSettings:treeNavigationSettings,
+					treeLoadUrl:treeNavigationSettings.url,
+					recursiveQuery:treeNavigationSettings.recursiveQueryUrl,
+					select:false,mode:mode,selectedRow:{},showRoot:false};
+			Page.initTreelistPage(options);
+		});
+}(jQuery)); 
+	//]]> 
+	</script>
+</div>

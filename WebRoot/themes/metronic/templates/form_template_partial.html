@@ -1,0 +1,20 @@
+<div class="form-section">
+	<table  th:each="section:${layout.sections}"
+		th:classappend="'form-table col'+${section.colNum}*2+'-fluid'">
+		<tr th:each="row:${section.rows}">
+			<meta:placeholder th:each="cell:${row}">
+				<th th:switch="${cell.contentType}">
+					<label th:case="'Control'" th:text="${layoutCtx.fields[cell.content.dataFieldName].displayName}+'：'"></label>
+					<label th:case="'RefEntityControl'"	th:text="${layoutCtx.relations[cell.content.relationName].displayName}+'：'"> </label> 
+					<label th:case="*"></label></th>
+				<td th:switch="${cell.contentType}" th:colspan="${cell.colspan}*2-1">
+					<input th:case="'Control'"
+					th:attr="meta_:field=${cell.content.dataFieldName},__${cell.attrsString()}__" />
+					<input th:case="'RefEntityControl'"
+					th:attr="meta_:ref=${cell.content.refEntityName}+'::'+${cell.content.relationName},__${cell.attrsString()}__" />
+					<span th:case="*" th:text="''"> </span>
+				</td>
+			</meta:placeholder>
+		</tr>
+	</table>
+</div>

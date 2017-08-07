@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head
+	th:substituteby="'/themes/'+${theme}+'/modules/common/statics'::head"></head>
+<body class="container-index">
+	<div id="default-content" th:if="${contentPage}">
+		<div th:substituteby="${contentPage}"></div>
+	</div>
+</body>
+
+<!-- Common Modules -->
+<script
+		th:substituteby="'/themes/'+${theme}+'/modules/common/statics'::scripts"></script>
+</html>

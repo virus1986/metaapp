@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" height="150" multiSelect="true" multiSelectKey="None" shrinkToFit="true" editUrl="~/entities/formAttachment/edit?businessId=@{Request('businessId')}" deleteUrl="~/entities/formAttachment/delete" createUrl="~/entities/formAttachment/create?businessId=@{Request('businessId')}" dataUrl="~/entities/formAttachment/query_paged?businessId=@{Request('businessId')}" entityName="formAttachment" id="grid_ea1a4cf0-fb6f-40cd-8be3-60141b61ee26">
+    <columns>
+        <column width="30" primaryKey="true" visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="id"/>
+        <column width="300" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="name"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="businessId"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="153" dataField="url"/>
+    </columns>
+    <contextButtons>
+    	<button name="delete"/>
+    </contextButtons>
+    <toolBarSetting>
+    </toolBarSetting>
+    <joinEntities>
+    </joinEntities>
+      <filter groupOp="AND">
+        <filters/>
+        <rules>
+            <rule data="@{Request('businessId')}" field="formAttachment.businessId" op="eq"/>
+        </rules>
+    </filter>
+    <orderby/>
+    <quickSearch>
+        <column dataField="name"/>
+    </quickSearch>
+    <addDialogSettings/>
+    <editDialogSettings/>
+    <viewDialogSettings/>
+</grid>

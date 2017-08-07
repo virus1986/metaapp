@@ -1,0 +1,295 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+<head>
+<!-- You can override IE's rendering mode by adding the X-UA-Compatible Meta tag -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="style.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="js/qtip/jquery.qtip.min.css" />
+<script src="js/jstools.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/lib/raphael.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/jquery/jquery.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/jquery/jquery.progressbar.js" type="text/javascript"
+	charset="utf-8"></script>
+<script src="js/jquery/jquery.asyncqueue.js" type="text/javascript"
+	charset="utf-8"></script>
+<script src="js/lib/jsrender.min.js"></script>
+<script src="js/Color.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/Polyline.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/ActivityImpl.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/ActivitiRest.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/LineBreakMeasurer.js" type="text/javascript"
+	charset="utf-8"></script>
+<script src="js/ProcessDiagramGenerator.js" type="text/javascript"
+	charset="utf-8"></script>
+<script src="js/ThemeCanvas.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/ThemeHighlight.cool.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/ProcessDiagramCanvas.js" type="text/javascript"
+	charset="utf-8"></script>
+<script src="js/qtip/jquery.qtip.min.js"></script>
+<style type="text/css" media="screen">
+</style>
+</head>
+<body class="workflow-diagram-con">
+	<div class="wrapper">
+		<div id="diagram-info-con" style="padding:5px;">
+			<label>当前环节：</label><div style="display:inline-block;" class="act-info"></div>
+			<div style="display:inline-block;width:50px;height:30px;background-color:#45BB7F;margin-left:250px;"></div><span>已处理</span>
+			<div style="display:inline-block;width:50px;height:30px;background-color:#FF5A00;"></div><span>正在处理</span>
+			<div style="display:inline-block;width:50px;height:30px;background-color:#CBCBCB;"></div><span>未处理</span>
+		</div>
+		<div id="pb1" style="display:none;">
+		</div>
+		<div id="overlayBox">
+			<div id="diagramBreadCrumbs" class="diagramBreadCrumbs"
+				onmousedown="return false" onselectstart="return false"
+				style="display: none;"></div>
+			<div id="diagramHolder" class="diagramHolder"></div>
+			<div id="diagramInfo" class="diagram-info"></div>
+		</div>
+	</div>
+	<script id="actInstanceInfoTpml" type="text/x-jsrender">
+	<table cellspacing="0">
+		<tbody>
+			<tr>
+				<th>环节名:</th>
+				<td>{{:properties.name?properties.name:" "}}</td>
+				{{if instanceInfo}}
+						<th>状态:</th>
+					{{if instanceInfo.status>=0 }}
+						<td>{{:instanceInfo.status>=10?"已结束":"处理中..."}}</td>
+					{{else}}
+						<td>    </td>
+					{{/if}}
+				{{/if}}
+			</tr>
+			<tr>
+				<th>描述:</th>
+				<td colspan="3">{{:properties.documentation}}</td>
+			</tr>
+			{{if instanceInfo && instanceInfo.taskInfos}}
+			<tr>
+				<td colspan="4">
+					{{include tmpl="taskInfoTpml"/}}
+				</td>
+			</tr>
+			{{/if}}
+		</tbody>
+	</table>
+	</script>
+	<script id="taskInfoTpml" type="text/x-jsrender">
+<div style="max-height:200px;overflow-y:auto;">
+	<table cellspacing="0">
+		<thead>
+			<tr>
+				<td>处理人</td>
+				<td>部门</td>
+				<td>意见</td>
+				<td>接收时间</td>
+				<td>办结时间</td>
+				<td>耗时</td>
+			</tr>
+		</thead>
+		<tbody>
+			{{props instanceInfo.taskInfos}}
+			<tr><td colspan="6">实例id：{{>key}}</td></tr>
+			{{for prop}}
+				<tr {{if #index % 2 ==0}}class="odd"{{/if}} title="任务ID: {{:taskid}} &#13处理人ID: {{:userId}} &#13处理部门ID: {{:userDeptId}} &#13过期时间: {{:expireTime}} &#13处理意见: {{:userOpinion}}">
+					<td>{{:userName}}</td>
+					<td>{{:userDeptName}}</td>
+					<td>{{:userShortOpinion}}</td>
+					<td>{{:startTime}}</td>
+					<td>{{:endTime}}</td>
+					<td>{{:duration}}</td>
+				</tr>
+			{{/for}}
+			{{/props}}
+		</tbody>
+	</table>
+</div>
+	</script>
+	<script id="flowInfoTpml" type="text/x-jsrender">
+	<table cellspacing="0">
+		<tbody>
+			<tr>
+		<th>迁移名:</th>
+		<td>{{:name}}</td>
+		<th>描述:</th>
+		<td>{{:documentation}}</td>
+			</tr>
+			<tr>
+		<th>源环节ID:</th>
+		<td>{{:sourceActivityId}}</td>
+		<th>目标环节ID:</th>
+		<td>{{:destinationActivityId}}</td>
+			</tr>
+			<tr>
+		<th>迁移条件:</th>
+		<td colspan="3">{{:condition}}</td>
+			</tr>
+		</tbody>
+	</table>
+	</script>
+	<script type="text/javascript">
+	var DiagramGenerator = {};
+	var pb1;
+	//流程环节和迁移信息的HTML的id和html字典缓存
+	var flowInfoHtml = {};
+	var SvgExt=SvgExt||{};
+	$(function(){
+		var query_string = {};
+		var query = window.location.search.substring(1);
+		var vars = query.split("&");
+		for (var i = 0; i < vars.length; i++) {
+			var pair = vars[i].split("=");
+			query_string[pair[0]] = pair[1];
+		}
+		var flowId = query_string["flowId"]; //流程定义的Id
+		var flowKey = query_string["flowKey"];//流程定义的Key
+		var instId = query_string["instId"];//流程实例的Id
+
+		var drawshadow = query_string["shadow"]; // 是否显示环节的白色背景  1为显示, 其他值不显示
+		var flowtrack = query_string["istrack"];//是否是流程的流转示意图  1为流转图, 其他值为流程定义图
+		var usetheme = query_string["usetheme"];//是否使用自定义主题
+
+		if (drawshadow&& (drawshadow == "1" || drawshadow == "true"))
+			Canvas_IsDrawShadow = true;
+
+		if (flowtrack&& (flowtrack == "1" || flowtrack == "true"))
+			Canvas_IsFlowTrack = true;
+
+		if (usetheme&& (usetheme == "1" || usetheme == "true"))
+			Canvas_useCustomTheme = true;
+
+		console.log("Initialize progress bar");
+
+		pb1 = new $.ProgressBar({
+			boundingBox : '#pb1',
+			label : 'Progressbar!',
+			on : {
+				complete : function() {
+					console.log("Progress Bar COMPLETE");
+					this.set('label', 'complete!');
+					if (instId) {
+						ProcessDiagramGenerator
+								.drawHighLights(instId);
+					}
+				},
+				valueChange : function(e) {
+					this.set('label', e.newVal + '%');
+				}
+			},
+			value : 0
+		});
+		var opts = ProcessDiagramGenerator.options;
+		opts.diagramBreadCrumbsId = "diagramBreadCrumbs";
+		opts.diagramHolderId = "diagramHolder";
+		opts.diagramInfoId = "diagramInfo";
+
+		opts.flowTmpls = $.templates({
+			actInstanceInfoTpml : "#actInstanceInfoTpml",
+			taskInfoTpml : "#taskInfoTpml",
+			flowInfoTpml : "#flowInfoTpml"
+		});
+
+		var selectAct = query_string["selectAct"];//表示是否需要选择环节
+		//var iframeId = query_string["_iframe_id"];//表示当前iframe的id
+		var _iframe=null;
+		if (selectAct == "1" || selectAct == "true") {
+			selectAct = true;
+			_iframe=window.parent.jQuery("iframe[name='"+window.name+"']");
+			_iframe.parent().css({"overflow":"hidden"});
+			_iframe.closest(".ui-dialog").find(".ui-dialog-buttonpane .btn-ok").hide();
+			ProcessDiagramGenerator.defaultOn = {
+				click : function(canvas, element,contextObject) {
+					if (selectAct) {
+						_iframe.dialogClose(contextObject);
+						return false;
+						/* if (iframeId && window.parent.Page) {
+							window.parent.Page.closeIframe(iframeId,contextObject);
+							return false;
+						} */
+					}
+				}
+			};
+		}
+		opts.on = ProcessDiagramGenerator.defaultOn;
+
+		var baseUrl = window.document.location.protocol+ "//" + window.document.location.host+ "/";
+		var shortenedUrl = window.document.location.href.replace(baseUrl, "");
+		baseUrl = baseUrl+ shortenedUrl.substring(0, shortenedUrl.indexOf("/"));
+
+		ActivitiRest.options = {
+			processInstanceHighLightsUrl : baseUrl+ "/wfdesigner/diagram-layout",
+			processDefinitionUrl : baseUrl+ "/wfdesigner/diagram-layout",
+			processDefinitionByKeyUrl : baseUrl+ "/wfdesigner/diagram-layout"
+		};
+		if (instId) {
+			ProcessDiagramGenerator.afterShow=function(){
+				var w=$(window.frameElement).parent().parent().width()-55;
+				var h=$(window.frameElement).parent().parent().height();
+				if(w>0&&h>0){
+					jQuery("#_wfdesigner_").width(w);
+					jQuery("#_wfdesigner_").height(3300);
+					jQuery("#_wfdesigner_>svg").attr("width",w);
+					jQuery("#_wfdesigner_>svg").attr("height",3300);
+				}
+				jQuery('#_wfdesigner_>svg rect').each(function(){
+					$(this).qtip({
+						id : 'tooltipHolder',
+						overwrite : false,
+						prerender : true,
+						content : {
+							text : '',
+							title : {
+								text : '详细信息',
+								button : '关闭'
+							}
+						},
+						position : {
+							target : false,
+							viewport : $(window),
+							screen : true,
+							my : 'top left',
+							at : 'bottom left'
+						},
+						style : {
+							classes : 'qtip-shadow qtip-rounded'
+						},
+						show : false,
+						hide : {
+							event : "unfocus",
+							fixed : false
+						}
+					});
+				});
+			};
+			ProcessDiagramGenerator.beforeShow=function(processDefinitionDiagramLayout){
+				var canvasHighLights = processDefinitionDiagramLayout.canvasHighLights||{};
+				var activities=canvasHighLights.activities;
+				if(!activities){
+					return;
+				}
+				var currentActs=[];
+				jQuery.each(activities,function(index,actId){
+					for ( var i in processDefinitionDiagramLayout.activityInstances) {
+						if (i == actId) {
+							var instanceInfo = processDefinitionDiagramLayout.activityInstances[actId];
+							currentActs.push(instanceInfo.name);
+							break;
+						}
+					}
+				});
+				jQuery("#diagram-info-con .act-info").text(currentActs.join(";"));
+			};
+			ProcessDiagramGenerator.drawDiagramByInstanceId(instId);
+		} else if (flowId) {
+			jQuery("#diagram-info-con").hide();
+			ProcessDiagramGenerator.drawDiagram(flowId);
+		} else {
+			alert("instId(flowId) parameter is required");
+		}
+	});
+	</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<div th:attr="data-url=${requestUrl}"  th:id="${viewId}">
+	<div class="breadcrumbs" id="breadcrumbs">
+		<ul class="breadcrumb">		
+		</ul>
+	</div>
+	<div class="container-fluid m-top10">
+		<meta:grid grid="${grid}"  entityName="${entityName}"/>
+	</div>
+<script type="text/javascript" th:inline="javascript">
+//<![CDATA[ 
+$(function(){
+	var context = /*[['div#'+${viewId}]]*/;
+	var gridId=/*[[${grid.id}]]*/;
+	var previewBasePath=/*[[${#httpServletRequest.getContextPath()}]]*/;
+	var menuTreeUrl=/*[[@{/portal/menu/create(entity=${entityName})}]]*/;
+	//var customBaseUrl = /*[[@{/metadata/uitemplate/view_create_base(entity=${entityName},layout='view')}]]*/;
+	//var customLayoutUrl = /*[[@{/metadata/uitemplate/view_custom(entity=${entityName},layout='view')}]]*/;
+	var copyViewUrl = /*[[@{/metadata/uitemplate/copy_view(entity=${entityName})}]]*/;
+	
+	var $grid=$("#"+gridId);
+	var imageRoot=Global.themePath+"/statics/images/icons/mini";
+	
+	function sendToMenu(){
+		var id = $grid.jqGrid('getGridParam','selrow');
+		if (!id){ 											
+			$.messageBox.info({message:i18n.t("view.publish.selectInfo")});
+			return;
+		}
+		var row=$grid.getRowData(id);
+		var status=row.status;
+		if(status!="10"){
+			$.messageBox.error({message:i18n.t("view.publish.draftNotAllowedPublish")});
+			return;
+		}
+		var menuUrl=row.url;//此处必须保留~作为上下文
+		if(menuUrl){
+			$.openLink(Urls.urlParam(menuTreeUrl,[{key:"view",value:id},{key:"url",value:menuUrl}]),{showType:'pop-up',title:i18n.t("view.publish.title")});
+		}
+	};
+	
+	function preview(){
+		var id = $grid.jqGrid('getGridParam','selrow');
+		if (!id){ 											
+			$.messageBox.info({message:i18n.t("view.preview.selectInfo")});
+			return;
+		}
+		var row=$grid.getRowData(id);
+		var version=row.version;
+		var previewUrl=findPreviewUrl(row);
+		previewUrl=Urls.urlParam(previewUrl,[{key:"_d",value:"preview"},{key:"action",value:"preview"}]);
+		if(version){
+			previewUrl=Urls.urlParam(previewUrl,[{key:"version",value:version}]);
+		}
+		$.openLink(previewUrl,{showType:'tab',title:i18n.t("view.preview.title"),width:1000});
+	};
+	
+	function copy(){
+		var id = $grid.jqGrid('getGridParam','selrow');
+		if (!id){ 											
+			$.messageBox.info({message:i18n.t("view.copy.selectInfo")});
+			return;
+		}
+		var row=$grid.getRowData(id);
+		var previewUrl=findPreviewUrl(row);
+		$.openLink(Urls.urlParam(copyViewUrl,[{key:"source",value:id}]),{showType:'pop-up',title:i18n.t("view.copy.title")},function(){
+			$grid.trigger("reloadGrid");
+		});
+	};
+	
+	function findPreviewUrl(row){
+		row.url=row.url||"";
+		var previewUrl=row.url.replace(/~/,previewBasePath);
+		return previewUrl;
+	};
+	
+	$grid.jqGrid("setGridParam",{
+		onBeforeDelete:function($grid){
+			var selectIds=$grid.jqGrid('getGridParam','selarrrow');
+			var sysIds=[];
+			for(var i=0;i<selectIds.length;++i){
+				var row=$grid.getRowData(selectIds[i]);
+				if(row.isCustom=="true"){
+					return true;
+				}
+				sysIds.push("["+row.displayName+"]");
+			}
+			if(sysIds.length>0){
+				$.messageBox.warning({message:sysIds.join(",")+i18n.t("view.deleteFailSystem")});
+				return false;
+			}
+			return true;
+		}
+	});
+	
+	$grid.jqGrid("setGridParam",
+			{exContextMenu:	[{type: "splitLine" },
+		    	{text: i18n.t("view.preview.title"),icon:imageRoot+"/icon_tool_145.gif",   action: function(){
+		              preview();
+		    	}},
+		    	{text: i18n.t("view.copy.title"),icon:imageRoot+"/icon_tool_064.gif",   action: function(){
+		              copy();
+		    	}},
+		    	{text: i18n.t("view.sendToMenu.title"),icon:imageRoot+"/icon_tool_157.gif",   action: function(){
+		    		sendToMenu();
+		    	}},
+		    ]}
+	);	
+
+	$(".sendToMenu",context).click(function(){
+		sendToMenu();
+	});
+	
+	$(".preview",context).click(function(){
+		preview();
+	});
+	
+	/* $(".copy",context).click(function(){
+		copy();
+	}); */
+	
+});
+//]]> 
+</script>
+</div>

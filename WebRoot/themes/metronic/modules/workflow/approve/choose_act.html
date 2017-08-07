@@ -1,0 +1,178 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:750px;">
+	<style>
+	.select-block .select-item {
+		width: 95%;
+		height: 80px;
+		margin: 5px auto;
+		background-color: #4F88BB;
+		color: #FFFFFF;
+		cursor: pointer;
+		border: 2px solid #EEEEEE;
+	}
+	.select-block .select-item.selected{
+		border: 3px solid #AC38C5;
+		background-color: #899B61;
+	}
+	.select-block .select-item .select-title {
+		width:50%;
+		display: inline-block;
+		font-size: 28px;
+		color: #FFFFFF;
+		margin: 25px 80px;
+	}
+	.select-block .select-item:hover {
+		border: 2px solid #AC38C5;
+	}
+	</style>
+		<div class="ui-dialog-title hide" th:attr="dd=${queryString['justsetactor']}">
+			<span th:if="${queryString['justsetactor']=='1'}">设置下面环节的参与者</span>
+			<span th:unless="${queryString['justsetactor']=='1'}">设置下一环节</span>
+		</div>
+
+		<div class="form-horizontal">
+				<div class="alert" th:if="${queryString['justsetactor']=='1'}">
+					<strong>提示！</strong>下面的环节有环节需要设置参与者，则可以在此处设置。 
+				</div>
+				<div class="alert" th:unless="${queryString['justsetactor']=='1'}">
+					<strong>提示！</strong>下一环节有多个时需要您手工选择，您还可以设置此环节的处理人。 
+				</div>
+				<div class="select-block">
+				</div>
+		</div>
+		<div class="ui-dialog-buttonset">
+		 	<button type="button" class="btn purple saveAct">
+             <span th:text="#{common.sure}">
+             </span>
+             <i class="m-icon-swapright m-icon-white">
+             </i>
+           </button>
+           <button type="button" class="btn closeBtn" th:text="#{common.cancel}">
+           </button>
+		</div>
+		<script type="text/x-jsrender"  id="add-row-template-act">
+		{{if justSetActor}}
+		<div class="select-item just-set-actor" id="{{:id}}" data-parent-id="{{:parentId}}" data-bname="{{:name}}">
+			<div class="select-title">{{>name}}</div>
+			{{if isCountersign}}<button class="btn green setupDeptFromAll">设置会签人员或部门</button> {{else if mustSelectUser}}<button class="btn green setupUserFromAll mustSelectUser">设置处理人</button> {{else if canSelectUser}}<button class="btn green setupUser">从候选选人</button>{{/if}}
+		</div>
+		{{else}}
+		<div class="select-item" id="{{:id}}" data-parent-id="{{:parentId}}" data-bname="{{:name}}">
+			<div class="select-title">{{>name}}</div>
+			{{if isCountersign}}<button class="btn green setupDeptFromAll">设置会签人员或部门</button> {{else if mustSelectUser}}<button class="btn green setupUserFromAll mustSelectUser">设置处理人</button> {{else if canSelectUser}}<button class="btn green setupUser">从候选选人</button>{{/if}}
+		</div>
+		{{/if}}
+		</script>
+	<script th:inline="javascript">
+	//<![CDATA[
+   	$(function(){
+   		var context=/*[['#'+${viewId}]]*/;
+   		var args=jQuery.dialogAraguments();
+   	   	var nextAllActivity=args.nextAllActivity;
+   	   	var procId=args.procId;
+   	   	var taskId=args.taskId;
+   	 	var $tr=$($("#add-row-template-act",context).render(nextAllActivity));
+		$(".select-block",context).append($tr);
+		$(".select-item",context).not(".just-set-actor").click(function(){
+			$(this).addClass("selected").siblings().removeClass("selected");
+		});
+		$(".closeBtn",context).click(function(){
+			$(context).dialogClose(null);
+		});
+		$(".select-item .setupUser",context).click(function(){
+			var $t=$(this).parent();
+			var url=Global.contextPath+"/workflow/approve/chooseUser";
+			if(!taskId){
+				taskId="";
+			}
+			url=Urls.urlParam(url,[{key:"procId",value:procId},{key:"taskId",value:taskId},{key:"actName",value:$t.attr("id")}]);
+			$.openLink(url,function(res){
+				if(res){
+					$t.data("userActors",res);
+					$t.addClass("actor-selected");
+				}
+			});
+		});
+		$(".select-item .setupUserFromAll",context).click(function(){
+			var $t=$(this).parent();
+			var selectUserUrl=Global.contextPath+"/entities/user/treeList/uamOrganization?view=select_tree_list&refField=orgId&mode=multi";
+			$.openLink(selectUserUrl,function(users){
+				if(users){
+					var cActors=[];
+					for(var i=0;i<users.length;++i){
+						cActors.push({id:users[i].id,name:users[i].text||users[i].name,type:"user"});
+					}
+					$t.data("userActors",cActors);
+					$t.addClass("actor-selected");
+				}
+			});
+		});
+		$(".select-item .setupDeptFromAll",context).click(function(){
+			var $t=$(this).parent();
+			//var selectUserUrl=Global.contextPath+"/entities/uamorganization/treeList/uamorganization?view=select_tree_list&refField=parentId&mode=multi";
+			var selectUserUrl=Global.contextPath+"/workflow/process/selectPostOrUser?hidename=dynamic,role,post";
+			$.openLink(selectUserUrl,function(users){
+				if(users){
+					var cActors=[],u=null;
+					for(var i=0;i<users.length;++i){
+						u=users[i];
+						if(u.actorType__==="user"){
+							cActors.push({id:u.id,name:u.description__,type:"user"});
+						}else if(u.actorType__==="scriptUser"){
+							cActors.push({id:u.userScriptExpression,name:u.description__,type:"expression"});
+						}else{
+							cActors.push({id:u.id,name:u.description__,type:"dept"});
+						}
+					}
+					$t.data("userActors",cActors);
+					$t.addClass("actor-selected");
+				}
+			});
+		});
+		function getBData($t){
+			var id = $t.attr('id');
+			var parentId = $t.attr('data-parent-id');
+			var actors=$t.data("userActors");
+			return {name:id,parent:parentId,actors:actors};
+		};
+		$(".saveAct",context).click(function(){
+			var $t = $(".select-item.just-set-actor",context);
+			var justSetActor=false;
+			if($t.length>0){
+				justSetActor=true;
+				var mustSelectUserItems=$(".mustSelectUser",context).closest(".just-set-actor");
+				var ok=true;
+				var allSetted=[];
+				mustSelectUserItems.each(function(i,item){
+					var selected=getBData($(item));
+					var name=$(item).data("bname");
+					if(!selected.actors){
+						$.messageBox.info({message:"请设置环节["+name+"]参与者"});
+						ok=false;
+						return false;
+					}
+					allSetted.push(selected);
+				});
+				if(!ok){
+					return false;
+				}else{
+					$(context).dialogClose(allSetted);
+				}
+			}else{
+				$t = $(".select-item.selected",context);
+				if(!$t.length){
+					$.messageBox.info({message:"请选择下一环节"});
+					return false;
+				}
+				var selected=getBData($t);
+				if($t.find(".setupUserFromAll").length>0&&!selected.actors){
+					$.messageBox.info({message:"当前选中的环节必须设置处理人"});
+					return false;
+				}
+				$(context).dialogClose(selected);
+			}
+		});
+   	});
+	//]]>
+</script>
+</div>
+

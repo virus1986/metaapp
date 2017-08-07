@@ -1,0 +1,61 @@
+<div class="wysiwyg-toolbar left">
+	<button ng-click="setupEditTab()" type="button" class="btn btn-mini btn-primary" data-target="#editTabModal" role="button" data-toggle="modal">移除tab</button> 
+	<button ng-click="setupAddTab()" type="button" class="btn btn-mini btn-primary" data-target="#addTabModal" role="button" data-toggle="modal">添加tab</button>
+	<div class="modal hide fade" role="dialog" id="editTabModal">
+	  <div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	    <h3>移除tab</h3>
+	  </div>
+	  <div class="modal-body">
+	  	<div class="accordion" id="accordion-edit-tab">
+	  	</div>
+	  </div>
+	  <div class="modal-footer"> <a class="btn btn-primary" data-dismiss="modal">关闭</a> </div>
+	</div>
+	<div class="modal hide fade" role="dialog" id="addTabModal">
+	  <div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	    <h3>添加tab</h3>
+	  </div>
+	  <div class="modal-body">
+	    <form class="form-horizontal" id="add-tab-form">
+		  <div class="control-group">
+		    <label class="control-label">显示名称：</label>
+		    <div class="controls">
+		      <input type="text" name="text" required="required"/>
+		    </div>
+		  </div>
+		  <div class="control-group">
+		    <label class="control-label">是否引用外部url：</label>
+		    <div class="controls">
+		      <label class="radio inline">
+		      	<input type="radio" name="useUrl" value="yes" checked="checked"/><span class="lbl">是</span>
+		      </label>
+		      <label class="radio inline">
+		      	<input type="radio" name="useUrl" value="no"/><span class="lbl">否</span>
+		      </label>
+		    </div>
+		  </div>
+		  <div class="control-group use-url">
+		    <label class="control-label">地址：</label>
+		    <div class="controls">
+		      <input type="text" name="url" required="required"/>
+		      <span class="label badge-important">可用~代表应用上下文</span>
+		    </div>
+		  </div>
+		</form>
+	  </div>
+	  <div class="modal-footer"> <a ng-click="saveSetupAddTab()" class="btn btn-primary" data-dismiss="modal">添加</a> <a class="btn" data-dismiss="modal">关闭</a> </div>
+	</div>
+	<script id="editTabTemplate" type="text/x-jsrender">
+	<div class="accordion-group" data-tabId="{{:tabId}}">
+    <div class="accordion-heading" style=" background-color: #CAEBE8; ">
+      <span style="display:inline-block;width:80%;padding: 0px 20px;">
+      {{:text}}
+	  </span>
+	  <span class="btn btn-mini btn-danger remove-tab"><i class="icon-trash"></i>移除</span>
+    </div>
+  	</div>
+	</script>
+	<script id="addTabTemplate" type="text/x-jsrender">
+	<li><a {{if useUrl}} th:href="${themes.resolveAppPath('{{:href}}')}" {{/if}} href="{{:href}}" >{{:text}}</a><span></span></li> 
+	</script> 
+</div>

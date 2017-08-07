@@ -1,0 +1,272 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width: 950px;">
+<style>
+#createRelationTable tbody tr textarea{
+	height: 120px;
+	width: 500px;
+}
+</style>
+<form  id="createRelationForm" class="form-horizontal"  data-widget="validator" th:action="${requestUri}">
+		<div class="ui-dialog-content container-fluid ">
+			<table class="form-table form-bordered  col2-fluid" id="createRelationTable">
+		<tbody>
+			<tr>
+				<th><label th:text="#{common.displayName}+':'"></label></th>
+				<td>
+				<input type="text" id="displayName" name="displayName" th:value="${relation.displayName}"
+								class="input-large" th:placeholder="#{validation.string36}"
+								data-validator="required,length[1,36]" />
+					<input type="hidden" id="sourceEntity" name="sourceEntity" th:value="${relation.sourceEntity}"/>	
+					<input type="hidden" name="action" th:value="${action}"/>
+				</td>
+			</tr>
+			<tr>
+				<th><label th:text="#{metadata.relation.relationType}+':'"></label></th>
+				<td>
+					<select id="type" name="type" data-validator="required">
+						<option value="" th:text="#{common.optionNullText}"></option>
+						<option value="OneToMany" th:selected="${null!=relation.type and relation.type.name().equals('OneToMany')}" th:text="#{metadata.relation.relationType.oneToMany}"></option>
+						<option value="ManyToOne" th:selected="${null!=relation.type and relation.type.name().equals('ManyToOne')}" th:text="#{metadata.relation.relationType.manyToOne}"></option>
+						<option value="ManyToMany" th:selected="${null!=relation.type and relation.type.name().equals('ManyToMany')}" th:text="#{metadata.relation.relationType.manyToMany}"></option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th><label th:text="#{metadata.targetEntity}+':'"></label></th>
+				<td>
+					<select id="targetEntity" name="targetEntity"
+						 data-validator="required">
+						<option value="" th:text="#{common.optionNullText}"></option>
+						<option th:each="n:${nameList}" th:value="${n.key}" th:text="${n.value}" th:selected="${relation.targetEntity==n.key}"/>
+					</select>
+				</td>
+			</tr>
+			<tr class="ManyToMany">
+				<th><label>关联实体:</label></th>
+				<td>
+					<select id="joinEntity" name="joinEntity">
+						<option value="" th:text="#{common.optionNullText}"></option>
+						<option th:each="n:${nameList}" th:value="${n.key}" th:text="${n.value}" th:selected="${relation.targetEntity==n.key}"/>
+					</select>
+				</td>
+			</tr>
+			<tr class="ManyToMany">
+				<th><label>关联字段1:</label></th>
+				<td>
+					<select name="joinEntityRefField1">
+					</select>
+					<span class="label label-info">关联实体的字段,对当前实体的引用字段</span>
+				</td>
+			</tr>
+			<tr class="ManyToMany">
+				<th><label>关联字段2:</label></th>
+				<td>
+					<select name="joinEntityRefField2">
+					</select>
+					<span class="label label-info">关联实体的字段,对目标实体的引用字段</span>
+				</td>
+			</tr>
+			<tr class="ManyToOne">
+				<th><label th:text="#{metadata.relation.relationField}+':'"></label></th>
+				<td>
+					<select name="sourceEntityRelationField">
+						<option value="" th:text="'--'+#{metadata.relation.relationField.autoCreate}+'--'"></option>
+						<option th:each="sField:${sourceEntityFields}" th:value="${sField.key}" th:text="${sField.value}"></option>
+					</select>
+					<span class="label label-info" th:text="#{metadata.relation.relationFieldDesc}"></span>
+				</td>
+			</tr>
+			<tr class="OneToMany ManyToOne">
+				<th><label th:text="#{metadata.relation.refField}+':'"></label></th>
+				<td>
+					<select name="refToTargetEntityField">
+						<option value="" th:text="'--'+#{metadata.relation.targetEntityIdentity}+'--'"></option>
+					</select>
+					<span class="label label-info many" th:text="#{metadata.relation.refField.manyDesc}"></span>
+					<span class="label label-info one hide" th:text="#{metadata.relation.refField.oneDesc}"></span>
+				</td>
+			</tr>
+			<tr class="ManyToOne">
+				<th><label th:text="#{metadata.relation.createForeignkeyOrNot}+':'"></label></th>
+				<td>
+					<label class="radio inline">
+						<input type="radio" th:checked="${!relation.isAbstract}" id="isAbstract" name='isAbstract' value="false"/><span th:text="#{common.yes}"></span>
+					</label>
+					<label class="radio inline">
+						<input type="radio" th:checked="${relation.isAbstract}"  id="isAbstract" name='isAbstract' value="true"/><span th:text="#{common.no}"></span>
+					</label>
+				</td>
+			</tr>
+			<tr class="ManyToOne" id="delStrategy">
+				<th><label th:text="#{metadata.relation.deleteStrategy}+':'"></label></th>
+				<td>
+					<select id="onDelete" name="onDelete" data-validator="required">
+						<option th:each="a:${onDelActions}" th:value="${a.key}" th:text="${a.value}"/>
+					</select>
+					<a href="javascript://" rel="popover" th:attr="data-content=#{metadata.relation.deleteStrategyDesc}, data-original-title=#{metadata.relation.deleteStrategyDescTitle}" 
+					id="onDelTip"><i class="icon-question-sign"></i></a>
+				</td>
+			</tr>
+			<tr>
+			<th><label th:text="#{common.description}+':'"></label></th>
+				<td>
+				<textarea id="summary" name="summary" class="shortArea"
+					data-validator="length[0,1000]" 
+					th:placeholder="#{validation.string1000Sec}" th:text="${relation.summary}"/>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	</div>
+	
+	<div class="ui-dialog-buttonset">
+		<button th:if="${action!='view'}" type="button" class="btn purple saveMetaRelation">
+			<span th:text="#{common.save}"></span>
+			<i class="m-icon-swapright m-icon-white"></i>
+		</button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+</form>
+<script th:inline="javascript">
+//<![CDATA[
+$(function(){
+	var context=/*[['#'+${viewId}]]*/;
+	var action=/*[[${action}]]*/;
+	var sourceEntity=/*[[${nameList[relation.sourceEntity]}]]*/;
+	var refToTargetEntityField=/*[[${refToTargetEntityField}]]*/;
+	var sourceEntityRelationField=/*[[${sourceEntityRelationField}]]*/;
+	var joinEntityRefField1=/*[[${joinEntityRefField1}]]*/;
+	var joinEntityRefField2=/*[[${joinEntityRefField2}]]*/;
+	$("#displayName", context).focus();
+	
+	Page.init(context);
+
+	$(".saveMetaRelation", context).click(function(){
+		debugger
+		var valInfo = $.validation.validate("#createRelationForm") ;
+		if( valInfo.isError ) {
+			return false;
+		}
+		$(this).attr("disabled","disabled");
+		$(this).addClass("disabled");
+		var url=$("#createRelationForm", context).attr("action");
+		var data=$("#createRelationForm", context).toJson();
+		
+		if(data.type=="ManyToOne"){
+			url=Urls.appendParam(url,"sourceEntityRelationField",$("[name='sourceEntityRelationField']").val());
+			url=Urls.appendParam(url,"refToTargetEntityField",$("[name='refToTargetEntityField']").val());
+		}else if(data.type=="OneToMany"){
+			url=Urls.appendParam(url,"refToTargetEntityField",$("[name='refToTargetEntityField']").val());
+		}else{
+			url=Urls.appendParam(url,"joinEntityRefField1",$("[name='joinEntityRefField1']").val());
+			url=Urls.appendParam(url,"joinEntityRefField2",$("[name='joinEntityRefField2']").val());
+		}
+		jQuery.restPost(url,data,function(response){
+			jQuery.dialogReturnValue(response);
+			$(context).dialogClose();
+		});
+	});
+
+	
+	var allClass=".ManyToOne,.OneToMany,.ManyToMany";
+	$("#type", context).change(function(){
+		var type = $(this).val();
+		var showClass="."+type;
+		$(showClass,context).show();
+		$(allClass,context).not(showClass).hide();
+		$("[name=targetEntity]", context).trigger("change");
+		$(context).dialogResize();
+	});
+	$("[name=isAbstract]", context).change(function(){
+		var del = $("#delStrategy", context);
+		var isCreateForeignkey = $("[name=isAbstract]:checked", context).val();
+		if(isCreateForeignkey == "false"){
+			del.show("slow");
+		} else {
+			del.hide("slow");
+		}
+	});
+	
+	$("[name=targetEntity]", context).change(function(){
+		var entity=$(this).val();
+		var type=$("#type", context).val();
+		if(!entity||type=="ManyToMany"){
+			return;
+		}
+		var url=Global.contextPath+"/metadata/entity/fieldJson?entity="+entity;
+		url=Urls.urlParam(url,[{key:"sourceEntity",value:sourceEntity},{key:"type",value:type}]);
+		$.restGet(url,function(fields){
+			if(fields&&fields.length>0){
+				var field;
+				var options=[];
+				if(type=="ManyToOne"){
+					options.push("<option value=''>————"+i18n.t('relation.targetEntityIdentity')+"————</option>");
+				}else if(type=="OneToMany"){
+					options.push("<option value=''>————"+i18n.t('relation.autocreateField')+"————</option>");
+				}
+				for(var i=0;i<fields.length;++i){
+					field=fields[i];
+					options.push("<option value='"+field.key+"'>"+field.value+"</option>");
+				}
+				$("[name=refToTargetEntityField]",context).html(options.join(""));
+				$("[name=targetEntity]", context).trigger("afterChanged");
+			}
+		});
+	});
+	$("[name=joinEntity]", context).change(function(){
+		var entity=$(this).val();
+		var type=$("#type", context).val();
+		if(!entity||type!="ManyToMany"){
+			return;
+		}
+		var url=Global.contextPath+"/metadata/entity/fieldJson?entity="+entity;
+		url=Urls.urlParam(url,[{key:"sourceEntity",value:sourceEntity},{key:"type",value:type}]);
+		$.restGet(url,function(fields){
+			if(fields&&fields.length>0){
+				var field;
+				var options=[];
+				options.push("<option value=''>————"+'请选择关联字段'+"————</option>");
+				for(var i=0;i<fields.length;++i){
+					field=fields[i];
+					options.push("<option value='"+field.key+"'>"+field.value+"</option>");
+				}
+				$("[name=joinEntityRefField1],[name=joinEntityRefField2]",context).html(options.join(""));
+				$("[name=joinEntity]", context).trigger("afterChanged");
+			}
+		});
+	});
+	
+	function initPage(){
+		$("#onDelTip", context).popover({trigger : "hover",html:true});
+		if(action == 'edit'){
+			$("input,select",context).not("[name=displayName],[name=summary]").attr("disabled","disabled");
+			$(".ui-dialog-title").html(i18n.t("relation.edit.title", sourceEntity));
+			var $type=$("#type", context).trigger("change");
+			$type.trigger("change");
+			$("[name=targetEntity]", context).on("afterChanged",function(){
+				$("[name='refToTargetEntityField']",context).val(refToTargetEntityField);
+			});
+			$("[name=targetEntity]", context).trigger("change");	
+			
+			$("[name='sourceEntityRelationField']",context).val(sourceEntityRelationField);
+			var type=$type.val();
+			if(type=="ManyToOne"){
+				$("[name=isAbstract]", context).trigger("change");
+			}else if(type=="ManyToMany"){
+				$("[name=joinEntity]", context).on("afterChanged",function(){
+					$("[name='joinEntityRefField1']").val(joinEntityRefField1);
+					$("[name='joinEntityRefField2']").val(joinEntityRefField2);
+				});
+				$("[name=joinEntity]", context).trigger("change");	
+			}
+		} else {
+			$(".ui-dialog-title")
+				.html(i18n.t("relation.create.title",sourceEntity));
+			$(allClass,context).hide();
+		}
+	};
+	
+	initPage();
+});
+//]]>
+</script>
+</div>

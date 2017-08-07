@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:meta="http://www.bingosoft.net">
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="pragma" content="no-cache" />
+	<meta http-equiv="cache-control" content="no-cache" />
+</head>
+<body>
+<div th:fragment="formlayout">
+ <li class="nav-header">
+    <div class="pull-right popover-info"><i class="icon-question-sign "></i>
+      <div class="popover fade right">
+        <div class="arrow"></div>
+        <h3 class="popover-title">功能</h3>
+        <div class="popover-content">表单的基础模板，所有表单在此模板基础上修改，目前提供<span class="label label-important">弹出式</span>和<span class="label label-important">tab中打开</span>两种基础布局。</div>
+      </div>
+    </div>
+     <i class="icon-plus icon-white"></i> 表单模板</li>
+   <li style="display: none;" class="rows" id="estRows" >
+   <div th:utext="${defaultPopupBaseFormLayout}">
+   </div>
+   <div th:utext="${defaultTabBaseFormLayout}">
+   </div>
+   <div class="lyrow base-form-layout popup" aria-disabled="false" style="display: block;"> 
+		<div class="toolbar">
+			<a href="#close" class="remove label label-important"><i class="icon-remove icon-white"></i>删除</a> 
+			<span class="drag label"><i class="icon-move"></i>拖动</span>
+		</div>
+		<div class="preview">popup表单外框</div>
+		<div class="view">
+			<div class="panel apply-panel" style="min-width: 950px;" _th:id="${viewId}">
+			  <div class="lyrow form form-parallel-item">
+			    <div class="toolbar">
+			  	  <span class="drag label"><i class="icon-move"></i>拖动</span>
+			  	</div>
+			  	<div class="view">
+					  <form class="form-horizontal ajaxpost" data-widget="validator" id="entityForm" method="post" _th:action="${requestUrl}" _th:object="${entity}">
+					    <meta:placeholder th:each="identityField:${identityFields}">
+					    	<input th:attr="_meta:field=${identityField.name}" type="hidden"/>
+					    </meta:placeholder>
+						<div class="table-dialog">
+							<div class="ui-dialog-title" _th:switch="${action}">
+								<span _th:case="'EDIT'" _th:text="'修改'+${metaEntity.displayName}"></span>
+								<span _th:case="'CREATE'" _th:text="'新建'+${metaEntity.displayName}"></span> 
+								<span _th:case="'VIEW'" _th:text="'查看'+${metaEntity.displayName}"></span>
+								<span _th:case="*" _th:text="'无此action：'+${action}"></span>
+							</div>
+							<div class="row-fluid">
+					          <div class="span2 column form-left">
+					            <div class="dialog-menu" id="left-navbar"></div>
+					            <div class="box auto-relation box-element">
+					                <div class="toolbar">
+						            	<span class="configuration">
+						            		<button data-target="#relationConfigModal" role="button" data-toggle="modal" type="button" class="btn btn-mini">关系设置</button>
+						            	</span>
+					            	</div>
+					            	<div class="view"> 
+					            		<div data-exclude-relation-names="" class="relations-section"><h2>自动关系</h2></div>
+					            	</div>
+					            </div>
+					          </div>
+					          <div class="span10 column form-sections form-right" data-spy="scroll" data-target="#left-navbar">
+					          </div>
+			          		</div>
+						</div>
+						<div class="ui-dialog-buttonset">
+							<button class="btn btn-primary" name="save" _th:if="${action} != 'VIEW'" type="submit">保&nbsp;存</button>
+							<button class="btn closeBtn" name="close" _th:text="(${action} != 'VIEW')?'取消':'关闭'" type="button">取&nbsp;消</button>
+						</div>
+					</form>
+			  	</div>
+			  </div>
+			</div>
+			<textarea style="display: none;" id="script">$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var context="#" + viewId;
+		Form.init(context,"#entityForm");
+		Page.init(context,{isInitFormNav:true,isInitRelation:true});
+		});
+		</textarea>
+		</div>
+   </div> 
+   <div class="lyrow base-form-layout tab" aria-disabled="false" style="display: block;"> 
+		<div class="toolbar">
+				<a href="#close" class="remove label label-important"><i class="icon-remove icon-white"></i>删除</a> 
+				<span class="drag label"><i class="icon-move"></i>拖动</span>
+				<span class="configuration">
+				  <button type="button" class="btn btn-mini" data-target="#toolbarConfigModal" role="button" data-toggle="modal">设置工具栏</button>
+				  <button type="button" class="btn btn-mini" data-target="#editTabModal" role="button" data-toggle="modal">编辑tab</button> 
+				  <button type="button" class="btn btn-mini" data-target="#addTabModal" role="button" data-toggle="modal">添加tab</button> 
+				</span>
+		</div>
+				<div class="preview">tab打开表单外框</div>
+				<div class="view">
+					<div _th:id="${viewId}" class="tab-form ui-corner-all">
+						<div class="form-toolbar">
+							<ul>
+								<li _th:if="${action} != 'VIEW'" id="submitAll" class="baseinfo"><a href="javascript://" title="保存"> 
+									<img _th:src="${themes.icon('main/form-save.png')}" /><span>保存</span>
+								</a></li>
+							</ul>
+						</div>
+						<div class="bottom-tabs">
+							<div class="tabs-bottom tabbable tabs-below" style="padding-right: 0px">
+								<div id="baseInfo">
+									<form class="form-horizontal ajaxpost" data-widget="validator" id="entityForm" method="post" _th:action="${requestUrl}" _th:object="${entity}">
+										<meta:placeholder th:each="identityField:${identityFields}">
+											<input th:attr="_meta:field=${identityField.name}" type="hidden" />
+										</meta:placeholder>
+										<div class="form-sections">
+										</div>
+									</form>
+								</div>
+								<ul class="bottom-tabs-ul nav nav-tabs">
+									<li class="active"><a href="#baseInfo">基本信息</a><span></span></li>
+									<li th:each="relationLink:${relationLinks}"><a
+										th:href="${relationLink['url']}"
+										th:attr="_th:href='${themes.resolveAppPath(\''+${relationLink['url']}+'\')}'+'+\'&amp;_ref_val=\'+${entity[\''+${relationLink['refFieldName']}+'\']}'"
+										th:text="${relationLink['text']}"></a><span></span></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<textarea style="display: none;" id="script">
+			$(function(){
+				var viewId=/*[[${viewId}]]*/;
+				var context = "#" + viewId;
+				var id=/*[[${entity['id']}]]*/;
+				var $container=$("#" + viewId);
+				ToolBars.initTabFormCustomToolBar(context);
+				$(".tabs-bottom",$container).tabs({
+					carousel : false,
+					cache:true,
+					ajaxOptions:{
+						cache:false
+					},
+					show:function(event,ui){
+						var _parent=$("#submitAll",$container).parent().parent();
+						resizeTabsHeight();
+					}
+				});
+				$(".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav > *",$container)
+					.removeClass("ui-corner-all ui-corner-top").addClass("ui-corner-bottom");
+				$(".tabs-bottom .ui-tabs-nav",$container).appendTo($(".tabs-bottom",$container));
+				//自适应外层Tab高度
+				$(window).on("resize",function(){
+					resizeTabsHeight();
+				});
+				
+				function resizeTabsHeight(){
+					if($container.closest(".ui-tabs")){
+						window.setTimeout(function(){
+							var parentContainer=$container.closest(".ui-tabs");
+							var toolbar=$container.find(".form-toolbar");
+							var toolbarHeight=toolbar.height();
+							if(toolbar.css("display")=='none'){
+								toolbarHeight=0;
+							}
+							$(".ui-tabs-panel",$container).height(parentContainer.height()-65-toolbarHeight);
+							var _submitAllDisplay=$("#submitAll",$container).css("display");
+							if(_submitAllDisplay=='none'){
+								$(".ui-tabs-panel",$container).css("overflow","hidden");
+								$(".ui-tabs-panel",$container).css("overflow-y","hidden");
+							}else{
+								$(".ui-tabs-panel",$container).css("overflow-y","auto")
+							}
+						},200);
+					}
+				}
+				
+				function saveAll(){
+					var valInfo = $.validation.validate("#" + viewId + " #productDetailsForm") ;
+					if( valInfo.isError ) {
+						return false;
+					}
+					Form.multiAjaxSubmit($("form",$container),{
+				    	before:function(){
+							$(".submitAll",$container).attr("disabled","disabled");
+								CommonUtil.showLoading($container);
+							},
+						complete:function(){
+								$(".submitAll",$container).removeAttr("disabled");
+								CommonUtil.hiddenLoading();
+							}
+					});
+					ReloadCurrentMainTab();
+					return false;
+				};
+			
+				//全部保存
+				$("#submitAll",$container).click(function(){
+					saveAll();
+			    });
+			});
+			</textarea>
+		</div>
+	</div>
+   
+ </li>     
+</div>
+</body>
+</html>

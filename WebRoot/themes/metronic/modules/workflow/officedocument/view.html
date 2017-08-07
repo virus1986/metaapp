@@ -1,0 +1,100 @@
+<div class="container-fluid m-right20" th:id="${viewId}">
+	<div>
+		<h3 class="page-title">
+			<span th:text="${entity['name']}"></span> <small></small>
+		</h3>		
+	</div>
+
+	<div class="tabbable tabbable-custom" data-widget="tab"
+		th:id="'entity-tabs-' + ${viewId}">
+		<ul>
+			<li><a th:href="'#tabs-baseform' + ${viewId}"
+				th:text="#{common.baseInfo}"></a> <span /></li>
+			<li th:if="${action=='VIEW'}"><a th:href="'#tabs-doc' + ${viewId}"
+				>公文正文</a> <span/></li>
+		</ul>
+		<div class="tab-content" th:id="'tabs-baseform' + ${viewId}">
+			<form class="form-horizontal  ajaxpost" data-widget="validator"
+				id="entityForm" method="post" th:action="${requestUrl}"
+				th:object="${entity}">
+				<input meta:field="*{id}" type="hidden" />
+				<input meta:field="*{content}" type="hidden" />
+				<div class="portlet box tea-green">
+					<div class="portlet-title">
+						<div class="caption">
+							<i class="icon-reorder"></i>基本信息
+						</div>
+						<div class="tools">
+							<a href="javascript:;" class="collapse"></a> <a
+								href="javascript:;" class="reload"></a>
+						</div>
+					</div>
+					<div class="portlet-body form-bordered">
+						<table class="form-table  col4-fluid">
+					<tbody>
+						<tr>
+							<th><label>名称：</label></th>
+							<td colspan="1"><input meta:field="name" /></td>
+							<th></th>
+							<td colspan="1"></td>
+						</tr>
+						<tr>
+							<th><label>发布部门：</label></th>
+							<td colspan="3"><input meta:field="PublishOrg"/></td>
+						</tr>						
+						<tr class="">
+							<th><label>备注：</label></th>
+							<td colspan="3"><input meta:field="Remarks"/></td>
+						</tr>
+					</tbody>
+				</table>
+					</div>
+				</div>				
+			</form>
+		</div>
+		<div class="tab-content" style="display:none" th:id="'tabs-doc' + ${viewId}">
+		加载中..
+		</div>
+	</div>
+	<script th:inline="javascript">
+		//<![CDATA[   
+		    $(function(){   
+		       var viewId=/*[[${viewId}]]*/;   
+		       var container=$('#' + viewId);   
+		       Page.init(container);  
+
+		       var docTabId='tabs-doc'+ viewId;
+		       var baseTabId='tabs-baseform'+viewId;
+		       setTimeout(function(){
+		    	   var $tab=$(".ui-tabs",container);
+		    	   $tab.tabs({
+						show:function(event,params){
+							if(params.panel.id!=docTabId){
+								return;
+							}
+							var $fileInput=$("#content",container);		
+							var url=Global.contextPath + "/workflow/process/doc?_inframe=1";
+					        url=Urls.appendParam(url,"filepath",$fileInput.val());
+					        url=Urls.appendParam(url,"_status","3");
+					        url=Urls.appendDate(url);
+					        $.openLink(url, {
+				            	showType:'slide',
+								requestType : "GET"
+								}, function(res){
+									$tab.tabs().active({id:baseTabId});
+							});
+						}
+					});
+		       },500);
+		       
+		    }); 
+		 //]]>
+	</script>
+</div>
+
+
+
+
+
+
+

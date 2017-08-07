@@ -1,0 +1,117 @@
+<div th:id="${viewId}" class="panel apply-panel" style="width:900px;min-height:500px">
+	<div class="ui-dialog-title hide" >
+		<span th:text="#{common.edit}+#{metadata.form}"></span>
+	</div>
+	<form id="createFormForm" data-widget="validator" th:action="${requestUri}">
+		<table class="form-table col4-fluid" style="border: none;margin-bottom: 0px">
+			<tbody>
+				<tr>
+					<th><label><meta:display-name field="metauitemplate.displayName"/>:</label></th>
+					<td >
+						<input name="id" type="hidden" th:value="${layout.id}"/>
+						<input name="entityName" type="hidden" th:value="${layout.entityName}"/>
+						<input name="displayName" type="text" th:value="${layout.displayName}" class="input-large" data-validator="required,length[1,50]"/>
+					</td>
+					<th><label><meta:display-name field="metauitemplate.name"/>:</label></th>
+					<td>
+						<input type="text" name="name" th:value="${layout.name}" disabled="true" class="input-large" data-validator="required,length[1,36]"/>
+					<textarea name="configData" class="hide" data-validator="required" th:text="${layout.configData}"></textarea>
+						<textarea name="template" class="hide" th:text="${layout.template}"></textarea>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div id="flashContent" style="width:100%; height: 460px; font-size: 14px;border: 1px solid #ccc;"></div>
+		<div class="ui-dialog-buttonset">
+			<button type="button" class="btn btn-primary saveEntityForm" th:text="#{common.save}"></button>
+			<button type="button" class="btn btn-primary saveAndToHtml" th:text="#{form.customCode.editHtml}"></button>
+			<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+		</div>
+	</form>
+	
+	<script th:inline="javascript">
+	//<![CDATA[
+	var context = /*[['#'+${viewId}]]*/;
+	$(function(){
+		function initEditor(){
+		    editor = ace.edit("flashContent");
+		    editor.setTheme("ace/theme/eclipse");
+		    if(template){
+		    	editor.getSession().setMode("ace/mode/html");
+	    		editor.setValue(template);
+	    	}else{
+	    		editor.getSession().setMode("ace/mode/xml");
+	    		editor.setValue($("[name=configData]",context).val() );
+	    	}
+		    editor.getSession().setMode("ace/mode/html");
+		    editor.setShowPrintMargin(false);
+		    editor.gotoLine(0,0,false);
+		}
+		
+		var editor=null;
+		var action = /*[[${action}]]*/;
+		var template=$("[name=template]",context).val();
+		var url     = $("#createFormForm", context).attr("action") ;
+		var args = $.dialogAraguments() ;
+		if( args && args.pageSource == "edit" ){
+			url = url.replace("action=create","action=edit&editMode=1") ;
+		}
+    	if(template){
+    		$(context).data("template","yes");
+    		$("button.saveAndToHtml").hide();
+    	}	
+		if(action != "edit"){
+			$("[name='displayName']", context).keyup(function(){
+				$("[name='name']", context).val($(this).toPinyin().replace(/\s*/g,''));
+			});
+		}
+		Form.init(context,"#createFormForm");
+		initEditor();
+		
+		
+		$(".saveEntityForm", context).click(function(){
+			var content=editor.getValue();
+			if($(context).data("template")=="yes"){
+				$("[name=template]",context).val(content);
+			}else{
+				$("[name=configData]",context).val(content);
+			}
+			var valInfo = $.validation.validate("#createFormForm") ;
+			if( valInfo.isError ) {
+				return false;
+			}
+			$(this).attr("disabled","disabled");
+			$(this).addClass("disabled");
+			var data=$("#createFormForm", context).toJson();
+			jQuery.restPost(url,data,function(response){
+				jQuery.dialogReturnValue(response);
+				$(context).dialogClose();
+			});
+		});
+		$(".saveAndToHtml", context).click(function(){
+			$.messageBox.confirm({
+				message:i18n.t("form.custom.toHtmlAlert"),
+				callback:function(result){
+					if(result){
+						var xmlContent=editor.getValue();
+						$("[name=configData]",context).val(xmlContent);
+						var valInfo = $.validation.validate("#createFormForm") ;
+						if( valInfo.isError ) {
+							return false;
+						}
+						$(this).attr("disabled","disabled");
+						$(this).addClass("disabled");
+						var data=$("#createFormForm", context).toJson();
+						jQuery.restPost(Urls.urlParam(url,[{key:"_template",value:"1"}]),data,function(response){
+							editor.setValue(response.template);
+							$(context).data("template","yes");
+							$("button.saveAndToHtml").hide();
+						});
+					}
+				}
+			}).click();
+		});
+	});
+	//]]>	
+	</script>
+</div>

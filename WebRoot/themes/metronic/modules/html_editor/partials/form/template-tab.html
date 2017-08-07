@@ -1,0 +1,78 @@
+<div class="container-fluid" th:id="${viewId}">
+	<div>
+		<!-- END BEGIN STYLE CUSTOMIZER -->
+		<h3 class="page-title">
+			点击修改标题 <small></small>
+		</h3>
+		<div class="pull-right form-toolbar">
+			<div class="btn-group">
+				<a href="javascript://"
+					class="btn green table-toolbar-icon-item baseinfo"
+					id="saveBaseInfo" th:title="#{common.save}"> <span
+					th:text="#{common.save}"> </span> <i class="icon-plus"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="tabbable tabbable-custom" data-widget="tab" ui-tab	th:id="'entity-tabs-' + ${viewId}">
+		<ul>
+			<li><a th:href="'#tabs-baseform' + ${viewId}"	th:text="#{common.baseInfo}">基本信息</a></li>
+		</ul>
+		<div class="tab-content" th:id="'tabs-baseform' + ${viewId}">
+			<form class="form-horizontal  ajaxpost full" data-widget="validator"
+				id="entityForm" method="post" th:action="${requestUrl}"
+				th:object="${entity}">
+				<div class="portlet box tea-green">
+					<div class="portlet-title">
+						<div class="caption">
+							<i class="icon-reorder"></i>标题1
+						</div>
+						<div class="tools">
+							<a href="javascript:;" class="collapse"></a> <a
+								href="javascript:;" class="reload"></a>
+						</div>
+					</div>
+					<div class="portlet-body form-bordered">
+						<table class="form-table col4-fluid">
+							<tr>
+								<th><label></label></th>
+								<td></td>
+								<th><label></label></th>
+								<td></td>
+							</tr>
+							<tr>
+								<th><label></label></th>
+								<td></td>
+								<th><label></label></th>
+								<td></td>
+							</tr>
+							<tr>
+								<th><label></label></th>
+								<td></td>
+								<th><label></label></th>
+								<td></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<textarea id="script" style="display: none;">
+	/*<![CDATA[*/	
+		$(function(){
+			var viewId=/*[[${viewId}]]*/;
+			var container = $('#' + viewId);
+			Page.init(container);
+		});
+	/*]]>*/
+	</textarea>
+</div>
+
+
+
+
+
+
+

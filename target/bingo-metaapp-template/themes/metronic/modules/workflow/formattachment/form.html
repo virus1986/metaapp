@@ -1,0 +1,69 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:850px;">
+  <form id="entityForm" th:object="${entity}" th:action="${requestUrl}" method="post" data-widget="validator" class="form-horizontal ajaxpost">
+    <input type="hidden" meta:field="*{id}"/>
+      <div class="table-dialog">
+        <div class="ui-dialog-title" th:switch="${action}">
+          <span th:case="'EDIT'" th:text="#{common.edit}+${metaEntity.displayName}">
+          </span>
+          <span th:case="'CREATE'" th:text="#{common.create}+${metaEntity.displayName}">
+          </span>
+          <span th:case="'VIEW'" th:text="#{common.view}+${metaEntity.displayName}">
+          </span>
+          <span th:case="*" th:text="#{common.notExistAction}+${action}">
+          </span>
+        </div>
+        <div class="ui-dialog-content container-fluid">
+          <table class="form-table form-bordered col4-fluid">
+            <tbody>
+              <tr>
+                <th>
+                  <label>名称：</label>
+                </th>
+                <td colspan="1">
+                  <input meta:field="name"/>
+                  </td>
+                  <th>
+                    <label>业务标志：</label>
+                  </th>
+                  <td colspan="1">
+                    <input readonly="readonly" meta:field="businessId"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>
+                      <label>地址：</label>
+                    </th>
+                    <td colspan="3">
+                      <input meta:field="url"/>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="ui-dialog-buttonset">
+                <button th:if="${action} != 'VIEW'" type="submit" name="save" class="btn purple">
+                  <span th:text="#{common.save}">
+                  </span>
+                  <i class="m-icon-swapright m-icon-white">
+                  </i>
+                </button>
+                <button type="button" name="close" class="btn closeBtn" th:text="(${action} != 'VIEW')?#{common.cancel} : #{common.close}">
+                </button>
+              </div>
+            </div>
+          </form>
+<script th:inline="javascript" type="text/javascript">
+     //<![CDATA[ 
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var context=$('#' + viewId);
+		Page.init(context);
+		$("input[name=url]",context).on("FileUploaded",function(e,up, file,resp,container){
+			var fileFullName=file.name;
+			var fileName=fileFullName.substring(0,fileFullName.lastIndexOf("."));
+			$("input[name=name]",context).val(fileName);
+		});
+	});
+	//]]>
+</script>         
+</div>

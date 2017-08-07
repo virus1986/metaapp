@@ -1,0 +1,17 @@
+<div th:id="${viewId}">
+<meta:grid grid="${grid}" id="'grid_user_associate_'+${viewId}" entityName="${entityName}"/>
+<script type="text/javascript" th:inline="javascript">
+//<![CDATA[ 
+;(function($){	
+	$(function() {
+		var viewId=/*[[${viewId}]]*/;
+		var context="#"+viewId;
+		var $grid=$("#grid_user_associate_"+viewId);
+		$grid.jqGrid("setGridParam",
+				{edit:false,del:false,setup:false}
+		);
+	}); 
+}(jQuery));
+//]]>
+</script>
+</div>

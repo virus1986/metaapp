@@ -1,0 +1,38 @@
+<div class="page-container webos-top">
+	<div class="page-sidebar nav-collapse collapse">
+		<ul class="page-sidebar-menu">
+			<li>
+				<div class="page-sidebar-title">
+					<!-- <i class="icon-group" style="color:#ffb848"></i> -->
+					<img alt="协作管理"
+						th:src="${themes.statics('images/icons/flat/64_64/orgmanage.png')}" />
+				</div>
+				<h2>协作管理</h2>
+			</li>
+			<li class="current"><a href="#" class="menu-item"
+				show-type="tab"
+				menu-url="~/entities/wfproc/treeList/wfproccatagory/?view=tree_list&amp;refField=procCatagoryId&amp;treeLabelField=catagoryName">
+					<i class="icon-list-alt  menu-icon"> </i> <span class="title">流程管理</span>
+					<span class="selected"></span><span class="selected"></span><span
+					class="selected"></span><span class="selected"></span>
+			</a></li>
+
+			<li><a href="#" class="menu-item" show-type="tab"
+				menu-url="~/entities/metauitemplate/list?view=form_workflow_list">
+					<i class="icon-qrcode  menu-icon"> </i> <span class="title">流程表单管理</span>
+			</a></li>
+			<li><a href="#" class="menu-item" show-type="tab"
+				menu-url="~/entities/wfuserrole/treeList/uamorganization?view=tree_list&amp;refField=orgId">
+					<i class="icon-user  menu-icon"> </i> <span class="title">流程角色管理</span>
+			</a></li>
+		</ul>
+	</div>
+
+	<div class="page-content">
+		<div class="menu-tab-container">
+			<div id="default-content" class="default-content-tab">
+			
+			</div>
+		</div>
+	</div>
+</div>

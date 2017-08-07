@@ -1,0 +1,26 @@
+<!-- 错误提示面板 start-->
+<div  th:id="${viewId}" class="error-container">
+	<div class="error-img">
+    	<div class="img-503"></div>
+        <p th:text="#{error.title503}"></p>
+    </div>
+	<div class="error-info">
+    	<h2 th:text="#{error.info503}"></h2>
+        <p><strong th:text="#{error.errorCodeTitle}+':'"></strong><span th:text="${appException.code}"></span><br/>
+        <strong th:text="#{error.errorInfoTitle}+':'"></strong><span th:text="${appException.message}"></span>，<span th:text="${appException.solution}"></span>[<a href="javascript://" id="viewDetial" th:text="#{error.detail}"></a>]<br/>
+        </p>
+	</div>	
+	<div th:text="${exDetail}" id="exDetail" style="display: none"></div> 	
+	<script type="text/javascript" th:inline="javascript">
+	//<![CDATA[ 
+	      $(function(){
+	    	  var viewId=/*[[${viewId}]]*/;
+	    	  var container=$("#"+viewId);
+	    	  $("#viewDetial",container).click(function(){
+	    		  var exDetail=$("#exDetail",container)
+	    		  CommonUtil.showError(exDetail.html().replace(/\n/g, '<br />'));
+	    	  });
+	      });
+	//]]>
+	</script>				
+</div>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugins xmlns="http://schemas.bingosoft.net/java/core/plugin">
+	<!-- <add class="bingo.metaapp.cache.MetadataCachePlugin">
+	</add> -->
+</plugins>

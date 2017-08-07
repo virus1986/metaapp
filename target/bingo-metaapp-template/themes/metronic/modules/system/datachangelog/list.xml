@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" createUrl="~/entities/DataChangeLog/create" dataUrl="~/entities/DataChangeLog/query_paged?entityName=@{Request('entityName')}&amp;recordId=@{Request('recordId')}" deleteUrl="~/entities/DataChangeLog/delete" editUrl="~/entities/DataChangeLog/edit" entityName="DataChangeLog" height="100%" id="grid_85701e43-23b6-4c08-b47d-a022c9d6d88d" multiSelect="true" multiSelectKey="None" shrinkToFit="true" view="list" viewUrl="~/dataChangeLog/view" width="100%">
+    <addDialogSettings showType="pop-up"/>
+    <appearanceSettings alternateRowBackground="true" caption="" highlightRowsOnHover="true" rightToLeft="false" rowNumbersColumnWidth="25" scrollBarOffset="18" showFooter="false" showRowNumbers="true" shrinkToFit="true"/>
+    <columns>
+        <column dataField="id" editable="true" fixed="false" frozen="false" groupSummaryType="None" primaryKey="true" resizable="true" searchable="true" textAlign="Left" visible="false" width="150"/>
+        <column dataField="changeTime" editable="true" fixed="false" frozen="false" groupSummaryType="None" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="80"/>
+        <column dataField="reason" editable="true" fixed="false" frozen="false" groupSummaryType="None" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="400"/>
+   		<column dataField="operator" editable="true" fixed="false" frozen="false" groupSummaryType="None" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="80"/>
+    </columns>
+    <contextButtons>
+    </contextButtons>
+    <toolBarSetting>
+        <button buttonIcon="main/search-add.png" cssClass="" isInMoreBtns="true" name="search" onClick="grid.advanceSearch"  />
+        <button buttonIcon="main/button-load.png" cssClass="" isInMoreBtns="true" name="fresh" onClick="grid.refreshGrid"  />
+    </toolBarSetting>
+    <editDialogSettings showType="pop-up"/>
+    <filter groupOp="and">
+        <rules>
+            <rule data="@{Request('entityName')}" field="entityName" op="eq"/>
+            <rule data="@{Request('recordId')}" field="recordId" op="eq"/>
+        </rules>
+    </filter>
+    <groupSettings collapseGroups="false"/>
+    <orderby>
+        <rule direction="Desc" field="changeTime"/>
+    </orderby>
+    <quickSearch>
+        <column dataField="reason"/>
+    </quickSearch>
+    <joinEntities/>
+    <scriptBlock/>
+    <treeGridSettings enabled="false"/>
+    <viewDialogSettings showType="pop-up"/>
+</grid>

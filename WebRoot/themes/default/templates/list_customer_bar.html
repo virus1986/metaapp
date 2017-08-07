@@ -1,0 +1,43 @@
+<div >
+<div style="display: none;" th:id="'toolbar_'+${jqgrid.id}" class="table-toolbar row-fluid clearfix navbar">
+	<div class="table-toolbar-icon span8">
+		<ul >
+			<li th:each="btn,itStat:${jqgrid.customToolBarSetting}" 
+				class="table-img-icon" th:style="${btn.width}?'width:' + ${btn.width} + 'px' : ''"
+				th:classappend="${btn.cssClass}"
+				th:attr="data-func=${btn.onClick}"
+				th:id="'toolbar_'+${btn.name}+'_'+${jqgrid.id}">
+				<a href="javascript://" th:title="${btn.toolTip}">
+				<img th:src="${themes.icon(btn.buttonIcon)}" />
+				<span th:text="${btn.text}"></span></a>
+			</li>		
+		</ul>
+	</div>
+	<div class="span4 table-toolbar-search" style="vertical-align: middle;height: 45px;line-height: 45px;" th:if="${(jqgrid.quickSearch != null and #lists.size(jqgrid.quickSearch.column)>0)||(jqgrid.isSwitchView==true)}">
+		
+		<div style="display: inline-block;float:right;" th:if="${jqgrid.isSwitchView==true}">
+			<select class="switch-view-btn" style="width:150px;height:24px;border-color: rgb(173, 200, 230);background-color: rgb(221, 232, 238);font-weight: bold;color:rgb(24, 155, 40);">
+				<option th:each="v:${jqgrid.switchViews}" th:attr="data-url=${v['url']}" th:value="${v['name']}" th:selected="${v['name']==jqgrid.view}" th:text="${v['displayName']}"></option>
+			</select>
+		</div>
+		<div style="display: inline-block;float:right;" th:if="${jqgrid.quickSearch != null and #lists.size(jqgrid.quickSearch.column)>0}">
+		<div class="btn-group" style="margin-top: 12px;margin-right:10px;">
+			<input name="searchString" type="text" 
+					class="input-medium search-query pull-left" style="height:16px;"/>
+			<input name="searchField" value="_quickSearch" type="hidden"/> 
+			<input class="btn" name="btSingleSearch" type="button" th:value="#{common.search}" />
+		</div>
+		</div>
+		
+	</div>
+</div>
+	<!-- <div th:id="'contextmenu_'+${jqgrid.id}" class="btn-group navbar" style="display:none">
+		<ul class="dropdown-menu" style="display:block;position: relative;">
+			<li id="edit"><a href="javascript://"><i class="icon-pencil"></i> Edit</a></li>
+			<li id="del"><a href="javascript://"><i class="icon-trash"></i> Delete</a></li>
+			<li id="ban"><a href="javascript://"><i class="icon-ban-circle"></i> Ban</a></li>
+			<li class="divider"></li>
+			<li id="search"><a href="javascript://"><i class="icon-search"></i> Make admin</a></li>
+		</ul>
+	</div> -->
+</div>

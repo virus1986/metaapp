@@ -1,0 +1,672 @@
+<div th:id="${viewId}">
+
+	<!-- 内容区域 -->
+	<div class="container-fluid"
+		style="margin: 0px; padding: 0px 2px; overflow: hidden;">
+		<div class="tabbable tabbable-custom"
+			th:id="'proc-statistics-tab'+${viewId}">
+			<ul class="nav nav-tabs order-tab" style="margin-bottom: 10px">
+				<li><a th:href="'#proc-statistics'+${viewId}">整体效率分析</a></li>
+				<li><a th:href="'#baseInfo'+${viewId}">环节效率分析</a></li>
+			</ul>
+
+			<div class="tab-pane  active" th:id="'proc-statistics'+${viewId}">
+				<div data-widget="validator"
+					class="table-toolbar toolbar toolbar-auto row-fluid simple-search-area"
+					th:id="${'grid_voacontract_common_transaction_list_'+viewId}"
+					style="">
+					<table>
+						<tbody>
+							<tr>
+								<td><label class="control-label ">经验耗时（小时）：</label></td>
+								<td><input id="idExpDuration" type="text"
+									class="input input-medium input-text-template val-location focus-location"
+									data-validator="required,pattern[double]" name="expDuration"
+									value="12"></input></td>
+								<td><label class="control-label ">开始日期：</label></td>
+								<td><input id="idExpStartTime"
+									class="Wdate input date-template input-medium val-location focus-location"
+									type="text" data-widget="calendar"
+									data-options="{'isShowWeek':false,'dateFmt':'yyyy-MM-dd'}"
+									data-operator="gt" name="startTime" th:value="${defStartTime}">
+									</input></td>
+								<td><label class="control-label ">结束日期：</label></td>
+								<td><input id="idExpEndTime"
+									class="Wdate input date-template input-medium val-location focus-location"
+									type="text" data-widget="calendar"
+									data-options="{'isShowWeek':false,'dateFmt':'yyyy-MM-dd'}"
+									data-operator="gt" name="endTime" th:value="${defEndTime}">
+									</input></td>
+								<td style="width: 150px;">
+									<button id="idViewExpDuration" type="button"
+										class="btn green searchBtn">查询</button>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="6" />
+								<td>
+									<div class="toolbar-btns">
+										<button id="idShowExpired" type="button"
+											class="btn green searchBtn" onclick="onShowExpired();">超时单据</button>
+									</div>
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+				<div th:id="${'divProcExpPercentChart_'+viewId}"
+					style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+			</div>
+			<div class="tab-pane" th:id="'baseInfo'+${viewId}">
+				<div
+					class="table-toolbar toolbar toolbar-auto row-fluid simple-search-area"
+					id="toolbar_grid_voacontract_common_transaction_list_0b52e719-b9be-4d66-a17c-aaf112b1cccb"
+					style="">
+					<table>
+						<tbody>
+							<tr>
+								<td><label class="control-label">开始日期：</label></td>
+								<td><input id="idActivityStartTime"
+									class="Wdate input date-template input-medium val-location focus-location"
+									type="text" data-widget="calendar"
+									data-options="{'isShowWeek':false,'dateFmt':'yyyy-MM-dd'}"
+									data-operator="gt" name="startTime" th:value="${defStartTime}">
+									</input></td>
+								<td><label class="control-label">结束日期：</label></td>
+								<td><input id="idActivityEndTime"
+									class="Wdate input date-template input-medium val-location focus-location"
+									type="text" data-widget="calendar"
+									data-options="{'isShowWeek':false,'dateFmt':'yyyy-MM-dd'}"
+									data-operator="gt" name="endTime" th:value="${defEndTime}">
+									</input></td>
+								<td style="width: 150px;">
+									<div class="toolbar-btns">
+										<button id="idViewActivtyEffective" type="button"
+											class="btn green searchBtn">查询</button>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div th:id="${'divActivityDurationChart_'+viewId}"
+					style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+			</div>
+
+		</div>
+	</div>
+
+	<script th:inline="javascript">
+	//<![CDATA[ 
+		
+		var procId = /*[[${procId}]]*/;
+
+		function onShowExpired (){
+			var param = "procId="+procId;
+
+			if($("#idExpDuration").val()){
+				param+= "&expDuration="+$("#idExpDuration").val();
+			}			
+			if($("#idActivityStartTime").val()){
+				param+= "&startTime="+$("#idActivityStartTime").val();
+			}
+			if($("#idActivityEndTime").val()){
+				param+= "&endTime="+ $("#idActivityEndTime").val();
+			}
+			var url = Global.contextPath + "/workflow/statistics/procEffectiveDetail?"+param;
+			$.openLink(url,{showType:'tab',title:'流程单据耗时'},function(){});
+		}
+	
+		function funcDuration (cellval, unit) {
+     		if (!$.isNumeric(cellval)) {
+     			return cellval;
+     		}
+     		var secondsSum = cellval;
+     		var numyears = Math.floor(secondsSum / 525600);
+     		var numdays = Math.floor((secondsSum % 525600) / 1440);
+     		var numhours = Math.floor(((secondsSum % 525600) % 1440) / 60);
+     		var numminutes = Math
+     				.floor((((secondsSum % 525600) % 1440) % 60));
+     		var numseconds = 0;//(((secondsSum % 525600) % 1440) % 60);
+     		var years = numyears ? numyears + "年" : "", days = numdays ? numdays
+     				+ "天" : "", hours = numhours ? numhours + "小时" : "", minutes = numminutes ? numminutes
+     				+ "分钟"
+     				: "", seconds = numseconds ? numseconds + "秒" : "";
+     		if (unit == "d") {
+     			cellval = (years + days) ? (years + days) : "1天";
+     		} else if (unit == "m") {
+     			if(!(years + days + hours))
+     				cellval = "小于1小时";
+     			else
+     				cellval = (years + days + hours + minutes) 
+     		} else if (unit == "h") {
+     			cellval = (years + days + hours) ? (years + days + hours) : "小于1小时";
+     		} else {
+     			cellval = (years + days + hours + minutes + seconds) ? (years
+     					+ days + hours + minutes + seconds) : "1秒";
+     		}
+     		return cellval;
+     	}
+     	
+
+     	var funcDurationValue = function(cellval, unit) {
+     		if (!$.isNumeric(cellval)) {
+     			return cellval;
+     		}
+     		var secondsSum = cellval;
+     		
+     		if (unit == "d") {
+     			cellval = Math.ceil(secondsSum/24*60.0);
+     		} else if (unit == "h") {
+     			cellval = Math.ceil(secondsSum/60.0);
+     		} else if (unit == "m") {
+     			cellval = secondsSum;
+     		} else if (unit == "s") {
+     			cellval = cellval*60;
+     		} 
+     		return cellval;
+     	};
+     	
+	$(function(){
+
+		var viewId=/*[[${viewId}]]*/;
+		
+		var actChartId= /*[['divActivityDurationChart_'+${viewId}]]*/;
+		var expChartId= /*[['divProcExpPercentChart_'+${viewId}]]*/;
+		
+		var context = /*[['#'+${viewId}]]*/;
+				
+		//var procDefEffective = /*[[${procDefEffective}]]*/;
+		//
+		Page.init(context);
+		
+		var isTabShowed =false;
+		
+		var tabId='#proc-statistics-tab'+viewId;
+		
+		$(tabId,context).tabs({
+			carousel : false,
+			cache:true,
+			ajaxOptions:{
+				cache:false
+			},
+			load:function(event,ui){
+			},
+			show:function(event,ui){
+				if(ui.index==1 &&!isTabShowed)
+				{
+					isTabShowed=true;
+					$('#idViewActivtyEffective',context).click();					
+				}
+			}
+		});
+
+		var pData=[];
+		var procTitle="";
+
+		/**
+		for (var i = 0;i<procDefEffective.length;i++){
+			
+			if(procTitle=="")
+				procTitle= "流程 "+procDefEffective[i].proc_name+"";
+			var d =  {
+	             name: procDefEffective[i].act_title,
+	             y: procDefEffective[i].avg_act_duration,
+	             sliced: i==0 ? true : false,
+	             selected: i==0 ? true : false,
+	             proc_id: procDefEffective[i].proc_id,
+	             proc_name: procDefEffective[i].proc_name,
+	             act_name: procDefEffective[i].act_name,
+	             act_title: procDefEffective[i].act_title,
+	             act_duration: procDefEffective[i].avg_act_duration,
+	         }
+			pData.push(d);
+		}
+		Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function(color) {
+		    return {
+		        radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
+		        stops: [
+		            [0, color],
+		            [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+		        ]
+		    };
+		});*/
+		
+	    
+	 	// Build the chart       $('#divActivityDurationChart',context).highcharts(
+	    var chartActivity =new Highcharts.Chart( {
+            chart: {
+            	renderTo: actChartId,
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                width: $(tabId).width(),
+                height: 420
+            },
+            title: {
+                text: procTitle
+            },
+            tooltip: {
+        	    pointFormat: '所占比重: <b>{point.percentage:.1f}%</b>'
+            },//环节: {point.act_title} <br/>
+            plotOptions: {
+                pie: {
+                    size: 220,
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function() {
+                            return '<b>'+ this.point.name +'</b>: '+ funcDuration(this.point.y,"m");
+                        }
+                    },
+                    showInLegend: true
+                }
+            },
+            legend: {
+                enabled: true,
+                layout: 'vertical',
+                align: 'left',
+                verticalAlign: 'middle',
+                labelFormatter: function() {
+                    return this.name + ' ' + Math.round(this.percentage*10)/10 + '%';
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: '环节效率',
+                data: pData
+            }]
+        }); 
+	 	
+         $('#idViewActivtyEffective',context).click(function(){
+        	 var strProcId = procId;
+        	 var startTime = $('#idActivityStartTime',context).val();
+        	 var endTime = $('#idActivityEndTime',context).val();
+        	 
+        	 var url =Global.contextPath+"/workflow/statistics/procActivityDuration";
+
+        	 $.restPost(url, {
+        		 startTime: startTime,
+        		 endTime: endTime,
+        		 procId: strProcId,
+        		 expDuration: 0
+ 			}, funcActivityDurationCallback
+ 			, {
+ 				async: true
+ 			});
+         });
+         
+        var buildChartData = function( procDefEffective ){
+        	 var pData=[];
+
+ 	     		for (var i = 0;i<procDefEffective.length;i++){
+ 	   			
+	 	   			if(procTitle=="")
+	 	   				procTitle= "流程 "+procDefEffective[i].proc_name+"";
+ 	     			
+ 	     			var d =  {
+ 	     	             name: procDefEffective[i].act_title,
+ 	     	             y: funcDurationValue(procDefEffective[i].avg_act_duration,"m"),
+ 	     	             ydescription: funcDurationValue(procDefEffective[i].avg_act_duration,"m"),
+ 	     	             sliced: i==0 ? true : false,
+ 	     	             selected: i==0 ? true : false,
+ 	     	             proc_id: procDefEffective[i].proc_id,
+ 	     	             proc_name: procDefEffective[i].proc_name,
+ 	     	             act_title: procDefEffective[i].act_title,
+ 	     	             act_duration: procDefEffective[i].avg_act_duration,
+ 	     	         }
+ 	     			pData.push(d);
+ 	     		}
+
+      		return pData;
+         };
+         
+         var funcActivityDurationCallback = function( re ){
+        	 
+     		var newData=buildChartData(re);
+     		
+     		chartActivity.setTitle({text: procTitle});
+        	 if(chartActivity.series.length>0){
+        		 chartActivity.series[0].remove(false);
+        		 chartActivity.addSeries({
+                     type: 'pie',
+                     name: '环节效率',
+                     data: newData
+                 }, false);
+	        	 //chartActivity.series[0].data = newData;
+	         }
+        	 chartActivity.redraw(); 
+         };
+	 	
+         $('#idViewExpDuration',context).click(function(){
+        	 var expDuration = $('#idExpDuration',context).val();
+        	 var startTime = $('#idExpStartTime',context).val();
+        	 var endTime = $('#idExpEndTime',context).val();
+        	 var strProcId = procId;
+        	 
+        	 var url =Global.contextPath+"/workflow/statistics/procExpDuration";
+
+        	 $.restPost(url, {
+        		 startTime: startTime,
+        		 endTime: endTime,
+        		 procId: strProcId,
+        		 expDuration: parseFloat(expDuration)
+ 			}, funcExpDurationCallback
+ 			, {
+ 				async: true
+ 			});
+         });
+
+         var funcExpDurationCallback = 
+        	 
+         function(re){
+
+			 if(re.length<1){
+			  	 return;
+			 }
+			  
+			 var data1 = re[0];
+			
+			 var avgDuration =  Math.round(data1.avg_duration/(6.0))/10
+			 var perLeft = Math.round(data1.smallthen*1000.0/data1.proc_inst_num)/10;
+			 var perRight= Math.round(data1.bigthen*1000.0/data1.proc_inst_num)/10;
+
+			 
+			 var charParam = {};
+			 
+			 charParam.expTime = $('#idExpDuration',context).val();
+			 
+			 charParam.textTitle = "流程 "+data1.proc_name+"";
+			 charParam.pData = {  left: [perLeft], center: [avgDuration], right: [perRight]} ;
+			 charParam.pTitle = {  left:"小于"+charParam.expTime+"小时", center: "平均耗时（小时）", right: "大于"+charParam.expTime+"小时"} ;
+			  	 
+			 charParam.centerMax =charParam.expTime*1.5;
+			 if(avgDuration>charParam.centerMax){
+				 charParam.centerMax =  avgDuration;
+			 }
+			  
+			 var chartDiv = $('#'+expChartId);
+			 
+			 charParam.chartWidth = chartDiv.parent().width();
+        
+        	 var chartExpDuration = new Highcharts.Chart({
+                 	 chart: {
+                 		renderTo: expChartId,
+		     	        type: 'gauge',
+		     	        plotBackgroundColor: null,
+		     	        plotBackgroundImage: null,
+		     	        plotBorderWidth: null,
+		     	        plotShadow: false,
+		     	        width: charParam.chartWidth
+		     	    },
+		     	    
+		     	    title: {
+		     	        text:  charParam.textTitle,
+		                 y: 20
+		     	    },
+		     	    
+		     	    pane:[ {
+		     	        startAngle: -150,
+		     	        endAngle: 150,
+		     	        center: ['50%', '45%'],
+		     	        size: 220,
+		     	        background: [{
+		     	            backgroundColor: {
+		     	                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+		     	                stops: [
+		     	                    [0, '#FFF'],
+		     	                    [1, '#333']
+		     	                ]
+		     	            },
+		     	            borderWidth: 0,
+		     	            outerRadius: '109%'
+		     	        }, {
+		     	            backgroundColor: {
+		     	                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+		     	                stops: [
+		     	                    [0, '#333'],
+		     	                    [1, '#FFF']
+		     	                ]
+		     	            },
+		     	            borderWidth: 1,
+		     	            outerRadius: '107%'
+		     	        }, {
+		     	            // default background
+		     	        }, {
+		     	            backgroundColor: '#DDD',
+		     	            borderWidth: 0,
+		     	            outerRadius: '105%',
+		     	            innerRadius: '103%'
+		     	        } ]
+		     	    },{
+		     	        startAngle: -120,
+		     	        endAngle: 120,
+		     	        center: ['29%', '81%'],
+		     	        size: 140,
+		     	        background: [{
+		     	            backgroundColor: {
+		     	                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+		     	                stops: [
+		     	                    [0, '#FFF'],
+		     	                    [1, '#333']
+		     	                ]
+		     	            },
+		     	            borderWidth: 0,
+		     	            outerRadius: '109%'
+		     	        }, {
+		     	            backgroundColor: {
+		     	                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+		     	                stops: [
+		     	                    [0, '#333'],
+		     	                    [1, '#FFF']
+		     	                ]
+		     	            },
+		     	            borderWidth: 1,
+		     	            outerRadius: '107%'
+		     	        }, {
+		     	            // default background
+		     	        }, {
+		     	            backgroundColor: '#DDD',
+		     	            borderWidth: 0,
+		     	            outerRadius: '105%',
+		     	            innerRadius: '103%'
+		     	        } ]
+		     	    },{
+		     	        startAngle: -120,
+		     	        endAngle: 120,
+		     	        center: ['71%', '81%'],
+		     	        size: 140,
+		     	        background: [{
+		     	            backgroundColor: {
+		     	                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+		     	                stops: [
+		     	                    [0, '#FFF'],
+		     	                    [1, '#333']
+		     	                ]
+		     	            },
+		     	            borderWidth: 0,
+		     	            outerRadius: '109%'
+		     	        }, {
+		     	            backgroundColor: {
+		     	                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+		     	                stops: [
+		     	                    [0, '#333'],
+		     	                    [1, '#FFF']
+		     	                ]
+		     	            },
+		     	            borderWidth: 1,
+		     	            outerRadius: '107%'
+		     	        }, {
+		     	            // default background
+		     	        }, {
+		     	            backgroundColor: '#DDD',
+		     	            borderWidth: 0,
+		     	            outerRadius: '105%',
+		     	            innerRadius: '103%'
+		     	        } ]
+		     	    } ],
+		     	       
+		     	    // the value axis
+		     	    yAxis: [{
+		     	        min: 0,
+		     	        max: charParam.centerMax,
+		     	        pane: 0,
+		     	        
+		     	        minorTickInterval: 'auto',
+		     	        minorTickWidth: 1,
+		     	        minorTickLength: 8,
+		     	        minorTickPosition: 'inside',
+		     	        minorTickColor: '#666',
+		     	
+		     	        tickPixelInterval: 30,
+		     	        tickWidth: 2,
+		     	        tickPosition: 'inside',
+		     	        tickLength: 13,
+		     	        tickColor: '#666',
+		                 
+		     	        labels: {
+		     	            step: 2,
+		     	            rotation: 'auto'
+		     	        },
+		     	        title: {
+		     	            text: charParam.pTitle.center,
+		                    y:15
+		     	        },
+		     	        plotBands: [{
+		     	            from: 0,
+		     	            to: charParam.expTime,
+		     	            color: '#55BF3B' // green
+		     	        }, {
+		     	            from: charParam.expTime,
+		     	            to: charParam.expTime*1.2,
+		     	            color: '#DDDF0D' // yellow
+		     	        }, {
+		     	            from: charParam.expTime*1.2,
+		     	            to: charParam.centerMax,
+		     	            color: '#DF5353' // red
+		     	        }]        
+		     	    },{
+		     	        min: 0,
+		     	        max: 100,
+		     	        pane: 1,
+		     	        
+		     	        minorTickInterval: 'auto',
+		     	        minorTickWidth: 1,
+		     	        minorTickLength: 8,
+		     	        minorTickPosition: 'inside',
+		     	        minorTickColor: '#666',
+		     	
+		     	        tickPixelInterval: 30,
+		     	        tickWidth: 2,
+		     	        tickPosition: 'inside',
+		     	        tickLength: 13,
+		     	        tickColor: '#666',
+		     	        labels: {
+		     	            step: 2,
+		     	            rotation: 'auto'
+		     	        },
+		     	        title: {
+		     	            text: charParam.pTitle.left,
+		                     y:15
+		     	        },
+		     	        plotBands: [{
+		     	            from: 0,
+		     	            to: 100,
+		     	            color: '#55BF3B' // green
+		     	        }]        
+		     	    },{
+		     	        min: 0,
+		     	        max: 100,
+		     	        pane: 2,
+		     	        
+		     	        minorTickInterval: 'auto',
+		     	        minorTickWidth: 1,
+		     	        minorTickLength: 8,
+		     	        minorTickPosition: 'inside',
+		     	        minorTickColor: '#666',
+		     	
+		     	        tickPixelInterval: 30,
+		     	        tickWidth: 2,
+		     	        tickPosition: 'inside',
+		     	        tickLength: 13,
+		     	        tickColor: '#666',
+		                 
+		     	        labels: {
+		     	            step: 2,
+		     	            rotation: 'auto'
+		     	        },
+		     	        title: {
+		     	            text: charParam.pTitle.right,
+		                     y:15
+		     	        },
+		     	        plotBands: [{
+		     	            from: 0,
+		     	            to: 20,
+		     	            color: '#DDDF0D' // yellow
+		     	        }, {
+		     	            from: 20,
+		     	            to: 100,
+		     	            color: '#DF5353' // red
+		     	        }]        
+		     	    }],
+		     	
+		     	    series: [{
+		     	        name: '平均耗时 ',
+		     	        data: charParam.pData.center,
+		     	       dataLabels: {
+			   	            formatter: function () {
+			   	            	
+			   	                var kmh =funcDuration(this.y*60,"m");
+			   	                return kmh;
+			   	            }
+		     	       },
+		     	        yAxis: 0,
+		     	        tooltip: {
+		     	            valueSuffix: ' 小时'
+		     	        }
+		     	    },{
+		     	        name: charParam.pTitle.left,
+		     	        data: charParam.pData.left,
+		     	        dataLabels: {
+			   	             formatter: function () {
+			   	                 return this.y + '%';
+			   	             }
+		     	        },
+		     	        yAxis: 1,
+		     	        tooltip: {
+		     	            valueSuffix: ' %'
+		     	        }
+		     	    },{
+		     	        name: charParam.pTitle.right,
+		     	        data: charParam.pData.right,
+		     	        dataLabels: {
+			   	             formatter: function () {
+			   	                 return this.y + '%';
+			   	             }
+		     	        },
+		     	        yAxis: 2,
+		                cursor: 'pointer',
+		                events: {
+		                    click: function(event) {
+		                        alert(this.name +' clicked\n'+
+		                              'Alt: '+ event.altKey +'\n'+
+		                              'Control: '+ event.ctrlKey +'\n'+
+		                              'Shift: '+ event.shiftKey +'\n');
+		                    }
+		                },
+		     	        tooltip: {
+		     	            valueSuffix: ' %'
+		     	        }
+		     	    }]
+		     	
+		     	});
+
+         };
+
+   		$('#idViewExpDuration',context).click();
+	});
+	//]]>
+	</script>
+</div>

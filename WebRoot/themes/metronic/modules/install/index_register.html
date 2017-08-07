@@ -1,0 +1,177 @@
+<!-- 导航 -->
+<div class="header">
+	<div class="logo">
+		<a href="/index.html"></a>
+	</div>
+	<div class="nav">
+		<ul>
+			<li><a href="/#page2">功能</a></li>
+			<li><a href="/price.html">购买</a></li>
+			<li><a href="/#page5">客户</a></li>
+			<li><a href="/#page6">下载</a></li>
+			<li><a href="##">帮助</a></li>
+		</ul>
+	</div>
+	<div class="navigation">
+		<ul>
+			<li><a href="/webos"><img
+					th:src="${contextPath}+'/themes/metronic/modules/install/images/btn-login2.png'" /></a></li>
+		</ul>
+	</div>
+</div>
+<!-- 正文注册 -->
+<div class="register-wrapper">
+	<div class="main-body">
+		<div class="main-header">
+			<h2>注册</h2>
+		</div>
+		<div class="main-content">
+			<form data-widget="validator">
+				<div style="margin-bottom: 0px;" class="login-group">
+					<label><em>*</em>帐号</label>
+					<div class="group-text first">
+						<span>admin@</span><input type="text" name="enterpriseCode"
+							id="enterpriseCode" data-validator="required,func[checkEnCode],length[1,18]"/>
+						<p class="point-info">后缀用于企业员工登录, 建议使用企业英文名称</p>
+					</div>
+				</div>
+				<div class="login-group">
+					<label for=""><em>*</em>密码</label>
+					<div class="group-text">
+						<input type="password" name="password" id="password"
+							style="display: block;" data-validator="required,length[1,16]"/>
+						<div class="txt-tips">
+							<span>1~16个字符，区分大小写</span>
+						</div>
+						<div id="mobilePwdStatus" class="pswState" style="display: none;">
+							<span class="s1">弱</span> <span class="s2">中等</span> <span
+								class="s3">强</span>
+						</div>
+					</div>
+				</div>
+				<div class="login-group">
+					<label for=""><em>*</em>重复密码</label>
+					<div class="group-text">
+						<input type="password" name="chk_psd" id="chk_psd" data-validator="required,equalToField[password,密码与确认密码不一致]"/>
+					</div>
+				</div>
+				<div class="login-group">
+					<label for=""><em>*</em>公司名称</label>
+					<div class="group-text">
+						<input type="text" name="enterpriseName" id="enterpriseName" data-validator="required"/>
+					</div>
+				</div>
+				<div class="login-group">
+					<label for=""><em>*</em>联系人</label>
+					<div class="group-text">
+						<input type="text" name="contact" id="contact" data-validator="required"/>
+					</div>
+				</div>
+				<div class="login-group">
+					<label for=""><em>*</em>联系电话</label>
+					<div class="group-text">
+						<input type="text" name="phone" id="phone" data-validator="required,pattern[mobile]"/>
+					</div>
+				</div>
+				<div class="login-group">
+					<label for=""><em>*</em>企业邮箱</label>
+					<div class="group-text">
+						<input type="text" name="email" id="email" data-validator="required,email,func[checkEmail]" disabled="disabled" />
+					</div>
+				</div>
+				<div class="login-group" style="display:none">
+					<label for=""><em></em></label>
+					<div class="group-text">
+						<input type="text" name="type" id="type" value="1" data-validator="required" disabled="disabled" />
+					</div>
+				</div>
+				<div class="login-group">
+					<label for=""><em>*</em>邀请码</label>
+					<div class="group-text" style="width: 400px;">
+						<input type="text"
+							style="width: 200px; margin: 0; float: left; margin-right: 15px;"
+							name="invitationCode" id="invitationCode" data-validator="required,func[checkInvitCode]"/>
+						<div class="code_loading" style="display: none; padding: 7px 0px;">
+							<img alt="" style="margin-left: 5px;"
+								th:src="${contextPath}+'/themes/metronic/modules/install/images/loader.gif'" />
+							<span class="tip_warn">检测中</span>
+						</div>
+						<div class="code_info" style="padding: 7px 0px; display: none;">
+							<i class="icon-remove"></i> <span class="tip_warn">无效的邀请码</span>
+						</div>
+					</div>
+				</div>
+				<p class="clause">
+					<input type="checkbox" id="agree" checked="true" data-validator="func[checkAgree]"/>我已经详细阅读并完全同意<a
+						href="/agreement.html" target="_blank">Link服务条款</a> 
+					<span class="tip-clause tip-err"
+						style="display: none; margin: 8px 10px 0 135px;"><i
+						class="tip-error"></i>&nbsp;请接受服务条款</span>
+				</p>
+				<p class="submit">
+					<button type="button" id="submits">提交注册</button>
+					已有帐号,<a href="/webos">登录</a>
+				</p>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript" th:src="${themes.file('modules/install/js/index.js')}"></script>
+	<script type="text/javascript" th:inline="javascript">
+		/*<![CDATA[*/
+		$(function(){
+			var data=/*[[${data}]]*/;
+			var email = data.email;
+			//alert(email);
+			$("#email").val(email);
+		}) 
+		var checkEnCode = function(_self,eventType){
+			
+			var enCode = $(_self).val();
+			if(!/^[a-zA-Z0-9_.]{1,18}$/.test(enCode))
+				return {isError:true,errorInfo:"请输入英文、数字、下划线或点的1-18位字符!"};
+			
+			if(!utils.isBlank(eventType) && 'focusout' != eventType)
+				return {isError:true,errorInfo:""};
+				
+			var chkVal = installModule.judgeIsInitialized(enCode);
+			
+			var result = {isError:false,errorInfo:""};
+			if(chkVal){
+				result = {isError:true,errorInfo:"企业标识已经被注册，请重新输入！"};
+			}
+			
+			return result;
+		};
+		var checkEmail = function(_self,eventType){
+			if(!utils.isBlank(eventType) && 'focusout' != eventType)
+				return {isError:true,errorInfo:""};
+			var email = $(_self).val();
+			
+			var result = {isError:false,errorInfo:""};
+			if(!utils.isBlank(email) && installModule.judgeEpEmailIsExist(email))
+				result = {isError:true,errorInfo:"此邮箱已经被注册！"};
+			
+			return result;
+		};
+		var checkAgree = function(_self,eventType){
+			var result = {isError:false,errorInfo:""};
+			if($("#agree").attr("checked") != "checked"){
+				$('.tip-clause').css('display','block');
+				result = {isError:true,errorInfo:""};
+			}else
+				$('.tip-clause').hide();
+			
+			return result;
+		};
+		var checkInvitCode = function(_self,eventType){
+			var invitCode = $(_self).val();
+			
+			var result = {isError:false,errorInfo:""};
+			if(!utils.isBlank(invitCode) && !$('#invitationCode').data("statue"))
+				result = {isError:true,errorInfo:""};
+			
+			return result;
+		}
+		/*]]>*/
+	</script>
+</div>

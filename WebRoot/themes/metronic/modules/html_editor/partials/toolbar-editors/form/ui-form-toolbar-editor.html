@@ -1,0 +1,23 @@
+<div class="wysiwyg-toolbar left">
+	<button ng-click="setupOperation()" type="button" class="btn btn-mini btn-primary" data-target="#toolbarConfigModal" role="button" data-toggle="modal">设置工具栏</button>
+	<div class="modal hide fade" role="dialog" id="toolbarConfigModal">
+		  <div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+		    <h3>操作启用和禁用<span class="label badge-important">拖动可排序</span></h3>
+		  </div>
+		  <div class="modal-body">
+		   	<label class="checkbox" ng-repeat="opt in operations">
+		      <input type="checkbox" data-displayName="{{opt.displayName}}" data-icon="{{opt.icon}}" value="{{opt.mainFunc}}"/><span class="lbl">{{opt.displayName}}</span>
+		    </label>
+		    <span ng-if="operations.length==0"><span class="label label-info">提示：</span>没有可选的操作</span>
+		  </div>
+		  <div class="modal-footer">
+		  	<a ng-click="saveSetupOperation()" class="btn btn-primary" data-dismiss="modal">确定</a>
+		  	<a class="btn" data-dismiss="modal">关闭</a> 
+		  </div>
+	</div>
+	<script id="addToolbarButtonTemplate" type="text/x-jsrender">
+	<li class="form-toolbar-button" data-func="{{:mainFunc}}"><a href="javascript://"
+		title="{{:displayName}}"> <img th:src="${themes.icon('{{:icon}}')}"/><span>{{:displayName}}</span>
+	</a></li>
+	</script>
+</div>

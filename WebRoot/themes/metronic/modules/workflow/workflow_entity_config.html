@@ -1,0 +1,48 @@
+<div th:id="${viewId}" class="panel apply-panel" style="width:100%;">
+<style type="text/css">
+	#workflowEntityTree .bbit-tree-node-icon{
+		height:24px;
+	}
+</style>
+	<div class="row-fluid">
+		<div class="span2">
+			<div id="workflowEntityTree" class="tree-menu" style="background-color:#fff;padding-top:10px;padding-left:10px;"></div>
+		</div>
+		<div class="span10">
+			<div id="entityPropsCon">正在加载数据......</div>
+		</div>
+	</div>
+	<script th:inline="javascript">
+	//<![CDATA[ 
+	window.dialog_not_render_top=true;
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;
+		var entityName = /*[[${entityName}]]*/;
+		var treeUrl=Global.contextPath+"/html_editor/"+entityName+"/entityTree";
+		var entityPropsCon=$("#entityPropsCon");
+		$("#workflowEntityTree").tree({
+			source : 'remote',
+			method : 'post',
+			nodeFormat : function(record) {
+				return record;
+			},
+			url : treeUrl,
+			onNodeClick:function(id, text, record,node){
+				var url=record.dataUrl;
+				CommonLoader.loadData(entityPropsCon,url,function(){
+					$("#entityPropsCon .breadcrumbs",context).remove();
+				});
+			},
+			contextMenuEventType:'click',
+			contextMenu:function( record ){
+				
+			}
+		});
+		$("ul.bbit-tree-root>li .bbit-tree-ec-icon",context).trigger("click");
+		setTimeout(function(){
+			$("[id$='_fields']:first",context).trigger("click");
+		},500);
+	});
+	//]]>
+	</script>
+</div>

@@ -1,0 +1,45 @@
+<div  th:attr="data-url=${requestUrl}"  th:id="${viewId}">
+	<div class="portlet box tea-green">
+		<div class="portlet-title">
+			<div class="caption">
+				<i class="icon-reorder"></i>相关附件<small></small>
+			</div>			
+			<div class="actions">
+				<button id="addAttachment" class="btn green table-toolbar-icon-item" data-func="grid.addRecord">
+					<span>添加</span>
+					<i class="icon-plus"></i>
+				</button>
+			</div>
+			
+		</div>
+		<div class="portlet-body form-bordered">
+			<meta:grid id="'grid_'+${entityName}+'_'+${view}+'_'+${viewId}"  entityName="${entityName}" 	view="${view}">
+			</meta:grid>
+		</div>
+	</div>
+	<script th:inline="javascript" type="text/javascript">
+	//<![CDATA[
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var $container=$("#" + viewId);
+		//$(".ui-jqgrid-view .table-toolbar",$container).addClass("hide");
+		setTimeout(function(){
+			$(".ui-jqgrid-hdiv",$container).width($(".ui-jqgrid-hdiv",$container).width()-30);
+		},300);
+		var dataFuncAttr=$("#addAttachment",$container).attr("data-func");
+		var gridId=/*[['grid_'+${entityName}+'_'+${view}+'_'+${viewId}]]*/;
+		var $grid=$('#'+gridId);
+		CommonUtil.dynRequire($grid,dataFuncAttr,function(func,context){
+			$("#addAttachment",$container).on("click",function(){
+				if(func==null){
+					$.messageBox.info({message:(dataFuncAttr||"")+i18n.t("error.operationUndefined")});
+				}else{
+					func.call(context,this,$grid);
+				}
+				return false ;
+			});
+		});
+	});
+	//]]>
+  </script>
+</div>

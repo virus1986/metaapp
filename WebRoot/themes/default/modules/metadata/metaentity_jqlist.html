@@ -1,0 +1,246 @@
+<div th:id="${viewId}">
+<div id="toolbar_grid_metaentity"
+	class="table-toolbar row-fluid" style="display: none">
+	<div class="table-toolbar-icon span8">
+		<ul>
+			<li id="toolbar_add_grid_metaentity" data-func="grid.addRecord" class="table-img-icon">
+				<a href="javascript://">
+				<img th:src="${themes.icon('main/button-add.png')}" />
+				<span th:text="#{common.create}"></span></a></li>
+			<li id="toolbar_edit_grid_metaentity" data-func="grid.editRecord" class="table-img-icon">
+				<a href="javascript://">
+				<img th:src="${themes.icon('main/comment-edit.png')}" />
+				<span th:text="#{common.edit}"></span></a></li>
+			<li id="toolbar_del_grid_metaentity" data-func="grid.delRecord" class="table-img-icon">
+				<a href="javascript://">
+				<img th:src="${themes.icon('main/button-white-remove.png')}" />
+				<span th:text="#{common.delete}"></span></a></li>
+			<li id="toolbar_reflesh_grid_metaentity" data-func="grid.refreshGrid" class="table-img-icon">
+				<a href="javascript://">
+				<img th:src="${themes.icon('main/button-load.png')}" />
+				<span th:text="#{common.refresh}"></span></a></li>
+			<li id="toolbar_export_grid_metaentity" data-func="grid.exportEntity" class="table-img-icon">
+				<a href="javascript://">
+				<img th:src="${themes.icon('main/file-send.png')}" />
+				<span th:text="#{common.export}"></span></a></li>
+		</ul>
+	</div>
+	<div class="span4 table-toolbar-search">
+		<div class="btn-group search-box">
+			<input name="searchString" type="text" class="input-medium search-query pull-left" />
+			<input name="btMultiSearch" type="button" class="btn" th:value="#{common.search}" />
+		</div>
+	</div>
+</div>
+<div>
+	<table id="grid_metaentity"></table>
+	<div id="grid_metaentity_pager"></div>
+	<script th:inline="javascript">
+	//<![CDATA[
+	$(function() {
+		var gridUrl=/*[[@{/metadata/entity/query_paged}]]*/;
+		var gridCreateUrl=/*[[@{/metadata/entity/create}]]*/;
+		var gridEditUrl=/*[[@{/metadata/entity/create(action='edit')}]]*/;
+		var gridDeleteUrl=/*[[@{/metadata/entity/delete}]]*/;
+		var isSystemIcon=/*[[${themes.icon('mini/icon_tool_371.gif')}]]*/;
+		var imageRoot=Global.themePath+"/statics/images/icons/mini";
+		var context=/*[['#'+${viewId}]]*/;
+		var col1=/*[[#{common.displayName}]]*/;
+		var col2=/*[[#{common.name}]]*/;
+		var col3=/*[[#{metaentity.sysEntity}]]*/;
+		var col4=/*[[#{metaentity.database}]]*/;
+		var col5=/*[[#{metaentity.summary}]]*/;
+		function isSystem(cellvalue, options, rowObject)
+		{
+			var reVal=cellvalue;
+			if(rowObject.isSystem){
+				reVal=i18n.t("common.yes");
+			}else{
+				reVal=i18n.t("common.no");
+			}
+			return reVal;
+		};
+		$('#grid_metaentity').jqGrid({
+			url : gridUrl,
+			createurl : gridCreateUrl,
+			editurl : gridEditUrl,
+			deleteurl: gridDeleteUrl,
+			mtype : 'POST',
+			datatype : 'json',
+			page : 1,
+			rowNum : 50,
+			rownumbers : true,
+			multiselect : true,
+			multiboxonly: true,
+			loadonce:true,
+			pager:'#grid_metaentity_pager',
+			rowList : [ 10, 50, 100 ],
+			colNames : [col1,col2,col3,col4,col5],
+			jsonReader : {
+				id : "name",
+				repeatitems : false
+			},
+			prmNames : {
+				id : "name",
+				search: "search"
+			},
+			autowidth : true,
+			height : '100%',
+			colModel : [
+			{name:'displayName',index:'displayName', width:100,formatter:'titleField'},
+            {name:'name',index:'name',key:true,width:50},
+            {name:'isSystem',index:'isSystem',width:30,formatter:isSystem},
+			{name:'schema',index:'schema', width:40},
+			{name:'summary',index:'summary', width:80}
+			],
+			searchDialogOptions : {
+				multipleSearch : true,
+				"recreateForm" : true,
+				"height" : 400,
+				"width" : 700,
+				"left" : 350,
+				"top" : 100
+			},
+			gridComplete:function(){
+				Page.gridComplete.call(this);
+				var $grid=$('#grid_metaentity');
+				$("input[name=btMultiSearch]",context).off("click");
+				$("input[name=btMultiSearch]",context).click(function(){
+					var searchString=$("input[name=searchString]",context).val();
+					if(!searchString){
+						$.messageBox.info({message:i18n.t("common.searchInfo")});
+						return;
+					}
+					var rules=[{"field":"displayName","op":"cn","data":searchString},{"field":"name","op":"cn","data":searchString}];
+					setTimeout(function(){
+						$grid.multiFieldsQuickSearch(rules,'OR');
+					},300);
+				});
+			},
+			onBeforeDelete:function($grid){
+				var selectIds=$grid.jqGrid('getGridParam','selarrrow');
+				var sysIds=[];
+				for(var i=0;i<selectIds.length;++i){
+					var row=$grid.getRowData(selectIds[i]);
+					if(row.isSystem==i18n.t("common.yes")){
+						sysIds.push(selectIds[i]);
+					}
+				}
+				if(sysIds.length>0){
+					$.messageBox.warning({message:sysIds.join(",")+i18n.t("metaentity.sysEntityNotAllowedDelete")});
+					return false;
+				}
+				return true;
+			},
+			onAfterDelete:function(response){
+				var map = response;
+				if(map.success == false){
+					var info = i18n.t("metaentity.delete.errorSum");
+					if(null != map.errorEntity){
+						var temp = "";
+						for ( var i = 0; i < map.errorEntity.length; i++) {
+							var entity = map.errorEntity[i];
+							var addComma = false;
+							if(null != entity.hasRelations && entity.hasRelations == true){
+								temp += i18n.t("metaentity.delete.errorRelationExist",entity.name);
+								addComma = true;
+							}
+							if(null != entity.hasReferers){
+								if(addComma == true){
+									temp += i18n.t("metaentity.delete.errorRelationRefBy2");
+								} else {
+									temp += i18n.t("metaentity.delete.errorRelationRefBy",entity.name);
+								}
+								for ( var j = 0; j < entity.hasReferers.length; j++) {
+									var referer = entity.hasReferers[j];
+									temp += "<b>" + referer + "</b>";
+									if(j < entity.hasReferers.length - 1) temp += "，";
+								}
+							}
+							temp = i + 1 + "." + temp;
+							if(i < map.errorEntity.length - 1) temp += "；<br/>";
+							else temp += "。";
+							info += temp;
+							temp = "";
+						}
+					} else {
+						info += i18n.t("metaentity.delete.errorDb");
+					}
+					$.messageBox.warning({
+						message : info
+					});
+				} else {
+					$("#menuadmin-tree").tree().reload();
+				}
+			},
+			onAfterAdd:function(reVal){
+				$("#menuadmin-tree").tree().reload();
+				if(reVal){
+					Navigator.navigateToMenu(reVal.name);
+				}
+			}
+		}).navGrid('#grid_metaentity_pager',{
+			"add" : false,
+			"cloneToTop" : false,
+			"del" : false,
+			"edit" : false,
+			"position" : "center",
+			"refresh" : false,
+			"search" : false,
+			"view" : false,
+			"toggle" : false
+		},jQuery('#grid_metaentity').getGridParam('editDialogOptions'),
+		jQuery('#grid_metaentity').getGridParam('addDialogOptions'),
+		jQuery('#grid_metaentity').getGridParam('delDialogOptions'),
+		jQuery('#grid_metaentity').getGridParam('searchDialogOptions')).bindKeys().initCustom().initCustToolBar("toolbar_grid_metaentity");
+	
+		var imageRoot=Global.themePath+"/statics/images/icons/mini";
+		var $grid=$('#grid_metaentity');
+		$grid.jqGrid("setGridParam",
+				{exContextMenu:	[
+					{text: i18n.t("common.edit"),icon:imageRoot+"/icon_tool_022.gif",  action: function(){
+						$grid.jqGrid().editRecord();
+					}},
+					 {text: i18n.t("common.delete"),icon:imageRoot+"/icon_tool_060.gif",  action: function(){
+						 $grid.jqGrid().delRecord();
+					}},   	 
+				    {type: "splitLine" },
+			    	{text: i18n.t("metadata.field"),icon:imageRoot+"/icon_tool_100.gif",   action: function(){
+			    		var id=$grid.jqGrid('getGridParam','selrow');
+			    		var row=$grid.getRowData(id);
+			    		Navigator.navigateToMenu(row.name,'fields');
+			    	}},
+			    	{text: i18n.t("metadata.view"),icon:imageRoot+"/icon_tool_103.gif",   action: function(){
+			    		var id=$grid.jqGrid('getGridParam','selrow');
+			    		var row=$grid.getRowData(id);
+			    		Navigator.navigateToMenu(row.name,'views');
+			    	}},
+			    	{text: i18n.t("metadata.form"),icon:imageRoot+"/icon_tool_095.gif",   action: function(){
+			    		var id=$grid.jqGrid('getGridParam','selrow');
+			    		var row=$grid.getRowData(id);
+			    		Navigator.navigateToMenu(row.name,'grids');
+			    	}},
+			    	{text: i18n.t("metadata.relation"),icon:imageRoot+"/icon_tool_074.gif",   action: function(){
+			    		var id=$grid.jqGrid('getGridParam','selrow');
+			    		var row=$grid.getRowData(id);
+			    		Navigator.navigateToMenu(row.name,'relation');
+			    	}},
+			    	{text: i18n.t("metadata.operation"),icon:imageRoot+"/icon_tool_136.gif",   action: function(){
+			    		var id=$grid.jqGrid('getGridParam','selrow');
+			    		var row=$grid.getRowData(id);
+			    		Navigator.navigateToMenu(row.name,'operation');
+			    	}},
+			    	{text: i18n.t("metadata.security"),icon:imageRoot+"/icon_tool_190.gif",   action: function(){
+			    		var id=$grid.jqGrid('getGridParam','selrow');
+			    		var row=$grid.getRowData(id);
+			    		Navigator.navigateToMenu(row.name,'security');
+			    	}}
+			    ]}
+		);
+	}); 
+	
+	//]]>
+	</script>
+</div>
+
+</div>

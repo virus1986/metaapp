@@ -1,0 +1,318 @@
+<div th:id="${viewId}" class="panel apply-panel" style="width:950px;">
+	
+	<style type="text/css">
+		.form-section{
+			width:100%;
+		}
+		.col-container li{
+			border:1px solid #CCC;
+			margin:3px;
+			padding:2px;
+		}
+		
+		
+		.design-row .design-hover{
+			background:none;
+		}
+		
+		.design-highlight span{
+			background:#EEE;
+		}
+		
+		.design-col{
+			position:relative;
+		}
+		
+		.ui-resizable-helper { border: 2px dotted #00F; }
+		
+		.design-col span{
+			border:1px solid #AAA; 
+			display:block;
+			/*width:100%;*/
+			margin:2px 2px 2px 2px;
+			padding:2px 3px;
+			height:26px;
+		}
+		
+		.design-col label{
+			width:120px;
+			display:inline-block;
+		}
+		
+		.design-row{
+			border:1px dashed #AAA; 
+			margin:2px 0px;
+			position:relative;
+		}
+		
+		.design-block{
+			border:1px dashed #AAA; 
+			margin:10px 15px;
+			padding:2px 5px;
+		}
+		
+		.design-del-col,.design-del-row{
+			position:absolute;
+			right:6px;
+			top:-1px;
+			cursor:pointer;
+		}
+		
+		.design-edit-title{
+			position:absolute;
+			left:6px;
+			top:-5px;
+			cursor:pointer;
+		}
+		
+		.design-title{
+			position:relative;
+			width:auto;
+			padding-left:20px;
+			height:26px;
+			line-height:26px;
+			cursor:pointer;
+		}
+		.design-toolbar-block{
+			border:1px solid #BBB ;
+			height:70px;
+		}
+		
+		.design-toolbar-title{
+			font-weight: bold;
+			text-align: left;
+		}
+		
+		.design-col span{
+			position:relative;
+		}
+		
+		.design-active{
+		}
+		
+		.design-row-active{
+			border:1px solid blue;
+		}
+		
+		.design-col-active span{
+			border:1px solid blue;
+		}
+		
+		.design-block-active{
+			border:1px solid blue;
+		}
+		
+		.form-col{
+			cursor:move;
+		}
+		
+		.form-col span{
+			 display:block;
+			 width:100%;
+			 overflow:hidden;
+		     white-space:nowrap;
+			text-overflow:ellipsis;
+			word-break : keep-all; 
+		    -o-text-overflow: ellipsis;
+		}
+		
+		.design-hover{
+			background:#DDD;
+		}
+		.design-hover span{
+			background:#D4E5F3;
+			-moz-box-shadow: 3px 6px 15px #010214;
+			-webkit-box-shadow: 3px 6px 15px #010214;
+			box-shadow: 3px 6px 15px #010214;
+		}
+		
+		.design-dragging{
+			background:#5F9ECC;
+			border:dashed 1px #000000;
+			z-index: 1000;
+		}
+		
+		.design-dragging span,li.design-dragging{
+			background:#5F9ECC;
+			z-index:1000;
+			font-weight:bold;
+			min-width:100px;
+			border:dashed 0px #000000;
+			-moz-box-shadow: 3px 6px 15px #010214;
+			-webkit-box-shadow: 3px 6px 15px #010214;
+			box-shadow: 3px 6px 15px #010214;
+		}
+
+		input.width1{
+			width:500px;
+		}
+		
+		input.width2{
+			width:60%;
+		}
+		
+		input.width3{
+			width:120px;
+		}
+		
+		input.width4{
+			width:50px;
+		}
+		
+		.col-type-label{
+			font-weight:bold;
+		}
+	</style>
+
+	<div class="ui-dialog-title">
+		<span th:inline="text">[[#{common.edit}+#{metadata.form}]]<span class='win-title'></span></span>
+	</div>
+	<form id="createFormForm" data-widget="validator" th:action="${requestUri}">
+		<input name="id" type="hidden" th:value="${layout.id}"/>
+		<input name="entityName" type="hidden" th:value="${layout.entityName}"/>
+		<input name="displayName" type="hidden" th:value="${layout.displayName}"/>
+		<textarea name="template" class="hide" th:text="${layout.template}"></textarea>
+		<textarea name="configData" class="hide" th:text="${layout.configData}"></textarea>
+		<input type="hidden" name="name" th:value="${layout.name}" />
+		
+		<div class="container-fluid" >
+			<div class="table-toolbar row-fluid navbar">
+			<div class="table-toolbar-icon span8">
+				<ul>
+					<li class="table-img-icon design-action design-action-prop"  ><a href="javascript://">
+						<img th:src="${themes.statics('images/icons/main/comment-edit.png')}" />
+						<span th:text="#{common.properties}"></span></a></li>
+					<li class="table-img-icon design-action design-action-delete"><a href="javascript://">
+						<img th:src="${themes.statics('images/icons/main/button-white-remove.png')}" />
+						<span th:text="#{common.delete}"></span></a></li>
+					<li class="table-img-icon design-action design-action-addRow"><a href="javascript://">
+						<img th:src="${themes.statics('images/icons/main/button-add.png')}" />
+						<span th:text="#{form.designer.addRow}"></span></a></li>
+					
+					<!-- 
+					<li class="table-img-icon " style="background:#CCC;width:2px;padding:0px;">
+					</li>
+					 -->
+						
+					<li class="table-img-icon  design-toolbar-section"  col="1"><a href="javascript://">
+						<img th:src="${themes.statics('images/icons/main/window.png')}" />
+						<span th:text="#{form.customDesign.oneColumn}"></span></a></li>
+					<li class="table-img-icon  design-toolbar-section"  col="2"><a href="javascript://">
+						<img th:src="${themes.statics('images/icons/main/window.png')}" />
+						<span th:text="#{form.customDesign.twoColumns}"></span></a></li>
+					<li class="table-img-icon  design-toolbar-section"  col="3"><a href="javascript://">
+						<img th:src="${themes.statics('images/icons/main/window.png')}" />
+						<span th:text="#{form.customDesign.threeColumns}"></span></a></li>
+					<li class="table-img-icon  design-toolbar-section"  col="4"><a href="javascript://">
+						<img th:src="${themes.statics('images/icons/main/window.png')}" />
+						<span th:text="#{form.customDesign.fourColumns}"></span></a></li>
+					<li class="table-img-icon" style="border-left: 3px double #B4D6F9;width:100px;">
+						<label class="autoFieldAreaSetup" style="width:100px;height:40px;line-height: 40px;"><input type="checkbox" name="autoFieldAreaSetup" style="vertical-align: middle;display: inline-block;"/><span style="vertical-align: middle;" th:text="#{form.customDesign.enableAutofields}"></span></label>
+					</li>
+				</ul>
+			</div>
+			</div>
+		</div>
+		
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="first span10 design-container">
+					<div class="design-block">
+						<div class="design-title">XXXXXX</div>
+						<div class="design-row row-fluid">
+							<div class="span6 first design-col">
+								<span>&nbsp;</span>
+							</div>
+							<div class="span6 design-col"><span>&nbsp;</span></div>
+						</div>
+						<div class="design-row row-fluid">
+							<div class="span6 first design-col"><span>&nbsp;</span></div>
+							<div class="span6 design-col"><span>&nbsp;</span></div>
+						</div>
+					</div>
+				</div>
+				<div class="span2 ">
+				<div class="fields-conatiner border-box">
+				   <label class="design-toolbar-title" th:text="#{form.customDesign.resourceSelector}"></label>
+				   <hr style="margin:2px 0px;"/>
+				   <label class="checkbox inline" th:inline="text">
+						<input type="checkbox" id="display_fields"></input>[[#{form.customDesign.onlyShowUnused}]]
+				   </label>
+				    <div class='col-type-label' th:text="#{metadata.field}"></div>
+				   <ul class="col-container col-container-fields">
+				   </ul>
+				    <div class='col-type-label' th:text="#{metadata.relation}"></div>
+				   <ul class="col-container col-container-relation">
+				   </ul>
+				   </div>
+				</div>
+			</div>
+		</div>
+		<div class="ui-dialog-buttonset">
+			<button type="button" class="btn btn-primary saveEntityForm" th:text="#{common.save}"></button>
+			<button type="button" class="btn btn-primary saveAndToHtml" th:text="#{form.customCode.editHtml}"></button>
+			<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+		</div>
+	</form>
+	
+	<script th:inline="javascript">
+	//<![CDATA[
+	(function(){
+
+		var layout  =  /*[[${layout}]]*/;
+		var context = /*[['#'+${viewId}]]*/;
+		var metadataFields     = /*[[${metadataFields}]]*/;
+		var xmlConfig  = /*[[${layout.configData}]]*/;
+		var imageRoot  = /*[[${themes.statics('images/icons/mini/')}]]*/ ;
+		var customBaseUrl = /*[[@{/metadata/uitemplate/form_create_base(entity=${layout.entityName},layout='form',action='edit',id=${layout.id})}]]*/;
+		var draggEl = null ;
+
+		$(function(){
+			function initAutoFieldAreaSetup(jsonConfig){
+				var _autoFieldsConfig=jsonConfig.autoFieldsConfig;
+				if(_autoFieldsConfig){
+					var _showAutoFields=_autoFieldsConfig.showAutoFields||false;
+					if(!_showAutoFields||_showAutoFields=="false"){
+						$(".autoFieldAreaSetup",context).find("[name=autoFieldAreaSetup]").removeAttr("checked");
+					}else{
+						$(".autoFieldAreaSetup",context).find("[name=autoFieldAreaSetup]").attr("checked","checked");
+					}
+				}
+				
+			};
+			reqModule(["custom_form"],function(CustomFormManager){
+				var customFormManager=CustomFormManager.createNew();
+				customFormManager.contextInit({
+					layout:layout,
+					context:context,
+					metadataFields:metadataFields,
+					xmlConfig:xmlConfig,
+					imageRoot:imageRoot,
+					draggEl:draggEl,
+					customBaseUrl:customBaseUrl
+				}) ;
+				var json = customFormManager.parseXmlToJson() ;
+				
+				initAutoFieldAreaSetup(json);
+				customFormManager.initCols(metadataFields);
+				customFormManager.parseConfigToHtml(json) ;
+				customFormManager.eventBind() ;
+				customFormManager.__actionRender() ;
+	
+				customFormManager.setTitle($("[name='displayName']",context).val()) ;
+			});
+		});
+		
+		$(".table-toolbar-icon li",context).hover(
+			function(){
+				$(this).css("background-color","rgb(220,230,237)");
+			},
+			function(){
+				$(this).css("background-color","");
+			}
+		);
+
+	})() ;
+	//]]>	
+	</script>
+</div>

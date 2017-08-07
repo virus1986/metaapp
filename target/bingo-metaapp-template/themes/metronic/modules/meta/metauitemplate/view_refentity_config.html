@@ -1,0 +1,66 @@
+<div th:id="${viewId}" class="panel apply-panel form-horizontal"  style="min-width:700px;">
+	<div class="ui-dialog-title hide">
+		<span th:text="#{view.custom.refEntityConfig}"></span>
+	</div>
+	<table class="table table-bordered table-hover">
+		<thead>
+			<tr>
+				<th style="width:80px;" th:text="#{view.refentiyConfig.refrenceOrNot}"></th>
+				<th  th:text="#{view.refentiyConfig.joinEntity}"></th>
+				<th  th:text="#{view.refentiyConfig.joinType}"></th>
+			</tr>
+		</thead>
+		<tbody class="joinEntityTable">
+		</tbody>
+	</table>
+	<div class="ui-dialog-buttonset">
+		<button type="button" class="btn purple saveRefEntityConfig" >
+			<span th:text="#{common.save}"></span>
+			<i class="m-icon-swapright m-icon-white"></i>
+		</button>
+		<button type="button" class="btn closButton" th:text="#{common.cancel}"></button>
+	</div>
+	<script id="joinEntityTemplate" type="text/x-jquery-tmpl">
+   	<tr class="joinEntity">
+		<td><input type="checkbox" name="joinEntityName" value="${$data}" style="width:50px;"/></td>
+		<td>${$data}</td>
+		<td><select class="joinTypeSelect">
+			<option value="Left">Left</option>
+			<option value="Inner">Inner</option>
+        </select></td>
+	</tr>
+	</script>
+	<script th:inline="javascript">
+	//<![CDATA[
+	
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;
+		
+		var args = jQuery.dialogAraguments() ;
+		var manyToOneRefEntities = args.manyToOneRefEntities||{} ;
+		var joinEntities=args.joinEntities||[];
+		
+		$("#joinEntityTemplate",context).tmpl(manyToOneRefEntities).appendTo($(".joinEntityTable",context));
+		$(joinEntities).each(function(){
+			var name=this._name;
+			var joinType=this._joinType;
+			var joinEntityInput=$("input[value='"+name+"']",context);
+			joinEntityInput.attr("checked","checked");
+			joinEntityInput.closest(".joinEntity").find(".joinTypeSelect").val(joinType);
+		});
+		$(".saveRefEntityConfig", context).click(function(){
+			var joinEntities=[];
+			$("[name='joinEntityName']:checked",context).each(function(){
+				var joinEntityName=$(this).val();
+				var joinType=$(this).closest(".joinEntity").find(".joinTypeSelect").val();
+				joinEntities.push({_name:joinEntityName,_joinType:joinType});
+			});
+			$(context).dialogClose(joinEntities);
+		});
+		$(".closButton", context).click(function(){
+			$(context).dialogClose(null);
+		});
+	});
+	//]]>	
+	</script>
+</div>

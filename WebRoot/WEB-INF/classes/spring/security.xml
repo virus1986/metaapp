@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"       
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd"
+	>
+	
+	<bean id="securityFilter" class="bingo.metaapp.security.SmartSecurityFilter" >
+		<property name="ignorePatternString" value="/workflow2/*|/ui/upload*|/wro*|/ssoclient*|/openid*|/images/*|/themes/*|*.css|*.js|*.png|*.jpg|*.gif|*.bmp|/common/*"></property>
+		<property name="loginMode" value="sso"></property>
+		<property name="loginUrl" value="/themes/${Profile.App.Theme}/modules/common/login/login_sso.jsp"></property>
+	</bean>
+	
+	<!-- 对接1.5.0版本SSO-->
+	<bean id="ssoServlet" class="bingo.metaapp.security.oauth.SingleSignOnServlet">
+		<property name="initParam">
+			<map>
+				<!-- <entry key="ssoBaseEndpoint" value="http://10.201.76.179:8070/sso2"/> -->
+				<!-- <entry key="ssoBaseEndpoint" value="http://localhost/sso"/> -->
+				<entry key="ssoBaseEndpoint" value="${SSO.BASE.ENDPOINT}"/>
+				<entry key="ssoDirectBaseEndpoint" value="${SSO.DIRECT.BASE.ENDPOINT}"/>
+				<entry key="clientId" value="clientId"/>
+				<entry key="clientSecret" value="clientSecret"/>
+				<entry key="oauthResourceId" value="${SSO.BASE.ENDPOINT}/"/>
+				<entry key="oauthAccessTokenUri" value="${SSO.BASE.ENDPOINT}/oauth/2/token"/>
+				<entry key="oauthUserAuthorizationUri" value="${SSO.BASE.ENDPOINT}/oauth/2/authorize"/>
+				<entry key="oauthScope" value="read"/>
+			</map>
+		</property>
+	</bean>
+	<bean id="oAuth2AuthenticationProcessingFilter" class="bingo.metaapp.security.OAuth2AuthenticationProcessingFilter">
+		<property name="oauth1TokenCheckEndpoint"  value="${ACCESSTOKEN.1.CHECK.ENDPOINT}"></property>
+		<property name="oauth2TokenCheckEndpoint"  value="${ACCESSTOKEN.2.CHECK.ENDPOINT}"></property>
+	</bean>
+	
+	<!-- <bean id="securityProvider" class="bingo.metaapp.security.CacheSecurityProvider"
+		p:authStore-ref="security.authStore"
+		p:userStore-ref="security.userStore"
+		p:authenticator-ref="security.authenticator"
+		p:authorizer-ref="security.authorizer"/> --> 
+	<bean id="securityProvider" class="bingo.security.SecurityProvider"
+		p:authStore-ref="security.authStore"
+		p:userStore-ref="security.userStore"
+		p:authenticator-ref="security.authenticator"
+		p:authorizer-ref="security.authorizer"/>
+
+	<bean id="security.authorizer" class="bingo.metabase.security.impl.MetaSecurityAuthorizer"
+		p:authStore-ref="security.authStore"/>
+	
+	<bean id="security.authenticator" class="bingo.security.authentication.SecurityAuthenticator"
+		p:userStore-ref="security.userStore"/>
+
+	<bean id="security.authStore" class="bingo.metabase.security.impl.MetaAuthStore"
+		p:dao-ref="dao"/>
+	
+	<bean id="security.userStore" class="bingo.metaapp.security.DBUserStoreEx"
+		p:dao-ref="dao"/>
+</beans>

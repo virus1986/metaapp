@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<metadata xmlns="http://schemas.bingosoft.net/metabase/metadata" xsi:schemaLocation="http://schemas.bingosoft.net/metabase/metadata http://schemas.bingosoft.net/metabase/1.0/metadata.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <entities>
+        <entity pack="uam" is-display="true" display-for="{manage:true}"
+			display-name="组织" inherits-persistence="PerEntity" name="UamOrganization"
+			is-system="true" table="uam_organization">
+			<field column="company_id" data-type="Guid" is-display="false"
+				display-name="所在公司" display-order="0" unique="false" name="companyId"
+				nullable="true" ref-entity="uamOrganization" ref-to="id" sql-type="nvarchar"
+				is-system="true" />
+			<field column="org_num" data-type="String" is-display="true"
+				display-name="组织编号" display-order="1" field-type="SingleLineText"
+				unique="false" name="orgNum" nullable="true" sql-type="nvarchar"
+				is-system="true" />
+			<field column="name" data-type="String" is-display="true"
+				display-name="组织名" display-order="2" field-type="SingleLineText"
+				unique="false" name="name" nullable="false" semantics="Title"
+				sql-type="nvarchar" is-system="true" />
+			<field column="full_name" data-type="String" is-display="true"
+				display-name="组织全名" display-order="3" field-type="SingleLineText"
+				unique="false" name="fullName" nullable="true" sql-type="nvarchar"
+				is-system="true" />
+			<field column="parent" data-type="Guid" is-display="true"
+				display-name="上级部门" display-order="4" field-type="SingleLineText"
+				unique="false" name="parentId" nullable="true" ref-entity="uamOrganization"
+				ref-to="id" sql-type="varchar" is-system="true" />
+			<field column="code" data-type="String" is-display="true"
+				display-name="组织编码" display-order="5" field-type="SingleLineText"
+				unique="false" name="code" nullable="true" sql-type="nvarchar"
+				is-system="true" />
+			<field column="level" data-type="Integer" is-display="true"
+				display-name="组织层级" display-order="6" field-type="Integer" unique="false"
+				name="level" nullable="true" sql-type="integer" is-system="true" />
+			<field column="type" data-type="Integer" default-value="1"
+				is-display="true" display-for="{form:true,list:true}" display-name="组织类型"
+				display-order="7" field-type="SingleOption" input-type="Tile"
+				unique="false" name="type" nullable="true" sql-type="integer"
+				is-system="true">
+				<options>
+					<item name="实体组织" value="1" />
+					<item name="虚拟组织" value="2" />
+				</options>
+			</field>
+			<field column="status" data-type="SmallInt" is-display="true"
+				display-for="{form:true,list:true}" display-name="组织状态"
+				display-order="8" field-type="SingleOption" input-type="Tile"
+				unique="false" name="status" nullable="false" sql-type="smallint"
+				is-system="true"  default-value="1">
+				<options>
+					<item name="启用" value="1" />
+					<item name="停用" value="0" />
+				</options>
+			</field>
+			<field column="higher_org_id" length="36" data-type="String"
+				is-display="true" display-for="{list:true,form:true}" display-name="审批上级部门"
+				display-order="22" field-type="SingleLineText" unique="false" name="higherOrgId"
+				nullable="true" sql-type="varchar" is-system="true">
+				<field-type-params>
+					<param name="length" value="36" />
+				</field-type-params>
+			</field>
+			<field column="order_" data-type="Integer" default-value="0"
+				is-display="true" display-name="排序" display-order="9" field-type="Integer"
+				unique="false" name="orderNo" nullable="true" sql-type="integer"
+				is-system="true" />
+			<field column="description" data-type="String" is-display="true"
+				display-name="描述" display-order="10" field-type="SingleLineText"
+				unique="false" name="description" nullable="true" sql-type="nvarchar"
+				is-system="true" />
+			<field column="icode" data-type="Integer" is-display="true"
+				display-name="编码的序号" display-order="11" field-type="Integer" unique="false"
+				name="icode" nullable="true" sql-type="integer" is-system="true" />
+			<field column="created_by" length="500" data-type="String"
+				default-value="@{env.User.Id}" is-display="true" display-for="{form:true,list:true}"
+				display-name="创建用户" display-order="100" field-type="SingleLineText"
+				unique="false" name="createdBy" nullable="true" sql-type="nvarchar"
+				is-system="false">
+				<field-type-params>
+					<param name="length" value="500" />
+				</field-type-params>
+			</field>
+			<field column="last_updated_date" data-type="Timestamp"
+				default-value="@{env.Now}" is-display="true" display-for="{form:true,list:true}"
+				display-name="最近更新时间" display-order="100" field-type="Timestamp"
+				unique="false" name="lastUpdatedDate" nullable="true" sql-type="nvarchar"
+				is-system="false" />
+			<field column="name_p_y" length="100" data-type="String"
+				is-display="true" display-for="{form:true,list:true}" display-name="组织名拼音首字母"
+				display-order="100" field-type="SingleLineText" unique="false" name="namePY"
+				nullable="true" sql-type="nvarchar" is-system="false">
+				<field-type-params>
+					<param name="length" value="100" />
+				</field-type-params>
+			</field>
+			<field column="disk_quota" length="500" data-type="String"
+				is-display="true" display-for="{form:true,list:true}" display-name="网盘配额(G)"
+				display-order="100" field-type="SingleLineText" unique="false" name="diskQuota"
+				nullable="true" sql-type="nvarchar" is-system="false">
+				<field-type-params>
+					<param name="length" value="500" />
+				</field-type-params>
+			</field>
+			<field column="created_date" data-type="Timestamp"
+				default-value="@{env.Now}" is-display="true" display-for="{form:true,list:true}"
+				display-name="创建时间" display-order="100" field-type="Timestamp"
+				unique="false" name="createdDate" nullable="true" sql-type="nvarchar"
+				is-system="false" />
+			<field column="name_pin_yin" length="500" data-type="String"
+				is-display="true" display-for="{form:true,list:true}" display-name="组织名全拼"
+				display-order="100" field-type="SingleLineText" unique="false" name="namePinYin"
+				nullable="true" sql-type="nvarchar" is-system="false">
+				<field-type-params>
+					<param name="length" value="500" />
+				</field-type-params>
+			</field>
+			<field column="last_updated_by" length="500" data-type="String"
+				default-value="@{env.User.Id}" is-display="true" display-for="{form:true,list:true}"
+				display-name="最近更新用户" display-order="100" field-type="SingleLineText"
+				unique="false" name="lastUpdatedBy" nullable="true" sql-type="nvarchar"
+				is-system="false">
+				<field-type-params>
+					<param name="length" value="500" />
+				</field-type-params>
+			</field>
+			<field column="principal" length="36" data-type="Guid"
+				description="reference field,refrence to entity:User" is-display="true"
+				display-for="{list:true,manage:true,form:false}" display-name="负责人"
+				display-order="100" field-type="SingleLineText" unique="false" name="principal"
+				nullable="true" ref-entity="User" ref-to="id" sql-type="varchar"
+				summary="reference field,refrence to entity:User" is-system="false">
+				<field-type-params>
+					<param name="length" value="36" />
+				</field-type-params>
+			</field>
+			<field column="cost_org_num" data-type="String" is-display="true"
+				display-name="财务部门编码" display-order="5" field-type="SingleLineText"
+				unique="false" name="costOrgNum" nullable="true" sql-type="nvarchar"
+				is-system="true" />
+			<id column="ID" data-type="Guid" is-display="false" display-name="组织ID"
+				display-order="0" unique="false" name="id" nullable="false"
+				sql-type="varchar" is-system="true" />
+			<many-to-one display-name="所属公司" field="companyId"
+				field-order="0" field-ref="id" is-abstract="false" is-display="false"
+				name="organization" optional="false" target-entity="uamOrganization" />
+			<many-to-one display-name="上级部门" field="parentId"
+				field-order="4" field-ref="id" is-abstract="false" is-display="true"
+				name="FK_Reference_12" optional="true" target-entity="uamOrganization" />
+			<many-to-one display-name="负责人" field="principal"
+				field-order="100" field-ref="id" is-abstract="true" is-display="false"
+				name="user1" optional="true" target-entity="User" />
+			<many-to-one display-name="审批上级部门" field="higherOrgId"
+				field-order="22" field-ref="id" is-abstract="true" is-display="false"
+				name="organization1" optional="true" target-entity="uamOrganization" />
+		</entity>
+        <entity pack="uam" is-display="true" display-for="{manage:true}"
+			display-name="职务" inherits-persistence="PerEntity" name="UamDuty"
+			is-system="true" table="uam_duty">
+			<field column="duty_num" length="50" data-type="String" is-display="true"
+				display-name="职务编号" display-order="1" field-type="SingleLineText"
+				unique="false" name="dutyNum" nullable="true" sql-type="varchar"
+				summary="职务编号" is-system="true" />
+			<field column="name" length="300" data-type="String" is-display="true"
+				display-name="职务名" display-order="2" field-type="SingleLineText"
+				unique="false" name="name" nullable="false" semantics="Title"
+				sql-type="varchar" summary="职务名" is-system="true" />
+			<field column="parent_id" data-type="Guid" is-display="true"
+				display-name="父职务" display-order="3" field-type="SingleLineText"
+				unique="false" name="parentId" nullable="true" ref-entity="uamDuty"
+				ref-to="id" sql-type="varchar" summary="父职务" is-system="true" />
+			<field column="type" data-type="SmallInt" default-value="0"
+				is-display="true" display-for="{form:true,list:true}" display-name="职务类型"
+				display-order="4" field-type="SingleOption" input-type="Tile"
+				unique="false" name="type" nullable="true" sql-type="smallint"
+				summary="职务类型" is-system="true">
+				<options>
+					<item name="未设置" value="0" />
+					<item name="技术职务" value="1" />
+					<item name="管理职务" value="2" />
+				</options>
+			</field>
+			<field column="status" data-type="SmallInt" default-value="1"
+				is-display="true" display-for="{form:true,list:true}" display-name="职务状态"
+				display-order="5" field-type="SingleOption" input-type="Tile"
+				unique="false" name="status" nullable="true" sql-type="smallint"
+				summary="职务状态" is-system="true">
+				<options>
+					<item name="启用" value="1" />
+					<item name="停用" value="0" />
+				</options>
+			</field>
+			<field column="order_no" data-type="Integer" default-value="0"
+				is-display="true" display-name="排序" display-order="6" field-type="Integer"
+				unique="false" name="orderNo" nullable="true" sql-type="integer"
+				summary="排序" is-system="true" />
+			<field column="description" data-type="String" is-display="true"
+				display-for="{form:true,list:true}" display-name="描述" display-order="7"
+				field-type="MultiLineText" unique="false" name="description"
+				nullable="true" length="1000" sql-type="varchar" summary="描述"
+				is-system="true">
+				<field-type-params>
+					<param name="length" value="1000" />
+				</field-type-params>
+			</field>
+			<field column="created_By" data-type="String" default-value="@{env.User.Id}"
+				is-display="true" display-for="{form:true,list:true}" display-name="创建人"
+				display-order="100" field-type="SingleLineText" unique="false" name="createdBy"
+				nullable="true" length="500" sql-type="varchar" is-system="false">
+				<field-type-params>
+					<param name="length" value="500" />
+				</field-type-params>
+			</field>
+			<field column="last_updated_date" data-type="Timestamp"
+				default-value="@{env.Now}" is-display="true" display-for="{form:true,list:true}"
+				display-name="最近更新时间" display-order="100" field-type="Timestamp"
+				unique="false" name="lastUpdatedDate" nullable="true" semantics="Updated"
+				sql-type="timestamp" is-system="false" />
+			<field column="last_updated_by" data-type="String"
+				default-value="@{env.User.Id}" is-display="true" display-for="{form:true,list:true}"
+				display-name="最近更新人" display-order="100" field-type="SingleLineText"
+				unique="false" name="lastUpdatedBy" length="500" nullable="true"
+				sql-type="varchar" is-system="false">
+				<field-type-params>
+					<param name="length" value="500" />
+				</field-type-params>
+			</field>
+			<field column="created_date" data-type="Timestamp"
+				default-value="@{env.Now}" is-display="true" display-for="{form:true,list:true}"
+				display-name="创建时间" display-order="100" field-type="Timestamp"
+				unique="false" name="createdDate" nullable="true" sql-type="timestamp"
+				is-system="false" />
+			<id column="duty_id" data-type="Guid" is-display="false"
+				display-name="职务ID" display-order="0" unique="false" name="id"
+				nullable="false" sql-type="varchar" summary="职务ID" is-system="true" />
+			<many-to-one display-name="上级职务" field="parentId"
+				field-order="3" field-ref="id" is-abstract="false" is-display="true"
+				name="FK_Reference_113" optional="true" target-entity="uamDuty" />
+		</entity>
+		<entity pack="uam" is-display="true" display-name="岗位" name="UamPost"
+			display-for="{manage:true}" is-system="true" table="uam_post">
+			<field column="post_num"  length="128" data-type="String" is-display="true"
+				display-name="岗位编号" display-order="1" field-type="SingleLineText"
+				unique="false" name="postNum" nullable="true" sql-type="varchar"
+				summary="岗位编号" is-system="true" />
+			<field column="name" length="64" data-type="String" is-display="true"
+				display-name="岗位名" display-order="2" field-type="SingleLineText"
+				unique="false" name="name" nullable="true" semantics="Title"
+				sql-type="varchar" summary="岗位名" is-system="true" />
+			<field column="duty_id" data-type="Guid" is-display="true"
+				display-for="{form:true,list:true}" display-name="岗位职务"
+				display-order="3" field-type="SingleLineText" unique="false" name="dutyId"
+				nullable="false" ref-entity="uamDuty" ref-to="id" sql-type="varchar"
+				summary="职务ID" is-system="true" />
+			<field column="org_id" data-type="Guid" is-display="true"
+				display-for="{form:true,list:true}" display-name="岗位组织"
+				display-order="4" field-type="SingleLineText" unique="false" name="orgId"
+				nullable="false" ref-entity="uamOrganization" ref-to="id" sql-type="varchar"
+				summary="组织ID" is-system="true" />
+			<field column="parent_id" data-type="Guid" is-display="true"
+				display-name="父岗位" display-order="5" field-type="SingleLineText"
+				unique="false" name="parentId" nullable="true" ref-entity="uamPost"
+				ref-to="id" sql-type="varchar" summary="父岗位" is-system="true" />
+			<field column="is_root" data-type="SmallInt" default-value="0"
+				is-display="true" display-for="{form:true,list:true}" display-name="顶级岗位"
+				display-order="6" field-type="SingleOption" input-type="Tile"
+				unique="false" name="isRoot" nullable="true" sql-type="smallint"
+				summary="是否为本组织的顶级岗位" is-system="true">
+				<options>
+					<item name="是" value="1" />
+					<item name="否" value="0" />
+				</options>
+			</field>
+			<field column="type" data-type="SmallInt" is-display="true"
+				display-name="岗位类型" display-order="7" field-type="SmallInt" unique="false"
+				name="type" nullable="true" sql-type="smallint" summary="岗位类型"
+				is-system="true" />
+			<field column="status" data-type="SmallInt" default-value="1"
+				is-display="true" display-for="{form:true,list:true}" display-name="岗位状态"
+				display-order="8" field-type="SingleOption" input-type="Tile"
+				unique="false" name="status" nullable="true" sql-type="smallint"
+				summary="岗位状态" is-system="true">
+				<options>
+					<item name="启用" value="1" />
+					<item name="停用" value="0" />
+				</options>
+			</field>
+			<field column="order_no" data-type="Integer" default-value="0"
+				is-display="true" display-name="排序" display-order="9" field-type="Integer"
+				unique="false" name="orderNo" nullable="true" sql-type="integer"
+				summary="排序" is-system="true" />
+			<field column="description" data-type="String" is-display="true"
+				display-for="{form:true,list:true}" display-name="描述" display-order="10"
+				field-type="MultiLineText" unique="false" name="description"
+				nullable="true" length="1000" sql-type="varchar" summary="描述"
+				is-system="true">
+				<field-type-params>
+					<param name="length" value="1000" />
+				</field-type-params>
+			</field>
+			<field column="last_updated_by" data-type="String"
+				default-value="@{env.User.Id}" is-display="true" display-for="{form:true,list:true}"
+				display-name="最近修改用户" display-order="100" field-type="SingleLineText"
+				unique="false" name="lastUpdatedBy" length="50" nullable="true"
+				sql-type="varchar" is-system="false">
+				<field-type-params>
+					<param name="length" value="50" />
+				</field-type-params>
+			</field>
+			<field column="created_by" data-type="String" default-value="@{env.User.Id}"
+				is-display="true" display-for="{form:true,list:true}" display-name="创建人"
+				display-order="100" field-type="SingleLineText" unique="false" name="createdBy"
+				nullable="true" length="500" sql-type="varchar" is-system="false">
+				<field-type-params>
+					<param name="length" value="500" />
+				</field-type-params>
+			</field>
+			<field column="created_date" data-type="Timestamp"
+				default-value="@{env.Now}" is-display="true" display-for="{form:true,list:true}"
+				display-name="创建时间" display-order="100" field-type="Timestamp"
+				unique="false" name="createdDate" nullable="true" sql-type="timestamp"
+				is-system="false" />
+			<field column="last_updated_date" data-type="Timestamp"
+				default-value="@{env.Now}" is-display="true" display-for="{form:true,list:true}"
+				display-name="最近更新时间" display-order="100" field-type="Timestamp"
+				unique="false" name="lastUpdatedDate" nullable="true" sql-type="timestamp"
+				is-system="false" />
+			<id column="post_id" data-type="Guid" is-display="false"
+				display-name="postId" display-order="0" unique="false" name="id"
+				nullable="false" sql-type="varchar" is-system="true" />
+			<many-to-many display-name="用户" is-abstract="false"
+				is-display="false" join-entity="uamUserPost" name="Users" optional="true"
+				target-entity="User" />
+			<many-to-one display-name="上级岗位" field="parentId"
+				field-order="5" field-ref="id" is-abstract="false" is-display="true"
+				name="FK_uam_post" optional="true" target-entity="uamPost" />
+			<many-to-one display-name="组织" field="orgId" field-order="4"
+				field-ref="id" is-abstract="false" is-display="true" name="FK_FK_Post_Ref_Org"
+				optional="false" target-entity="UamOrganization" />
+			<many-to-one display-name="职务" field="dutyId"
+				field-order="3" field-ref="id" is-abstract="false" is-display="true"
+				name="FK_FK_Post_Ref_Duty" optional="false" target-entity="UamDuty" />
+		</entity>
+		<entity pack="uam" is-display="true" display-name="岗位用户" name="UamUserPost"
+			is-system="true" table="uam_user_post">
+			<field column="is_default" data-type="SmallInt" is-display="true"
+				display-for="{form:true,list:true}" display-name="是否默认岗位"
+				display-order="2" field-type="SingleOption" input-type="Tile"
+				unique="false" name="isDefault" nullable="true" sql-type="smallint"
+				summary="是否默认岗位" is-system="true">
+				<options>
+					<item name="是" value="1" />
+					<item name="否" value="0" />
+				</options>
+			</field>
+			<field column="is_part_time" data-type="SmallInt" is-display="true"
+				display-for="{form:true,list:true}" display-name="是否兼职"
+				display-order="3" field-type="SingleOption" input-type="Tile"
+				unique="false" name="isPartTime" nullable="true" sql-type="smallint"
+				summary="是否兼职" is-system="true">
+				<options>
+					<item name="是" value="1" />
+					<item name="否" value="0" />
+				</options>
+			</field>
+			<field column="last_updated_by" data-type="String"
+				default-value="@{env.User.Id}" is-display="true" display-for="{form:true,list:true}"
+				display-name="最近修改人" display-order="100" field-type="SingleLineText"
+				unique="false" name="lastUpdatedBy" length="50" nullable="true"
+				sql-type="varchar" is-system="false">
+				<field-type-params>
+					<param name="length" value="50" />
+				</field-type-params>
+			</field>
+			<field column="last_updated_date" data-type="Timestamp"
+				default-value="@{env.Now}" is-display="true" display-for="{form:true,list:true}"
+				display-name="最近更新时间" display-order="100" field-type="Timestamp"
+				unique="false" name="lastUpdatedDate" nullable="true" semantics="Updated"
+				sql-type="timestamp" is-system="false" />
+			<field column="created_by" data-type="String" default-value="@{env.User.Id}"
+				is-display="true" display-for="{form:true,list:true}" display-name="创建人"
+				display-order="100" field-type="SingleLineText" unique="false" name="createdBy"
+				nullable="true" length="50" sql-type="varchar" is-system="false">
+				<field-type-params>
+					<param name="length" value="50" />
+				</field-type-params>
+			</field>
+			<field column="created_date" data-type="Timestamp"
+				default-value="@{env.Now}" is-display="true" display-for="{form:true,list:true}"
+				display-name="创建时间" display-order="100" field-type="Timestamp"
+				unique="false" name="createdDate" nullable="true" sql-type="timestamp"
+				is-system="false" />
+			<composite-id>
+				<field column="post_id" data-type="Guid" is-display="false"
+					display-name="岗位" display-order="0" unique="false" name="postId"
+					nullable="false" ref-entity="uamPost" ref-to="id" sql-type="varchar"
+					is-system="true" />
+				<field column="user_id" data-type="Guid" is-display="false"
+					display-name="用户" display-order="1" unique="false" name="userId"
+					nullable="false" ref-entity="User" ref-to="id" sql-type="varchar"
+					is-system="true" />
+			</composite-id>
+			<many-to-one display-name="Post" field="postId"
+				field-order="0" field-ref="id" is-abstract="false" is-display="false"
+				identity="true" name="Post" optional="false" target-entity="uamPost" />
+			<many-to-one display-name="User" field="userId"
+				field-order="1" field-ref="id" is-abstract="false" is-display="false"
+				identity="true" name="User" optional="false" target-entity="User" />
+		</entity>
+    </entities>
+</metadata>

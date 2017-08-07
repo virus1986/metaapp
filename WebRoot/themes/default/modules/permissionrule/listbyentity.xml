@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" autoWidth="true" columnReordering="false" 
+		createUrl="~/entities/PermissionRule/create?scopeType=2&amp;operationId=@{Request('operationId')}" dataUrl="~/entities/permissionrule/query_paged" deleteUrl="~/entities/permissionrule/delete" editUrl="~/entities/permissionrule/edit" 
+		entityName="permissionrule" height="300px" id="grid_permissionrule_list_by_entity" multiSelect="true" multiSelectKey="None" shrinkToFit="true" viewId="permissionRuleList">
+    <columns>
+        <column dataField="id" editable="true" fixed="false" frozen="false" primaryKey="true" resizable="true" searchable="true" textAlign="Left" visible="false" width="150"/>
+        <column dataField="operationId" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="false" width="50"/>
+        <column dataField="name" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="100"/>
+        <column dataField="rule" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="200"/>
+        <column dataField="priority" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="100"/>
+        <column dataField="scopeType" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="100"/>
+    </columns>
+ 	<toolBarSetting>
+        <button buttonIcon="main/button-add.png" cssClass="" isInMoreBtns="false" name="create" onClick="grid.addRecord"  />
+        <button buttonIcon="main/comment-edit.png" cssClass="" isInMoreBtns="false" name="edit" onClick="grid.editRecord"  />
+        <button buttonIcon="main/button-white-remove.png" cssClass="" isInMoreBtns="false" name="delete" onClick="grid.delRecord"  />
+    </toolBarSetting>
+    <contextButtons>
+  		<button  buttonIcon="mini/icon_tool_022.gif"  cssClass=""   name="edit"  onClick="grid.editRecord"   />
+    	<button  buttonIcon="mini/icon_tool_060.gif"  cssClass=""   name="delete"  onClick="grid.delRecord"   />
+  	</contextButtons>
+    <filter groupOp="or">
+        <filters />
+        <rules>
+        	<rule field="operationId" op="eq" data="@{Request('operationId')}"></rule>
+        </rules>
+    </filter>
+    <orderby>
+    	<rule field="priority" direction="Asc" />
+    </orderby>
+</grid>

@@ -1,0 +1,188 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width: 950px;">
+<style>
+#createOptionSetTable tbody tr textarea{
+	height: 60px;
+}
+
+#createOptionSetTable .btn-toolbar {
+	margin-bottom: 0px;
+	margin-top: 0px;
+	height: 24px;
+}
+</style>
+<div class="ui-dialog-content container-fluid ">
+		<div class="portlet box tea-green">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-reorder"></i><span th:text="#{common.baseInfo}"></span>
+					</div>
+				</div>
+				<div class="portlet-body form-bordered">
+<form class="form-horizontal" id="createOptionSetForm" data-widget="validator" th:action="${requestUrl}">
+					<table class="form-table col2-fluid">
+						<tbody>
+							<tr>
+								<th><label th:text="#{common.displayName}+':'"></label></th>
+								<td>
+									<input type="hidden" id="id" name="id" th:value="${optionset.id}"/>
+									<input type="text" id="displayName" name="displayName" th:value="${optionset.displayName}" class="input-large" 
+										th:placeholder="#{validation.string36}"
+										data-validator="required,length[1,36]"/>
+								</td>
+							</tr>
+							<tr>
+								<th><label th:text="#{common.name}+':'"></label></th>
+								<td th:if="${action=='edit'}">
+									<input type="text" id="name" name="name" readonly="readonly" th:value="${optionset.name}" class="input-large"/>
+								</td>
+								<td th:unless="${action=='edit'}">
+								<input type="text" id="name" name="name" th:value="${optionset.name}"  class="input-large" 
+									th:placeholder="#{validation.autoByDisplayName}"
+									data-validator="required,length[1,36],name,func[optionsetNameUnique]"/>
+								<span class="label label-info" th:text="#{validation.nameSpec}"></span>
+								</td>
+							</tr>
+							<tr>
+							<th><label th:text="#{common.description}+':'"></label></th>
+								<td>
+								<textarea id="summary" name="summary" class="shortArea" 
+								 	data-validator="length[0,1000]"
+									th:placeholder="#{validation.string1000Sec}" th:text="${optionset.summary}" />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					</form>
+				</div>
+			</div>
+			
+		<div class="portlet box tea-green option-items-con">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-reorder"></i><span th:text="#{optionset.itemInfo}"></span>
+					</div>
+				</div>
+				<div class="portlet-body form-bordered">
+				<table class="form-table col2-fluid">
+				<tbody>	
+					<tr>
+						<th><label th:text="#{metadata.optionset.manageOptionItems}+':'"></label></th>
+						<td colspan="1" width="30%">
+							<div class="btn-toolbar" style="margin-bottom: 1px;margin-top: 0px" >
+							  <div class="btn-group">
+							    <a class="btn" href="javascript://" id="addOptionItem" th:title="#{common.add}">
+							    	<i class="icon-plus"></i></a>
+							    <a class="btn" href="javascript://" id="delOptionItem" th:title="#{common.remove}">
+							    	<i class="icon-minus"></i></a>
+							    <a class="btn" href="javascript://" id="upOptionItem" th:title="#{common.up}">
+							    	<i class="icon-arrow-up"></i></a>
+							    <a class="btn" href="javascript://" id="downOptionItem" th:title="#{common.down}">
+							    	<i class="icon-arrow-down"></i></a>
+							    <a class="btn" href="javascript://" id="emptyOptionItem" th:title="#{common.clear}">
+							    	<i class="icon-ban-circle"></i></a>
+							  </div>
+							</div>
+							<div class="optionItemsTableCon" style="overflow-y: scroll;overflow-x: hidden;">
+								<table class="optionItemsTable form-table  ">
+									<thead>
+										<tr>
+											<th width="60%" class="item-thead" th:text="#{common.tag}"></th>
+											<th class="item-thead" th:text="#{common.value}"></th>
+										</tr>
+									</thead>
+									<tbody id="optionSetsItem">
+										<tr class="optionItem">
+											<td class="itemName"></td>
+											<td class="itemValue"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</td>
+						<td>
+							<div id="createOptionItemForm">
+								<table class="form-table col2-fluid" id="itemTable" style="border:solid 1px #e4e4e4;">
+									<tbody>
+										<tr>
+											<th><label th:text="#{common.tag}+':'"></label></th>
+											<td><input type="text" name="itemName" value="" id="itemName"/></td>
+										</tr>
+										<tr>
+											<th><label th:text="#{common.value}+':'"></label></th>
+											<td><input type="text" name="itemValue" value="" id="itemValue" /></td>
+										</tr>
+										<tr>
+											<th><label th:text="#{common.description}+':'"></label></th>
+											<td><textarea name="itemDesc" id="itemDesc"></textarea></td>
+										</tr>
+						
+									</tbody>
+								</table>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th><label th:text="#{common.defaultValue}+':'"></label></th>
+						<td colspan="2">
+							<select id="defaultValue" name="defaultValue">
+								<option value="" th:text="#{common.notAssignValue}"/>
+							</select>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+				
+				</div>
+			</div>
+
+</div>
+
+<div class="ui-dialog-buttonset">
+	<button th:if="${action!='view'}" type="button" class="btn purple saveMetaOptionSet"><span th:text="#{common.save}"></span>
+			<i class="m-icon-swapright m-icon-white"></i></button>
+	<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+</div>
+<script th:inline="javascript">
+//<![CDATA[
+$(function(){
+    var context=/*[['#'+${viewId}]]*/;
+	var action=/*[[${action}]]*/;
+	var optionsetDisplayName=/*[[${optionset.displayName}]]*/;
+	var options = [];
+	if(action == "edit") {
+		options = /*[[${options!=null}?${options}:'[]']]*/;
+		if(typeof options == "string"){
+			options=JSON.parse(options);
+		}
+	}
+	
+	var _options={action:action,context:context,options:options,optionsetDisplayName:optionsetDisplayName};
+	
+	reqModule(["module/metadata/create_metaoptionset"],function(MetaOptionsetManager){
+		MetaOptionsetManager.createNew(_options);
+	});
+});
+
+function optionsetNameUnique(caller) {
+	var context=/*[['#'+${viewId}]]*/;
+	var myOptionSet = $(caller, context).val();
+	var result = {isError:false,errorInfo:""};
+	$.ajax({
+		url		:	Global.contextPath + "/validation/optionset_name_unique",
+		data	:	{
+						optionset  : myOptionSet
+					},
+		async	:	false,
+		success	:	function(data){
+						if (data == false) {
+							result = {isError:true,errorInfo:i18n.t("optionset.nameAlreadyExist")};
+						} else {
+							result = {isError:false,errorInfo:""};
+						}
+					}
+	});
+	return result;
+};
+//]]>
+</script>
+</div>

@@ -1,0 +1,252 @@
+<div th:id="${viewId}" class="panel apply-panel">
+	<form class="form-horizontal  ajaxpost" data-widget="validator"
+				id="entityForm" method="post" th:action="${requestUrl}"
+				th:object="${entity}">
+				<input meta:field="*{id}" type="hidden" />
+				<div class="portlet box tea-green">
+					<div class="portlet-title">
+						<div class="caption">
+							<i class="icon-reorder"></i>流程基本信息
+						</div>
+					</div>
+					<div class="portlet-body form-bordered container-fluid">
+						<table class="form-table form-bordered col4-fluid">
+							<tbody>
+								<tr>
+									<th><label>流程名称:</label></th>
+									<td colspan="3"><input meta:field="procName" style="width: 427px;" /><input
+										type="hidden" meta:field="procId" />
+										<input type="hidden" meta:field="entityName"/></td>
+								</tr>
+								<tr>
+									<th><label>业务归属分类:</label></th>
+									<td colspan="3">
+										<input meta:field="procCatagoryId"/></td>
+								</tr>
+								<tr>
+									<th><label>流程表单:</label></th>
+									<td colspan="3"><span class="inputpro-img input-append">
+											<input meta:field="formUrl" style="width: 400px;" data-uneditable="true"/>
+											<a href="javascript://" class="add-on btn select-workflow-form" ><i	class="icon-search"></i></a></span>
+											<a hef="javascript://" title="新建表单" class="add-on btn create-workflow-form" style="width:18px;padding:5px;"><i class="icon-plus"></i></a>
+											<a href="javascript://" title="设计表单" class="add-on btn edit-workflow-form" style="width:18px;padding:5px;"><i class="icon-edit"></i></a>
+									</td>
+								</tr>
+								<tr>
+									<th><label>是否自由流:</label></th>
+									<td colspan="3">
+										<input meta:field="freestyle" disabled="disabled"/>
+									</td>
+								</tr>
+								<tr>
+									<th><label>表单验证类型:</label></th>
+									<td colspan="3">
+										<input meta:field="formValiationType"/>
+									</td>
+								</tr>
+								<tr>
+									<th><label>表单验证参数:</label></th>
+									<td colspan="3">
+										<input meta:field="formValiationParam" style="width: 427px;"/><span class="label label-info" style="margin-left:5px;">服务验证填写远程地址[http://]</span>
+									</td>
+								</tr>
+								<tr>
+									<th><label>流程标题定义:</label></th>
+									<td colspan="3">
+										<textarea maxlength="150" meta:field="procTitleDef" style="width:427px;"></textarea>
+										<div style="margin-top:1px;">
+										<span style="font-style: italic;color: blue;">通用变量：</span><select class="select-def-exp" name="select-common-def-exp" style="width:80px;">
+											<option value="">--选择--</option>
+											<option value="{公司}">公司</option>
+											<option value="{部门}">部门</option>
+											<option value="{申请人}">申请人</option>
+											<option value="{原始标题}">原始标题</option>
+											<option value="{流程名称}">流程名称</option>
+											<option value="{seq:5}">自增序列(可设长度)</option>
+											<option value="{date:yyyyMMdd}">日期时间(可设格式)</option>
+											<option value="{yyyy}">当前年(如:2014)</option>
+											<option value="{mm}">当前月(如:03)</option>
+											<option value="{dd}">当前日(如:12)</option>
+										</select>
+										<span style="font-style: italic;color: blue;">表单变量：</span><select class="select-def-exp" name="select-formfield-def-exp" style="width:80px;">
+											<option value="">--选择--</option>
+										</select>
+										</div>
+									</td>
+								</tr>
+								<tr th:if="${entity[freestyle]}">
+									<th><label>第一步处理人:</label></th>
+									<td colspan="3">
+										<span class="inputpro-img input-append">
+											<ul class="token-input-list-facebook" style="width: 412px;height:26px;">
+											</ul> 
+											<input type="hidden" id="firstStepActorsText" name="firstStepActorsText" th:value="${entity['firstStepActorsText']}"/>
+											<span class="add-on btn select-actor" > <i class=" icon-search"></i>
+											</span>
+											<input type="hidden" id="firstStepActorsId" name="firstStepActorsId" th:value="${entity['firstStepActorsId']}"/>
+										</span> <span class="label label-info">设置自由流第一步默认发送人</span>
+									</td>						
+								</tr>
+								<tr>
+                                   <th>
+                                     <label>业务管理员:</label>
+                                   </th>
+                                   <td colspan="3">
+                                     <input meta:ref="user::user"/>
+                                   </td>
+                                </tr>
+                                <tr>
+                                   <th>
+                                     <label>标准耗时(分钟):</label>
+                                   </th>
+                                   <td colspan="3">
+                                     <input meta:field="standardConsuming" style="width:206px;"/>
+                                   </td>
+                                </tr>
+                                <!-- <tr>
+									<th><label>图标:</label></th>
+									<td colspan="1">
+									<input meta:field="icon" data-setNames="font-awesome" />
+										</td>
+									<th><label>背景色:</label></th>
+									<td colspan="1">
+									<input meta:field="bgColor" /></td>
+								</tr> -->
+								<tr>
+									<!-- <th><label>启用流程关联:</label></th>
+									<td colspan="1">
+									<input meta:field="enableReWf" />
+									</td> -->
+									<th><label>审批模板:</label></th>
+									<td colspan="3">
+									<input meta:field="container" />
+									</td>
+								</tr>
+								<!-- <tr>
+									<th><label>启用正文:</label></th>
+									<td colspan="3">
+										<input meta:field="enableDoc" />
+									</td>
+								</tr> -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="portlet box tea-green">
+					<div class="portlet-title">
+						<div class="caption">
+							<i class="icon-reorder"></i>环节跳过配置
+						</div>
+					</div>
+					<div class="portlet-body form-bordered container-fluid">
+						<table class="form-table form-bordered col4-fluid">
+							<tbody>
+							<tr>
+                                   <th>
+                                     <label>开启跳过:</label>
+                                   </th>
+                                   <td colspan="3">
+                                     <input meta:field="skip"/>
+                                   </td>
+                            </tr>
+                            <tr th:if="${entity['skipConfig']!=null}" th:with="conf=${entity['skipConfig']}">
+                            	<th>
+                                   <label>跳过策略:</label>
+                                 </th>
+                                 <td colspan="3">
+                                  <label class="checkbox inline">
+									<input id="skipConfig1" name="skipConfigPolicy" th:checked="${conf['AreadyApproved']}" type="checkbox" value="AreadyApproved"/>
+									<span>历史环节已审批</span>
+									</label>
+									<label class="checkbox inline">
+									<input id="skipConfig2" name="skipConfigPolicy" th:checked="${conf['FoundNoUser']}" type="checkbox" value="FoundNoUser"/>
+									<span>找不到处理人</span>
+								  </label>
+                                </td>
+                            </tr>
+                            <tr th:unless="${entity['skipConfig']!=null}">
+                            	<th>
+                                   <label>跳过策略:</label>
+                                 </th>
+                                 <td colspan="3">
+                                  <label class="checkbox inline">
+									<input id="skipConfig1" name="skipConfigPolicy"  type="checkbox" value="AreadyApproved"/>
+									<span>历史环节已审批</span>
+									</label>
+									<label class="checkbox inline">
+									<input id="skipConfig2" name="skipConfigPolicy" type="checkbox" value="FoundNoUser"/>
+									<span>找不到处理人</span>
+								  </label>
+                                </td>
+                            </tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="portlet box tea-green">
+					<div class="portlet-title">
+						<div class="caption">
+							<i class="icon-reorder"></i>发起人提醒配置
+						</div>
+					</div>
+					<div class="portlet-body form-bordered container-fluid">
+						<table class="form-table form-bordered col4-fluid">
+							<tbody>
+							<tr>
+                                   <th>
+                                     <label>流程结束提醒:</label>
+                                   </th>
+                                   <td colspan="3">
+                                     <input meta:field="procEndRemind"/>
+                                   </td>
+                            </tr>
+							<tr>
+                                   <th>
+                                     <label>任务完成提醒:</label>
+                                   </th>
+                                   <td colspan="3">
+                                     <input meta:field="taskCompleteRemind"/>
+                                   </td>
+                            </tr>
+							<tr>
+                                   <th>
+                                     <label>抄送给发起人后不再提醒:</label>
+                                   </th>
+                                   <td colspan="3">
+                                     <input meta:field="taskRemindIgnore"/>
+                                     <span class="label label-info">勾选此项后，当选择了抄送给发起人时，不会发任务完成提醒给发起人</span>
+                                   </td>
+                            </tr>
+                            
+							</tbody>
+						</table>
+					</div>
+				</div>
+	</form>
+	<script th:inline="javascript">
+	//<![CDATA[ 
+	;(function($){
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;
+		var action = /*[[${action}]]*/;
+		Page.init(context);
+		$(context).uiwidget();
+		var _options={
+			context:context,
+			action:action
+		};
+		reqModule(["module/workflow/wfproc_manager"],function(WfprocManager){
+			var wfprocManager=WfprocManager.createNew(_options);
+		});
+	});
+	}(jQuery)); 
+	//]]>
+	</script>
+</div>
+
+
+
+
+
+
+

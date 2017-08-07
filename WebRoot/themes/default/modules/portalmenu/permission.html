@@ -1,0 +1,189 @@
+<div th:id="${viewId}" class="tab-form container-fluid ui-corner-all permissions" style="min-width: 900px ;border: 0px;background-color: rgb(245, 245, 245);">
+<style>
+.fix-header td,.fix-header th{
+	box-sizing: border-box;
+	overflow: hidden;
+}
+.fix-header thead{
+	position: fixed;
+	top: 113px;
+	z-index: 800;
+}
+.width120{
+	width: 120px;
+}
+</style>
+<div class="row-fluid" style="position: absolute;margin-left: 1px;z-index: 1000">
+		<div class="form-toolbar" >
+			<ul>
+				<li class="add-roles-toolbar">
+					<a  href="javascript://" th:title="#{security.authorizeNewRole}">
+						<img th:src="${themes.icon('main/enterprise.png')}"/><span th:text="#{security.selectRole}"> </span>
+					</a>
+				</li>
+				<li class="spliter"></li>
+				<li class=" dropdown">
+					<a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">
+						<img th:src="${themes.icon('main/note-pinned.png')}"/><span th:text="#{security.expandNav}"> </span><b class="caret"></b></a>
+                     <ul class="dropdown-menu node-collapse-to">
+                     	<li style="width:95%"><a href="javascript://" th:text="#{security.navExpandLevel1}"></a></li>
+                     	<li style="width:95%"><a href="javascript://" th:text="#{security.navExpandLevel2}"></a></li>
+                     	<li style="width:95%"><a href="javascript://" th:text="#{security.navExpandLevel3}"></a></li>
+                     	<li style="width:95%"><a href="javascript://" th:text="#{security.navExpandLevel4}"></a></li>
+                     </ul>
+               </li>
+			</ul>
+		</div>
+	</div>
+			<table	class="table table-bordered table-striped fix-header" style="margin-top: 69px">
+				<thead>
+					<tr>
+						<th style="width:200px" th:text="#{security.operation}"></th>
+						<th class="width120" th:text="#{security.permissionControl}"></th>
+						<th class="permission-role width120" th:each="role:${roles}" th:id="${role.id}" ><span th:text="${role.name}"></span>[<a class="hide-role" href="javascript://" th:text="#{common.hide}"></a>]</th>
+						<th th:if="${#lists.size(roles)==0}" style="width:200px"><span th:text="#{security.role}"></span>[<a class="add-roles" href="javascript://" th:text="#{common.add}"></a>]</th>
+						<th style="width:0px;padding: 0px"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr 
+					th:each="metaObj:${metauiOps}" 
+				 	th:id="${originalPermission.code}"
+					th:with="originalPermission=${objToPerm[metaObj.toString()]},
+						permission=${objToPerm[metaObj.toString()].refPermission} ,
+						isInControl=${(!objToPerm[metaObj.toString()].isReference and objToPerm[metaObj.toString()].isInControl) or (objToPerm[metaObj.toString()].refPermission!=null and objToPerm[metaObj.toString()].refPermission.isInControl)}"
+					th:attr="data-level=${metaObj.level}"
+					>
+						<td style="width:200px">
+							<div th:style="${'margin-left:'+metaObj.level*20+'px'}">
+								<b class="icon-chevron-down node-collapse" data-status="1" style="vertical-align:text-top;cursor: pointer;"></b><img th:src="${themes.icon(metaObj.icon)}" />
+								<a class='edit-metaobj' th:href="@{/entities/PortalMenu/edit(id=${metaObj.id},editMode='1')}" >
+									<span th:text="${metaObj.name}"> </span>
+								</a>
+							</div>
+						</td>
+						<td class="width120">
+							<div class="switch switch-small" data-on="success" data-off="warning">
+							    <input th:id="${metaObj.id}" type="checkbox" name="isInControl"  
+							    	th:disabled="${originalPermission.isReference}" 
+							    	th:checked="${isInControl}"/>
+							</div>
+						</td>						
+						<td class="width120" th:each="role,iterStat:${roles}" 
+							th:with="rolePermission=${rolePermissions[#objects.nullSafe(permission,originalPermission).id+'_'+role.id]}"
+							>
+							<div th:if="${!isInControl}"></div>
+							<div th:if="${isInControl}" th:switch="${#objects.nullSafe(rolePermission,'_none_')}" style="text-align: center;">
+								<a th:case="'_none_'" th:title="${role.name}" th:classappend="${originalPermission.isReference}?'':'role-permission'"  th:attr="data-status=0" ><img th:src="${themes.icon(originalPermission.isReference?'led-icons/cross_grey.png':'led-icons/cross.png')}"/></a>
+								<a th:case="*"        th:title="${role.name}" th:classappend="${originalPermission.isReference}?'':'role-permission'"  th:attr="data-status=1" ><img th:src="${themes.icon(originalPermission.isReference?'led-icons/accept_grey.png':'led-icons/accept.png')}"/></a>
+							</div>
+						</td>
+						<td style="width:200px"  th:if="${#lists.size(roles)==0}">
+							<span th:if="${!isInControl}"></span>
+							<a th:if="${isInControl}" class="add-roles" href="javascript://" th:text="#{security.addRole}"></a>
+						</td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+	<script th:inline="javascript">
+	//<![CDATA[
+		$(function(){
+			var options={
+				viewId:/*[[${viewId}]]*/,
+				roles:/*[[${roles}]]*/,
+			};
+			
+			reqModule(["module/security/portalmenupermission"],function(module){
+				var entitySec=module.createNew(options);
+				$('.switch',entitySec.context)['bootstrapSwitch']();
+				$('.switch',entitySec.context).on('switch-change',function (e, data) {
+			        var $el=$(data.el);
+			        var self=$(this);
+		        	self.bootstrapSwitch("setActive",false);
+			        var metaObjId=$el.attr("id");
+			        if(data.value){
+			        	entitySec.turnOnPermission(self,metaObjId);
+			        }else{
+			        	entitySec.turnOffPermission(self,metaObjId);
+			        }
+			  	});
+				
+				$(".edit-metaobj",entitySec.context).click(function(e){
+					e.stopImmediatePropagation();
+					e.preventDefault();
+					var self=$(this);
+					var url=self.attr("href");
+					jQuery.openLink(url,{showType:"pop-up",width:800,height:400},function(){
+						var returnVal=$.dialogReturnValue();
+						if(!returnVal) return;
+					});
+				});
+				
+				entitySec.context.on("click",".add-roles",function(e){
+					var self=$(this);
+					entitySec.addRoles(self);
+				});
+				
+				entitySec.context.on("click",".hide-role",function(e){
+					var self=$(this);
+					var roleId=self.closest("th").attr("id");
+					entitySec.hideRoleColumn(self.closest("table"),roleId);
+				});
+				
+				entitySec.context.on("click",".add-roles-toolbar",function(e){
+					var url=Global.contextPath+"/entities/Role/select?mode=multi";
+					var self=$(this);
+					$.openLink(url, {
+						title : i18n.t("role.select"),
+						requestType : "GET"
+						}, function() {
+							var reVal=jQuery.dialogReturnValue();
+							if(!reVal || reVal.length==0) return;
+							var tableEl=$("table",entitySec.context);
+							entitySec.addRolesToUI(tableEl,reVal);
+					});
+				});
+				
+				entitySec.context.on("click",".node-collapse",function(e){
+					var self=$(this);
+					entitySec.toggleNode(self);
+				});
+				
+				entitySec.context.on("click",".node-collapse-to li",function(e){
+					var self=$(this);
+					var level=self.index();
+					var tableEl=$("table",entitySec.context);
+					entitySec.collapseToLevel(tableEl,level);
+				});
+				
+				entitySec.context.on("click",".role-permission",function(e){
+					var self=$(this);
+					var status=self.attr("data-status");
+					if(status=="0"){
+						entitySec.addPermission(self);
+					}else{
+						entitySec.delPermission(self);
+					}
+				});
+				
+				$("tr:gt(0)",entitySec.context).each(function(i,el){
+					var self=$(this);
+					var nextTr=self.next();
+					if(nextTr.length==0){
+						self.find(".node-collapse").css("visibility","hidden");
+					}else{
+						if(self.attr("data-level")>=nextTr.attr("data-level")){
+							self.find(".node-collapse").css("visibility","hidden");
+						}
+					}
+				});
+				
+				var $tabContainer=entitySec.context.closest(".ui-tabs");
+				entitySec.context.closest(".ui-tabs-panel").css("overflow-y","auto").height($tabContainer.height()-30);
+			});
+		});
+	    
+	//]]>
+	</script>
+</div>

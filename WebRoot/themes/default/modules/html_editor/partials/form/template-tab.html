@@ -1,0 +1,38 @@
+<div th:id="${viewId}" class="tab-form ui-corner-all">
+	<div class="form-toolbar">
+		<ul>
+			<li th:if="${action} != 'VIEW'" id="saveBaseInfo" class="baseinfo">
+				<a href="javascript://" th:title="#{common.save}"><img th:src="${themes.icon('main/form-save.png')}" alt='' /><span th:text="#{common.save}">保存</span></a>
+			</li>
+		</ul>
+	</div>
+	<div class="bottom-tabs">
+		<div th:id="'entity-tabs-' + ${viewId}" class="tabs-bottom" ui-tab style="padding-right: 0px">
+			<div th:id="'tabs-baseform' + ${viewId}">
+				<form class="form-horizontal ajaxpost" data-widget="validator" id="entityForm" method="post" th:action="${requestUrl}" th:object="${entity}">
+					<input type="hidden" meta:field="id" />
+					<div class="form-sections">
+						<div pd-layout='form_section2'></div>
+					</div>
+				</form>
+			</div>
+			<ul class="bottom-tabs-ul">
+				<li class="active">
+					<a th:href="'#tabs-baseform' + ${viewId}" th:text="#{common.baseInfo}">基本信息</a><span></span>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<textarea id="script" style="display:none;">
+	/*<![CDATA[*/			
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var context = '#' + viewId;
+		var $container=$(context);
+		Form.init(context,"#entityForm");
+		Form.initValidator(context);
+		Page.init($container,{pageType:"in-tab",entityTabs:"entity-tabs-" + viewId});
+	});
+	/*]]>*/
+	</textarea>
+</div>

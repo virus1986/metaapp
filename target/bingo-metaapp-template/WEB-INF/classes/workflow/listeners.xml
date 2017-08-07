@@ -1,0 +1,12 @@
+<listeners>
+    <add event="TASK_CREATED"  bean="remindTaskCreatedListener"/>
+    <add event="TASK_ENDED"  bean="remindTaskEndedListener"/>
+    <add event="NOTIFY_CREATED"  bean="remindNotifyCreatedListener"/>
+    <add event="WORKFLOW_STARTED"  bean="customWorkflowStartedListener"/>
+    <add event="WORKFLOW_STARTED"  bean="commonWorkflowStartedListener"/>
+    <add event="WORKFLOW_ENDED"  bean="commonWorkflowEndedListener"/>
+    <add event="WORKFLOW_ENDED"  bean="remindProcessEndedListener"/>
+    <add event="ACTIVITY_STARTED"  bean="commonActivityStartedListener"/>
+    <add event="ACTIVITY_ENDED"  bean="commonActivityEndedListener"/>
+    <add event="BEFORE_TASKS_CREATED"  bean="commonBeforeTasksCreatedListener"/>
+</listeners>

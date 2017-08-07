@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" createUrl="~/entities/uamOrganization/create" dataUrl="~/entities/uamOrganization/query_paged" deleteUrl="~/entities/uamOrganization/delete" editUrl="~/entities/uamOrganization/edit" entityName="uamOrganization" height="230px" id="grid_e40260d0-cbc5-4de6-8655-41201a8cacc4" isSwitchView="false" multiSelect="true" multiSelectKey="None" shrinkToFit="true" type="normal" view="associcate" width="100%">
+    <addDialogSettings caption="" showType="pop-up"/>
+    <appearanceSettings alternateRowBackground="true" caption="" highlightRowsOnHover="true" rightToLeft="false" rowNumbersColumnWidth="25" scrollBarOffset="18" showFooter="false" showRowNumbers="true" shrinkToFit="true"/>
+    <columns>
+        <column dataField="id" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="false" width="150"/>
+        <column dataField="name" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="300"/>
+        <column dataField="orgNum" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="80"/>
+        <column dataField="companyId" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="80"/>
+    </columns>
+    <contextButtons>
+        <button buttonIcon="mini/icon_tool_022.gif" cssClass="" isInMoreBtns="true" name="edit" onClick="grid.editRecord" text="修改" toolTip="修改"/>
+        <button buttonIcon="mini/icon_tool_060.gif" cssClass="" isInMoreBtns="true" name="delete" onClick="grid.delRecord" text="删除" toolTip="删除"/>
+    </contextButtons>
+    <customSettings/>
+    <toolBarSetting>
+        <button isInMoreBtns="true" cssClass="" name="link" buttonIcon="main/search-add.png" onClick="grid.addRelation" text="选择" toolTip="选择"/>
+        <button isInMoreBtns="true" cssClass="" name="fresh" buttonIcon="main/button-load.png" onClick="grid.refreshGrid" text="刷新" toolTip="刷新"/>
+        <button isInMoreBtns="true" cssClass="" name="search" buttonIcon="main/search-add.png" onClick="grid.advanceSearch" text="查询" toolTip="查询"/>
+        <button buttonIcon="main/button-white-remove.png" cssClass="" isInMoreBtns="false" name="delete" onClick="grid.delRecord" text="删除" toolTip="删除" />
+        <button isInMoreBtns="true" cssClass="" name="export" buttonIcon="main/file-send.png" onClick="grid.exportGrid" text="导出" toolTip="导出"/>
+    </toolBarSetting>
+    <editDialogSettings caption="" showType="pop-up"/>
+    <filter groupOp="and">
+        <filters>
+        </filters>
+        <rules>
+        </rules>
+    </filter>
+    <groupSettings collapseGroups="false"/>
+    <orderby/>
+    <quickSearch searchColNum="4">
+        <column dataField="name"/>
+        <column dataField="name"/>
+        <column dataField="name"/>
+        <column dataField="name"/>
+        <column dataField="name"/>
+    </quickSearch>
+    <joinEntities>
+    </joinEntities>
+    <scriptBlock/>
+    <treeGridSettings enabled="false"/>
+    <viewDialogSettings caption="" showType="pop-up"/>
+</grid>

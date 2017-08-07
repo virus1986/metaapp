@@ -1,0 +1,120 @@
+<div th:id="${viewId}" data-widget="validator">
+	<form class="form-horizontal ajaxpost proc-entity">
+		<div class="portlet box tea-green">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-reorder"></i> <span>流程基本信息</span>
+				</div>
+			</div>
+			<div class="portlet-body form-bordered">
+				<table class="form-table form-bordered col4-fluid">
+					<tbody>
+						<tr>
+									<th><label>流程名称:</label></th>
+									<td colspan="3"><input meta:field="procName" entity-name="wfproc" style="width: 427px;" />
+									<input type="hidden" name="entityName"/>
+									</td>
+								</tr>
+								<tr>
+									<th><label>业务归属分类:</label></th>
+									<td colspan="3">
+										<input meta:field="procCatagoryId" entity-name="wfproc"/></td>
+								</tr>
+								<tr>
+									<th><label>业务管理员:</label></th>
+									<td colspan="3" class="proc-manager-con">
+										<input meta:ref="user::user" entity-name="wfproc"/></td>
+								</tr>
+								<tr>
+									<th><label>流程表单:</label></th>
+									<td colspan="3"><span class="inputpro-img input-append">
+											<input meta:field="formUrl" entity-name="wfproc" style="width: 400px;" data-uneditable="true"/>
+											<a href="javascript://" class="add-on btn select-workflow-form" ><i	class="icon-search"></i></a></span>
+											<a hef="javascript://" title="新建表单" class="add-on btn create-workflow-form" style="width:18px;padding:5px;"><i class="icon-plus"></i></a>
+											<a href="javascript://" title="设计表单" class="add-on btn edit-workflow-form" style="width:18px;padding:5px;"><i class="icon-edit"></i></a>
+									</td>
+								</tr>
+								<tr>
+									<th><label>流程标题定义:</label></th>
+									<td colspan="3">
+										<textarea maxlength="150" meta:field="procTitleDef" entity-name="wfproc" style="width:427px;"></textarea>
+										<div style="margin-top:1px;">
+										<span style="font-style: italic;color: blue;">通用变量：</span><select class="select-def-exp" name="select-common-def-exp" style="width:80px;">
+											<option value="">--选择--</option>
+											<option value="{公司}">公司</option>
+											<option value="{部门}">部门</option>
+											<option value="{申请人}">申请人</option>
+											<option value="{原始标题}">原始标题</option>
+											<option value="{流程名称}">流程名称</option>
+											<option value="{seq:5}">自增序列(可设长度)</option>
+											<option value="{date:yyyyMMdd}">日期时间(可设格式)</option>
+											<option value="{yyyy}">当前年(如:2014)</option>
+											<option value="{mm}">当前月(如:03)</option>
+											<option value="{dd}">当前日(如:12)</option>
+										</select>
+										<span style="font-style: italic;color: blue;">表单变量：</span><select class="select-def-exp" name="select-formfield-def-exp" style="width:80px;">
+											<option value="">--选择--</option>
+										</select>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th><label>第一步处理人:</label></th>
+									<td colspan="3">
+										<span class="inputpro-img input-append"> 
+											<input type="text" id="firstStepActorsText" name="firstStepActorsText"  style="width: 400px;"/>
+											<span class="add-on btn select-actor" > <i class=" icon-search"></i>
+											</span>
+											<input type="hidden" id="firstStepActorsId" name="firstStepActorsId"/>
+										</span> <span class="label label-info">设置自由流第一步默认发送人</span>
+									</td>						
+								</tr>
+                               <!--  <tr>
+									<th><label>图标:</label></th>
+									<td colspan="1">
+									<input meta:field="icon" entity-name="wfproc" data-setNames="font-awesome" />
+										</td>
+									<th><label>背景色:</label></th>
+									<td colspan="1">
+									<input meta:field="bgColor" entity-name="wfproc"/></td>
+								</tr> -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</form>
+	<script th:inline="javascript">
+	//<![CDATA[ 
+;(function($){
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;
+		var userId = /*[[${user.id}]]*/;
+		var userName = /*[[${user.name}]]*/;
+		var userjson=null;
+		if(userId){
+			userjson={id:userId,name:userName};
+		}
+		Page.init(context);
+		var _options={
+			context:context,
+			action:"CREATE",
+			userjson:userjson
+		};
+		reqModule(["module/workflow/wfproc_manager"],function(WfprocManager){
+			var wfprocManager=WfprocManager.createNew(_options);
+			$("[name=procTitleDef]",context).val("");
+		});
+		
+		$(context).dialogResize();
+	});
+}(jQuery)); 
+	//]]>
+	</script>
+</div>
+
+
+
+
+
+
+

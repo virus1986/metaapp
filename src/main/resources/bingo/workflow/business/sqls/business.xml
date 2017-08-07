@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="workflow.business.getUsersOfOrg.override">
+      select 'user' type, su.id id, su.name name from uam_user su
+	  where su.org_id in (select id from uam_organization so where so.id = #orgId#)
+    </entry>
+    <entry key="workflow.business.getUsersOfRole.override">
+      select su.id id, su.name name, swr.id parent from wf_user_role swr, uam_user su
+	  where swr.org_id = #orgId#
+			and swr.role_id = #roleId#
+			and swr.user_id = su.id  
+    </entry>
+</properties>

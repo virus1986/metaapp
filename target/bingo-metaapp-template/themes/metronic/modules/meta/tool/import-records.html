@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div class="panel apply-panel" style="min-width:850px;height: 480px;" th:id="${viewId}">
+  <form class="form-horizontal ajaxpost" data-widget="validator" id="entityForm" method="post" th:action="${requestUrl}"  >
+    <div class="table-dialog">
+      <div class="ui-dialog-title" th:text="#{tool.import.dataImport}"></div>
+      <div class="ui-dialog-content container-fluid">
+        <div class="row-fluid">
+           <table class="form-table form-bordered col2-fluid">
+                <tr>
+                  <th th:text="#{tool.import.dataFile}+':'"></th>
+                  <td>
+	                 <div>
+						<div data-widget="upload" data-useFileserver="true" data-maxSize="10" data-fileSuffix="xls,xlsx" class="input-prepend input-append" style="line-height: 25px;height: 25px;">
+							<div class="input-append">
+							  	<div class="add-on progress progress-info progress-striped" style="width: 456px;margin-bottom:0px;float:left;">
+								  <div class="bar" style="width: 0%;height:21px;line-height: 21px;position:relative;"></div>
+								</div>
+								<span class="uploadfile add-on btn">
+									<i class="icon-plus-sign"></i>
+									<span th:text="#{common.browse}"></span>
+								</span>
+							</div>
+							<input type="hidden" class="value-input" name="filePath" id="filePath" />
+						</div>
+						<div>
+							<i class='icon-info-sign'></i>
+							<span th:text="#{tool.import.dataFileDesc}"></span>
+							<a  th:if="${existTemplate}" class="download-template">模板下载</a>
+						</div>
+					</div>
+                  </td>
+                </tr>
+              </table>
+        </div>
+        <div class="row-fluid" id="mapping" style="height:400px;overflow: auto;">
+        	<div class="alert alert-info" style="margin: 10px">
+					<a class="close" data-dismiss="alert"> </a>
+					<h4 class="alert-heading" style="margin-bottom: 10px">
+					<span th:text="${#messages.msg('tool.importRecord.descTitle',metaEntity.displayName)}"></span></h4>
+					<p th:text="#{tool.importRecord.step1}"></p>
+					<p th:text="#{tool.importRecord.step2}"></p>
+			</div>
+			<div class="alert alert-block" style="margin: 10px">
+				<p><i class='icon-info-sign'></i> 对于引用类型的字段，导入过程支持将名称转换为Id的操作，因此，对于"创建人"，"修改人"这些字段，Excel文件中该列的值可以直接写用户姓名，转换时可启用"显示名转Id"功能，导入时，系统将根据用户名查询用户Id，并进行保存
+					</p>
+					<p><i class='icon-info-sign'></i> 针对名称转换为Id的操作，在Excel模板的标题行上可附加"|toid"，系统创建映射时，会自动选中”映射到值“的选项
+					</p>
+			</div>
+			<div style="padding:10px; text-align: center;" th:if="${existImportPic}">
+				<p><img alt="" th:src="${contextPath}+'/entities/'+${metaEntity.name}+'/download-resource?name=import.png'"/></p>
+			</div>
+        </div>
+      </div>
+      <iframe src="" id="importErrorDownloadIfr" name="importErrorDownloadIfr" style="display:none;"/>
+      <div class="ui-dialog-buttonset">
+        <button class="btn closeBtn" name="close" type="button" th:text="#{common.cancel}">
+		</button>
+		<button class="btn blue" id="import" name="import" type="button" >
+        	<span th:text="#{common.import}"></span>
+			<i class="m-icon-swapright m-icon-white"></i>
+		</button>
+      </div>
+    </div>
+  </form>
+  <script th:inline="javascript" type="text/javascript">
+//<![CDATA[
+    $(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var context = "#" + viewId;
+		var entityName=/*[[${metaEntity.name}]]*/;
+		var container = $('#' + viewId);
+		Page.init(container);
+		$("#filePath",context).bind("FileUploaded",function(event,up, file,resp,container){
+
+			var mappingContainer=$("#mapping",context);
+			var url= Global.contextPath+'/entities/'+entityName+'/import-mapping?filepath='+resp.filePath;
+			CommonLoader.loadData(mappingContainer,url,function(){
+
+			});
+		});
+
+		$(".download-exceptdata",context).click(function(){
+			var path = $(this).attr("path") ;
+			var realPath=Urls.parseDownloadPath(path);//
+			$("#importErrorDownloadIfr").attr("src",realPath) ;
+		}) ;
+
+		$(".download-template",context).click(function(){
+			var realPath=Global.contextPath+'/entities/'+entityName+'/import-download-template';
+			$("#importErrorDownloadIfr").attr("src",realPath) ;
+		}) ;
+
+		$("#import",context).click(function(){
+			var filePath=$("#filePath",context).val();
+			if(filePath==null || filePath.length==0){
+				$.messageBox.warning({message:i18n.t("tool.importRecord.selectInfo")});
+				return false;
+			}
+			$.messageBox.confirm({
+				message:i18n.t("tool.importRecord.confirmInfo"),
+				callback:function(result){
+						if(result){
+							var sId=$("#sId",container).val();
+							var url= Global.contextPath+'/entities/'+entityName+'/import-init-progress?sid='+sId;
+							window.setTimeout(function(){
+								$.openLink(url,{showType:"pop-up",width:"800",height:"500",title:"数据导入"});
+							},500);
+
+							$("#entityForm",context).submit();
+						}
+					}
+			});
+		});
+    });
+//]]>
+</script>
+</div>

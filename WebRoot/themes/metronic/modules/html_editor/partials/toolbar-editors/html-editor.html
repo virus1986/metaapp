@@ -1,0 +1,63 @@
+<div class="wysiwyg-toolbar btn-toolbar  left">
+	<!-- 字体 -->
+	<div class="btn-group" pd-htmleditor-item="fontFamily">
+		<a class="btn btn-small  dropdown-toggle" data-toggle="dropdown"
+			title="字体"><i class="icon-font"></i><i
+			class="icon-angle-down icon-on-right"></i></a>
+		<ul class="dropdown-menu dropdown-light">
+			<li ng-repeat="val in item.valueList"><a ng-click="item.setValue(val)"  style="font-family: {{val}}">{{val}}</a></li>
+		</ul>
+	</div>	
+	<div class="btn-group" pd-htmleditor-item="fontSize">
+		<a class="btn btn-small  dropdown-toggle" data-toggle="dropdown"
+			title="字体大小" data-original-title="Font Size"><i
+			class="icon-text-width"></i>&nbsp;<i
+			class="icon-angle-down icon-on-right"></i></a>
+		<ul class="dropdown-menu dropdown-light">
+			<li ng-repeat="val in item.valueList"><a ng-click="item.setValue(val)" style="font-size:{{val}}">{{val}}</a></li>
+		</ul>
+	</div>	
+	<div class="btn-group" pd-htmleditor-item="lineHeight">
+		<a class="btn btn-small  dropdown-toggle" data-toggle="dropdown"
+			title="{{item.label}}" ><i
+			class="icon-text-height"></i>&nbsp;<i
+			class="icon-angle-down icon-on-right"></i></a>
+		<ul class="dropdown-menu dropdown-light">
+			<li ng-repeat="val in item.valueList"><a ng-click="item.setValue(val)" >{{val}}</a></li>
+		</ul>
+	</div>	
+	<div class="btn-group">
+		<div class="dropdown dropdown-colorpicker" pd-htmleditor-item="color">
+			<a data-toggle="dropdown" class="dropdown-toggle" href="#"><span
+				class="btn-colorpicker" style="background-color: #ac725e"
+				data-original-title="" title="字体颜色"></span></a>
+			<ul class="dropdown-menu dropdown-caret pull-right">
+				<li ng-repeat="val in item.valueList"><a ng-click="item.setValue(val)" class="colorpick-btn" href="#"	style="background-color: {{val}};"></a></li>
+			</ul>
+		</div>		
+	</div>
+	<div class="btn-group">
+		<a class="btn btn-small btn-info" title="字体加粗" pd-htmleditor-item="bold" ng-click="item.onClick();" ng-class="item.stateClass" ><i class="icon-bold"></i></a>
+		<a class="btn btn-small btn-info" title="斜体" pd-htmleditor-item="italic" ng-click="item.onClick();" ng-class="item.stateClass"><i class="icon-italic"></i></a>
+		<a class="btn btn-small btn-info" title="" pd-htmleditor-item="lineThrough" ng-click="item.onClick();" ng-class="item.stateClass"><i class="icon-strikethrough"></i></a>
+		<a class="btn btn-small btn-info" title="下划线" pd-htmleditor-item="underline" ng-click="item.onClick();" ng-class="item.stateClass"><i class="icon-underline"></i></a>
+	</div>
+	<!-- 对齐 -->
+	<div class="btn-group">
+		<a class="btn btn-small btn-primary" pd-htmleditor-item="left" ng-click="item.onClick();" ng-class="item.stateClass" title="左对齐"><i class="icon-align-left"></i></a>
+		<a class="btn btn-small btn-primary" pd-htmleditor-item="center" ng-click="item.onClick();" ng-class="item.stateClass" title="居中对齐" ><i	class="icon-align-center"></i></a>
+		<a class="btn btn-small btn-primary" pd-htmleditor-item="right" ng-click="item.onClick();" ng-class="item.stateClass" title="右对齐"><i class="icon-align-right"></i></a>
+		<a class="btn btn-small btn-primary" pd-htmleditor-item="justify" ng-click="item.onClick();" ng-class="item.stateClass" title="两端对齐" ><i class="icon-align-justify"></i></a>
+	</div>
+	<!-- 表格 -->
+	<div class="btn-group">
+		<a class="btn btn-small btn-primary" pd-htmleditor-item="addColumn" ng-click="item.onClick();" ng-class="item.stateClass" title="增加列"><i class="icon-columns"></i></a>
+		<a class="btn btn-small btn-primary" pd-htmleditor-item="addRow" ng-click="item.onClick();" ng-class="item.stateClass" title="向下增加行" ><i	class="icon-hand-down"></i></a>
+		<a class="btn btn-small btn-primary" pd-htmleditor-item="addRowUp" ng-click="item.onClick();" ng-class="item.stateClass" title="向上增加行" ><i	class="icon-hand-up"></i></a>
+		<a class="btn btn-small btn-primary" pd-htmleditor-item="mergeLeft" ng-click="item.onClick();" ng-class="item.stateClass" title="向左合并列"><i class="icon-arrow-left"></i></a>
+		<a class="btn btn-small btn-primary" pd-htmleditor-item="mergeRight" ng-click="item.onClick();" ng-class="item.stateClass" title="向右合并列"><i class="icon-arrow-right"></i></a>
+		<a class="btn btn-small btn-primary" pd-htmleditor-item="mergeDown" ng-click="item.onClick();" ng-class="item.stateClass" title="向下合并行" ><i class="icon-arrow-down"></i></a>
+		<a class="btn btn-small btn-primary" pd-htmleditor-item="splitCells" ng-click="item.onClick();" ng-class="item.stateClass" title="拆分单元格" ><i class="icon-th"></i></a>
+	</div>	
+	
+</div>

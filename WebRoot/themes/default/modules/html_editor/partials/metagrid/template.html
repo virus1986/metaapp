@@ -1,0 +1,13 @@
+<table class="table table-condensed">
+	<caption>关系列表:{{data.relationdisplayname}}</caption>
+	<thead>
+	<tr>
+		<th ng-repeat="col in data.gridCols">{{col.displayName}}</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr ng-repeat="i in [1,2,3,4]">
+		<td ng-repeat="col in data.gridCols"></td>
+	</tr>
+	</tbody>
+</table>

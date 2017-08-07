@@ -1,0 +1,83 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:700px">
+	<div class="ui-dialog-title hide">
+		<span th:text="#{form.colAttrs.caption}"></span>
+	</div>
+	<form id="formColAttrsForm">
+		<table class="form-table">
+			<tbody>
+				<tr>
+					<th th:text="#{form.colAttrs.class}+':'"></th>
+					<td><input name="class" type="text" style="width:95%"/></td>
+				</tr>
+				<tr>
+					<th th:text="#{form.colAttrs.style}+':'"></th>
+					<td><input name="style" type="text" style="width:95%"/></td>
+				</tr>
+				<tr>
+					<th th:text="#{form.colAttrs.rwAttrs}+':'"></th>
+					<td><label for="disabled" class="checkbox inline"><input name="disabled" type="checkbox"/>disabled</label>
+					<label for="readonly" class="checkbox inline"><input name="readonly" type="checkbox"/>readonly</label>
+					<label for="required" class="checkbox inline"><input name="required" type="checkbox"/>required</label>
+					</td>
+				</tr>
+				<!-- <tr>
+					<th>validator:</th>
+					<td><input name="data-validator" type="text" style="width:95%"/></td>
+				</tr> -->
+			</tbody>
+		</table>
+	</form>
+	<div class="ui-dialog-buttonset">
+		<button type="button" class="btn btn-primary saveFormColAttrs" th:text="#{common.sure}"></button>
+		<button type="button" class="btn btn-primary closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+
+<script th:inline="javascript">
+//<![CDATA[
+   $(function(){
+   	var context=/*[['#'+${viewId}]]*/;
+   	var args=jQuery.dialogAraguments();
+   	var attrs=args.attrs;
+   	function initPage(){
+   		if(attrs){
+   			for(var i=0;i<attrs.length;++i){
+   				var key=attrs[i].key;
+   				var value=attrs[i].value;
+   				if(key=="readonly"||key=="disabled"||key=="required"){
+   					if(true===value||"true"===value){
+   						$("[name="+key+"]",context).attr("checked","checked");
+   					}else{
+   						$("[name="+key+"]",context).removeAttr("checked");
+   					}
+   				}else{
+   					$("[name="+key+"]",context).val(value);
+   				}
+   			}
+   		}
+   	};
+   	initPage();
+   	$(".saveFormColAttrs",context).click(function(){
+   		var attrs=$("#formColAttrsForm",context).toJson();
+   		var keys=["readonly","disabled","required"];
+   		for(var i=0;i<keys.length;++i){
+   			var key=keys[i];
+   			if($("[name="+key+"]:checked",context).length>0){
+   				attrs[key]=true;
+   			}else{
+   				attrs[key]=false;
+   			}
+   		}
+   		var _attrs=[];
+   		for(var _key in attrs){
+   			var _value=attrs[_key];
+   			_attrs.push({key:_key,value:_value});
+   		}
+		$(context).dialogClose(_attrs);
+	});
+   	$(".closeBtn",context).click(function(){
+		$(context).dialogClose(null);
+	});
+   });
+//]]>
+</script>
+</div>

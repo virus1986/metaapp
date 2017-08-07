@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>share template</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<span th:fragment="String" th:with="useOption=${!#lists.isEmpty(fieldCtx.options)}">
+		<input th:if="${!useOption}" type="text" th:id="${fieldCtx.name}"
+			th:name="${fieldCtx.name}" th:value="${fieldCtx.defaultValue}"/>
+			
+		<select th:if="${useOption}" th:name="${fieldCtx.name}">
+			<option th:each="option: ${fieldCtx.options}" th:text="${option.name}" 
+				th:value="${option.value}" th:selected="${fieldCtx.defaultValue!=null}?${fieldCtx.defaultValue==option.value}:${option.default}"></option>
+		</select>
+	</span>
+	<span th:fragment="Integer" th:with="useOption=${!#lists.isEmpty(fieldCtx.options)}">
+		<input th:if="${!useOption}" type="text" th:id="${fieldCtx.name}"
+			th:name="${fieldCtx.name}" th:value="${fieldCtx.defaultValue}"/>
+			
+		<select th:if="${useOption}" th:name="${fieldCtx.name}">
+			<option th:each="option: ${fieldCtx.options}" th:text="${option.name}" 
+				th:value="${option.value}" th:selected="${fieldCtx.defaultValue!=null}?${fieldCtx.defaultValue==option.value}:${option.default}"></option>
+		</select>
+	</span>
+	<span th:fragment="Float" th:with="useOption=${!#lists.isEmpty(fieldCtx.options)}">
+		<input th:if="${!useOption}" type="text" th:id="${fieldCtx.name}"
+			th:name="${fieldCtx.name}" th:value="${fieldCtx.defaultValue}"/>
+			
+		<select th:if="${useOption}" th:name="${fieldCtx.name}">
+			<option th:each="option: ${fieldCtx.options}" th:text="${option.name}" 
+				th:value="${option.value}" th:selected="${fieldCtx.defaultValue!=null}?${fieldCtx.defaultValue==option.value}:${option.default}"></option>
+		</select>
+	</span>
+	<span th:fragment="Boolean">
+		<select th:name="${fieldCtx.name}">
+			<option value='1' th:text="#{common.yes}"></option>
+			<option value='0' th:text="#{common.no}"></option>
+		</select>
+	</span>
+	
+	<input th:fragment="Hidden" type="hidden" th:id="${fieldCtx.name}"
+		th:name="${fieldCtx.name}" th:value="${fieldCtx.defaultValue}"/>
+		
+	<span th:fragment="CascadeFieldsSelect" th:with="useFields=(${fields!=null})">
+		<input th:if="${!useFields}" type="text" th:id="${fieldCtx.name}"
+			th:name="${fieldCtx.name}" th:value="${fieldCtx.defaultValue}"/>
+		<select th:if="${useFields}" th:name="${fieldCtx.name}">
+			<option value="" th:text="#{common.optionNullText1}"></option>
+			<option th:each="option: ${fields}" th:text="${option.value}" 
+				th:value="${option.key}" th:selected="${option.key}==${fieldCtx.defaultValue}"></option>
+		</select>
+	</span>
+	
+	<span th:fragment="TextArea">
+		<textarea th:id="${fieldCtx.name}" data-widget="autocode" rows="5" th:name="${fieldCtx.name}" th:text="${fieldCtx.defaultValue}"/>
+	</span>
+</body>
+</html>

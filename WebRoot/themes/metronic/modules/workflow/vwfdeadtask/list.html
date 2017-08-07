@@ -1,0 +1,55 @@
+<div  th:attr="data-url=${requestUrl}"  th:id="${viewId}">
+<script type="text/javascript" th:inline="javascript">
+//<![CDATA[ 
+	$(function() {
+		var viewId=/*[[${viewId}]]*/;
+		var view=/*[[${view}]]*/;
+		var entityName=/*[[${entityName}]]*/;
+		var context="#"+viewId;
+		var $grid=$('grid_'+entityName+'_'+view+'_'+viewId);
+		window.vwfdeadtask_formatFunction=function(cellval, opts, rowObject, act){
+			if(!cellval){
+				return "";
+			}
+			var html="<a href='javascript://'";
+			var url=Global.contextPath;
+			if(cellval.startWith("role:")){
+				var orgId=rowObject['orgId'],roleId=rowObject['roleId'];
+				if(!rowObject['orgId']||rowObject['orgId']=='null'){
+					return "组织["+orgId+"]不存在";
+				}
+				if(!rowObject['roleId']||rowObject['roleId']=='null'){
+					return "角色["+roleId+"]不存在";
+				}
+				url+="/entities/wfuserrole/form?orgId="+orgId+"&roleId="+roleId;
+				html+=" onclick=\"javascript:jQuery.openLink('"+url+"');\" ";
+				html+=">给组织["+rowObject['orgName']+"]的角色["+rowObject['roleName']+"]分配用户";
+			}else if(cellval.startWith("post:")){
+				var postId=cellval.substring(5);
+				if(!rowObject['postName']||rowObject['postName']=='null'){
+					return "岗位["+postId+"]不存在";
+				}
+				url+="/entities/uampost/edit?id="+postId;
+				html+=" onclick=\"javascript:jQuery.openLink('"+url+"');\" ";
+				html+=">给岗位["+rowObject['postName']+"]分配用户";
+			}
+			html+="</a>";
+			return html;
+		};
+		
+		window.vwfdeadtask_unFormatFunction=function(cellval,ops,pos,cnt){
+		};
+		
+	}); 
+	//]]>
+	</script>
+	<div class="breadcrumbs" id="breadcrumbs">
+		<ul class="breadcrumb">		
+		</ul>
+	</div>
+	<div class="container-fluid m-top10">
+		<meta:grid id="'grid_'+${entityName}+'_'+${view}+'_'+${viewId}"  entityName="${entityName}" 	view="${view}">
+		</meta:grid>
+	</div>
+	
+</div>

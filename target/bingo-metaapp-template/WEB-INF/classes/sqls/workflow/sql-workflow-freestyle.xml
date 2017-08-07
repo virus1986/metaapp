@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment></comment>
+
+	<entry key="workflow.freestyle.topntodo">
+		<![CDATA[
+		select * from(
+			select 0 as notifyId,wfTask.id,wfProcInst.title as title,1 as todoType,
+				wfTask.creatorId,wfTask.creatorName,
+				wfTask.assigneeId,wfTask.assigneeName,
+				wfTask.startTime,wfTask.endTime,
+				wfTask.procInstId,wfTask.businessData,
+				wfTask.actTitle,wfTask.actName,
+				wfProcInst.businessType as procId,
+				wfProcInst.formKey,
+				wfProcInst.starterId,
+				wfProcInst.starterName
+				from wfTask wfTask join wfProcInst wfProcInst
+				on wfTask.procInstId=wfProcInst.id
+				where wfTask.deleted=0
+				and wfTask.status !=10
+				{?and wfTask.startTime< #lastCreatedTime#}
+			union
+			select wfNotify.id as notifyId,wfNotify.taskId as id,wfProcInst.title as title,2 as todoType,
+				wfNotify.passerId as creatorId,wfNotify.passerName as creatorName,
+				wfNotify.assigneeId,wfNotify.assigneeName,
+				wfNotify.startTime,wfNotify.endTime,
+				wfNotify.procInstId,0 as businessData,
+				wfNotify.actTitle,wfNotify.actName,
+				wfProcInst.businessType as procId,
+				wfProcInst.formKey,
+				wfProcInst.starterId,
+				wfProcInst.starterName
+				from wfNotify wfNotify join wfProcInst wfProcInst
+				on wfNotify.procInstId=wfProcInst.id
+				where wfNotify.deleted=0
+				and wfNotify.status !=10
+				and wfNotify.id not in(select wfNotifyReader.notifyId from wfNotifyReader wfNotifyReader where wfNotifyReader.readerId = #userId#)
+				{?and wfNotify.startTime< #lastCreatedTime#}
+		) t
+		order by t.startTime desc
+		]]>
+	</entry>
+	<entry key="workflow.freestyle.topndone">
+		<![CDATA[
+		select * from(
+		SELECT WfProcInst.id,
+		WfProcInst.title,
+		WfProcInst.status,
+		WfProcInst.startTime,
+		WfProcInst.endTime ,
+		wfProcInst.starterId,
+		wfProcInst.starterName,
+		wfProcInst.endUserId,
+		wfProcInst.endUserName,
+		WfProcInst.businessData,
+		sum(t.todoType) as todoType,
+		max(t.processTime) as processTime
+		FROM WfProcInst WfProcInst 
+		,(
+			select wfTask.procInstId,1 as todoType,wfTask.endTime as processTime  from wfTask wfTask where 
+			wfTask.status =10 and
+			wfTask.id in (
+				select wa.taskId from wfActor wa where wa.value in ($env.UserActors$) and wa.notifyId is null
+				union
+				select wt1.id as taskId from wfTask wt1 where wt1.assigneeId=#userId#  
+				union
+				select wt2.id as taskId from wfTask wt2 where wt2.agentId = #userId#
+			)
+			union
+			select wfNotify.procInstId,2 as todoType,wfNotify.readTime as processTime from wfNotify wfNotify where wfNotify.assigneeId= #userId#
+			and wfNotify.status =10
+			union
+			select wfNotify.procInstId,2 as todoType,wfNotify.readTime as processTime from wfNotify wfNotify where wfNotify.id in(
+				select wfNotifyReader.notifyId from wfNotifyReader wfNotifyReader where wfNotifyReader.readerId = #userId#)
+		) t
+		WHERE WfProcInst.id =t.procInstId
+		group by WfProcInst.id,WfProcInst.title,WfProcInst.status,WfProcInst.startTime,WfProcInst.endTime 
+		order by processTime desc,WfProcInst.startTime desc) t2
+		where 1=1
+		{?and processTime< #lastCreatedTime#}
+		]]>
+	</entry>
+</properties>

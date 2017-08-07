@@ -1,0 +1,41 @@
+<div class="container-fluid" style="padding:0px" th:id="${viewId}">
+    <style>
+        li {
+            list-style: none;
+            border-collapse: collapse;
+        }
+    </style>
+    <table class="table table-bordered table-striped fix-header">
+        <thead><h2>缓存详情</h2></thead>
+        <tbody>
+        <tr th:each="cache:${cacheDataTable.entrySet()}">
+            <th width="10%" th:text="${cache.getKey()+'(共'+cache.getValue().size()+'条记录)'}"></th>
+            <td width="90%">
+                <table class="table table-bordered table-striped">
+                    <tr th:each="em:${cache.getValue()}">
+                        <ul th:each="row:${em.entrySet()}"> <li>
+                                <strong th:text="${row.getKey()+':'}"></strong>
+                                <br/>
+                                <div>
+                                    <textarea th:if="${#strings.length(row.getValue())&gt;200}"  style="width:95%;height: 400px;" th:text="${row.getValue()}"></textarea>
+                                    <p th:if="${#strings.length(row.getValue())&lt;200}" th:text="${row.getValue()}"></p>
+                                </div>
+                            </li>
+                        </ul>
+                    </tr>
+                </table>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+    <script type="text/javascript" th:inline="javascript">
+        //<![CDATA[
+        $(function () {
+            var viewId =/*[[${viewId}]]*/;
+            var context = "#" + viewId;
+
+        });
+        //]]>
+    </script>
+</div>

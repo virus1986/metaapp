@@ -1,0 +1,21 @@
+<div class="wysiwyg-toolbar  left">
+	<div class="btn-group">
+		<button ng-click="setupRelation()" data-target="#relationConfigModal" role="button" data-toggle="modal" class="btn btn-small btn-primary">
+			<i class="icon-filter icon-on-right"></i><span class="bigger-110 no-text-shadow">关系设置&nbsp;&nbsp;</span></button>
+	</div>
+
+	<div class="modal hide fade" role="dialog" id="relationConfigModal">
+		  <div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+		    <h3>关系启用和禁用</h3>
+		  </div>
+		  <div class="modal-body">
+		   	<label class="checkbox" ng-repeat="rl in relationLinks" data-relation-name="">
+		      <input type="checkbox" value="{{rl.relationName}}"/><span class="lbl"> {{rl.text}}</span>
+		    </label>
+		  </div>
+		  <div class="modal-footer">
+		  	<a ng-click="saveSetupRelation()" class="btn btn-primary" data-dismiss="modal">确定</a>
+		  	<a class="btn" data-dismiss="modal">关闭</a> 
+		  </div>
+	</div>
+</div>

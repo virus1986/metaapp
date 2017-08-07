@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration xmlns="http://schemas.bingosoft.net/metabase/configuration">
+
+	<properties>
+		<property name="mb.contextual">false</property>
+		<property name="mb.saas">false</property>
+		<property name="mb.saas.mode">addColumn</property>
+	</properties>
+	
+	<!-- 
+	<datasource name="test"  extra-schemas="test">
+		<driver-class>org.gjt.mm.mysql.Driver</driver-class>
+		<url>jdbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8</url>
+		<username>boss</username>
+		<password>boss</password>
+	</datasource>
+	 -->
+
+</configuration>

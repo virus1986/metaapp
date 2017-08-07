@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" height="100%" multiSelect="true" multiSelectKey="None" shrinkToFit="true" editUrl="~/entities/uamPost/edit" deleteUrl="~/entities/uamPost/delete" createUrl="~/entities/uamPost/create" dataUrl="~/entities/uamPost/query_paged" entityName="uamPost" id="grid_228c83ca-2e98-4041-96c3-f87bb80fbc57">
+    <appearanceSettings alternateRowBackground="true" caption="选择岗位" highlightRowsOnHover="true" rightToLeft="false" rowNumbersColumnWidth="25" scrollBarOffset="18" showFooter="false" showRowNumbers="true" shrinkToFit="true"/>
+    <columns>
+        <column width="30" primaryKey="true" visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="id"/>
+        <column width="300" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="name"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="dutyId"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="orgId"/>
+    </columns>
+    <contextButtons>
+    </contextButtons>
+    <toolBarSetting>
+    	 <button  name="fresh"/>
+    </toolBarSetting>
+    <joinEntities>
+    </joinEntities>
+    <filter groupOp="AND">
+        <filters>
+        </filters>
+        <rules>
+        </rules>
+    </filter>
+    <orderby/>
+    <quickSearch>
+        <column dataField="name"/>
+    </quickSearch>
+    <addDialogSettings/>
+    <editDialogSettings/>
+    <viewDialogSettings/>
+</grid>

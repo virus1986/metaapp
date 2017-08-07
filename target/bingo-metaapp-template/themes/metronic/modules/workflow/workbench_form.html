@@ -1,0 +1,132 @@
+<div class="page-container webos-top" th:id="${viewId}">
+	<style type="text/css">
+		.nice-remind{
+			color:#EF4A28;
+		}
+		ul.workbench-mytask li > ul.sub-menu{
+			margin:0px;
+		}
+		ul.workbench-mytask li > ul.sub-menu > li{
+			margin-left:20px;
+		}
+		ul.workbench-mytask li > ul.sub-menu > li > a{
+			color:#fff;
+		}
+	</style>
+	<div class="page-sidebar nav-collapse collapse">
+		<ul class="page-sidebar-menu workbench-mytask">
+			<li>
+				<div class="page-sidebar-title">
+					<!-- <i class="icon-group" style="color:#ffb848"></i> -->
+					<img alt="我的工作"
+						th:src="${themes.statics('images/icons/flat/64_64/mytask.png')}" />
+				</div>
+				<h2>我的工作</h2>
+			</li>
+			<li class='current'><a href="#" class="menu-item" show-type="tab" th:attr="menu-url='~/workflow/process/start?businessProcId='+${selectedMenu}">
+					<i class="icon-edit  menu-icon"> </i> <span class="title">发起协作</span>
+			</a></li>
+			<li><a href="#" class="menu-item">
+					<i class="icon-user menu-icon"> </i> <span class="title">我的协作</span>
+			</a></li>
+			<li>
+				<ul class="sub-menu" style="display:block;">
+					<li><a href="#" class="menu-item" show-type="tab"
+						menu-url="~/entities/wftask/list">
+							 <span class="title">待办</span><span class="nice-remind pendingTaskCount"></span>
+					</a></li>
+					<li><a href="#" class="menu-item" show-type="tab"
+						menu-url="~/entities/wfnotify/list">
+							<span class="title">待阅</span><span class="nice-remind readingTaskCount"></span>
+					</a></li>
+					<li><a href="#" class="menu-item" show-type="tab"
+						menu-url="~/entities/wftask/list?view=done">
+							 <span class="title">已办</span>
+					</a></li>
+					<li><a href="#" class="menu-item" show-type="tab"
+						menu-url="~/entities/wfnotify/list?view=read">
+							<span class="title">已阅</span>
+					</a></li>
+					<li><a href="#" class="menu-item" show-type="tab"
+						menu-url="~/entities/wfdraft/list">
+							 <span class="title">草稿</span><span class="nice-remind myDraftCount"></span>
+					</a></li>
+					<li><a href="#" class="menu-item" show-type="tab"
+						menu-url="~/entities/wfprocinst/list">
+							 <span class="title">我发起的</span>
+					</a></li>
+					<!-- <li><a href="#" class="menu-item" show-type="tab"
+						menu-url="~/entities/wfcommonopinion/list?view=mylist">
+							 <span class="title">常用意见</span>
+					</a></li> -->
+				</ul>
+			</li>
+			<li th:if="${wf.isWfManager()}"><a href="#" class="menu-item" show-type="tab" menu-url="~/workflow/bdata">
+					<i class="icon-tasks  menu-icon"> </i> <span class="title">业务数据视图</span>
+			</a></li>
+		</ul>
+	</div>
+
+	<div class="page-content my-task-top-con">
+		<div class="menu-tab-container">
+			<div id="default-content" class="default-content-tab">
+			
+			</div>
+		</div>
+	</div>
+	<script th:inline="javascript">
+	/*<![CDATA[*/	
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var context = $('#' + viewId);
+	   	function refreshTodoCount(){
+	   		var pendingTaskCountUrl=Global.contextPath+"/home/statisticsPendingTask?_date=" + new Date().getTime();
+		   	$.get(pendingTaskCountUrl,function(res){
+		   		var v="("+res+")";
+		   		if(res===0){
+		   			v="";
+		   		}
+		   		$(".pendingTaskCount",context).text(v);
+		   	});
+	   	};
+	   	function refreshToreadCount(){
+	   		var readingTaskCountUrl=Global.contextPath+"/home/statisticsForReadingTask?_date=" + new Date().getTime();
+		   	$.get(readingTaskCountUrl,function(res){
+		   		var v="("+res+")";
+		   		if(res===0){
+		   			v="";
+		   		}
+		   		$(".readingTaskCount",context).text(v);
+		   	});
+	   	};
+	   	function refreshDraftCount(){
+	   		var myDraftCountUrl=Global.contextPath+"/home/statisticsForMyDraft?_date=" + new Date().getTime();
+		   	$.get(myDraftCountUrl,function(res){
+		   		var v="("+res+")";
+		   		if(res===0){
+		   			v="";
+		   		}
+		   		$(".myDraftCount",context).text(v);
+		   	});
+	   	};
+	   	refreshTodoCount();
+	   	refreshToreadCount();
+	   	refreshDraftCount();
+		jQuery(".my-task-top-con",context).on("refreshTodoCount",function(){
+			refreshTodoCount();
+		});
+		jQuery(".my-task-top-con",context).on("refreshToreadCount",function(){
+			refreshToreadCount();
+		});
+		jQuery(".my-task-top-con",context).on("refreshDraftCount",function(){
+			refreshDraftCount();
+		});
+		jQuery(".my-task-top-con",context).on("refreshCount",function(){
+			refreshTodoCount();
+		   	refreshToreadCount();
+		   	refreshDraftCount();
+		});
+	});
+	/*]]>*/
+	</script>
+</div>

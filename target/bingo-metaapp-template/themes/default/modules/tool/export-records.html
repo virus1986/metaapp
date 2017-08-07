@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div class="panel apply-panel" style="min-width:600px;height: 180px;" th:id="${viewId}">
+  <form class="form-horizontal ajaxpost" data-widget="validator" id="entityForm" method="post" >
+    <div class="table-dialog">
+      <div class="ui-dialog-title" th:text="#{common.export}"></div>
+      <div class="ui-dialog-content container-fluid">
+        <div class="row-fluid">
+          <div class="span12 form-right" data-spy="scroll" data-target="#left-navbar">
+            <div>
+              <table class="form-section form-table col4-fluid">
+                <tr>
+                  <th th:text="#{tool.export.fileFormat}+':'"></th>
+                  <td colspan="3">
+                  	<label>
+                  		<select name="format" class="input">
+                  			<option value="xls" th:text="#{tool.export.fileFormat.excel}"></option>
+                  		</select>
+                  	</label>
+                  </td>
+                </tr>
+                <tr>
+                  <th th:text="#{tool.export.purpose}+':'"></th>
+                  <td colspan="3">
+                		<select name="aim" class="input">
+                			<option value="business" th:text="#{tool.export.purpose.business}"></option>
+                			<option value="develop" th:text="#{tool.export.purpose.develop}"></option>
+                		</select>
+                  </td>
+                </tr>
+                <tr>
+                  <th th:text="#{tool.export.scope}+':'"></th>
+                  <td colspan="3">
+                		<select name="scope" class="input">
+                			<option value="page" th:text="#{tool.export.scope.page}"></option>
+                			<option value="selected" th:text="#{tool.export.scope.selected}"></option>
+                			<option value="all" th:text="#{tool.export.scope.all}"></option>
+                		</select>
+                  </td>
+                </tr>
+                <tr>
+                  <th th:text="#{tool.export.desc}+':'"></th>
+                  <td colspan="3">
+                  	<div class="description">
+                  	</div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui-dialog-buttonset">
+        <button class="btn btn-primary" name="export" type="button" th:text="#{common.export}">
+					</button>
+        <button class="btn closeBtn" name="close" type="button" th:text="#{common.cancel}">
+					</button>
+      </div>
+    </div>
+  </form>
+  <script th:inline="javascript" type="text/javascript">
+//<![CDATA[ 
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var gridId=/*[[${gridId}]]*/;
+		var $grid = window[gridId];
+		var context='#' + viewId;
+
+		var entity = $grid.getGridParam("entityName");
+		var view = $grid.getGridParam("view");
+		var ids = $grid.jqGrid('getGridParam','selarrrow');
+		var page = $grid.jqGrid('getGridParam','page');
+		var rowNum = $grid.jqGrid('getGridParam','rowNum');
+		var reccount = $grid.jqGrid('getGridParam','reccount');
+		var postData = $grid.jqGrid('getGridParam','postData');
+		var records = $grid.jqGrid('getGridParam','records');
+		
+		var $selectAim = $('[name=aim]', context);
+		var $selectScope = $('[name=scope]', context);
+		var $btnExport = $('[name=export]', context);
+		
+		var $scopeAll = $('[value=all]', context);
+		
+		$selectScope.change(function() {
+			var $ts = $(this), val = $ts.val(), content;
+			$btnExport.removeAttr('disabled');
+			switch(val) {
+				case 'page': content =i18n.t("tool.exporeRecord.sum",page,reccount);
+					break;
+				case 'selected': content = i18n.t("tool.exporeRecord.selectedInfo",ids.length);
+					if(ids.length === 0) {
+						$btnExport.attr('disabled', true);
+					}
+					break;
+				case 'all': content =i18n.t("tool.exporeRecord.allInfo",records);
+					break;
+			}
+			$('.description', context).text(content);
+		}).change();
+		$selectAim.change(function() {
+			var $ts = $(this), val = $ts.val();
+			if(val === 'business') {
+				$scopeAll.hide();// cannot export all records when in bisiness mode
+				if($selectScope.val() === 'all') $selectScope.val('page');
+			}
+			else $scopeAll.show();
+		}).change();
+		
+		$btnExport.click(function() {
+			var format = $('[name=format]', context).val();			
+			var scope = $selectScope.val();
+			var aim = $selectAim.val();
+			var url;
+			if(aim === 'business') {
+				// get header 
+				var colNames = $grid.getGridParam('colNames'), colModel = $grid.getGridParam('colModel');
+				var l = colModel.length, header = [];
+				for(var i = 0; i < l; i++) {
+					var model = colModel[i];
+					// skipping the rowNum, checkbox and hidden id. 
+					if(model.name === 'rn' || model.name === 'cb' || model.hidden) continue;
+					header.push(colNames[i]);
+				}
+				// get rows 
+				var $rows, rows = [], select = [];
+				if(scope === 'selected') {
+					for(var i = 0; i < ids.length; i++) {
+						select.push('tr:not(.jqgfirstrow):has(td[title=' + ids[i] + '])');						
+					}
+					$rows = $grid.find(select.join(','));
+				} else {
+					$rows = $grid.find('tr:not(.jqgfirstrow)')
+				}
+				$rows.each(function() {
+					var $row = $(this), row = [];
+					var $cells = $row.find('td:not(.jqgrid-rownum):visible:not(:has(.cbox))');
+					$cells.each(function() {
+						var $cell = $(this), text = $cell.text();
+						// handle all checkbox as Boolean type. 
+						if($cell.has('input[type=checkbox]:checked').length > 0) row.push(i18n.t("common.yes"));
+						else if($cell.has('input[type=checkbox]:not(:checked)').length > 0) row.push(i18n.t("common.no"));
+						// normal handled 
+						else row.push(text);
+					});
+					rows.push(row);
+				});
+				url = Global.contextPath + '/entities/' + entity + '/export-for-business/' + view + '.' + format;
+				$.restPost(url, {
+					header: header,
+					rows: rows
+				}, function(fileId) {
+					if(!!fileId) {
+						url += '?fileId=' + fileId;
+						window.location.assign(url);
+					}
+				}, {dataType: 'text'});
+			} else {
+				url = Global.contextPath + '/entities/' + entity + '/export/' + view + '.' + format;
+				var param = $.param($.extend(postData, {
+					scope: scope,
+					page: page,
+					rowNum: rowNum,
+					ids: ids.join(',')
+				}));
+				if(!!param) url += '?' + param;
+				window.location.assign(url);
+			}
+			
+			delete window[gridId];
+			$(context).dialogClose();
+			return false;
+		});
+		$('[name=close]', context).click(function() {
+			delete window[gridId];
+			$(context).dialogClose();
+		});
+	});
+//]]></script>
+</div>

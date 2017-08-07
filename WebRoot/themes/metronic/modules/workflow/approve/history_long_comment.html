@@ -1,0 +1,120 @@
+<div class="row-fluid" th:id="${viewId}">
+	<div class="portlet box tea-green" meta:sec="${sec.workflow(dd,dd)}">
+		<div class="portlet-title">
+			<div class="caption">
+				<i class="icon-reorder"></i>流程轨迹<small></small>
+			</div>
+			<div class="tools">
+				<a href="javascript:;" class="collapse"></a> <!-- <a href="javascript:;" class="reload"></a> -->
+			</div>
+		</div>
+		<div class="portlet-body">
+			<table class="table td-middle table-condensed table-bordered table-striped">
+			<thead>
+				<tr>
+					<th style="width:13%">处理步骤</th>
+					<th style="width:13%">状态</th>
+					<th style="width:16%">处理人</th>
+					<th style="width:18%">处理人部门</th>
+					<th style="width:20%">开始时间</th>
+					<th style="width:20%">处理时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				<meta:placeholder th:each="h:${taskHistory}">
+				<meta:placeholder th:if="${h.siblings==null}">
+				<tr>
+					<td th:text="${h.actTitle}" rowspan="2" style="vertical-align: middle;"></td>
+					<td>
+						<span th:if="${h.status==1}" th:text="${h.type==2 or h.type==4}?'被驳回，未提交':(${h.type==3}?'转办，待审批':'待审批')"></span>
+						<span th:if="${h.status==10}" th:text="${h.type==2 or h.type==4}?'被驳回，已提交':(${h.type==3}?'转办，已完成':'已完成')"></span>
+						<span th:unless="${h.status==10 or h.status==1}" th:text="'未知'"></span>
+					</td>
+					<td>
+						<meta:placeholder  th:if="${h.status!=1}">
+							<span th:if="${h.agentName!=null and h.assigneeName!=null}" th:text="'['+${h.assigneeName}+']授权['+${h.agentName}+']'"></span>
+							<span th:unless="${h.agentName!=null}" th:text="${h.assigneeName}?${h.assigneeName}:${h.assigneeIdentityName}"></span>
+						</meta:placeholder>
+						<span th:if="${h.status==1}" th:attr="data-task-id=${h.id}" class="task-user dropdown">
+							<span class="approve-actors" th:include="'/themes/' + ${theme} + '/modules/workflow/approve/history_approve_actor' :: 'actor'"></span>
+						</span>
+					</td>
+					<td th:text="${h.assigneeDeptName}"></td>
+					<!-- <td th:text="${#dates.format(h.startTime, 'MM-dd-yyyy HH:mm')}"></td>
+					<td th:text="${#dates.format(h.endTime, 'MM-dd-yyyy HH:mm')}"></td> -->
+					<td th:text="${h.startTime}?${#dates.format(h.startTime, 'yyyy-MM-dd HH:mm')}:''"></td>
+					<td th:text="${h.endTime}?${#dates.format(h.endTime, 'yyyy-MM-dd HH:mm')}:''"></td>
+				</tr>
+				<tr>
+					<td colspan="5" th:utext="${#strings.unescapeJava(h.userComment)}"></td>
+				</tr>
+				</meta:placeholder>
+				<tr th:if="${h.siblings!=null}">
+					<td colspan="6" class="tools"><i class="icon  icon-chevron-right collapse"/><span style="font-weight: bold;color: #0d638f;" th:text="${h.processInstance.title}"></span>
+						<table class="table hide">
+						<thead>
+							<tr>
+								<th style="width:13%"></th>
+								<th style="width:13%"></th>
+								<th style="width:16%"></th>
+								<th style="width:18%"></th>
+								<th style="width:20%"></th>
+								<th style="width:20%"></th>
+							</tr>
+						</thead>
+						<tbody>
+						<meta:placeholder th:each="h:${h.siblings}">
+						<tr>
+							<td th:text="${h.actTitle}" rowspan="2" style="vertical-align: middle;"></td>
+							<td>
+								<span th:if="${h.status==1}" th:text="${h.type==2 or h.type==4}?'被驳回，未提交':(${h.type==3}?'转办，待审批':'待审批')"></span>
+								<span th:if="${h.status==10}" th:text="${h.type==2 or h.type==4}?'被驳回，已提交':(${h.type==3}?'转办，已完成':'已完成')"></span>
+								<span th:unless="${h.status==10 or h.status==1}" th:text="'未知'"></span>
+							</td>
+							<td>
+								<meta:placeholder  th:if="${h.status!=1}">
+									<span th:if="${h.agentName!=null and h.assigneeName!=null}" th:text="'['+${h.assigneeName}+']授权['+${h.agentName}+']'"></span>
+									<span th:unless="${h.agentName!=null}" th:text="${h.assigneeName}?${h.assigneeName}:${h.assigneeIdentityName}"></span>
+								</meta:placeholder>
+								<span th:if="${h.status==1}" th:attr="data-task-id=${h.id}" class="task-user dropdown">
+									<a href="javascript://">
+									 	<span class="task-user-list"></span>
+									</a>
+								</span>
+							</td>
+							<td th:text="${h.assigneeDeptName}"></td>
+							<!-- <td th:text="${#dates.format(h.startTime, 'MM-dd-yyyy HH:mm')}"></td>
+							<td th:text="${#dates.format(h.endTime, 'MM-dd-yyyy HH:mm')}"></td> -->
+							<td th:text="${h.startTime}?${#dates.format(h.startTime, 'yyyy-MM-dd HH:mm')}:''"></td>
+							<td th:text="${h.endTime}?${#dates.format(h.endTime, 'yyyy-MM-dd HH:mm')}:''"></td>
+						</tr>
+						<tr>
+							<td colspan="5" th:utext="${#strings.unescapeJava(h.userComment)}"></td>
+						</tr>
+						</meta:placeholder>
+						</tbody>
+						</table>
+					</td>
+				</tr>
+				</meta:placeholder>
+				<tr th:if="${procInst.status==10}" th:switch="${procInst.endReason}">
+					<td th:case="8" colspan="6" style="font-weight: bold;color: #0d638f;">流程已强制结束</td>
+					<td th:case="9" colspan="6" style="font-weight: bold;color: #0d638f;">流程已废弃</td>
+					<td th:case="*" colspan="6" style="font-weight: bold;color: #0d638f;">流程已完成<span th:if="${isSubprocess and not parentComplete}">,父流程未完成</span></td>
+				</tr>
+			</tbody>
+		  </table>
+		</div>
+	</div>
+</div>
+<div style="margin-bottom: 50px"></div>
+<script th:inline="javascript">
+//<![CDATA[ 
+$(function(){
+	var context = /*[['#'+${viewId}]]*/;
+	$(".collapse",context).click(function(){
+		$(this).parent().find("table").toggleClass("hide");
+	});
+});
+//]]>
+</script>

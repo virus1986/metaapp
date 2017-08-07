@@ -1,0 +1,34 @@
+<div th:id="${viewId}" >
+	<div class="breadcrumbs" id="breadcrumbs">
+		<ul class="breadcrumb">
+		</ul>
+	</div>
+	<div class="container-fluid m-top10">
+		<meta:grid entityName="user" view="list" id="'grid_user_'+${viewId}"/>
+	</div>
+<script type="text/javascript" th:inline="javascript">
+//<![CDATA[
+	$(function() {
+		var viewId=/*[[${viewId}]]*/;
+		var context="#"+viewId;
+		var $grid=$("#grid_user_"+viewId);
+		var entity=/*[[${entity}]]*/;
+
+		var imageRoot=Global.themePath+"/statics/images/icons/mini";
+		$grid.jqGrid("setGridParam",
+				{exContextMenu:	[{type: "splitLine" },
+			    	{text: i18n.t("role.assign"),icon:imageRoot+"/Protection.gif",   action: function(){
+			    		var id=$grid.jqGrid('getGridParam','selrow');
+			    		var row=$grid.getRowData(id);
+			    		var assignRolesUrl=Global.contextPath+"/entities/role/associate";
+			    		$.openLink(Urls.urlParam(assignRolesUrl,[{key:"_ref_entity",value:"user"},{key:"_ref_val",value:id}]),{width:800,height:500},function(res){
+			    			consolelog(res);
+			    		});
+			    	}}
+			    ]}
+		);
+
+	});
+	//]]>
+	</script>
+</div>

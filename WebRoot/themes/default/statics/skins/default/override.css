@@ -1,0 +1,393 @@
+@charset "utf-8";
+
+
+td .inputpro-img{
+	margin-left: 2px;
+}
+/* override插件中的样式  */
+
+.ui-dialog-titlebar .ui-dialog-title {
+	font-weight: normal;
+	color: gray;
+}
+
+.ui-dialog .ui-dialog-content{
+	clear: left;
+}
+
+.ui-widget-content a{
+	color: #0088cc;
+}
+
+.ui-dialog{
+	overflow: visible;
+}
+
+.ui-helper-reset{
+	background:#fff;
+	border:1px solid #ccc;
+}
+/*layout*/
+.ui-layout{
+	height:100%;
+}
+.webpart-customer {
+	margin-bottom: 10px;
+}
+
+.webpart-customer .webpart-head {
+	height: 32px;
+	background: url(images/wp_title2.jpg) repeat-x;
+	padding: 0 0 0 10px;
+	overflow: hidden;
+	border: 1px solid #dedede;
+}
+
+.webpart-head a{
+	background: url(images/icon_04.gif) no-repeat 5px center;
+	padding-left:22px;
+	padding-right:10px;
+	padding-top:5px;
+	padding-bottom:3px;
+	line-height:180%;
+}
+
+.webpart-head a:hover{
+	background-color: #ccc;
+}
+
+.input-img-selected-item{
+	background-color: #eee;
+}
+
+
+/*自动宽度*/
+.container-fluid{margin-left:0px;margin-right:0px; padding-left: 0px; padding-right: 0px;}
+
+
+.form-table th label{
+	margin-bottom: 0px;
+}
+
+/*jQuery-ui样式覆盖*/
+
+.ui-widget{font-family:宋体,Arial, Helvetica, sans-serif;font-size: 12px; }
+.ui-widget-content {border:none;background:#fff; /*border-top:1px solid #aaaaaa;background: #ffffff url(images/jquery-ui/ui-bg_glass_75_ffffff_1x400.png) 50% 50% repeat-x; color: #404040;*/ }
+.ui-jqgrid-htable {border-bottom:1px solid #eee; }
+.ui-jqgrid{border:1px solid #eee;}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+  color: #333;
+  font-size: 12px;
+  line-height: normal;
+  border-bottom-color: #e5ebee;
+  border-top:none;
+ }
+ .ui-jqgrid tr.jqgfirstrow td{border-right:none;}
+
+.ui-priority-secondary, .ui-widget-content .ui-priority-secondary,  .ui-widget-header .ui-priority-secondary { opacity: 1; filter:Alpha(Opacity=100); font-weight: normal; }
+.ui-dialog .ui-widget-header{background:url(images/ui-widget-header-bg.gif) no-repeat right top!important;}
+
+.ui-jqgrid .ui-jqgrid-pager{height:35px}
+.ui-jqgrid .ui-pg-input{height:15px}
+.ui-jqgrid td.ui-pg-button {padding:2px 5px 2px 5px}
+.ui-jqgrid .ui-pg-button:hover { padding:2px 5px 2px 5px }
+.ui-jqgrid .ui-state-disabled:hover {padding:2px 5px 2px 5px}
+.ui-jqgrid-btable a,.ui-jqgrid-btable a:link{color:#0088cc;}
+.ui-jqgrid-btable a:hover{color:#005580; text-decoration:underline;}
+.ui-jqgrid .contextmenu-over{border: 1px solid #ddd;margin-top:1px;margin-left: -1px;}
+
+.ui-jqgrid .ui-jqgrid-htable th.ui-th-column{
+	text-align: left;
+	font-weight: bold;	
+	vertical-align: middle;
+}
+.ui-jqgrid .ui-jqgrid-htable th.ui-state-hover{
+	background-color: #fff;
+}
+
+.ui-th-column div{
+	padding-top:4px;
+	margin-left:4px;
+}
+
+.ui-jqgrid tr.ui-row-ltr td{
+	padding-left:10px;
+}
+
+.ui-jqgrid tr.ui-row-ltr td.jqgrid-rownum{
+	padding-left:0px;
+}
+
+.ui-jqgrid tr.ui-row-ltr td .cbox{
+	margin-left: -5px
+}
+
+.ui-jqgrid .ui-jqgrid-sortable .ui-state-disabled{
+	display: none;
+}
+
+.ui-jqgrid .ui-icon-asc, .ui-jqgrid .ui-icon-desc {
+	margin-top: -2px;
+}
+
+
+/* inputpro */
+.inputpro-img-span, .inputpro-img-span-bg{
+	margin-left:0;
+}
+
+/*下拉控件*/
+.dropdown-menu li > a:hover,
+.dropdown-menu .active > a,
+.dropdown-menu .active > a:hover {
+  color: #5081a3;
+  text-decoration: none;
+  background-color: #e9e9e9;
+  border:none;
+}
+.dropdown.open .dropdown-toggle {
+  color: #ffffff;
+  background: #ccc;
+  background: #79a1bd;
+}
+
+
+.panel-header{
+	font-size:14px;
+	border:1px solid #C0DCF1;
+	border-bottom:0;
+	color:#074E81;
+	padding-left:10px;
+}
+.layout .panel-body, .layout .ui-widget-header, .layout .panel-header {
+	border-color:#C0DCF1;
+}
+/*west*/
+.layout-split-west{
+	border-right-color: #fff;
+}
+.layout .panel-header {
+	background:none;
+	border-bottom:1px solid #C0DCF1;
+}
+.ui-helper-reset{
+	border-top:0;
+	padding:10px;
+}
+.layout-split-west ,.layout-panel-center ,.layout-split-east ,.layout-split-north ,.layout-split-south{
+	position:absolute;
+}
+.layout-expand{
+	position: absolute;
+}
+/*east*/
+.layout-split-east{
+	border-left-color: #fff;
+}
+
+/*树控件*/
+.bbit-tree-node{ padding:3px!important;}
+.bbit-tree-node a span{ border:solid 0px red;}
+.bbit-tree .bbit-tree-node .bbit-tree-node-el:hover {
+	color: rgb(33, 33, 33); text-decoration: none; background-color: rgb(238, 238, 238);
+}
+.bbit-tree .bbit-tree-node .active {
+	color: rgb(255, 255, 255); background-color: rgb(0, 136, 204);
+}
+.bbit-tree .bbit-tree-node .active a {
+	color: rgb(255, 255, 255);background-color: rgb(0, 136, 204);
+}
+.bbit-tree .bbit-tree-node .active a:hover {
+	color: #fff!important;background-color: rgb(0, 136, 204);
+}
+.bbit-tree .bbit-tree-node .active:hover{
+	color:  #fff!important;background-color: rgb(0, 136, 204)!important;
+}
+/*tab导航*/
+.ui-tabs .ui-tabs-nav{ height:29px; overflow:hidden; background-image:url(images/ui-tabs-nav-bg.gif) repeat-x left top;}
+
+.nav-tabs>li>a{ padding-top:0; font-size:12px;}
+
+.ui-tab-close{position:absolute; right:8px; top:6px;}
+
+.ui-tabs .ui-tabs-nav {
+	border-width: 0px 0px 1px; border-style: solid; border-color: rgb(221, 221, 221);
+}
+.ui-tabs {
+	padding: 0.2em; border: 0px currentColor; position: relative; zoom: 1; 
+}
+.ui-tabs .ui-tabs-nav li:hover {
+	background: whitesmoke; color: rgb(0, 67, 138); padding-bottom: 0px; border-bottom-color: rgb(221, 221, 221); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.ui-tabs .ui-tabs-nav li a:hover {
+	 background:#fff url(images/ui-tabs-hover-bg.gif) repeat-x left top;  color: #004c9a; cursor: default; border:solid 1px #91cbe7; 
+}
+.ui-tabs .ui-tabs-nav {
+	margin: 0px; padding: 0px; border-bottom-color: rgb(221, 221, 221); border-bottom-width: 1px; border-bottom-style: solid;
+}
+.ui-tabs .ui-tabs-nav li {
+	list-style: none; padding: 0px 0px 1px; border: 0px currentColor; top: 1px; text-decoration: none; float: left; white-space: nowrap; position: relative; 
+} 
+.ui-tabs-nav .ui-state-default {
+	box-shadow: 0px 0px 0px #ffffff; position:relative;
+}
+.ui-tabs .ui-tabs-nav li a {
+	padding: 0px 20px 0 15px; border-radius: 4px 4px 0px 0px; border: 1px solid #91cbe7; line-height: 29px; text-decoration: none; margin-right: 4px; float: left; cursor: text; -webkit-border-radius: 4px 4px 0 0; -moz-border-radius: 4px 4px 0 0; color:#004c9a;cursor: pointer!important;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected {
+	padding-bottom: 0px; margin-bottom: 0px;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected a {
+	 color: #004c9a; cursor: default; border:solid 1px #91cbe7;  background:#ecf4f8  url(images/ui-tabs-selected-bg.gif) repeat-x left top;
+}
+.ui-tabs .ui-tabs-nav li.ui-state-disabled a {
+	border-width: 1px; border-style: solid;border: 1px solid #91cbe7;  color: #004c9a; cursor: default; background-color: rgb(255, 255, 255);
+}
+.ui-tabs .ui-tabs-nav li.ui-state-processing a {
+	border-width: 1px; border-style: solid; border: 1px solid #91cbe7;  color: #004c9a; cursor: default; background-color: rgb(255, 255, 255);
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected:hover {
+	
+}
+.ui-tabs .ui-tabs-nav li a {
+	 color: #004c9a; font-weight: normal; margin-bottom: -1px; cursor: pointer;
+}
+.ui-tabs-collapsible.ui-tabs .ui-tabs-nav li.ui-tabs-selected a {
+	 color: #004c9a;  font-weight: normal; margin-bottom: -1px; cursor: pointer;
+}
+.ui-tabs .ui-tabs-panel {
+	border-width: 0px; padding:0px; display: block;
+}
+.ui-tabs-panel .ui-button {
+	text-decoration: none;
+}
+.ui-tabs .ui-tabs-hide {
+	display: none !important;
+}
+.ui-tabs .ui-tabs-nav li {
+	filter: none;
+}
+
+/* 底部Tab样式  */
+
+.bottom-tabs .ui-tabs { position: relative; padding: .2em; zoom: 1; border:0px;} /* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
+.bottom-tabs .ui-tabs .ui-tabs-nav { margin: 0; background:none;
+padding:0px; border-bottom:0px; border-top:1px solid #DDD;
+clear: both;
+}
+.bottom-tabs .ui-tabs-nav .ui-state-default{
+  -webkit-box-shadow: 0px 0px 0px #ffffff; /* Saf3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+     -moz-box-shadow: 0px 0px 0px #ffffff; /* FF3.5 - 3.6 */
+          box-shadow: 0px 0px 0px #ffffff; /* Opera 10.5, IE9, FF4+, Chrome 6+, iOS 5 */
+}
+.bottom-tabs .tabs-spacer{
+	min-height:200px;
+	position: relative;
+	float: left;
+}
+
+.bottom-tabs .ui-tabs .ui-tabs-nav li:hover, .bottom-tabs .ui-tabs .ui-tabs-nav li a:hover,.bottom-tabs .ui-tabs .ui-tabs-nav li:hover span{
+  background:whiteSmoke;
+  border-bottom:0px;
+  padding-bottom:0px;
+  color:#00438A;
+}
+
+
+.bottom-tabs .ui-tabs .ui-tabs-nav li {  text-decoration: none; list-style: none; float: left; position: relative; top: 1px;
+padding: 0px 0px 1px 0px; white-space: nowrap; border:0px; 
+	
+}
+
+.bottom-tabs .ui-tabs .ui-tabs-nav li span {  
+	display:inline-block;
+	width:18px;
+	height:26px;
+	background-color: white;
+	background: url(images/tab-right.png) no-repeat;	
+}
+
+.bottom-tabs .ui-tabs .ui-tabs-nav li:last-child span
+{
+	width:24px;
+}
+
+.bottom-tabs .ui-tabs .ui-tabs-nav li a {
+  float: left;
+  text-decoration: none;
+  cursor: text;
+  padding: 0 15px;
+  margin-right: 0px;
+  line-height: 27px;
+  border:none;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  background: url(images/tab-left.png) no-repeat;
+ }
+.bottom-tabs .ui-tabs .ui-tabs-nav li.ui-tabs-selected { margin-bottom: 0; padding-bottom: 0px; outline:none;}
+
+.bottom-tabs .ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .bottom-tabs .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .bottom-tabs .ui-tabs .ui-tabs-nav li.ui-state-processing a {
+  background-color: #ffffff;
+  border: 0px solid #ddd;
+  cursor: default;
+  color:gray;
+  outline:none;
+  background: url(images/tab-selected-left.png) no-repeat;
+}
+
+
+.bottom-tabs .ui-tabs .ui-tabs-nav li.ui-tabs-selected span, .bottom-tabs .ui-tabs .ui-tabs-nav li.ui-state-disabled span, .bottom-tabs .ui-tabs .ui-tabs-nav li.ui-state-processing span {
+ 	display:inline-block;
+	width:20px;
+	height:27px;
+	background-color: white;
+	background: url(images/tab-selected-right.png) no-repeat;	 
+	background-position: right;
+}
+	
+.bottom-tabs .ui-tabs .ui-tabs-nav li.ui-tabs-selected:hover{
+  background:#ffffff;
+  outline:none;
+}
+
+.bottom-tabs .ui-tabs .ui-tabs-nav li a, .bottom-tabs .ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a { 
+	cursor: pointer; color:#0069D6; font-weight:normal; margin-bottom:-1px;} 
+/* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */
+.bottom-tabs .ui-tabs .ui-tabs-panel { 
+	display: block; border-width: 0; padding: 0px 5px 0px 0px; background: none;
+	overflow-y:auto; }
+.bottom-tabs .ui-tabs-panel .ui-button{text-decoration:none;}
+.bottom-tabs .ui-tabs .ui-tabs-hide { display: none !important; }
+
+
+
+/* IE fix for background inheritance from ui-widget*/
+.bottom-tabs .ui-tabs .ui-tabs-nav li{
+  filter:none;
+}
+
+
+
+
+/*弹出层的遮罩透明度设置*/
+.ui-widget-overlay {
+	background:#4d4d4d;filter: Alpha(Opacity=50); opacity: 0.5; 
+}
+.panel .ui-dialog-buttonset{
+	float:right;
+	padding-right:50px;
+}
+.tree-menu a span{
+	border:none;
+}
+.uneditable-input{
+	margin-left:2px;
+}
+
+/******common tab*****/
+.tab_common ul.nav-tabs{ border:none!important;}
+.tab_common ul.nav-tabs li{background-image:none!important; border:solid 1px #e1e1e1!important; margin-right:4px!important; border-bottom:none!important; background:#fff!important;}
+.tab_common ul.nav-tabs li a{ background-image:none!important; color:#5a5a5a!important;}
+.tab_common ul.nav-tabs li.ui-state-active,.tab_common ul.nav-tabs li.ui-tabs-selected{ background:#f5f5f5!important; background-color:#f5f5f5!important; }

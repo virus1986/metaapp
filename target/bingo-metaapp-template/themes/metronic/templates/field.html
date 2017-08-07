@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>share template</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<!-- 拒绝访问 -->
+	<div th:fragment="AccessDeny" th:name="${fieldCtx.fieldName}" th:text="#{security.unauthorized}">
+	
+	</div>
+	<!-- 隐藏值 -->
+	<input th:fragment="Hidden" type="hidden" th:id="${fieldCtx.fieldName}"
+		th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}"/>
+	
+	<!-- 多对一关系选择 -->
+	<div th:fragment="Lookup">
+		<input th:if="${fieldCtx.getAttribute('data-inputtype','')=='dropdown'}" type="text" data-widget="inputimg" uneditable="true" th:disabled="${fieldCtx.hasAttribute('disabled')}" th:readonly="${fieldCtx.hasAttribute('readonly')}" th:id="${fieldCtx.fieldName}+'_text'"
+				th:name="${fieldCtx.fieldName}+'_text'" th:value="${fieldCtx.getRefEntityTitle(0)}"
+				th:attr="data-field-val=${fieldCtx.fieldVal},data-title-field=${fieldCtx.refObjTitleField},data-entity=${fieldCtx.metaRelation.getTargetEntity().getName()},
+				data-selecturl=${fieldCtx.refObjSelectUrl},
+				data-queryurl=${fieldCtx.refObjQueryUrl},
+				data-validator=${fieldCtx.getAttribute('data-validator',(fieldCtx.metaRelation.isOptional() or fieldCtx.metaField.nullable)?'':'required')}"
+				data-options="{type:'class',src:'icon-chevron-down',title:'查询',event:{click:SelectForm.openDropdownGrid}}"		
+		 />
+		 <input th:unless="${fieldCtx.getAttribute('data-inputtype','')=='dropdown'}" type="text" data-widget="inputimg" uneditable="true" th:disabled="${fieldCtx.hasAttribute('disabled')}" th:readonly="${fieldCtx.hasAttribute('readonly')}" th:id="${fieldCtx.fieldName}+'_text'"
+				th:name="${fieldCtx.fieldName}+'_text'" th:value="${fieldCtx.getRefEntityTitle(0)}"
+				th:attr="data-field-val=${fieldCtx.fieldVal},data-title-field=${fieldCtx.refObjTitleField},data-entity=${fieldCtx.metaRelation.getTargetEntity().getName()},
+				data-selecturl=${fieldCtx.refObjSelectUrl},
+				data-queryurl=${fieldCtx.refObjQueryUrl},
+				data-validator=${fieldCtx.getAttribute('data-validator',(fieldCtx.metaRelation.isOptional() or fieldCtx.metaField.nullable)?'':'required')}"
+				data-options="{type:'class',src:'icon-search',title:'查询',event:{click:SelectForm.openSelectForm}}"		
+		 />
+		<div th:if="${fieldCtx.getAttribute('data-inputtype','')=='dropdown'}" class="lookup-grid-con" data-hidetoolbar="true" data-hidepager="true"></div>
+		<input type="hidden" th:id="${fieldCtx.fieldName}" th:disabled="${fieldCtx.hasAttribute('disabled')}"
+			th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}"
+			th:attr="data-expression=${fieldCtx.metaField.getDefaultValue()}
+			,data-entity=${fieldCtx.metaRelation.getTargetEntity().getName()}" />
+	</div>
+	<div th:fragment="Lookup.view" th:text="${fieldCtx.getRefEntityTitle(0)}" th:name="${fieldCtx.fieldName}"></div>
+	
+	<!-- 多对多关系选择 -->
+	<div th:fragment="MultiLookup" th:id="${fieldCtx.id}" class="inputpro-img input-append">
+		<input type="text" data-widget="tokeninput"  th:id="${fieldCtx.fieldName}" 
+		th:attr="data-queryUrl=${fieldCtx.refObjQueryUrl},data-selectUrl=${fieldCtx.refObjSelectUrl},keydown-event=${fieldCtx.getAttribute('keydown-event','')},data-dropdown=(${fieldCtx.getAttribute('data-inputtype','')}=='dropdown')"
+				th:name="${fieldCtx.fieldName}" th:value='${fieldCtx.refEntitiesToOptionItemsJson(fieldCtx.getAttribute("options-field",""))}'/> 
+		<div th:if="${fieldCtx.getAttribute('data-inputtype','')=='dropdown'}" class="lookup-grid-con" data-hidetoolbar="true" data-hidepager="true"></div>
+	</div>
+	<div th:fragment="MultiLookup.view" th:name="${fieldCtx.fieldName}">
+		<ul class="token-input-list-facebook" style="border:0px; width:100%">
+			<li th:each="item:${fieldCtx.refEntitiesToOptionItems()}" class="token-input-token-facebook token-input-selected-token-facebook">
+				<p th:text="${item.name}"></p>
+			</li>
+		</ul>
+	</div>
+	
+	<!-- 单行文本 -->
+	<input th:fragment="SingleLineText"  type="text" th:id="${fieldCtx.fieldName}"
+			th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}" th:readonly="${fieldCtx.hasAttribute('readonly')}"
+			th:attr="data-validator=${fieldCtx.requireValidation}?((${fieldCtx.metaField.nullable}?'':'required,') + ('length[0,'+${fieldCtx.metaField.length}+']') + (${fieldCtx.metaField.unique and fieldCtx.action.toString()=='CREATE'}?',func[isFieldValUnique]':'')):'', 
+					data-expression=${fieldCtx.metaField.getDefaultValue()},
+					data-entity=${fieldCtx.entityName}" />
+	<div th:fragment="SingleLineText.view" th:name="${fieldCtx.fieldName}" th:text="${fieldCtx.fieldVal}" data-widget="format" th:attr="data-format=${fieldCtx.getAttribute('data-format','')}" style="word-break: break-all;"></div>
+
+	<!-- 富文本 -->
+	<div th:fragment="RichText" th:with="mode=${#objects.nullSafe(fieldCtx.metaField.fieldTypeParams['mode'],'large')}">
+		<textarea data-widget="ueditor" th:id="${fieldCtx.fieldName}" th:readonly="${fieldCtx.hasAttribute('readonly')}" style="width:95%;"
+			th:name="${fieldCtx.fieldName}" th:text="${fieldCtx.fieldVal}" th:attr="data-mode=${mode}"></textarea>
+	</div>
+	<div th:fragment="RichText.view" th:utext="${fieldCtx.fieldVal}" th:name="${fieldCtx.fieldName}" style="word-break: break-all;"></div>
+	
+	<!-- 多行文本 -->
+	<textarea th:fragment="MultiLineText"  th:id="${fieldCtx.fieldName}" th:readonly="${fieldCtx.hasAttribute('readonly')}" style="width:95%; height:60px" row="5"
+		th:name="${fieldCtx.fieldName}" th:text="${fieldCtx.fieldVal}"
+		th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required,')+'length[0,'+${fieldCtx.metaField.length}+']'" 
+	></textarea>
+	<div th:fragment="MultiLineText.view" th:text="${fieldCtx.fieldVal}" th:name="${fieldCtx.fieldName}" style="word-break: break-all;"></div>
+	<!-- 密码 -->
+	<input th:fragment="Password" type="password" th:readonly="${fieldCtx.hasAttribute('readonly')}" th:id="${fieldCtx.fieldName}"
+		th:name="${fieldCtx.fieldName}" />
+	<div th:fragment="Password.view" th:text="'******'" th:name="${fieldCtx.fieldName}"></div>	
+	<!-- 日期 -->
+	<input th:fragment="Date" type="text" th:readonly="${fieldCtx.hasAttribute('readonly')}" th:id="${fieldCtx.fieldName}"
+		th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}?${#dates.format(fieldCtx.fieldVal, fieldCtx.getAttribute('format','yyyy-MM-dd'))}:''"
+		th:classappend="'Wdate'" data-widget="calendar" 
+		th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required'),data-datefmt=${fieldCtx.getAttribute('format','yyyy-MM-dd')}" 
+		data-options="{'isShowWeek':true,'dateFmt':'yyyy-MM-dd'}" />
+	<div th:fragment="Date.view" th:name="${fieldCtx.fieldName}" >
+		<span th:if="${fieldCtx.fieldVal != null}" th:text="${fieldCtx.fieldVal}?${#dates.format(fieldCtx.fieldVal,fieldCtx.getAttribute('format','yyyy-MM-dd'))}:''"
+	data-widget="format" th:attr="data-format=${fieldCtx.getAttribute('data-format','')}"></span>
+	</div>
+	
+	<!-- 日期时间 -->
+	<input th:fragment="DateTime"  type="text" th:readonly="${fieldCtx.hasAttribute('readonly')}"  th:id="${fieldCtx.fieldName}"
+		th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}?${#dates.format(fieldCtx.fieldVal, fieldCtx.getAttribute('format','yyyy-MM-dd HH:mm:ss'))}:''"
+		th:classappend="'Wdate'" data-widget="calendar"
+		th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required'),data-datefmt=${fieldCtx.getAttribute('format','yyyy-MM-dd HH:mm:ss')}" 
+		data-options="{'isShowWeek':true}" />
+	<div th:fragment="DateTime.view" th:name="${fieldCtx.fieldName}">
+		<span th:if="${fieldCtx.fieldVal != null}" th:text="${fieldCtx.fieldVal}?${#dates.format(fieldCtx.fieldVal,fieldCtx.getAttribute('format','yyyy-MM-dd HH:mm:ss'))}:''"
+	data-widget="format" th:attr="data-format=${fieldCtx.getAttribute('data-format','')}"></span>
+	</div>
+		
+	<!-- 时间 -->
+	<input th:fragment="Time"  type="text"  th:readonly="${fieldCtx.hasAttribute('readonly')}" th:id="${fieldCtx.fieldName}"
+		th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}?${#dates.format(fieldCtx.fieldVal,fieldCtx.getAttribute('format','HH:mm:ss'))}:''"
+		th:classappend="'Wdate'" data-widget="calendar"
+		th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required'),data-datefmt=${fieldCtx.getAttribute('format','HH:mm:ss')}" 
+		data-options="{'isShowWeek':true}" />
+	<div th:fragment="Time.view" th:name="${fieldCtx.fieldName}">
+		<span th:if="${fieldCtx.fieldVal != null}" th:text="${fieldCtx.fieldVal}?${#dates.format(fieldCtx.fieldVal,fieldCtx.getAttribute('format','HH:mm:ss'))}:''"
+	data-widget="format" th:attr="data-format=${fieldCtx.getAttribute('data-format','')}"></span>
+	</div>
+		
+	<!-- 时间戳 -->
+	<input th:fragment="Timestamp"  type="text" th:readonly="${fieldCtx.hasAttribute('readonly')}"  th:id="${fieldCtx.fieldName}"
+		th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}?${#dates.format(fieldCtx.fieldVal,fieldCtx.getAttribute('format','yyyy-MM-dd HH:mm:ss'))}:''"
+		th:classappend="'Wdate'" data-widget="calendar"
+		th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required'),data-datefmt=${fieldCtx.getAttribute('format','yyyy-MM-dd HH:mm:ss')}" 
+		data-options="{'isShowWeek':true}" />
+	<div th:fragment="Timestamp.view" th:name="${fieldCtx.fieldName}">
+		<span th:if="${fieldCtx.fieldVal != null}" th:text="${fieldCtx.fieldVal}?${#dates.format(fieldCtx.fieldVal,fieldCtx.getAttribute('format','yyyy-MM-dd HH:mm:ss'))}:''"
+	data-widget="format" th:attr="data-format=${fieldCtx.getAttribute('data-format','')}"></span>
+	</div>
+	
+	<!-- 平铺单选 -->
+	<div th:fragment="Radio" >
+		<label th:each="option,itemStatus:${fieldCtx.options}" class="radio inline"  style=" width: 60px; ">
+			<input type="radio"	th:id="${fieldCtx.fieldName}+${itemStatus.index}" th:readonly="${fieldCtx.hasAttribute('readonly')}"  th:name="${fieldCtx.fieldName}"
+				th:checked="(${option.value}==${#objects.nullSafe(fieldCtx.fieldVal,'').toString()})"  th:value="${option.value}" 
+				th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required')"/>
+			<span th:text="${option.name}"></span>
+		</label>
+	</div>
+	<div th:fragment="Radio.view" th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}">
+		<div th:if="${fieldCtx.fieldVal != null}">
+			<span th:each="option : ${fieldCtx.options}" th:if="${option.value.toString() == fieldCtx.fieldVal.toString()}" th:text="${option.name}"></span>
+		</div>
+	</div>
+	
+	<!-- 下拉单选 -->
+	<select th:fragment="Select" th:id="${fieldCtx.fieldName}" th:readonly="${fieldCtx.hasAttribute('readonly')}"	th:name="${fieldCtx.fieldName}"
+			th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required')" >
+	    <option value=""></option>
+		<option th:each="option:${fieldCtx.options}" th:text="${option.name}"
+			th:value="${option.value}" th:selected="(${option.value}==${#objects.nullSafe(fieldCtx.fieldVal,'').toString()})"></option>
+	</select>
+	<div th:fragment="Select.view" th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}">
+		<div th:if="${fieldCtx.fieldVal != null}">
+			<span th:each="option : ${fieldCtx.options}" th:if="${option.value.toString() == fieldCtx.fieldVal.toString()}" th:text="${option.name}"></span>
+		</div>
+	</div>
+	
+	<!-- 联动选择项 -->
+	<select th:fragment="CascadeOption" th:id="${fieldCtx.fieldName}" th:readonly="${fieldCtx.hasAttribute('readonly')}"
+			th:name="${fieldCtx.fieldName}"	data-widget="cascade"
+			th:attr="data-current-entity=${fieldCtx.entityName},data-lookup-value=${fieldCtx.metaField.lookupValue},data-value=${fieldCtx.fieldVal},data-optionset=(${fieldCtx.optionsJson}),data-validator=(${fieldCtx.metaField.nullable}?'':'required'), data-parentField=(${fieldCtx.metaField.fieldTypeParams['parentField']}), data-handleUnusedChild=(${fieldCtx.metaField.fieldTypeParams['handleUnusedChild']}),data-context=('#' + ${viewId})"
+			>
+	    <option value=""></option>
+	</select>
+	<div th:fragment="CascadeOption.view" >
+		<div th:name="${fieldCtx.fieldName}" style="display:none" th:text="${fieldCtx.fieldVal}"></div>
+		<span th:text="${#objects.nullSafe(fieldCtx.fieldValTitle,fieldCtx.fieldVal)}" th:name="${fieldCtx.fieldName}+'_text'"></span>
+	</div>
+	<div th:fragment="CascadeOptionPopup">
+		<input class="popupCascade" type="text" data-widget="popupCascade" th:readonly="${fieldCtx.hasAttribute('readonly')}" th:id="${fieldCtx.fieldName}+'_text'"
+				th:name="${fieldCtx.fieldName}+'_text'" th:value="${fieldCtx.fieldValTitle}"
+				th:attr="data-field-val=${fieldCtx.fieldVal},data-title-field=${fieldCtx.refObjTitleField},data-entity=${fieldCtx.getAttribute('lookupEntityName',null)},
+				data-selecturl=${fieldCtx.refObjSelectUrl},
+				data-oselecturl=${fieldCtx.refObjSelectUrl},
+				data-queryurl=${fieldCtx.refObjQueryUrl},
+				data-parententityreffield=${fieldCtx.getAttribute('parentEntityRefField','')},
+				data-current-entity=${fieldCtx.entityName},
+				data-lookup-value=${fieldCtx.metaField.lookupValue},
+			    data-parentfield=(${fieldCtx.metaField.fieldTypeParams['parentField']}),
+				data-handleunusedchild=(${fieldCtx.metaField.fieldTypeParams['handleUnusedChild']}),
+				data-context=('#' + ${viewId}),
+				data-validator=${fieldCtx.getAttribute('data-validator',(fieldCtx.metaField.nullable)?'':'required')}"
+				data-options="{type:'class',src:'icon-search',title:'Query',event:{click:SelectForm.openSelectForm}}"		
+		 />
+		<input type="hidden" th:id="${fieldCtx.fieldName}"
+			th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}"
+			th:attr="data-expression=${fieldCtx.metaField.getDefaultValue()}
+			,data-entity=${fieldCtx.getAttribute('lookupEntityName',null)}" />
+	</div>
+	<div th:fragment="CascadeOptionPopup.view" >
+		<div th:name="${fieldCtx.fieldName}" style="display:none" th:text="${fieldCtx.fieldVal}"></div>
+		<span th:text="${#objects.nullSafe(fieldCtx.fieldValTitle,fieldCtx.fieldVal)}" th:name="${fieldCtx.fieldName}+'_text'"></span>
+	</div>
+	
+	<!-- 平铺多选 -->
+	<div th:fragment="Checkbox" >	
+		<label th:each="option,itemStatus:${fieldCtx.options}" class="checkbox inline" >
+		<input type="checkbox"	th:id="${fieldCtx.fieldName}+${itemStatus.index}" th:readonly="${fieldCtx.hasAttribute('readonly')}"  th:name="${fieldCtx.fieldName}"
+			th:value="${option.value}" th:checked="${fieldCtx.fieldVal}?${#maps.containsKey(fieldCtx.fieldVal,option.value)}:0" 
+			th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required,')+(${fieldCtx.metaField.minValue!=null} and ${fieldCtx.metaField.maxValue!=null}?(',range['+${fieldCtx.metaField.minValue}+','+${fieldCtx.metaField.maxValue}+']'):'')"
+		/>
+			<span th:text="${option.name}"></span>
+		</label>
+	</div>
+	<div th:fragment="Checkbox.view" th:name="${fieldCtx.fieldName}">
+		<div th:if="${fieldCtx.fieldVal != null}">
+			<span th:each="option,st:${fieldCtx.options}" th:text="${option.name} + (${st.index==fieldCtx.options.size()-1}?'':', ')"
+				th:if="${#maps.containsKey(fieldCtx.fieldVal,option.value)}"></span>
+		</div>
+	</div>
+	
+	<!-- 下拉多选 -->
+	<select th:fragment="MutiSelect" multiple="multiple" th:readonly="${fieldCtx.hasAttribute('readonly')}" data-widget="multiselect" data-options="{oneOrMoreSelected: '*' }" th:id="${fieldCtx.fieldName}"	
+		th:name="${fieldCtx.fieldName}" th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required')" style="display: none; ">
+		<option th:each="option:${fieldCtx.options}" th:text="${option.name}"
+			th:value="${option.value}" th:selected="${fieldCtx.fieldVal}?${#maps.containsKey(fieldCtx.fieldVal,option.value)}:0"></option>
+	</select>
+	<div th:fragment="MutiSelect.view" th:name="${fieldCtx.fieldName}">
+		<div th:if="${fieldCtx.fieldVal != null}">
+			<span th:each="option,st:${fieldCtx.options}" th:text="${option.name} + (${st.index==fieldCtx.options.size()-1}?'':', ')"
+				th:if="${#maps.containsKey(fieldCtx.fieldVal,option.value)}"></span>
+		</div>
+	</div>
+	
+	<!-- 整数 -->
+	<div th:fragment="Integer" th:with="unit=${fieldCtx.metaField.fieldTypeParams['unit']}"
+		 style="display: inline-block; ">
+		<div th:class="${showUnit}?'input-append':''"  th:with="showUnit=(${unit != null} and ${not #strings.isEmpty(unit)})">
+			<input type="text" th:readonly="${fieldCtx.hasAttribute('readonly')}" th:id="${fieldCtx.fieldName}"
+				th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}" 
+			th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required,')+'pattern[integer]'+(${fieldCtx.metaField.minValue!=null} and ${fieldCtx.metaField.maxValue!=null}?(',range['+${fieldCtx.metaField.minValue}+','+${fieldCtx.metaField.maxValue}+']'):'')"
+			th:style="${showUnit}?${fieldCtx.getAttribute('style','width:179px')}:''"
+			/>
+		  	<span class="add-on" style="margin-left: -1px;" th:if="${showUnit}"	th:text="${unit}"></span>
+		</div> 	
+	</div>
+	<div th:fragment="Integer.view" th:name="${fieldCtx.fieldName}" th:text="${fieldCtx.fieldVal}"
+	data-widget="format" th:attr="data-format=${fieldCtx.getAttribute('data-format','')}"></div>
+	
+	<!--浮点数Double-->
+	<input th:fragment="Double" type="text" th:readonly="${fieldCtx.hasAttribute('readonly')}" th:id="${fieldCtx.fieldName}"
+		th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required,')+'pattern[double]'+(${fieldCtx.metaField.minValue!=null} and ${fieldCtx.metaField.maxValue!=null}?(',range['+${fieldCtx.metaField.minValue}+','+${fieldCtx.metaField.maxValue}+']'):'')" 
+		th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}" />
+	<div th:fragment="Double.view" th:name="${fieldCtx.fieldName}" th:text="${fieldCtx.fieldVal}"></div>
+	
+	<!--浮点数Double-->
+	<input th:fragment="Float" type="text" th:readonly="${fieldCtx.hasAttribute('readonly')}" th:id="${fieldCtx.fieldName}"
+	th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required,')+'pattern[double]'+(${fieldCtx.metaField.minValue!=null} and ${fieldCtx.metaField.maxValue!=null}?(',range['+${fieldCtx.metaField.minValue}+','+${fieldCtx.metaField.maxValue}+']'):'')" 
+		th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}" />
+	<div th:fragment="Float.view" th:name="${fieldCtx.fieldName}" th:text="${fieldCtx.fieldVal}"
+	data-widget="format" th:attr="data-format=${fieldCtx.getAttribute('data-format','')}"></div>
+	
+	<!-- 是否 -->
+	<div th:fragment="Boolean">
+		<label class="radio inline"> <input th:disabled="${fieldCtx.hasAttribute('disabled')}" th:readonly="${fieldCtx.hasAttribute('readonly')}" type="radio"
+			th:id="${fieldCtx.fieldName}+'0'" th:name="${fieldCtx.fieldName}" value="1"
+			th:checked="${fieldCtx.fieldVal}" /> <span th:text="#{common.yes}"></span>
+		</label> <label class="radio inline"> <input th:disabled="${fieldCtx.hasAttribute('disabled')}" th:readonly="${fieldCtx.hasAttribute('readonly')}" type="radio"
+			th:id="${fieldCtx.fieldName}+'1'" th:name="${fieldCtx.fieldName}" value="0"
+			th:checked="${#objects.nullSafe(fieldCtx.fieldVal,'').toString()} == 'false'" /> <span th:text="#{common.no}"></span>
+		</label>
+	</div>
+	<div th:fragment="Boolean.view" th:name="${fieldCtx.fieldName}">
+		<div th:if="${fieldCtx.fieldVal != null}" th:text="${fieldCtx.fieldVal}?#{common.yes}:#{common.no}"></div>
+	</div>
+	
+	<!--数字-->
+	<input th:fragment="Decimal" type="text" th:readonly="${fieldCtx.hasAttribute('readonly')}" th:id="${fieldCtx.fieldName}"
+	th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required,')+'pattern[double]'+(${fieldCtx.metaField.minValue!=null} and ${fieldCtx.metaField.maxValue!=null}?(',range['+${fieldCtx.metaField.minValue}+','+${fieldCtx.metaField.maxValue}+']'):'')" 
+		th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}" />
+	<div th:fragment="Decimal.view" th:name="${fieldCtx.fieldName}" th:text="${fieldCtx.fieldVal}"
+	data-widget="format" th:attr="data-format=${fieldCtx.getAttribute('data-format','')}"></div>
+	
+	<!-- 邮件 -->
+	<input th:fragment="Email" type="text" th:readonly="${fieldCtx.hasAttribute('readonly')}" th:id="${fieldCtx.fieldName}"
+		th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}"
+		th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required,')+'pattern[email],length[0,'+${fieldCtx.metaField.length}+']'" />
+	<div th:fragment="Email.view" th:name="${fieldCtx.fieldName}">
+		<a th:if="${fieldCtx.fieldVal != null}" th:title="#{common.sendEmailTo} + ${fieldCtx.fieldVal}" th:text="${fieldCtx.fieldVal}" th:href="'mailto:' + ${fieldCtx.fieldVal}" target="_blank"></a>
+	</div>
+	
+	<!-- Url -->
+	<input th:fragment="Url" type="text" th:readonly="${fieldCtx.hasAttribute('readonly')}" th:id="${fieldCtx.fieldName}"
+		th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}"
+		th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required,')+'pattern[url],length[0,'+${fieldCtx.metaField.length}+']'" />
+	<div th:fragment="Url.view" th:name="${fieldCtx.fieldName}">
+		<a th:if="${fieldCtx.fieldVal != null}" th:text="${fieldCtx.fieldVal}" th:href="${fieldCtx.fieldVal}" target="_blank"></a>
+	</div>
+	
+	<!-- 百分比 -->
+	<div th:fragment="Percent" class="input-append">
+		<input type="text" th:readonly="${fieldCtx.hasAttribute('readonly')}" th:id="${fieldCtx.fieldName}"
+		th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required,')+'pattern[double],range[0,1000]'" 
+			th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}" style="width: 185px;"/>
+	  	<span class="add-on" style="margin-left: -7px;">%</span>
+	</div>
+	<div th:fragment="Percent.view" th:name="${fieldCtx.fieldName}">
+		<span th:if="${fieldCtx.fieldVal != null}" th:text="${fieldCtx.fieldVal} + '%'"></span>
+	</div>
+	
+	<!-- 货币 -->
+	<div th:fragment="Money" class="input-append">
+		<input type="text" th:readonly="${fieldCtx.hasAttribute('readonly')}" th:id="${fieldCtx.fieldName}"
+		th:attr="data-validator=(${fieldCtx.metaField.nullable}?'':'required,')+'pattern[money]'+(${fieldCtx.metaField.minValue!=null} and ${fieldCtx.metaField.maxValue!=null}?(',range['+${fieldCtx.metaField.minValue}+','+${fieldCtx.metaField.maxValue}+']'):'')" 
+			th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}" style="width: 185px;"/>
+	  	<span class="add-on" style="margin-left: -7px;" th:text="${#objects.nullSafe(fieldCtx.metaField.fieldTypeParams['unit'],#messages.msg('money.chineseYuan'))}"></span>
+	</div>
+	<div th:fragment="Money.view" th:name="${fieldCtx.fieldName}">
+		<span th:if="${fieldCtx.fieldVal != null}" th:text="'￥' + ${fieldCtx.fieldVal}"
+	data-widget="format" th:attr="data-format=${fieldCtx.getAttribute('data-format','')}"></span>
+	</div>
+	
+	<!-- 文件上传 -->
+	<div th:fragment="Upload" th:with="maxSize=${#objects.nullSafe(fieldCtx.metaField.fieldTypeParams['maxSize'],'10')}, fileSuffix=${#objects.nullSafe(fieldCtx.metaField.fieldTypeParams['fileSuffix'],'*')}">
+		<div data-widget="upload" th:attr="data-maxSize=${maxSize}, data-fileSuffix=${fileSuffix}" 
+				class="input-prepend input-append" style="line-height: 25px;height: 25px;">
+			<div class="input-append">
+			  	<div class="add-on progress progress-info progress-striped" style="width: 156px;margin-bottom:0px;float:left;">
+				  <div class="bar" style="width: 0%;height:18px;line-height: 18px;position:relative;"></div>
+				</div>
+				<span class="uploadfile add-on" th:inline="text">
+					<i class="icon-plus-sign"></i>
+					[[#{common.browse}]]
+				</span>
+			</div>
+			<input class="value-input" type="hidden" th:name="${fieldCtx.fieldName}" th:id="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}"/>
+		</div>
+		<div>
+			<i class='icon-info-sign'></i> 
+			<span th:text="${#messages.msg('file.uploadLimitDesc',maxSize)} + ((${fileSuffix} != '*')?${fileSuffix}:#{file.any}) + #{file.fileFormat}"></span>
+		</div>
+	</div>
+	<div th:fragment="Upload.view" th:name="${fieldCtx.fieldName}" th:with="pathMap=${x.downloadPathMap(fieldCtx.fieldVal)}">
+		<a th:if="${pathMap}" target="_blank" th:text="#{file.clickAndDownload} + ${pathMap[fileName]}"
+			th:href="${pathMap[downloadPath]}"></a>
+	</div>
+	<!-- 多文件上传 -->
+	<div th:fragment="MultiUpload" th:attr="data-widget=${fieldCtx.checkIsDiskUpload()}?'diskMultiUpload':'multiUpload'">
+		<div class="portlet multiUpload">
+			<div class="portlet-title">
+				<div class="actions">
+					<span class="btn blue table-toolbar-icon-item addBrowseButton" th:id="'addBrowseButton'+${fieldCtx.fieldName}">
+						<span>上传本地文件</span>
+					</span>
+					<span th:if="${fieldCtx.checkIsDiskUpload()}" class="btn blue table-toolbar-icon-item addBrowseFromDiskButton" th:id="'addBrowseFromDiskButton'+${fieldCtx.fieldName}">
+						<span>选择网盘文件</span>
+					</span>
+				</div>
+			</div>
+			<div class="portlet-body" th:with="files=${x.downloadPathList(fieldCtx.fieldVal)}">
+				<div class="attachment-con" th:if="${files}" th:id="'attachment-con'+${fieldCtx.fieldName}" style="min-height:30px;">
+					<div class="attachement-item" th:each="file:${files}" th:attr="diskid=${file['diskId']},filename=${file['fileName']},filepath=${file['filePath']},data-url=${file['filePath']}">
+						<a target="_blank" th:text="${file['fileName']}" class="file-desc"
+							th:href="${file[downloadPath]}"></a>
+						<a href="javascript://" class="icon-remove">删除</a>
+					</div>
+				</div>
+				<div class="attachment-con" th:unless="${files}" th:id="'attachment-con'+${fieldCtx.fieldName}" style="min-height:30px;">
+				</div>
+			</div>
+		</div>
+		<input class="value-input" type="hidden" th:name="${fieldCtx.fieldName}" th:id="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}"/>
+	</div>
+	<div th:fragment="MultiUpload.view" th:with="files=${x.downloadPathList(fieldCtx.fieldVal)}">
+		<div class="attachment-con" th:if="${files}" style="min-height:30px;" >
+			<div class="attachement-item" th:each="file:${files}">
+				<a target="_blank" th:text="${file['fileName']}" class="file-desc"
+					th:href="${file[downloadPath]}"></a>
+			</div>
+		</div>
+		<div class="attachment-con" th:unless="${files}">
+		</div>
+	</div>
+	<!-- 图片 -->
+	<div th:fragment="Photo" data-widget='photo' th:attr="style='width:'+${fieldCtx.getAttribute('width','100')}+'px;height:'+${fieldCtx.getAttribute('height',100)}+'px;position:relative;'">
+		<button type="button" class="close" th:attr="style='z-index:20;top:5px;right:5px;position:absolute;padding:2px 2px;line-height:10px;'" >&times;</button>
+		<img  class='photoDisplay' th:attr="style='width:'+${fieldCtx.getAttribute('width','100')}+'px;height:'+${fieldCtx.getAttribute('height',100)}+'px;display:block;margin-bottom:2px;'" th:src="${themes.statics('images/100x100.gif')}"/>
+		<input class="photoPath" type="hidden" th:name="${fieldCtx.fieldName}" th:id="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}"/>
+	</div>	
+	<div th:fragment="Photo.view" class="photo" th:name="${fieldCtx.fieldName}" th:with="pathMap=${x.downloadPathMap(fieldCtx.fieldVal)}">
+		<a th:if="${pathMap}" target="_blank" th:title="#{file.clickAndDownload}" th:href="${pathMap[downloadPath]}">
+			<img  class='photoDisplay' th:src="${pathMap[downloadPath]}"
+				th:attr="style='width:'+${fieldCtx.getAttribute('width','100')}+'px;height:'+${fieldCtx.getAttribute('height',100)}+'px;display:block;margin-bottom:2px;'"/>
+		</a>
+	</div>
+	<!-- 多图片上传-->
+	<div th:fragment="MultiPhoto" th:attr="data-widget=${fieldCtx.checkIsDiskUpload()}?'diskMultiPhoto':'multiPhoto'">
+		<div class="portlet multiPhoto">
+			<div class="portlet-title">
+				<div class="actions">
+					<span class="btn blue table-toolbar-icon-item addBrowseButton" th:id="'addBrowseButton'+${fieldCtx.fieldName}">
+						<span>上传本地图片</span>
+					</span>
+					<span th:if="${fieldCtx.checkIsDiskUpload()}" class="btn blue table-toolbar-icon-item addBrowseFromDiskButton" th:id="'addBrowseFromDiskButton'+${fieldCtx.fieldName}">
+						<span>选择网盘图片</span>
+					</span>
+				</div>
+			</div>
+			<div class="portlet-body" th:with="files=${x.downloadPathList(fieldCtx.fieldVal)}">
+				<div class="photo-con" style="min-height:30px;" th:if="${files}">
+					<div class="photo-item" th:each="file:${files}"  th:attr="style='width:'+${fieldCtx.getAttribute('width','100')}+'px;height:'+${fieldCtx.getAttribute('height',100)}+'px;position:relative;',diskid=${file[diskId]},filename=${file[fileName]},filepath=${file[filePath]},data-url=${file[filePath]}">
+						<button type="button" class="close" th:attr="style='z-index:20;top:5px;right:5px;position:absolute;padding:2px 2px;line-height:10px;'" ></button>
+						<img  class='photoDisplay' th:attr="style='width:'+${fieldCtx.getAttribute('width','100')}+'px;height:'+${fieldCtx.getAttribute('height',100)}+'px;display:block;margin-bottom:2px;'" th:src="${file[downloadPath]}"/>
+					</div>	
+				</div>
+				<div class="photo-con" style="min-height:30px;" th:unless="${files}">
+				</div>
+				<input class="photoPath" type="hidden" th:name="${fieldCtx.fieldName}" th:id="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}"/>
+			</div>
+		</div>
+	</div>
+	<div th:fragment="MultiPhoto.view" class="multiPhoto" th:with="files=${x.downloadPathList(fieldCtx.fieldVal)}">
+		<div class="photo-con" th:if="${files}" style="min-height:30px;">
+			<div class="photo-item" th:each="file:${files}">
+				<img  class='photoDisplay' th:attr="style='width:'+${fieldCtx.getAttribute('width','100')}+'px;height:'+${fieldCtx.getAttribute('height',100)}+'px;display:block;margin-bottom:2px;'" th:src="${file[downloadPath]}"/>
+			</div>
+		</div>
+		<div class="attachment-con" th:unless="${files}">
+		</div>
+	</div>
+	
+	<!-- 图标 -->
+	<div th:fragment="Icon" data-widget="icon" 
+		th:attr="data-width=${#objects.nullSafe(fieldCtx.metaField.fieldTypeParams['width'],'')},
+			data-height=${#objects.nullSafe(fieldCtx.metaField.fieldTypeParams['height'],'')}" >
+		<img th:if="${!#strings.isEmpty(fieldCtx.fieldVal) and #strings.contains(fieldCtx.fieldVal,'.')}" th:src="${themes.icon(fieldCtx.fieldVal)}"  alt="" src=""/>
+		<i th:if="${!#strings.isEmpty(fieldCtx.fieldVal) and !#strings.contains(fieldCtx.fieldVal,'.')}" class="field-icon" th:classappend="${fieldCtx.fieldVal}"></i>
+		<input type="hidden" th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}" th:id="${fieldCtx.fieldName}"/>
+		<div class="btn-group">
+			<button type="button" class="btn dropdown-toggle" data-toggle="dropdown" th:if="${!fieldCtx.hasAttribute('readonly')}" >
+				<span class="btn-select" th:text="#{icon.selectIcon}"></span> <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu pull-right" style="min-width: 85px">
+				<li>
+					<a href="javascript://" class="btn-remove"><i class="icon-remove"></i> <span>清空</span></a>
+				</li>						
+			</ul>
+		</div>
+	</div>
+	<div th:fragment="Icon.view" th:name="${fieldCtx.fieldName}" th:if="${fieldCtx.fieldVal != null}">
+		<img th:if="${!#strings.isEmpty(fieldCtx.fieldVal) and #strings.contains(fieldCtx.fieldVal,'.')}" th:src="${themes.icon(fieldCtx.fieldVal)}"  alt="" src=""/>
+		<i th:if="${!#strings.isEmpty(fieldCtx.fieldVal) and !#strings.contains(fieldCtx.fieldVal,'.')}" class="field-icon"  th:classappend="${fieldCtx.fieldVal}"></i>
+	</div>
+	
+	<!-- 代码 -->
+	<div th:fragment="Code" data-widget="code">
+		<input type="hidden" th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}"/>
+		<button type="button" class="btn btn-info code-edit" th:text="#{code.clickAndEdit}"></button>
+	</div>
+	<div th:fragment="Code.view">
+		<div th:name="${fieldCtx.fieldName}" th:if="${fieldCtx.fieldVal != null}" data-widget="code">
+			<input type="hidden" th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}"/>
+		</div>
+	</div>
+		
+	<!-- 可选值输入框 -->	
+	<input data-widget="typeahead" th:fragment="ComboBox"  th:name="${fieldCtx.fieldName}" type="text" autocomplete="off" 	th:value="${fieldCtx.fieldVal}"
+	th:attr="data-source=${'['''+#objects.nullSafe(fieldCtx.metaField.fieldTypeParams['data'],'').replace(' ',''',''')+''']'}" 
+	/>	
+	<div th:fragment="ComboBox.view" th:text="${fieldCtx.fieldVal}"
+	data-widget="format" th:attr="data-format=${fieldCtx.getAttribute('data-format','')}"></div>
+		
+	<!-- 追加输入框 -->
+	<div th:fragment="Addition">
+		<div data-widget="addition" class="accordion" th:attr="data-value=${#objects.nullSafe(fieldCtx.fieldVal,'')}, data-showField=${#objects.nullSafe(fieldCtx.metaField.fieldTypeParams['showField'],'')}, data-formOrder=${#objects.nullSafe(fieldCtx.metaField.fieldTypeParams['formOrder'],'')}, data-showInput=${#objects.nullSafe(fieldCtx.metaField.fieldTypeParams['showInput'],'')}">
+		  <div class="accordion-group hide js-item">
+		    <div class="accordion-heading js-collapse" style="cursor: move;">
+		      <a href="#" style="margin-left: 5px;" class='js-title'></a>
+		    </div>
+		    <div class="accordion-body collapse in">
+		      <div class="accordion-inner js-content"></div>
+		    </div>
+		  </div>
+		</div>
+		<input type="hidden" th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}"/>
+		<textarea style="width: 98%; margin: 0 auto;" th:name="'add_' + ${fieldCtx.fieldName}"
+			placeholder="在此输入追加内容，点击保存即追加。"></textarea>
+	</div>
+	<div th:fragment="Addition.view">
+		<div data-widget="addition" class="accordion" th:attr="data-value=${#objects.nullSafe(fieldCtx.fieldVal,'')}, data-showField=${#objects.nullSafe(fieldCtx.metaField.fieldTypeParams['showField'],'')}, data-formOrder=${#objects.nullSafe(fieldCtx.metaField.fieldTypeParams['formOrder'],'')}, data-showInput=${#objects.nullSafe(fieldCtx.metaField.fieldTypeParams['showInput'],'')}">
+		  <div class="accordion-group hide js-item">
+		    <div class="accordion-heading js-collapse" style="cursor: move;">
+		      <a href="#" style="margin-left: 5px;" class='js-title'></a>
+		    </div>
+		    <div class="accordion-body collapse in">
+		      <div class="accordion-inner js-content"></div>
+		    </div>
+		  </div>
+		</div>
+	</div>
+	
+	<!-- 计算字段 -->
+	<input th:fragment="caculate"  
+		readonly="true"  type="text" th:id="${fieldCtx.fieldName}" 
+		th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}"
+		th:attr="data-expression=(${fieldCtx.metaField.fieldTypeParams['expression']}),data-validator=(${fieldCtx.metaField.nullable}?'':'required')"
+	/>
+	<div th:fragment="caculate.view" 
+		th:id="${fieldCtx.fieldName}"  th:name="${fieldCtx.fieldName}" th:text="${fieldCtx.fieldVal}"
+		data-widget="format" th:attr="data-format=${fieldCtx.getAttribute('data-format','')}"></div>
+		
+	<!-- 单号 -->
+	<input th:fragment="AutoCode" type="text" th:id="${fieldCtx.fieldName}"
+		th:name="${fieldCtx.fieldName}" th:value="${fieldCtx.fieldVal}" th:attr="data-validator=${fieldCtx.requireValidation}?((${fieldCtx.metaField.nullable}?'':'required,') + ('length[0,'+${fieldCtx.metaField.length}+']') + (${fieldCtx.metaField.unique}?',func[isFieldValUnique]':'')):'', data-entity=(${fieldCtx.requireValidation} and ${fieldCtx.metaField.unique})?${fieldCtx.metaField.entity.name}:'', data-value=${fieldCtx.fieldVal}" />
+	<div th:fragment="AutoCode.view" th:name="${fieldCtx.fieldName}" th:text="${fieldCtx.fieldVal}" style="word-break: break-all;"></div>
+</body>
+</html>

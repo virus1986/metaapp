@@ -1,0 +1,32 @@
+<div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	<h3>配置验证</h3>
+</div>
+<div class="modal-body">
+    <div class="form-horizontal" id="config-validator-con">
+	  <div class="control-group">
+	    <label class="control-label">是否必填</label>
+	    <div class="controls">
+	    	<label class="checkbox inline"><input type="checkbox" name="validator-required" style="opacity:1;"/></label>
+	    </div>
+	  </div>
+	  <div class="control-group">
+	    <label class="control-label">关联字段比较</label>
+	    <div class="controls func-con">
+	    	<select class="func-name" name='validator-func-name' style="width:145px;">
+	    		<option value="">--选择比较函数--</option>
+	    		<option value="formValidatorFunc.gt">大于</option>
+	    		<option value="formValidatorFunc.ge">大于等于</option>
+	    		<option value="formValidatorFunc.lt">小于</option>
+	    		<option value="formValidatorFunc.le">小于等于</option>
+	    	</select>
+	    	<select class="func-param" name='validator-func-param-fieldname' style="width:145px;">
+	    	</select>
+	    </div>
+	  </div>
+	</div>
+</div>
+<div class="modal-footer"> 
+	<a class="btn btn-primary saveBtn">确定</a> 
+	<a class="btn" data-dismiss="modal">关闭</a> 
+</div>
+			

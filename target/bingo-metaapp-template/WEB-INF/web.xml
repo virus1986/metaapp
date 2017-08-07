@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee   http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+	<!-- Spring 配置文件位置 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath*:spring/*.xml</param-value>
+	</context-param>
+
+	<!-- Spring 配置文件的加载器 -->
+	<listener>
+		<listener-class>
+			org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+	</listener>
+	<listener>  
+	    <listener-class>  
+	        org.springframework.web.context.request.RequestContextListener  
+	    </listener-class>  
+	</listener> 
+	<!-- wro脚本压缩 -->
+	<listener>
+	    <listener-class>ro.isdc.wro.http.WroServletContextListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.owasp.csrfguard.CsrfGuardServletContextListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.owasp.csrfguard.CsrfGuardHttpSessionListener</listener-class>
+	</listener>
+
+	<filter>
+		<filter-name>compositeFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>compositeFilter</param-value>
+		</init-param>
+		<init-param>
+			<param-name>targetFilterLifecycle</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>compositeFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!--js minify-->
+	<filter>
+		<filter-name>WroContextFilter</filter-name>
+		<filter-class>ro.isdc.wro.http.WroContextFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>WroContextFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+	  <filter-name>WebResourceOptimizer</filter-name>
+	  <filter-class>ro.isdc.wro.http.WroFilter</filter-class>
+	  <!--<filter-class>bingo.metaapp.js.WroFilterEx</filter-class> -->
+	</filter>
+	<filter-mapping>
+	  <filter-name>WebResourceOptimizer</filter-name>
+	  <url-pattern>/wro/*</url-pattern>
+	</filter-mapping>
+	<servlet>
+		<servlet-name>JavaScriptServlet</servlet-name>
+		<servlet-class>org.owasp.csrfguard.servlet.JavaScriptServlet</servlet-class>
+		<init-param>
+         <param-name>source-file</param-name>
+         <param-value>WEB-INF/csrfguard.js</param-value>
+     	</init-param>
+     	<init-param>
+	         <param-name>inject-into-forms</param-name>
+	         <param-value>true</param-value>
+	    </init-param>
+	    <init-param>
+	         <param-name>inject-into-attributes</param-name>
+	         <param-value>false</param-value>
+	    </init-param>
+	    <init-param>
+	         <param-name>domain-strict</param-name>
+	         <param-value>false</param-value>
+	    </init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>JavaScriptServlet</servlet-name>
+		<url-pattern>/JavaScriptServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+      <servlet-name>spring</servlet-name>
+      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+      <init-param>
+	        <param-name>contextConfigLocation</param-name>
+	        <param-value>classpath*:spring/mvc/*.xml</param-value>
+	    </init-param>
+     <!--  <load-on-startup>1</load-on-startup> -->
+    </servlet>
+
+    <servlet-mapping>
+      <servlet-name>spring</servlet-name>
+      <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+	<!-- SSO单点登录配置(通过代理)-->
+	<servlet>
+		<servlet-name>ssoclient</servlet-name>
+		<servlet-class>bingo.integration.spring.DelegatingServletProxy</servlet-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>ssoServlet</param-value>
+		</init-param>
+		<!-- <load-on-startup>1</load-on-startup> -->
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ssoclient</servlet-name>
+		<url-pattern>/ssoclient/*</url-pattern>
+	</servlet-mapping>
+	
+
+	<!-- Session 超时时间,单位为分钟 -->
+	<session-config>
+		<session-timeout>240</session-timeout>
+	</session-config>
+
+	<welcome-file-list>
+		<welcome-file>/home/</welcome-file>
+	</welcome-file-list>
+	
+	<error-page>
+		<error-code>401</error-code>
+		<location>/error_401</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error_404</location>
+	</error-page>
+</web-app>

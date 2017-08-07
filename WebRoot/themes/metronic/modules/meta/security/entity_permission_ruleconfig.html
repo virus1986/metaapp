@@ -1,0 +1,123 @@
+<!--元数据实体的规则配置页面 add by yay-->
+<div th:id="${viewId}" class=" permissions" style="border: 0px">
+    <table class="table table-striped table-bordered table-advance table-hover">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <!--<th>所属实体</th>-->
+            <th>规则名称</th>
+            <th>操作名称</th>
+            <!--<th>规则内容</th>-->
+            <th>开启或关闭</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ruleConfig,rn:${ruleConfigList}" th:id="${ruleConfig['configId']}">
+            <td th:text="${rn.index+1}"></td>
+            <!--<td th:text="${ruleConfig['OwnEntity']}"></td>-->
+            <td >
+                <a href="javascript:;"  th:id="${ruleConfig['RuleId']}" class="entityRuleLink" th:text="${ruleConfig['RuleName']}"></a>
+            </td>
+            <td th:text="${ruleConfig['OperationName']}"></td>
+            <!--<td th:text="${ruleConfig['RuleContent']}"></td>-->
+            <td>
+                <div th:if="${!ruleConfig['IsAlreadyConfig']||ruleConfig['configBySelf']}" class="switch"
+                     data-on="success" data-off="warning">
+                    <input th:id="${ruleConfig['OperationCode']}"
+                           th:name="${ruleConfig['RuleId']}+'_'+${ruleConfig['OperationName']}" type="checkbox"
+                           th:checked="${ruleConfig['IsAlreadyConfig']}"/>
+                </div>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+    <script th:inline="javascript">
+        //<![CDATA[
+        $(function () {
+            var viewId =/*[[${viewId}]]*/;
+            var entityName =/*[[${entityName}]]*/;
+            var moduleId =/*[[${queryString['moduleid']}]]*/;
+            var operationRuleId =/*[[${queryString['operationruleid']}]]*/;
+            var context = $("#" + viewId);
+
+            if (!moduleId || !operationRuleId) {
+                $.messageBox.warn({message: "页面参数异常！"});
+                return false;
+            }
+
+            $('.switch', context).bootstrapSwitch();
+            $('.switch', context).on('switch-change', function (e, data) {
+                var $el = $(data.el);
+                var self = $(this);
+                self.bootstrapSwitch("setActive", false);
+                var configId = self.closest("tr", context).attr("id");
+                if (data.value) {
+                    var operationCode = $el.attr("id");
+                    var configName = $el.attr("name");
+                    var paramsArray = configName.split("_");
+                    openConfig(self, operationCode, paramsArray[0], paramsArray[1]);
+                } else {
+                    closeConfig(self,configId);
+                }
+
+            });
+
+            var openConfig = function (sender, operationCode, entityRuleId, operationName) {
+                if (!operationCode || !entityRuleId || !operationName) return false;
+                var data = {};
+                data.moduleId = moduleId;
+                data.entityOperationCode = operationCode;
+                data.entityOperationName = operationName;
+                data.operationRuleId = operationRuleId;
+                data.entityRuleId = entityRuleId;
+
+                $.post(Global.contextPath + "/entities/OperRuleToEntityRule/create", data, function (data, status, xhr) {
+                    if (status != "success" || !data) {
+                        sender.bootstrapSwitch("setState", false, true);
+                    }else{
+                        sender.closest("tr", context).attr("id",data.id);
+                    }
+                    sender.bootstrapSwitch("toggleActivation");
+                }, "json");
+            };
+            var closeConfig = function (sender, configId) {
+                if (!configId) return false;
+                $.messageBox.confirm({
+                    message: i18n.t("permission.turnoffOperationRuleConfig"),
+                    callback: function (result) {
+                        if (result) {
+                            $.post(Global.contextPath + "/entities/OperRuleToEntityRule/delete", {id: configId}, function (data, status, xhr) {
+                                if (!status) {
+                                    sender.bootstrapSwitch("setState", true, true);
+                                }
+                                else{
+                                    sender.closest("tr", context).attr("id",null);
+                                }
+                                sender.bootstrapSwitch("toggleActivation");
+                            }, "json");
+                        }
+                        else {
+                            sender.bootstrapSwitch("setState", true, true);
+                            sender.bootstrapSwitch("toggleActivation");
+                        }
+                    }
+                });
+            };
+
+            //点击链接弹出实体规则信息
+            context.on("click",".entityRuleLink",null,function() {
+                var createPageUrl = Global.contextPath + "/entities/PermissionRule/edit?id=" + this.id;
+                $.openLink(createPageUrl, {
+                    width: 500,
+                    height: 300,
+                    requestType: "GET",
+                    showType: "pop-up",//"tab",
+                    title: "编辑实体规则"
+                }, function (responseJson) { });
+            });
+        });
+        //]]>
+    </script>
+</div>

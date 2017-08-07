@@ -1,0 +1,131 @@
+<div th:id="${viewId}" class="panel apply-panel" style="width:400px;">
+
+<table class="order-table table table-bordered">
+	<tr>
+		<th th:text="#{view.order.firstOrderRule}+':'"></th>
+		<td th:inline="text">
+			<select class="first-order" name="first-field">
+			</select> <br/>
+			<label class="radio">
+				<input type="radio" name="first-order" value="Asc"/>[[#{view.order.asc}]]
+			</label>
+			<label class="radio">
+				<input type="radio" name="first-order" value="Desc"/>[[#{view.order.desc}]]<br/>
+			</label>
+		</td>
+	</tr>
+	<tr>
+		<th th:text="#{view.order.secondOrderRule}+':'"></th>
+		<td th:inline="text">
+			<select class="second-order" name="second-field">
+			</select><br/>
+			<label class="radio">
+			<input type="radio" name="second-order" value="Asc"/>[[#{view.order.asc}]]<br/>
+			</label>
+			<label class="radio">
+			<input type="radio" name="second-order" value="Desc"/>[[#{view.order.desc}]]<br/>
+			</label>
+		</td>
+	</tr>
+</table>
+<div class="ui-dialog-buttonset">
+	<button type="button" class="btn purple saveEntityView" th:text="#{common.save}">
+		<span th:text="#{common.save}"></span>
+		<i class="m-icon-swapright m-icon-white"></i>
+	</button>
+	<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+</div>
+
+<style type="text/css">
+	.order-table tr .order-td{
+		padding:0px;
+	}
+</style>
+
+<script type="text/javascript" th:inline="javascript">
+//<![CDATA[
+     (function(){
+    	 var __context = /*[['#'+${viewId}]]*/;
+
+    	 var args = jQuery.dialogAraguments() ;
+    	 ////[{'direction':{'$type':'OrderDirection','$name':'ASC'},'field':'displayOrder','orderString':'displayOrder ASC'}];
+ 		 var orderby = args.orderby||[] ;
+ 		 //var colKeys = args.colKeys ;
+ 		 //var columnMap = args.columnMap ;
+ 		 var allFieldsDataUrl = args.allFieldsDataUrl;
+ 		 var rows=[];
+ 		 $.restGet(allFieldsDataUrl,function(resp){
+ 			 if(resp){
+ 				rows=resp.rows||[];
+ 				if( orderby.length >0 ){
+ 		 	 		var direction =  orderby[0].direction?orderby[0].direction:"Asc" ;
+ 		 	 		if(typeof(direction)=="object"){
+ 		 	 			direction=direction.$name;
+ 		 	 		}
+ 		 			renderFirstOrder(rows, orderby[0].field , direction ) ;
+ 		 	 	 }else{
+ 		 	 		renderFirstOrder(rows) ;
+ 		 	 	 }
+
+ 		 	 	 if(orderby.length>1){
+ 		 	 		var direction =  orderby[1].direction?orderby[1].direction:"Asc" ;
+ 		 	 		if(typeof(direction)=="object"){
+ 		 	 			direction=direction.$name;
+ 		 	 		}
+ 		 	 		renderSecondOrder(rows,orderby[1].field ,direction) ;
+ 		 	 	 }else{
+ 		 	 		renderSecondOrder(rows) ;
+ 		 	 	 }
+ 			 }
+ 		 },{async:false});
+ 	
+    	 function renderSecondOrder(rows,field,order){
+  			var val = $(".first-order",__context).val() ;
+  			$(".second-order",__context).empty() ;
+  			$("<option value=''>"+i18n.t("common.select")+"</option>").appendTo($(".second-order",__context)) ;
+      		 $(rows).each(function(){
+      			var key = this.name ;
+      			if(key == val) return ;
+      			var isSelected = key == field?"selected":"" ;
+      			//var col = columnMap[key] ;
+      			//var text = col.headerText||col.displayName||col.$displayName ;
+      			var text = this.displayName;
+      			$("<option value='"+key+"' "+isSelected+">"+text+"</option>").appendTo($(".second-order",__context)) ;
+       	 	 }) ;
+
+      		 if(order){
+				$("[name='second-order'][value='"+order+"']").attr("checked",true) ;
+   	   	 	 }
+         };
+
+    	 function renderFirstOrder(rows,field,order){
+    		 $(rows).each(function(){
+   				var key = this.name ;
+   				var isSelected = key == field?"selected":"" ;
+   				//var col = columnMap[key] ;
+   				//var text = col.headerText||col.displayName||col.$displayName ;
+   				var text = this.displayName;
+   				$("<option value='"+key+"' "+isSelected+">"+text+"</option>").appendTo($(".first-order",__context)) ;
+   	 	 	 }) ;
+   	 	 	 if(order){
+				$("[name='first-order'][value='"+order+"']").attr("checked",true) ;
+   	   	 	 }
+         };
+ 		$(".first-order",__context).change(function(){
+ 			renderSecondOrder(rows) ;
+ 	 	}) ;
+
+ 		$(".saveEntityView",__context).click(function(){
+			var data = $(".order-table",__context).toJson() ;
+			$.dialogReturnValue( data ) ;
+			$(this).dialogClose() ;
+		}) ;
+
+		$(".closeBtn",__context).click(function(){
+			$.dialogReturnValue( null ) ;
+			$(this).dialogClose() ;
+		}) ;
+     })();
+//]]> 
+</script>
+</div>

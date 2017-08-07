@@ -1,0 +1,32 @@
+var $validatorConfigConfig={
+		equalToField:"输入值与相关信息不相符",
+		url:"网址输入不正确",
+		qq:"QQ号码输入不正确（非零开头的四位以上的数字）",
+		telephone:"电话号码输入不正确",
+		mobile:"手机号码输入不正确",
+		zip:"邮政编码输入不正确",
+		email:"邮箱地址输入不正确",
+		date:"日期输入格式不正确（YYYY-MM-DD）",
+		identity:"身份证输入不正确",
+		money:"金额格式输入不正确",
+		integer:"输入值必须是正整数",
+		double:"输入值必须是数值",
+		digit:"只能输入数字",
+		noSpecialCaracters:"不允许输入字母和数字之外的特殊字符",
+		letter:"只允许输入英文",
+		chinese:"只允许输入中文",
+		name:"字母下划线开头，允许数字字母下划线"
+};
+var $validationConfig={
+		spellingError:"验证器拼写有误",
+		required:"该输入项必填",
+		radioRequired:"该选项为必选项",
+		checkboxRequired:"必须选择一个选项",
+		selectRequired:"该选择项必选",
+		regexNotDefined:"正则表达式:{0}没有定义，请检查拼写是否正确",
+		lengthInfo:"当前输入长度为{0}[输入长度必须在{1}和{2}之间,中文长度为2]",
+		scopeInfo:"必须选择{0}到{1}选项",
+		numScopeInfo:"输入的值必须在{0}到{1}之间",
+		errorInfo:"错误信息",
+		notDefined:"未定义！"
+};

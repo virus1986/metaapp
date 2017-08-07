@@ -1,0 +1,172 @@
+<div class="container-fluid m-right20" th:id="${viewId}">
+	<style>
+	.dashboard-stat {
+		cursor: pointer;
+	}
+	</style>
+	<h3 class="page-title">
+		工作台 <small id="nowTime"></small>
+	</h3>
+	<ul class="breadcrumb breadcrumb-style2">
+
+	</ul>
+	<div id="dashboard">
+		<div class="row-fluid m-top20">
+			<div class="span3 responsive"
+				data-desktop="span3">
+				<div class="dashboard-stat blue">
+					<div class="visual">
+						<i class="icon-user"></i>
+					</div>
+					<div class="details">
+						<div class="number doingTaskCount"></div>
+						<div class="desc">处理中事项</div>
+					</div>
+					<a class="more" href="javascript:void(0);" id="my-doing-wfpro">我的流程 <i
+						class="m-icon-swapright m-icon-white"></i>
+					</a>
+				</div>
+			</div>
+			<div class="span3 responsive"
+				data-desktop="span3">
+				<div class="dashboard-stat green">
+					<div class="visual">
+						<i class="icon-bell"></i>
+					</div>
+					<div class="details">
+						<div class="number pendingTaskcCount"></div>
+						<div class="desc">待办事项</div>
+					</div>
+					<a class="more" href="javascript:void(0);" id="pending-task">所有待办 <i
+						class="m-icon-swapright m-icon-white"></i>
+					</a>
+				</div>
+			</div>
+			<div class="span3 responsive"
+				data-desktop="span3">
+				<div class="dashboard-stat yellow">
+					<div class="visual">
+						<i class="icon-bullhorn"></i>
+					</div>
+					<div class="details">
+						<div class="number readingTakCount"></div>
+						<div class="desc">待阅事项</div>
+					</div>
+					<a class="more" href="javascript:void(0);" id="pending-read">所有待阅 <i
+						class="m-icon-swapright m-icon-white"></i>
+					</a>
+				</div>
+			</div>
+			<div class="span3 responsive"
+				data-desktop="span3">
+				<div class="dashboard-stat on purple">
+					<div class="visual">
+						<i class="icon-globe"></i>
+					</div>
+					<div class="details">
+						<div class="number">　</div>
+						<div class="desc">常用流程</div>
+					</div>
+					<a class="more" href="#">所有流程 <i
+						class="m-icon-swapright m-icon-white"></i>
+					</a>
+					<div class="flag">
+						<span></span>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="row-fluid">
+			<div class="span12 timeline-maincontent">
+				<div class="tabbable">
+					<ul class="nav nav-tabs">
+						<li th:each="entry,stat:${otherWorkFlows}" th:class="${stat.index==0?'active':''}"><a th:href="'#panel_' + ${entry.key['procCatagoryId']}+${viewId}" th:text="${entry.key['catagoryName']}" data-toggle="tab" ></a></li>
+					</ul>
+					<div class="tab-content">
+						<div th:each="entry,stat:${otherWorkFlows}" class="tab-pane other-proc" th:attrappend="class=${stat.index==0?' active':''}" th:id="'panel_'+${entry.key['procCatagoryId']}+${viewId}">
+							<div class="row-fluid">
+								<ul class="big-icon-list" th:if="${entry.value.size()>0}">
+									<li th:each="proc:${entry.value}" th:class="${proc['bgColor']}" th:attr="data-proc-id=${proc['procId']},data-proc-name=${proc['procName']}" style="margin-bottom: 20px;">
+										<a href="javascript://">
+										<div class="visual">
+											<i th:class="${proc['icon']}"></i>
+										</div>
+										<div class="details" style="margin-top:10px;line-height:20px; height:40px; overflow:hidden;" th:text="${proc['procName']}">
+
+										</div>
+										</a>
+									</li>
+								</ul>
+								<p th:unless="${entry.value.size()>0}" style="margin-left:20px;font-weight:bold;font-size:14px;">此分类下无可用的工作流</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<script th:inline="javascript">
+//<![CDATA[
+   $(function(){
+	   	var viewId=/*[[${viewId}]]*/;
+	   	var context=/*[['#'+${viewId}]]*/;
+	   	var doingTaskCountUrl=Global.contextPath+"/home/statisticsDoingTask?_date=" + new Date().getTime();
+	   	var pendingTaskcCountUrl=Global.contextPath+"/home/statisticsPendingTask?_date=" + new Date().getTime();
+	   	var readingTakCountUrl=Global.contextPath+"/home/statisticsForReadingTask?_date=" + new Date().getTime();
+	   	$.get(doingTaskCountUrl,function(res){
+	   		$(".doingTaskCount",context).text(res);
+	   	});
+	   	$.get(pendingTaskcCountUrl,function(res){
+	   		$(".pendingTaskcCount",context).text(res);
+	   	});
+	   	$.get(readingTakCountUrl,function(res){
+	   		$(".readingTakCount",context).text(res);
+	   	});
+
+		$(".other-proc li",context).on("click",function(){
+			var procId = $(this).data("procId");
+			var procName=$(this).data("procName");
+			var url = Global.contextPath + "/workflow/process/start?businessProcId=" + procId;
+			$.openLink(url,{showType:'tab',title:procName},function(){});
+		});
+
+		//我的处事中的流程点击事件功能函数,链接到我的发起流程界面列表
+		$("#my-doing-wfpro",context).parent('.dashboard-stat').on("click",function(){
+			var url = Global.contextPath + "/entities/wfprocinst/list";
+			$.openLink(url,{showType:'tab',title:'我发起的流程'},function(){});
+		});
+
+		//我的待办点击事件功能函数,链接到我的待办界面列表
+		$("#pending-task",context).parent('.dashboard-stat').on("click",function(){
+			var url = Global.contextPath + "/entities/wftask/list";
+			$.openLink(url,{showType:'tab',title:'待办事项'},function(){});
+		});
+
+		$("#pending-read",context).parent('.dashboard-stat').on("click",function(){
+			var url = Global.contextPath + "/entities/wfnotify/list";
+			$.openLink(url,{showType:'tab',title:'待阅事项'},function(){});
+		});
+		getTimeNow();
+		function getTimeNow() {
+			var time = new Date(); 
+			var hour = time.getHours(); 
+			var minute = time.getMinutes(); 
+			var second = time.getSeconds();
+			var week; var date; 
+			if(time.getDay()==0) week="星期日"; 
+			if(time.getDay()==1) week="星期一"; 
+			if(time.getDay()==2) week="星期二"; 
+			if(time.getDay()==3) week="星期三"; 
+			if(time.getDay()==4) week="星期四"; 
+			if(time.getDay()==5) week="星期五"; 
+			if(time.getDay()==6) week="星期六";
+			date=time.getYear()+1900+"年"+(time.getMonth()+1)+"月"+time.getDate()+"日"+" ";
+			$("#nowTime",context).html("当前时间："+date+week); 
+		} 
+   });
+//]]>
+</script>
+</div>

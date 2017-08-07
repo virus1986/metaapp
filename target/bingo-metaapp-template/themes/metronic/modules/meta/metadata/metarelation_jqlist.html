@@ -1,0 +1,222 @@
+<div th:attr="data-url=${requestUrl}"  th:id="${viewId}">
+	<div class="breadcrumbs" id="breadcrumbs">
+		<ul class="breadcrumb">		
+		</ul>
+	</div>
+	<div class="container-fluid m-top10">
+		<div style="margin:0px;padding:0px;">
+			<table th:id="'grid_metarelation_'+${entity}"></table>
+			<div th:id="'grid_metarelation_pager_'+${entity}"></div>
+
+			<div th:id="'toolbar_grid_metarelation_'+${entity}" class="table-toolbar row-fluid" style="display: none">
+				<div class="grid-headerline">
+					<i class="icon-hand-right icon-animated-hand-pointer"></i>
+					<span class="grid-headtext">关系管理</span>
+				</div>
+				<div class="pull-right ">					
+					<div class="btn-group">
+						<input name="searchString" type="text" class="m-wrap input-medium search-query pull-left" />
+						<input name="searchField" value="_quickSearch" type="hidden" />
+						<button class="btn blue" name="btMultiSearch"><i class="icon-search"></i></button>
+						<span class="arrow"></span>
+					</div>
+					<div class="btn-group">
+						<button th:id="'toolbar_add_grid_metarelation_'+${entity}" class="btn green table-toolbar-icon-item" data-func="grid.addRecord">
+							<span th:text="#{common.create}">新建</span>
+							<i class="icon-plus"></i>
+						</button>
+					</div>
+					<div class="btn-group">
+						<button class="btn dropdown-toggle" data-toggle="dropdown">更多操作 <i class="icon-angle-down"></i>
+						</button>
+						<ul class="dropdown-menu pull-right table-toolbar-icon">
+							<li th:id="'toolbar_edit_grid_metarelation_'+${entity}" data-func="grid.editRecord" class="table-toolbar-icon-item">
+								<a href="javascript://">
+								<img th:src="${themes.icon('main/comment-edit.png')}" />
+								<span th:text="#{common.edit}"></span></a></li>
+							<li th:id="'toolbar_del_grid_metarelation_'+${entity}" data-func="grid.delRecord" class="table-toolbar-icon-item">
+								<a href="javascript://">
+								<img th:src="${themes.icon('main/button-white-remove.png')}" />
+								<span th:text="#{common.delete}"></span></a></li>
+							<li th:id="'toolbar_reflesh_grid_metarelation_'+${entity}" data-func="grid.refreshGrid" class="table-toolbar-icon-item">
+								<a href="javascript://">
+								<img th:src="${themes.icon('main/button-load.png')}" />
+								<span th:text="#{common.refresh}"></span></a></li>
+							<li th:id="'toolbar_export_grid_metarelation_'+${entity}" data-func="grid.exportGrid" class="table-toolbar-icon-item">
+								<a href="javascript://">
+								<img th:src="${themes.icon('main/file-send.png')}" />
+								<span th:text="#{common.export}"></span></a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script th:inline="javascript">
+	//<![CDATA[	
+	$(function() {
+		function typeFormatter(cellvalue, options, rowObject)
+		{
+			var type = rowObject.type;
+			if(type=="OneToOne"){
+				return i18n.t("relation.oneToOne");
+			}else if(type=="OneToMany"){
+				return i18n.t("relation.oneToMany");
+			}else if(type == "ManyToOne"){
+				return i18n.t("relation.manyToOne");
+			}else if(type=="ManyToMany"){
+				return i18n.t("relation.manyToMany");
+			}else{
+				return type;
+			}
+		};
+		function displayNameFormatter(cellvalue, options, rowObject){
+			var userdata = $("#"+gridId).getGridParam("userData");
+			return userdata[rowObject.targetEntity];
+		};
+		var entity=/*[[${entity}]]*/;
+		var gridUrl=/*[[@{/metadata/relation/query_paged(entity=${entity})}]]*/;
+		var gridCreateUrl=/*[[@{/metadata/relation/create(entity=${entity})}]]*/;
+		var gridEditUrl=/*[[@{/metadata/relation/create(entity=${entity},action='edit')}]]*/;
+		var gridDeleteUrl=/*[[@{/metadata/relation/delete(entity=${entity})}]]*/;
+		var gridId="grid_metarelation_"+entity;
+		var pagerId="grid_metarelation_pager_"+entity;
+		var toolbarId="toolbar_grid_metarelation_"+entity;
+		var imageRoot=Global.themePath+"/statics/images/icons/mini";
+		var context=/*[['#'+${viewId}]]*/;
+		var reorderUrl = /*[[@{/metadata/relation/reorder(entity=${entity})}]]*/;
+		var col1=/*[[#{relation.name}]]*/;
+		var col2=/*[[#{relation.displayName}]]*/;
+		var col3=/*[[#{relation.targetEntity}]]*/;
+		var col4=/*[[#{relation.type}]]*/;
+		var col5=/*[[#{relation.lastModified}]]*/;
+		var col6=/*[[#{relation.summary}]]*/;
+		$("#" + gridId).tableDnD({
+			scrollAmount:0,
+			onDrop: function(table, row){
+				var orderList = [];
+				var isChange = false;
+				for ( var i = 1; i < table.rows.length; i++) {
+					orderList.push(table.rows[i].id);
+					if(table.rows[i].cells[0].innerText != i) {
+						isChange = true;
+						table.rows[i].cells[0].innerText = i;
+					}
+				}
+				if(isChange){
+					$.restPost(reorderUrl,
+						orderList,
+						function(data){
+							var i = data;
+							if(i == 1){
+								//consolelog("新排序已应用。");
+							} else {
+								//consolelog("排序应用失败。");
+							}
+						}
+					); 
+					//consolelog("排序改变。");
+				} else {
+					//consolelog("排序没改变。");
+				}
+				$(row, context).removeClass("dnd-style");
+			},
+			onDragStart: function(table, row) {
+				//consolelog("开始拖动排序……");
+				var rows = $("#" + gridId).jqGrid('getGridParam','selarrrow');
+				var isSelected = false;
+				for ( var i = 0; i < rows.length; i++) {
+					var r = rows[i];
+					if(r == row.id) isSelected = true;
+				}
+				if(!isSelected) $("#" + gridId).jqGrid('setSelection',row.id);
+				$(row, context).addClass("dnd-style");
+				
+				for ( var i = 0; i < rows.length; i++) {
+					var id = rows[i];
+					$(table.rows[id], context).addClass("ui-state-highlight");
+				}
+	        }  
+		});
+		$("#"+gridId).jqGrid({
+			url : gridUrl,
+			createurl : gridCreateUrl,
+			editurl : gridEditUrl,
+			deleteurl: gridDeleteUrl,
+			mtype : 'POST',
+			datatype : 'json',
+			page : 1,
+			rowNum : 100,
+			isShowContextMenu:true,
+			rownumbers : true,
+			multiselect : true,
+			multiboxonly: true,
+			loadonce:true,
+			pager:'#'+pagerId,
+			rowList : [ 10, 50, 100 ],
+			altRows: true,
+			colNames : [col1,col2,col3,col4,col5,col6],
+			jsonReader : {
+				id : "name",
+				repeatitems : false
+			},
+			shrinkToFit :true,
+			prmNames : {
+				id : "name",
+				search: "search"
+			},
+			toolbar: [true, 'top'],
+			headertitles: true,
+			autowidth : true,
+			height : '100%',
+			colModel : [{name:'name',index:'name',key:true,hidden: true},
+			{name:'displayName',index:'displayName',width:100,formatter:'titleField'},
+			{name:'targetEntity',index:'targetEntity', width:50, formatter:displayNameFormatter},
+			{name:'type',index:'type', width:50, formatter:typeFormatter},
+			{name:'lastModified',index:'lastModified', width:50},
+			{name:'summary',index:'summary', width:50},
+			],
+			searchDialogOptions : {
+				multipleSearch : true,
+				"recreateForm" : true,
+				"height" : 400,
+				"width" : 700,
+				"left" : 350,
+				"top" : 100
+			},
+			gridComplete:function(){
+		    	$("#_empty", context).addClass("nodrag nodrop");
+		    	$("#" + gridId).tableDnDUpdate();
+				Page.gridComplete.call(this);
+				var $grid=$("#"+gridId);
+				$("input[name=btMultiSearch]",context).off("click");
+				$("input[name=btMultiSearch]",context).click(function(){
+					var searchString=$("input[name=searchString]",context).val();
+					var rules=[{"field":"displayName","op":"cn","data":searchString},{"field":"name","op":"cn","data":searchString}];
+					setTimeout(function(){
+						$grid.multiFieldsQuickSearch(rules,'OR');
+					},300);
+				});
+			},
+			exContextMenu:[{text: i18n.t("common.edit"),icon:imageRoot+"/icon_tool_022.gif",  action: function(){
+				$("#"+gridId).jqGrid().editRecord();
+			}},
+			 {text: i18n.t("common.delete"),icon:imageRoot+"/icon_tool_060.gif",  action: function(){
+				 $("#"+gridId).jqGrid().delRecord();
+			}}]
+		}).navGrid('#'+pagerId,{
+			"add" : false,
+			"cloneToTop" : false,
+			"del" : false,
+			"edit" : false,
+			"position" : "left",
+			"refresh" : false,
+			"search" : false,
+			"view" : false,
+			"toggle" : false
+		}).bindKeys()
+		.initCustom().initCustToolBar(toolbarId);
+	}); 
+	//]]>
+	</script>
+</div>

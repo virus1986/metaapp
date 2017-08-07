@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" height="100%" multiSelect="true" multiSelectKey="None" shrinkToFit="true" viewFunc="system/workflow.itemView" editUrl="~/entities/WfNotify/edit" deleteUrl="~/entities/WfNotify/delete" createUrl="~/entities/WfNotify/create" dataUrl="~/entities/WfNotify/query_paged" entityName="WfNotify" id="grid_54e398f8-526d-407a-9359-a209adaab693">
+    <appearanceSettings caption="我的已阅"/>
+    <columns>
+    	<column visible="false" width="80" primaryKey="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="id"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="procInstId"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="type"/>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="taskId"/>
+        <column visible="false" dataField="WfProcInst.businessId" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" width="150"/>
+        <column text="主题" dataField="WfProcInst.title" width="200" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left">
+        	<titleFieldFormatter/>
+        </column>
+        <column text="流程名称" dataField="wfproc.procName" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="150"/>
+        <column text="发起人" dataField="WfProcInst.proposerName" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="100"/>
+        <column text="发起时间" dataField="WfProcInst.startTime" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="120"/>
+        <column text="接收时间" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="120" dataField="startTime"/>
+        <column text="当前环节" dataField="actTitle" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="150"/>
+    	<column text="耗时" dataField="duration" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="false" textAlign="Left" width="80">
+        	<millisecondFormatter unit="m"/>
+        </column>
+    </columns>
+    <contextButtons>
+    </contextButtons>
+    <toolBarSetting>
+        <button isInMoreBtns="false" cssClass="" name="fresh"/>
+        <button isInMoreBtns="false" cssClass="" name="search"/>
+    </toolBarSetting>
+    <joinEntities>
+        <entity name="WfProcInst" alias="WfProcInst" joinExpression="left join WfProcInst WfProcInst on WfProcInst.id=wfnotify.procInstId"/>
+        <entity name="wfproc" alias="wfproc" joinExpression="left join wfproc wfproc on WfProcInst.businessType=wfproc.procId"/>
+    </joinEntities>
+    <filter groupOp="AND">
+        <filters>
+            <filter groupOp="OR">
+                <filters/>
+                <rules>
+                    <rule data="10" field="WfNotify.status" op="eq"/>
+            		<rule data="select notifyId from wfNotifyReader where readerId = '@{env.User.id}'" field="WfNotify.id" op="insql"/>
+                </rules>
+            </filter>
+        </filters>
+        <rules>
+            <rule data="0" field="WfNotify.deleted" op="eq"/>
+        </rules>
+    </filter>
+    <orderby>
+        <rule direction="Desc" field="WfNotify.startTime"/>
+    </orderby>
+    <quickSearch searchColNum="4">
+        <column dataField="WfNotify.title"/>
+    </quickSearch>
+    <addDialogSettings/>
+    <editDialogSettings/>
+    <viewDialogSettings/>
+</grid>

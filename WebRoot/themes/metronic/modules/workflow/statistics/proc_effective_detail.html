@@ -1,0 +1,166 @@
+<div th:id="${viewId}">
+	<input type="hidden" id="idDetailProcId" name="procId"
+		th:value="${procId}" /> <input type="hidden" id="idDetailExpDuration"
+		name="expDuration" th:value="${expDuration}" /> <input type="hidden"
+		id="idDetailStartTime" name="startTime" th:value="${startTime}" /> <input
+		type="hidden" id="idDetailEndTime" name="endTime"
+		th:value="${endTime}" />
+
+	<table th:id="${'grid_procExpDurationDetail_'+viewId}"></table>
+	<div th:id="${'grid_procExpDurationDetail_pager_'+viewId}"></div>
+
+	<script th:inline="javascript">
+	//<![CDATA[ 
+	           
+		var gridId= /*[['#grid_procExpDurationDetail_'+${viewId}]]*/;
+		var gridPagerId= /*[['#grid_procExpDurationDetail_pager_'+${viewId}]]*/;
+	
+		function funcDuration (cellval, unit) {
+     		if (!$.isNumeric(cellval)) {
+     			return cellval;
+     		}
+     		var secondsSum = cellval;
+     		var numyears = Math.floor(secondsSum / 525600);
+     		var numdays = Math.floor((secondsSum % 525600) / 1440);
+     		var numhours = Math.floor(((secondsSum % 525600) % 1440) / 60);
+     		var numminutes = Math
+     				.floor((((secondsSum % 525600) % 1440) % 60));
+     		var numseconds = 0;//(((secondsSum % 525600) % 1440) % 60);
+     		var years = numyears ? numyears + "年" : "", days = numdays ? numdays
+     				+ "天" : "", hours = numhours ? numhours + "小时" : "", minutes = numminutes ? numminutes
+     				+ "分钟"
+     				: "", seconds = numseconds ? numseconds + "秒" : "";
+     		if (unit == "d") {
+     			cellval = (years + days) ? (years + days) : "1天";
+     		} else if (unit == "m") {
+     			if(!(years + days + hours))
+     				cellval = "小于1小时";
+     			else
+     				cellval = (years + days + hours + minutes) 
+     		} else if (unit == "h") {
+     			cellval = (years + days + hours) ? (years + days + hours) : "小于1小时";
+     		} else {
+     			cellval = (years + days + hours + minutes + seconds) ? (years
+     					+ days + hours + minutes + seconds) : "1秒";
+     		}
+     		return cellval;
+     	}
+	$(function(){
+
+		var viewId=/*[[${viewId}]]*/;
+		
+		var procId = /*[[${procId}]]*/;
+	
+		var context = /*[['#'+${viewId}]]*/;
+		Page.init(context);
+
+		var col1="流程ID";
+		var col2="流程名称";
+		var col3="流程实例ID";
+		var col4="流程标题";
+		var col5="流程状态";
+		var col6="拟稿人姓名";
+		var col7="拟稿人所在部门";
+		var col8="提交时间";
+		var col9="耗时";
+
+		function intFormatter(cellvalue, options, rowObject){
+			return funcDuration(cellvalue,"m");
+		};
+		var detailUrl= Global.contextPath+"/workflow/statistics/procExpDurationDetailPaged";
+		$(gridId).jqGrid({
+			url : detailUrl,
+			mtype : 'POST',
+			datatype : 'json',
+			postData: {
+				procId: function () { return $("#idDetailProcId",context).val(); },
+				expDuration: function () { return $("#idDetailExpDuration",context).val(); },				
+				startTime: function () { return $("#idDetailStartTime",context).val(); },
+				endTime: function () { return $("#idDetailEndTime",context).val(); }
+			},
+			page : 1,
+			rowNum : 10,
+			rownumbers : true,
+			multiselect : false,
+			multiboxonly: true,
+			loadonce: false,
+			pager:gridPagerId,
+		   	sortname: 'proc_inst_duration',
+		    sortorder: "desc",
+			rowList : [ 10, 20, 50, 80, 100 ],
+			colNames : [col1,col2,col3,col4,col5,col6,col7,col8,col9],
+			jsonReader : {
+				id : "name",
+				repeatitems : false
+			},
+			shrinkToFit :true,
+			prmNames : {
+				id : "name",
+				search: "search"
+			},
+			toolbar: [true, 'top'],
+			headertitles: true,
+			altRows: true,
+			autowidth : true,
+			height:'400px',
+			colModel : [{name:'proc_id',index:'proc_id',width:160,hidden: true},
+			{name:'proc_name',index:'proc_name', width:200, sorttype:'string',hidden: true},
+			{name:'proc_inst_id',index:'proc_inst_id', width:100, key:true, sorttype:'string'},
+			{name:'proc_inst_title',index:'proc_inst_title', width:300, sorttype:"string",formatter:'titleField'},
+			{name:'status_',index:'status_', width:45, sorttype:'string'},
+			{name:'starter_name',index:'starter_name', width:50, sorttype:'string'},
+			{name:'starter_dept_name',index:'starter_dept_name', width:100, sorttype:'string'},
+			{name:'start_time',index:'start_time', width:90, sorttype:'string'},	
+			{name:'proc_inst_duration',index:'proc_inst_duration', width:100, sorttype:"number", formatter:intFormatter}
+			],
+			viewFunc:function(id, sender){
+				var viewUrl =Global.contextPath+ "/workflow/process/approve?type=view&taskId="+id+"_00001";
+				viewUrl=Urls.appendDate(viewUrl);
+				
+				$.openLink(viewUrl,{showType:'tab',title:'阅读已办历史'},function(){});
+			},
+			gridComplete:function(){
+				Page.gridComplete.call(this);
+				
+				var datas = jQuery(gridId).jqGrid('getRowData'); 
+				
+				for(var i=0;i < datas.length;i++){
+					var cl = datas[i];
+
+					var statu = "";
+					switch(cl.status_){
+						case "1":
+							statu="已提交";
+							break;
+						case "2":
+							statu="审批中";
+							break;
+						case "9":
+							statu="已暂停";
+							break;
+						case "10":
+							statu="已完成";
+							break;
+						default:
+							statu = "";
+					}
+					jQuery(gridId).jqGrid('setRowData', cl.proc_inst_id, {status_:statu});
+				}
+			}
+		}).navGrid(gridPagerId,{
+			"add" : false,
+			"cloneToTop" : false,
+			"del" : false,
+			"edit" : false,
+			"position" : "left",
+			"refresh" : false,
+			"search" : false,
+			"view" : false,
+			"toggle" : false
+		}).bindKeys().initCustom();
+		
+	});
+
+	//]]>
+	</script>
+</div>

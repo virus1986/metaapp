@@ -1,0 +1,4 @@
+1 新建数据库
+2 执行src/test/java/tools/ReImportDatabase.java,创建元数据核心表
+3 请执行insert-mysql.sql和view-mysql.sql
+4 修改jdbc.xml到新建的数据库地址，启动工程

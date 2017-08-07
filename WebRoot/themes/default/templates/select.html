@@ -1,0 +1,54 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:800px;">
+	<div class="table-dialog">
+		<div class="ui-dialog-title" th:switch="${action}" th:inline="text">
+			[[#{common.select}]]<span th:text="${metaEntity.displayName}"></span>
+		</div>
+		<div class="ui-dialog-content container-fluid">
+			<meta:grid grid="${grid}" entityName="${entityName}" />
+		</div>
+		<div class="ui-dialog-buttonset" >
+			<button type="button" class="btn btn-primary" th:text="#{common.sure}"></button>
+			<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+		</div>
+	</div>
+
+	<script type="text/javascript" th:inline="javascript">
+//<![CDATA[ 
+$(function(){
+	var gridId=/*[[${grid.id}]]*/;
+	var container=/*[[${viewId}]]*/;
+	var mode=/*[[${mode}]]*/;
+	var $grid=$("#"+gridId);
+	$grid.jqGrid("setGridParam",{
+		beforeSelectRow:function(rowid, e)
+		{
+			if(mode=="single"){
+				$grid.jqGrid("resetSelection");
+			}
+		    return(true);
+		}
+	});
+	$(".btn-primary","#"+container).click(function(){
+		var selectIds=$grid.jqGrid("getGridParam","selarrrow");
+		if (selectIds.length==0){ 											
+			$.messageBox.warning({message:i18n.t("common.selectRow")});
+			return;
+		}
+		var reVal=new Array();
+		$.each(selectIds,function(i,item){
+			var record=$grid.getRowData(item);
+			reVal.push($.extend({
+				id:item,
+				text:$grid.jqGrid("getCell",item,3)
+			},record));
+		});
+		$("#"+container).dialogReturnValue(reVal);
+		$("#"+container).dialogClose();
+	});
+	$(".closeBtn","#"+container).click(function(){
+		$("#"+container).dialogClose();
+	});	
+});           
+//]]> 
+</script>
+</div>

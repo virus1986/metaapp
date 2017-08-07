@@ -1,0 +1,40 @@
+<div class="panel apply-panel" style="min-width: 950px;" th:id="${viewId}">
+	<form class="form-horizontal ajaxpost" data-widget="validator" id="entityForm" method="post" th:action="${requestUrl}" th:object="${entity}">
+		<input type="hidden" meta:field="id" />
+		<div class="table-dialog">
+			<div class="ui-dialog-title" th:switch="${action}">
+				<span th:case="'EDIT'" th:text="#{common.edit}+${metaEntity.displayName}"></span>
+				<span th:case="'CREATE'" th:text="#{common.create}+${metaEntity.displayName}"></span>
+				<span th:case="'VIEW'" th:text="#{common.view}+${metaEntity.displayName}"></span>
+				<span th:case="*" th:text="#{common.notExistAction}+${action}"></span>
+			</div>
+			<div class="row-fluid">
+				<div class="span2 form-left">
+					<div class="dialog-menu" id="left-navbar">
+					</div>
+					<meta:relation view-container=".form-right">
+					</meta:relation>
+				</div>
+				<div class="span10 form-sections form-right" data-spy="scroll" data-target="#left-navbar">
+					<div pd-layout='form_section1'></div>
+				</div>
+			</div>
+		</div>
+		<div class="ui-dialog-buttonset">
+			<button th:if="${action} != 'VIEW'" type="submit" name="save" class="btn btn-primary" th:text="#{common.save}">
+			</button>
+			<button type="button" name="close" class="btn closeBtn" th:text="(${action} != 'VIEW')?#{common.cancel} : #{common.close}">
+			</button>
+		</div>
+	</form>
+	<textarea id="script" style="display:none;">
+	/*<![CDATA[*/
+	$(function(){
+	var viewId=/*[[${viewId}]]*/;
+	var context="#" + viewId;
+	Form.init(context,"#entityForm");
+	Page.init(context,{isInitFormNav:true,isInitRelation:true});
+	});
+	/*]]>*/
+	</textarea>
+</div>

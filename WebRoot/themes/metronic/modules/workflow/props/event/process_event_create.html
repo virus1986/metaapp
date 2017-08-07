@@ -1,0 +1,60 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:600px;min-height:400px;">
+	<form class="form-horizontal" data-widget="validator">
+		<div class="ui-dialog-title hide">
+		流程事件管理
+		</div>
+		<div class="portlet width120">
+			<div class="portlet-body form-bordered">
+				<div class="control-group">
+				   <label class="control-label" for="eName">事件类型：</label>
+				    <div class="controls">
+				    <label class="radio inline">
+				      <input type="radio" name="eName" data-validator="required" value="WORKFLOW_STARTED"/>开始流程
+            		</label>
+            		<label class="radio inline">
+				      <input type="radio" name="eName" data-validator="required" value="WORKFLOW_ENDED"/>结束流程
+            		</label>
+				    </div>
+				</div>
+				<div class="control-group" style="height:280px;" th:include="'/themes/'+${theme}+'/modules/workflow/props/event/event_operations'::eventOperations">
+			    </div>
+		</div>
+		<div class="ui-dialog-buttonset">
+           <button type="button" class="btn purple saveEvent">
+             <span th:text="#{common.save}">
+             </span>
+             <i class="m-icon-swapright m-icon-white">
+             </i>
+           </button>
+           <button type="button" class="btn closeBtn" th:text="(${action} != 'VIEW')?#{common.cancel} : #{common.close}">
+           </button>
+         </div>
+       </div>
+	</form>
+	<script th:inline="javascript">
+	//<![CDATA[ 
+;(function($){
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;
+		var action = /*[[${action}]]*/;
+		var eventConfig=/*[[${eventConfig}]]*/;
+		if(action=="EDIT"){
+			if(!eventConfig){
+				var args=jQuery.dialogAraguments();
+				if(args&&args.eventConfig){
+					eventConfig=args.eventConfig;
+				}
+			}else{
+				eventConfig.businessData=JSON.parse(eventConfig.businessData);
+			}
+		}
+		$(context).uiwidget();
+		reqModule(["module/workflow/process_config_manager"],function(ProcessConfigManager){
+			var _options={context:context,eventConfig:eventConfig,action:action};
+			ProcessConfigManager.createNew(_options);
+		});
+	});
+}(jQuery)); 
+	//]]>
+	</script>
+</div>

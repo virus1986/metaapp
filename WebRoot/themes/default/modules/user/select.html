@@ -1,0 +1,52 @@
+<div class="panel apply-panel" style="padding:0px;width:800px;height:410px" th:id="${viewId}" >
+<div class="ui-dialog-title hide">	
+	<span th:text="#{security.selectUser}"></span>
+</div>
+<div>
+<meta:grid grid="${grid}" entityName="${entityName}"/>
+</div>
+<div class="ui-dialog-buttonset">
+	<button type="button" class="btn btn-primary" th:text="#{common.save}"></button>
+	<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+</div>
+
+
+<script type="text/javascript" th:inline="javascript">
+//<![CDATA[ 
+$(function(){
+	var gridId=/*[[${grid.id}]]*/;
+	var container=/*[[${viewId}]]*/;
+	var mode=/*[[${mode}]]*/;
+	var $grid=$("#"+gridId);
+	$grid.jqGrid("setGridParam",{edit:false,del:false,setup:false,
+		beforeSelectRow:function(rowid, e)
+		{
+			if(mode=="single"){
+				$grid.jqGrid("resetSelection");
+			}
+		    return(true);
+		}
+	});
+	$(".btn-primary","#"+container).click(function(){
+		var selectIds=$grid.jqGrid("getGridParam","selarrrow");
+		if (selectIds.length==0){ 											
+			$.messageBox.warning({message:i18n.t("common.selectRow")});
+			return;
+		}
+		var reVal=new Array();
+		$.each(selectIds,function(i,item){
+			reVal.push({
+				id:item,
+				text:$grid.jqGrid("getCell",item,3)
+			});
+		});
+		$("#"+container).dialogReturnValue(reVal);
+		$("#"+container).dialogClose();
+	});
+	$(".closeBtn","#"+container).click(function(){
+		$("#"+container).dialogClose();
+	});	
+});           
+//]]> 
+</script>
+</div>

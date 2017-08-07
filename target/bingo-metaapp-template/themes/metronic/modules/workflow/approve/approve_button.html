@@ -1,0 +1,58 @@
+<div th:fragment="buttons">
+	<div class="workflow-header-con" id="workflow-header-con-btns">
+		<!-- END BEGIN STYLE CUSTOMIZER --> 
+		<h3 class="page-title">
+			<span th:text="${procItemName}"></span>
+			<small th:if="${type=='draft'}">发起</small>
+			<small th:if="${type=='todo'}">审批</small>
+			<small th:if="${type=='read' or type=='view'}">阅读</small>
+		</h3> 
+		<div class="pull-right form-toolbar">
+			<div class="draft workflow-btns">
+			  	<button th:if="${buttonsAuthority['do-draft']}" class="btn green do-draft" title="提交表单" >
+			  		<i class="icon-signin"></i> <span> 提交</span>
+				</button>
+			  	<button th:if="${buttonsAuthority['do-draft-and-sendtoread']}" class="btn do-draft-and-sendtoread" title="设置抄送人" >
+			  		<i class="icon-user"></i> <span> 设置抄送</span>
+				</button>
+				<button th:if="${buttonsAuthority['save-draft']}" class="btn save-draft" title="保存表单" >
+			  		<i class="icon-hdd"></i> <span> 暂存</span> 
+				</button>
+			</div>
+			<div class="todo workflow-btns">
+				<button th:if="${buttonsAuthority['do-send']}" class="btn green do-send" title="提交表单" >
+			  		<i class="icon-signin"></i> <span> 提交</span>
+				</button>
+				<button th:if="${buttonsAuthority['do-read']}" class="btn green do-read" title="标记为已阅" >
+			  		<i class="icon-signin"></i> <span> 已阅</span>
+				</button>
+				<button th:if="${buttonsAuthority['do-transfer']}" class="btn do-transfer" title="将任务转交其它人处理" >
+			  		<i class="icon-user"></i> <span> 转办</span> 
+				</button>
+				<button th:if="${buttonsAuthority['do-setsendtoread']}" class="btn do-setsendtoread" title="设置抄送人" >
+			  		<i class="icon-user"></i> <span> 设置抄送</span> 
+				</button> 
+				<button th:if="${buttonsAuthority['do-circulate']}" class="btn do-circulate" title="传阅" >
+			  		<i class="icon-bookmark"></i> <span> 传阅</span> 
+				</button> 
+				<button th:if="${buttonsAuthority['do-remind']}" class="btn do-remind" title="催办" >
+			  		<i class="icon-time"></i> <span> 催办</span> 
+				</button>				
+				<button th:if="${buttonsAuthority['do-print']}" class="btn do-print" title="打印" >
+			  		<i class="icon-print"></i> <span> 打印</span> 
+				</button>				
+				<button th:if="${buttonsAuthority['save-receipt']}" class="btn save-receipt" title="单据保存" >
+			  		<i class="icon-hdd"></i> <span> 保存</span> 
+				</button>
+				<button th:if="${buttonsAuthority['valid-finish']}" class="btn valid-finish" title="结束流程" >
+			  		<i class="icon-remove-sign"></i> <span> 结束</span> 
+				</button>
+				<button th:if="${buttonsAuthority['finish']}" class="btn finish" title="作废流程" >
+			  		<i class="icon-remove-sign"></i> <span> 作废</span> 
+				</button>
+			  	<!-- <button class="btn tea-green do-reject" href="javascript://"><i class="icon-arrow-left"></i><span>驳回</span></button> -->
+			</div>
+		</div>
+	</div>
+	
+</div>

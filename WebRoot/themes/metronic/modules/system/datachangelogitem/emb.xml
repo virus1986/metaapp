@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" createUrl="~/entities/DataChangeLogItem/create" dataUrl="~/entities/DataChangeLogItem/query_paged?id=@{Request('id')}" deleteUrl="~/entities/DataChangeLogItem/delete" editUrl="~/entities/DataChangeLogItem/edit" entityName="DataChangeLogItem" height="100%" id="grid_5047b258-88e3-46ed-aedb-ab9dd5abfbd9" multiSelect="true" multiSelectKey="None" shrinkToFit="true" view="list" viewUrl="~/entities/DataChangeLogItem/view" width="100%">
+    <addDialogSettings showType="pop-up"/>
+    <appearanceSettings alternateRowBackground="true" caption="" highlightRowsOnHover="true" rightToLeft="false" rowNumbersColumnWidth="25" scrollBarOffset="18" showFooter="false" showRowNumbers="true" shrinkToFit="true"/>
+    <columns>
+        <column dataField="id" editable="true" fixed="false" frozen="false" groupSummaryType="None" primaryKey="true" resizable="true" searchable="true" textAlign="Left" visible="false" width="150"/>
+        <column dataField="field" editable="true" fixed="false" frozen="false" groupSummaryType="None" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="180"/>
+        <column dataField="before" editable="true" fixed="false" frozen="false" groupSummaryType="None" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="300"/>
+        <column dataField="after" editable="true" fixed="false" frozen="false" groupSummaryType="None" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="300"/>
+    </columns>
+    <toolBarSetting>
+    </toolBarSetting>
+    <editDialogSettings showType="pop-up"/>
+    <filter groupOp="and">
+    	<rules>
+            <rule data="@{Request('id')}" field="logId" op="eq"/>
+        </rules>
+    </filter>
+    <groupSettings collapseGroups="false"/>
+    <orderby/>
+    <quickSearch/>
+    <joinEntities/>
+    <scriptBlock/>
+    <treeGridSettings enabled="false"/>
+    <viewDialogSettings showType="pop-up"/>
+</grid>

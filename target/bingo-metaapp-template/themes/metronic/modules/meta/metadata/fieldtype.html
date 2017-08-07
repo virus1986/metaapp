@@ -1,0 +1,13 @@
+<meta:placeholder th:each="parameterMetadata:${fieldtypeParams}">
+<tr th:if="${parameterMetadata.name=='condition' or parameterMetadata.name=='orderBy'}" th:with="fields=${fields}" th:object="${parameterMetadata}" style="display:none;">
+	<th></th>
+	<td  colspan="3"><input meta:dtfield="" th:attr="data-fieldType=${fieldtype}"/></td>
+</tr>
+<tr th:unless="${parameterMetadata.name=='condition' or parameterMetadata.name=='orderBy'}" th:with="fields=${fields}" th:object="${parameterMetadata}">
+	<th><label th:text="${parameterMetadata.displayName}+':'"></label></th>
+	<td  colspan="3">
+		<input meta:dtfield="" th:attr="data-fieldType=${fieldtype}"/>
+		<i class='icon-info-sign' th:if="${parameterMetadata.summary}"></i> <span th:text="${parameterMetadata.summary}"></span>
+	</td>
+</tr>
+</meta:placeholder>

@@ -1,0 +1,52 @@
+{
+	"extensions": [
+		{
+			"title" : "jBPM BPMN2 (Minimal)",
+			"namespace" : "http://b3mn.org/stencilset/bpmn2.0minimal#",
+			"description":"Minimal subset of JBPM BPMN2",
+			"definition":"bpmn2.0jbpmminimal/bpmn2.0jbpmminimalsubset.json",
+			"extends":"http://b3mn.org/stencilset/bpmn2.0#"
+		},
+		{
+			"title" : "P1 BPMN2 Subset",
+			"namespace" : "http://b3mn.org/stencilset/bpmn2.0p1#",
+			"description":"P1 subset of BPMN2",
+			"definition":"bpmn2.0p1/bpmn2.0p1.json",
+			"extends":"http://b3mn.org/stencilset/bpmn2.0#"
+		}
+	],
+	"perspectives": [
+		/**{
+			"title":"jBPM BPMN2 (Full)",
+			"namespace":"http://b3mn.org/stencilset/bpmn2.0#",
+			"description":"Full jBPMBPMN2 Features",
+			"stencilset":"http://b3mn.org/stencilset/bpmn2.0#",
+			"removeExtensions" : [
+				"http://b3mn.org/stencilset/bpmn2.0minimal#",
+                "http://b3mn.org/stencilset/bpmn2.0p1#"
+			],
+			"addExtensions" : []
+		},
+		{
+			"title":"jBPM BPMN2 (Minimal)",
+			"namespace":"http://b3mn.org/stencilset/bpmn2.0minimal#",
+			"description":"jBPM Minimal BPMN2 Features",
+			"stencilset":"http://b3mn.org/stencilset/bpmn2.0#",
+			"removeExtensions" : [],
+			"addExtensions" : [
+				"http://b3mn.org/stencilset/bpmn2.0minimal#"
+			]
+		},**/
+		{
+			"title":"P1 BPMN2",
+			"namespace":"http://b3mn.org/stencilset/bpmn2.0p1#",
+			"description":"P1 BPMN2 Features",
+			"description_zh_cn":"P1 BPMN2 流程元素",
+			"stencilset":"http://b3mn.org/stencilset/bpmn2.0#",
+			"removeExtensions" : [],
+			"addExtensions" : [
+				"http://b3mn.org/stencilset/bpmn2.0p1#"
+			]
+		}
+	]
+}

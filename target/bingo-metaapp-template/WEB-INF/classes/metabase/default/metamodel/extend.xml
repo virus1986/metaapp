@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entities xmlns="http://schemas.bingosoft.net/metabase/metadata">
+	<!-- <entity-extend entity="FieldMetadata">
+		<add>
+			<field column="display_method" name="displayMethod"  data-type="Integer"/>
+		</add>
+	</entity-extend> -->
+</entities>

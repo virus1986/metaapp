@@ -1,0 +1,100 @@
+<div th:id="${viewId}" class="panel apply-panel"
+	style="min-width: 700px">
+	<form id="viewColAttrsForm" data-widget="validator"
+		class="form-horizontal">
+		<div class="ui-dialog-title hide">
+			<span th:text="#{view.colAttrs.configCaption}"></span>
+		</div>
+
+		<div class="ui-dialog-content container-fluid ">
+			<table class="form-table form-bordered col2-fluid">
+				<tbody>
+					<tr>
+						<th th:text="#{view.colAttrs.align}+':'"></th>
+						<td><select name="textAlign">
+								<option value="Left" th:text="#{view.colAttrs.align.left}+':'"></option>
+								<option value="Right" th:text="#{view.colAttrs.align.right}+':'"></option>
+								<option value="Center"
+									th:text="#{view.colAttrs.align.center}+':'"></option>
+						</select></td>
+
+					</tr>
+					<tr>
+						<th th:text="#{view.colAttrs.colWidth}+':'"></th>
+						<td><input type="text" name="width" data-validator="integer" /></td>
+					</tr>
+					<tr>
+						<th th:text="#{view.colAttrs.hideOrNot}+':'"></th>
+						<td th:inline="text">
+						<label class="radio inline">
+						<input type="radio" name="visible"
+							value="false" />[[#{common.hide}]]&nbsp;
+						</label>
+						<label class="radio inline">
+						<input type="radio"
+							name="visible" value="true" />[[#{common.show}]]
+							</label>
+							</td>
+					</tr>
+					<tr>
+						<th th:text="#{view.colAttrs.resizableOrNot}+':'"></th>
+						<td th:inline="text">
+						<label class="radio inline">
+							<input type="radio" name="resizable"
+							value="true" />[[#{view.colAttrs.resizable}]]&nbsp;
+						</label>
+						<label class="radio inline">
+							<input	type="radio" name="resizable" value="false" />[[#{view.colAttrs.notResizable}]]
+							</label>
+							</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+
+		<div class="ui-dialog-buttonset">
+			<button type="button" class="btn purple saveViewColAttrs">
+				<span th:text="#{common.sure}"></span> <i
+					class="m-icon-swapright m-icon-white"></i>
+			</button>
+			<button type="button" class="btn btn-primary closeBtn"
+				th:text="#{common.cancel}"></button>
+		</div>
+	</form>
+	<script th:inline="javascript">
+//<![CDATA[
+   $(function(){
+   	var context=/*[['#'+${viewId}]]*/;
+   	var args=jQuery.dialogAraguments();
+   	//注意此时传过来的attrs属性都是以_开头的
+   	var attrs=args.attrs||{_textAlign:{}};
+   	function initPage(){
+   		if(attrs){
+   			var textAlign,width,visible,resizable;
+   			textAlign=attrs._textAlign||"Left";
+   			width=attrs._width||100;
+   			visible=attrs._visible;
+   			resizable=attrs._resizable;
+   			
+   			$("select[name=textAlign]").val(textAlign);
+   			$("input[name=width]").val(width);
+   			$("input[name=visible][value="+visible+"]").attr("checked","checked");
+   			$("input[name=resizable][value="+resizable+"]").attr("checked","checked");
+   		}
+   	};
+   	initPage();
+   	$(".saveViewColAttrs",context).click(function(){
+		attrs._textAlign=$("select[name=textAlign]").val();   		
+		attrs._width=$("input[name=width]").val();   		
+		attrs._visible=$("input[name=visible]:checked").val();   		
+		attrs._resizable=$("input[name=resizable]:checked").val();   		
+		$(context).dialogClose(attrs);
+	});
+   	$(".closeBtn",context).click(function(){
+		$(context).dialogClose(null);
+	});
+   });
+//]]>
+</script>
+</div>

@@ -1,0 +1,48 @@
+{ "themes":{
+        "P1":{
+           "Start Events" : "#7ff87f|#188b18|#000000",
+           "Catching Intermediate Events" : "#f5deb3|#a0522d|#000000",
+           "Throwing Intermediate Events" : "#8cabff|#008cec|#000000",
+           "End Events" : "#f88282|#7f0000|#000000",
+           "Gateways" : "#f0e68c|#a67f00|#000000",
+           "Activities" : "#cfe1f1|#546778|#000000",
+           "Tasks" : "#cfe1f1|#546778|#000000",
+           "Subprocesses" : "#cfe1f1|#546778|#000000",
+           "Service Tasks" : "#cfe1f1|#546778|#000000",
+           "Data Objects" : "#C0C0C0|#000000|#000000",
+           "Swimlanes" : "#ffffff|#000000|#000000",
+           "Artifacts" : "#ffffff|#000000|#000000",
+           "Connecting Objects" : "#546778|#546778|#000000"
+        },
+        "jBPM":{
+           "Start Events" : "#9acd32|#000000|#000000",
+           "Catching Intermediate Events" : "#f5deb3|#a0522d|#000000",
+           "Throwing Intermediate Events" : "#8cabff|#008cec|#000000",
+           "End Events" : "#ff6347|#000000|#000000",
+           "Gateways" : "#f0e68c|#a67f00|#000000",
+           "Activities" : "#fafad2|#000000|#000000",
+           "Tasks" : "#fafad2|#000000|#000000",
+           "Subprocesses" : "#fafad2|#000000|#000000",
+           "Service Tasks" : "#fafad2|#000000|#000000",
+           "Data Objects" : "#C0C0C0|#000000|#000000",
+           "Swimlanes" : "#ffffff|#000000|#000000",
+           "Artifacts" : "#ffffff|#000000|#000000",
+           "Connecting Objects" : "#000000|#000000|#000000"
+        },
+        "HighContrast":{
+           "Start Events" : "#d2b29f|#000000|#000000",
+           "Catching Intermediate Events" : "#ffd3a6|#a37e25|#000000",
+           "Throwing Intermediate Events" : "#adbaf2|#000099|#000000",
+           "End Events" : "#ffc4d1|#000000|#000000",
+           "Gateways" : "#ccaea0|#330600|#000000",
+           "Activities" : "#f3df8c|#000000|#000000",
+           "Tasks" : "#f3df8c|#000000|#000000",
+           "Subprocesses" : "#fafad2|#000000|#000000",
+           "Service Tasks" : "#f3df8c|#000000|#000000",
+           "Data Objects" : "#C0C0C0|#000000|#000000",
+           "Swimlanes" : "#ffffff|#000000|#000000",
+           "Artifacts" : "#ffffff|#000000|#000000",
+           "Connecting Objects" : "#000000|#000000|#000000"
+        }
+   }
+}

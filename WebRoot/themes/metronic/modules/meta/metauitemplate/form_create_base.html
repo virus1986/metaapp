@@ -1,0 +1,109 @@
+<div th:id="${viewId}" class="panel apply-panel" style="width:900px;">
+	<form id="createFormForm" class="form-horizontal" data-widget="validator" th:action="${requestUri}">
+	<div class="ui-dialog-title " th:switch="${action}">
+		<span th:case="'edit'" th:text="#{common.edit}+#{metadata.form}"></span>
+		<span th:case="'view'" th:text="#{common.view}+#{metadata.form}"></span>
+		<span th:case="*" th:text="#{common.create}+#{metadata.form}"></span>
+	</div>
+	<div class="ui-dialog-content container-fluid ">
+		<table class="form-table form-bordered col4-fluid">
+			<tbody>
+				<tr>
+					<th><label><meta:display-name field="metauitemplate.displayName"/>:</label></th>
+					<td >
+						<input name="id" type="hidden" th:value="${layout.id}"/>
+						<input name="entityName" type="hidden" th:value="${layout.entityName}"/>
+						<input name="displayName" type="text" th:value="${layout.displayName}" class="input-large" data-validator="required,length[1,50]"/>
+					</td>
+					<th><label><meta:display-name field="metauitemplate.name"/>:</label></th>
+					<td th:switch="${action}">
+						<input th:case="'edit'" type="text" name="name" th:value="${layout.name}" disabled="true" class="input-large"/>
+						<input th:case="'view'" type="text" name="name" th:value="${layout.name}" disabled="true" class="input-large"/>
+						<input th:case="'create'" type="text" name="name" class="input-large" data-validator="required,length[1,36]"/>
+					</td>
+				</tr>
+				<tr>
+					<th><label><meta:display-name field="metauitemplate.type"/>:</label></th>
+					<td colspan="3" >
+					<div>
+						<label class="radio inline">
+							<input id="type_0" name="type"  th:checked="${layout.type!='partial'}" value="main"  type="radio" />
+							<span th:text="#{form.type.main}"></span>
+						</label><label class="radio inline">
+							<input id="type_1" name="type" th:checked="${layout.type=='partial'}" value="partial" type="radio" />
+							<span th:text="#{form.type.partial}"></span>
+						</label>
+					</div>
+					</td>
+				</tr>
+				<tr>
+					<th><label th:text="#{form.style}+':'"></label></th>
+					<td colspan="3" >
+					<div>
+						<label class="radio inline">
+							<input id="converter_0" name="converter" th:checked="${layout.converter!='form_template_tab'}"  value="form_template"  type="radio" />
+							<span th:text="#{form.style.popup}"></span>
+						</label><label class="radio inline">
+							<input id="converter_1" name="converter" th:checked="${layout.converter=='form_template_tab'}" value="form_template_tab" type="radio" />
+							<span th:text="#{form.style.tab}"></span>
+						</label><label class="radio inline">
+							<input id="converter_2" name="converter" th:checked="${layout.converter=='form_template_workflow'}" value="form_template_workflow" type="radio" />
+							<span>流程表单</span>
+						</label>
+					</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<textarea name="configData" class="hide" th:text="${layout.configData}"></textarea>
+						<textarea name="template" class="hide" th:text="${layout.template}"></textarea>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="ui-dialog-buttonset">
+		<button th:if="${action} != 'VIEW'" type="button" name="save"
+			class="btn purple saveEntityForm" ><span th:text="#{common.save}"></span>
+			<i class="m-icon-swapright m-icon-white"></i>
+		</button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+	</form>
+	
+	<script th:inline="javascript">
+	//<![CDATA[
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;		
+		var action = /*[[${action}]]*/;
+		var url     = $("#createFormForm", context).attr("action") ;
+		var args = $.dialogAraguments() ;
+		if( args && args.pageSource == "edit" ){
+			url = url.replace("action=create","action=edit&editMode=1") ;
+		}
+		if(action != "edit"){
+			$("[name='displayName']", context).keyup(function(){
+				$("[name='name']", context).val($(this).toPinyin().replace(/\s*/g,''));
+			});
+		}
+		if(action == "view"){
+			$("input",context).attr("disabled","disabled");
+		}
+		Page.init(context);
+		$(".saveEntityForm", context).click(function(){
+			var valInfo = $.validation.validate("#createFormForm") ;
+			if( valInfo.isError ) {
+				return false;
+			}
+			$(this).attr("disabled","disabled");
+			$(this).addClass("disabled");
+			var data=$("#createFormForm", context).toJson();
+			jQuery.restPost(url,data,function(response){
+				jQuery.dialogReturnValue(response);
+				$(context).dialogClose();
+			});
+		});		
+	});
+	//]]>	
+	</script>
+</div>

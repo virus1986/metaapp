@@ -1,0 +1,55 @@
+<div class="lyrow base-form-layout" style="display: block; position: relative; z-index: 0;">
+	<div class="preview" th:text="#{form.designer.formSection}"></div>
+	<div class="view">
+		<div class="form-section ">
+			<div class="lyrow form-table " style="display: block;">
+				<div class="toolbar">
+					<span class="configuration">
+						<div class="btn-group">
+							<button data-toggle="dropdown"
+								class="btn btn-mini dropdown-toggle" th:inline="text">
+								[[#{common.operation}]]<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a class="addTableRow" href="javascript://" th:text="#{form.designer.addRow}"></a></li>
+								<li><a class="deleteTableRow" href="javascript://" th:text="#{form.designer.delRow}"></a></li>
+							</ul>
+						</div>
+	     								<button type="button" class="btn btn-mini" data-target="#simpleEditorModal" role="button" data-toggle="modal" th:text="#{common.edit}"></button> 
+					</span> 
+					<a href="#close" class="remove label label-important" th:inline="text"><i class="icon-remove icon-white"></i>[[#{common.delete}]]</a> 
+					<span class="drag label" th:inline="text"><i class="icon-move"></i>[[#{common.drag}]]</span>
+				</div>
+				<div class="preview"></div>
+				<div class="view">
+					<table class="form-table col4-fluid">
+						<caption th:text="#{common.baseInfo}"></caption>
+						<thead></thead>
+						<tbody>
+							<tr th:each="rowData:${layoutFields}">
+					            <meta:placeholder th:each="rowCol,state:${rowData}">
+					            <th><label th:if="${rowCol!='blank'}" th:text="${rowCol.displayName}+'：'"></label><label th:if="${rowCol=='blank'}"></label></th>
+								<td  class="column field">
+	                  			<div th:if="${rowCol!='blank'}" class="box box-element field-item" th:attr="data-field=${rowCol.name},data-label=${rowCol.displayName}+'：'" aria-disabled="false" style="display: block;"> 
+		                  			<div class="toolbar">
+			                  			<a href="#close" class="remove label label-important" th:inline="text"><i class="icon-remove icon-white"></i>[[#{common.delete}]]</a> 
+			                  			<span class="drag label" th:inline="text"><i class="icon-move"></i>[[#{common.drag}]]</span>
+			                  			<span class="configuration">
+						          			<button type="button" class="btn btn-mini" data-target="#simpleEditorModal" role="button" data-toggle="modal" th:text="#{common.edit}"></button> 
+						          		</span>
+					          		</div>
+						            <div class="preview" th:text="${rowCol.displayName}"></div>
+						            <div class="view">
+										 <input th:attr="_meta:field=${rowCol.name}" th:placeholder="${rowCol.displayName}"/>
+						            </div>
+					            </div>
+					            </td>
+								</meta:placeholder>
+	                  		</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

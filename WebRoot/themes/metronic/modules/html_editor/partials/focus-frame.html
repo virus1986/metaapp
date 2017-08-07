@@ -1,0 +1,33 @@
+<div class="editFocus i-wrapper i-wrapper-active" ng-style="style">
+	<div class="editFocusStdChrome" >
+		<div class="editFocusFrame editFocusFrameLEFT" ng-style="frameLeftStyle"></div>
+		<div class="editFocusFrame editFocusFrameRIGHT" ng-style="frameRightStyle"></div>
+		<div class="editFocusFrame editFocusFrameTOP" ng-style="frameTopStyle"></div>
+		<div class="editFocusFrame editFocusFrameBOTTOM" ng-style="frameBottomStyle"></div>
+		<div class="editFocusNob" style="display: none; cursor: auto;"></div>
+		<div class="editFocusNob" style="display: none; cursor: auto;"></div>
+		<div class="editFocusNob" style="display: none; cursor: auto;"></div>
+		<div class="editFocusNob" style="display: none; cursor: auto;"></div>
+		<div class="editFocusNob" style="display: none; cursor: auto;"></div>
+		<div class="editFocusNob" style="display: none; cursor: auto;"></div>
+		<div class="editFocusNob" style="display: none; cursor: auto;"></div>
+		<div class="editFocusNob" style="display: none; cursor: auto;"></div>
+	</div>
+	<div class="i-titlebar i-titlebar-active active" ng-style="titlebarStyle" ng-if="titlebar.canSetting || titlebar.canDelete || titlebar.canDrag">
+		<div class="i-titlebar-wrap">
+			<div class="i-titlebar-padding"></div>
+			<a ng-if="titlebar.canSetting" ng-click="setting()" class="i-titlebar-settings i-titlebar-button active"
+				data-tooltip="Settings" style="display: inline;"></a>
+			<a ng-if="titlebar.canDelete" ng-click="del()" class="i-titlebar-delete i-titlebar-button active"
+				data-tooltip="Delete"></a>
+			<a ng-if="titlebar.canDrag"  class="i-titlebar-move i-titlebar-button"
+				data-tooltip="Drag to Move"><span class="icon"></span></a>
+			<div class="i-titlebar-tooltip">
+				<span class="icon"></span>Drag above, below or to the sides of any	module.
+			</div>
+		</div>
+	</div>	
+</div>
+
+
+

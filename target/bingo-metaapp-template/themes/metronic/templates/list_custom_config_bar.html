@@ -1,0 +1,15 @@
+<div class="table-toolbar-config row-fluid"
+	style="display: none;">
+	<div class="table-toolbar-icon span12">
+		<ul class="">
+			<li th:each="btn,itStat:${operations}" 
+				class="table-img-icon table-toolbar-icon-item" 
+				th:attr="data-func=${btn.mainFunc}"
+				th:id="'toolbar_'+${btn.name}">
+				<a href="javascript://" th:title="${btn.toolTip}">
+				<img th:unless="${!#strings.isEmpty(btn.icon) and (not #strings.contains(btn.icon,'.'))}" th:src="${themes.icon(btn.icon)}" />
+				<div th:if="${!#strings.isEmpty(btn.icon) and (not #strings.contains(btn.icon,'.'))}" th:class="${btn.icon}" style="height:20px;width:20px;display:block;"></div>
+				<span th:text="${btn.displayName}"></span></a></li>             
+		</ul>
+	</div>
+</div>

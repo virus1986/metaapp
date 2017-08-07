@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"  
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:cache="http://www.springframework.org/schema/cache"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.1.xsd
+           http://www.springframework.org/schema/cache 
+           http://www.springframework.org/schema/cache/spring-cache-3.1.xsd"
+       default-autowire="byType">
+	
+	<!-- 属性文件读入 -->
+	<bean id="propertyConfigurer"
+		class="bingo.common.core.spring.SpringProperties">
+		<property name="propertiesPersister">
+			<bean class="bingo.common.core.spring.SpringPropertiesPersister"></bean>
+		</property>
+		<property name="locations">
+			<list>
+				<value>classpath*:config/*.xml</value>
+			</list>
+		</property>
+	</bean>
+
+	<context:component-scan base-package="bingo.app">
+		<context:include-filter type="regex" expression=".*Manager" />
+		<context:include-filter type="regex" expression=".*Service" />
+		<context:include-filter type="regex" expression=".*Handler" />
+		<context:exclude-filter type="regex" expression=".*Test.*" />
+	</context:component-scan>
+	
+	<!--囯际化-->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>i18n.metaappBaseMessages</value>
+				<value>i18n.metaappManagerMessages</value>
+			</list>
+		</property>
+	</bean>
+	<!-- web filter -->
+	<bean id="compositeFilter" class="bingo.metaapp.web.filter.ParamsCompositeFilter">
+		<property name="filters">
+			<list>
+				<!-- 解决cookie的iframe及跨域输出 -->
+				<bean class="bingo.web.filter.ResponseHeaderFilter"></bean>
+				<!-- 解决中文编码，转为UTF-8编码 -->
+				<bean class="org.springframework.web.filter.CharacterEncodingFilter">
+					<property name="encoding" value="UTF-8"></property>
+				</bean>
+				<!-- 应用上下文处理器，配置信息 -->
+				<bean class="bingo.common.core.servlets.ApplicationFilter"></bean>
+				<!-- Oauth资源服务器认证处理器 -->
+				<ref bean="oAuth2AuthenticationProcessingFilter"/>
+				<!-- OAuth客户端认证异常处理器，浏览器->本服务器->资源服务器，资源服务器认证失败后，重定向到登录页面处理器 -->
+				<bean class="bingo.oauth.client.filter.OAuth2ClientContextFilter"></bean>
+				<!-- 元数据上下文处理器 -->
+				<bean class="bingo.metabase.web.MbFilter"></bean>				
+				<!-- Kissu安全上下文处理器，处理SSO,Local认证 -->
+				<ref bean="securityFilter"/>
+				<!-- OData请求上下文处理器 
+				<bean class="bingo.metabase.odata.servlet.MbODataFilter"></bean>	
+				-->
+				<!-- 跨站请求伪造防治filter	
+				<bean name="CSRFGuard" class="org.owasp.csrfguard.CsrfGuardFilter"></bean>-->
+			</list>
+		</property>
+		<property name="params">
+			<map>
+				<entry key="P3P">
+					<value>CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"</value>
+				</entry>
+				<entry key="check-upgrade"  value="false"></entry>
+				<entry key="ajaxCallBackUrl"  value="ajaxcallback.jsp"></entry>
+			</map>
+		</property>
+	</bean>
+	<!-- config to make uploader use network disk upload -->
+	<bean id="downloadRender" class="bingo.metaapp.web.upload.EntityDownloadRender"/>
+
+    <!-- <bean name="distributedCacheProvider" scope="singleton" class="bingo.metaapp.cache.EhcacheCacheProviderImpl">
+        <constructor-arg name="configLocation" value="config/ehcache.xml"></constructor-arg>
+    </bean> -->
+</beans>

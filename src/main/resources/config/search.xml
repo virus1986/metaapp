@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<search-config xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <!-- 这里的高级查询配置可以覆盖、追加、删除metaapp-web中的配置 -->
+    
+<!--
+     <conditions>
+    	示例1：更改某个字段类型的某个操作符的输入控件
+        <condition field-type="SingleLineText" operator="eq" input-type="another-input-type"/>
+        
+    	示例2：删除某个字段类型的某个(某些)操作符
+        <condition field-type="SingleLineText" operator="eq" input-type="input-text" is-exclude="true"/>
+        <condition field-type="SingleLineText" operator="eq, ne, gt" input-type="input-text" is-exclude="true"/>
+        
+    	示例3：追加某个字段类型的某个(某些)操作符
+        <condition field-type="SingleLineText" operator="new-operator" input-type="input-text"/>
+        <condition field-type="SingleLineText" operator="new-operator1,new-operator2" input-type="input-text"/>
+    </conditions>
+    <operators>
+    	示例4：更改某个操作符，只需要保持name一致，其他操作符的属性可以任意改
+        <operator display-name="等于" has-input="true" name="eq" sql-param="{0}={value}" sql-pattern="{field}=:{0}"/>
+        
+    	示例5：追加某个操作符，只需要保证name不与系统默认的重复即可
+        <operator display-name="等于" has-input="true" name="new-name-for-new-operatpr" sql-param="{0}={value}" sql-pattern="{field}=:{0}"/>
+    </operators>
+-->
+</search-config>

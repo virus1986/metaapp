@@ -1,0 +1,60 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:750px;">
+	<style>
+	
+	</style>
+		<div class="ui-dialog-title hide">
+			<span>从候选选人</span>
+		</div>
+		<div class="form-horizontal">
+				<table	class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th style="width:80px"><input type="checkbox" data-widget="tablecheck"/></th>
+						<th class="width120">用户</th>
+						<th class="width120">组织</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="user:${userActors}">
+						<td style="width:80px"><input type="checkbox" class="user-actor" th:attr="data-id=${user.id},data-name=${user.name}"/></td>
+						<td class="width120" th:text="${user.name}"></td>
+						<td class="width120" th:text="${user.orgName}"></td>
+					</tr>
+				</tbody>
+				</table>
+		</div>
+		<div class="ui-dialog-buttonset">
+		 	<button type="button" class="btn purple saveUsers">
+             <span th:text="#{common.sure}">
+             </span>
+             <i class="m-icon-swapright m-icon-white">
+             </i>
+           </button>
+           <button type="button" class="btn closeBtn" th:text="#{common.cancel}">
+           </button>
+		</div>
+		
+	<script th:inline="javascript">
+	//<![CDATA[
+   	$(function(){
+   		var context=/*[['#'+${viewId}]]*/;
+   		$(context).uiwidget();
+		$(".closeBtn",context).click(function(){
+			$(context).dialogClose(null);
+		});
+		$(".saveUsers",context).click(function(){
+			var userActors=[];
+			$(".user-actor:checked",context).each(function(i,user){
+				userActors.push({type:"user",id:$(user).data("id"),name:$(user).data("name")});
+			});
+			if(userActors.length===0){
+				$.messageBox.info({message:"未选择任何用户"});
+				return;
+			}
+			$(context).dialogClose(userActors);
+		});
+   	});
+	//]]>
+</script>
+</div>
+

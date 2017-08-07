@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration scan="true" scanPeriod="1 seconds">
+	<!-- 控制台输出日志 -->  
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread]  %logger{100}[line:%L] - %msg%n</pattern>
+		</layout>
+	</appender>
+	
+	<!-- 文件输出日志 (文件大小策略进行文件输出，超过指定大小对文件备份)-->   
+	<appender name="ERRORFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">   
+			<level>ERROR</level>   
+			<OnMismatch>DENY</OnMismatch>
+			<OnMatch>ACCEPT</OnMatch>
+		</filter>
+		<File>../logs/error-bingo-app-template.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>../logs/error-bingo-app-template.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<maxHistory>60</maxHistory> <!-- keep 90 days -->
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{100}[line:%L] - %msg%n</Pattern>
+		</layout>
+	</appender>
+	<appender name="DEBUGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">   
+			<level>DEBUG</level>   
+			<OnMismatch>DENY</OnMismatch>
+			<OnMatch>ACCEPT</OnMatch>
+		</filter>
+		<File>../logs/debug-bingo-app-template.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>../logs/debug-bingo-app-template.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<maxHistory>30</maxHistory> <!-- keep 90 days -->
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{100}[line:%L] - %msg%n</Pattern>
+		</layout>
+	</appender>
+	<appender name="INFOFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">   
+			<level>INFO</level>   
+			<OnMismatch>DENY</OnMismatch>
+			<OnMatch>ACCEPT</OnMatch>
+		</filter>
+		<File>../logs/info-bingo-app-template.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>../logs/info-bingo-app-template.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<maxHistory>30</maxHistory> <!-- keep 90 days -->
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{100}[line:%L] - %msg%n</Pattern>
+		</layout>
+	</appender>
+
+    <!--缓存的日志-->
+    <appender name="CACHE_ERRORFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <OnMismatch>DENY</OnMismatch>
+            <OnMatch>ACCEPT</OnMatch>
+        </filter>
+        <File>../logs/error-ehcache.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>../logs/error-ehcache.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <maxHistory>60</maxHistory> <!-- keep 90 days -->
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{100}[line:%L] - %msg%n</Pattern>
+        </layout>
+    </appender>
+    <appender name="CACHE_DEBUGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <OnMismatch>DENY</OnMismatch>
+            <OnMatch>ACCEPT</OnMatch>
+        </filter>
+        <File>../logs/debug-ehcache.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>../logs/debug-ehcache.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <maxHistory>30</maxHistory> <!-- keep 90 days -->
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{100}[line:%L] - %msg%n</Pattern>
+        </layout>
+    </appender>
+    <appender name="CACHE_INFOFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <OnMismatch>DENY</OnMismatch>
+            <OnMatch>ACCEPT</OnMatch>
+        </filter>
+        <File>../logs/info-ehcache.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>../logs/info-ehcache.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <maxHistory>30</maxHistory> <!-- keep 90 days -->
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{100}[line:%L] - %msg%n</Pattern>
+        </layout>
+    </appender>
+
+	<logger name="bingo" level="DEBUG"/>
+	<logger name="ro.isdc" level="ERROR"/>
+    <!--通过<category></category>的定义可以将各个包中的类日志输出到不同的日志文件中-->
+    <category name="net.sf.ehcache">
+        <priority value="DEBUG"/>
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="CACHE_ERRORFILE" />
+        <appender-ref ref="CACHE_INFOFILE" />
+        <appender-ref ref="CACHE_DEBUGFILE" />
+    </category>
+
+	<root level="DEBUG">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="ERRORFILE" />
+		<appender-ref ref="INFOFILE" />
+		<appender-ref ref="DEBUGFILE" />
+	</root>
+</configuration>

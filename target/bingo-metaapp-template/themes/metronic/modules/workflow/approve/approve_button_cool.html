@@ -1,0 +1,115 @@
+<div th:fragment="buttons">
+	<div class="workflow-header-con" id="workflow-header-con-btns">
+		<div th:unless="${type=='draft'}" class="approve-title" th:if="${smService!=null}" th:with="sid=${smService[id]}">
+			<dl>
+        		<dt>
+					<img th:src="${x.entityPicturePath('EsService','icon',sid)}" th:attr="onerror='this.src=\''+${themes.statics('images/soft.png')}+'\''"/>
+        		</dt>
+                <dd th:with="bdata=${x.decodeToMap(procInst.businessData)}">
+            		<div class="proc-status-desc">
+            			<span>
+            				<span th:text="${procItemName}+':'"></span>
+							<!-- <small th:if="${type=='draft'}">(发起):</small>
+							<small th:if="${type=='todo'}">(审批):</small>
+							<small th:if="${type=='read' or type=='view' or type=='role'}">(阅读):</small> -->
+							&nbsp;&nbsp;
+            			</span>
+            			<span th:if="${type=='role'}">
+	            			<span th:if="${procInst.status==10}" th:text="${procInst.endUserName}+'结束了本次协作'"></span>
+	            			<span th:unless="${procInst.status==10}">
+			            		<span th:if="${null!=bdata[nextCanditatesNames]}" th:text="${task.creatorName}+'提交给'+${bdata[nextCanditatesNames]}+(${bdata[nextIsCountersign]}?'会签':'处理')"></span>
+			            		<span th:unless="${null!=bdata[nextCanditatesNames]}" th:text="${task.creatorName}+'已提交'"></span>
+	            			</span>
+            			</span>
+            			<span th:unless="${type=='role'}">
+            				<span th:if="${task.type==0}" th:text="${task.creatorName}+'拟稿完成'"></span>
+            				<span th:unless="${task.type==0}" th:text="${task.creatorName}+'提交给我处理'"></span>
+            			</span>
+	            		<span class="label label-info" th:if="${procInst.status==10}">已结束</span>
+	            		<span class="label label-info" th:unless="${procInst.status==10}">审批中</span>
+            		</div>
+                    <p class="proc-start-desc" th:text="'发起人：'+${procInst.starterName}+'&nbsp;&nbsp;发起时间：'+${#dates.format(procInst.startTime, 'yyyy-MM-dd HH:mm')}"></p>
+                </dd>
+            </dl>
+		</div>
+		<div class="process" th:if="${type=='draft'}">
+        		<ul>
+                	<li>
+                    		<div class="proText">
+                                <i  class="number">1</i>
+                                <p>选择服务</p>
+                            </div>
+                    </li>
+                    <li class="cur">
+                    		<div class="proText">
+                                <i  class="number">2</i>
+                                <p>填写表单</p>
+                            </div>
+                    </li>
+                    <li class="end">
+                    		<div class="proText">
+                                <i  class="number">3</i>
+                                <p>提交表单</p>
+                            </div>
+                    </li>
+                </ul>
+        </div>
+		<div class="pull-right form-toolbar cool-btns">
+			<div class="draft-cool workflow-btns">
+			  	<button th:if="${buttonsAuthority['do-draft']}" class="btn green do-draft" title="提交表单" >
+			  		<i class="icon-signin"></i> <span> 提交</span>
+				</button>
+				<button th:if="${buttonsAuthority['save-draft']}" class="btn save-draft" title="保存表单" >
+			  		<i class="icon-hdd"></i> <span> 暂存</span> 
+				</button>
+			</div>
+			<div th:if="${wfProc.getFreestyle()}" class="freestyle-todo-cool workflow-btns">
+				<meta:placeholder  th:if="${countersign}">
+					<button  th:if="${buttonsAuthority['do-send']}" class="btn green do-finish-countersign" title="处理" >
+			  			<i class="icon-signin"></i> <span> 处理</span> 
+			  		</button>
+				</meta:placeholder>
+				<meta:placeholder  th:unless="${countersign}">
+				<button  th:if="${buttonsAuthority['do-send']}" class="btn green do-reply" title="回复" >
+			  		<i class="icon-signin"></i> <span> 回复</span>
+				</button>
+				<button  th:if="${buttonsAuthority['do-send']}" class="btn green do-send" title="转发" >
+			  		<i class="icon-signin"></i> <span> 转发</span>
+				</button>
+				<button  th:if="${buttonsAuthority['do-send']}" class="btn do-finish" title="结束流程" >
+			  		<i class="icon-remove-sign"></i> <span> 结束</span> 
+				</button>
+				</meta:placeholder>
+				<button th:if="${buttonsAuthority['do-read']}" class="btn green do-read" title="标记为已阅" >
+			  		<i class="icon-signin"></i> <span> 已阅</span>
+				</button>
+				<button th:if="${buttonsAuthority['valid-finish'] and procInst.status!=10}" class="btn valid-finish" title="结束流程" >
+			  		<i class="icon-remove-sign"></i> <span> 结束</span> 
+				</button>
+				<!-- <button th:if="${buttonsAuthority['do-circulate'] and procInst.status==10}" class="btn do-circulate" title="传阅" >
+			  		<i class="icon-bookmark"></i> <span> 传阅</span> 
+				</button> -->
+			</div>
+			<div th:unless="${wfProc.getFreestyle()}" class="todo-cool workflow-btns">
+				<button th:if="${buttonsAuthority['do-send']}" class="btn green do-send" title="提交表单" >
+			  		<i class="icon-signin"></i> <span> 提交</span>
+				</button>
+				<button th:if="${buttonsAuthority['do-read']}" class="btn green do-read" title="标记为已阅" >
+			  		<i class="icon-signin"></i> <span> 已阅</span>
+				</button>
+			  	<button th:if="${buttonsAuthority['do-reject'] and (not todoDraft) and (!reject)}" class="btn reject" title="退回">
+			  		<i class="icon-arrow-left"></i><span>退回</span>
+			  	</button>
+				<button th:if="${buttonsAuthority['do-transfer'] and (not todoDraft) and type!='role'}" class="btn do-transfer" title="将任务转交其它人处理" >
+			  		<i class="icon-user"></i> <span> 转办</span> 
+				</button>
+				<button th:if="${buttonsAuthority['valid-finish'] and procInst.status!=10}" class="btn valid-finish" title="结束流程" >
+			  		<i class="icon-remove-sign"></i> <span> 结束</span> 
+				</button>
+				<!-- <button th:if="${buttonsAuthority['do-circulate'] and procInst.status==10}" class="btn do-circulate" title="传阅" >
+			  		<i class="icon-bookmark"></i> <span> 传阅</span> 
+				</button> -->
+			</div>
+		</div>
+	</div>
+</div>

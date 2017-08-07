@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:b3mn="http://b3mn.org/2007/b3mn" xmlns:ext="http://b3mn.org/2007/ext" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:atom="http://b3mn.org/2007/atom+xhtml">
+  <head profile="http://purl.org/NET/erdf/profile">
+    <link rel="icon" href="jbpm.gif"></link>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8"></meta>
+    <title>P1流程在线设计器</title>
+    
+    <!-- 默认 -->
+    <wro:link th:if="${ieVersion le 0 or ieVersion ge 9}"  th:href="${contextPath}+'/wro/themes_'+${theme}+'_'+${skin}+'.css'" rel="stylesheet" type="text/css"/>
+    <!-- IE6~8 -->
+    <wro:link th:if="${ieVersion le 9 and ieVersion ge 6}" th:href="${contextPath}+'/wro/themes_'+${theme}+'_'+${skin}+'_ie8.css'" rel="stylesheet" type="text/css"/>
+    <!-- 插件CSS -->
+    <wro:link th:href="${contextPath}+'/wro/plugins_css.css'"  rel="stylesheet" type="text/css"/>
+    <!-- 项目内重写及自定义CSS -->
+    <link rel="stylesheet" th:href="${themes.css('override.css')}"/> 
+   	<wro:link th:href="${contextPath}+'/wro/wfdesigner_base_css.css'"  rel="stylesheet" type="text/css"/>
+   	<script th:src="${contextPath}+'/JavaScriptServlet'" type="text/javascript"></script>
+   	<wro:script th:src="${contextPath}+'/wro/base.js'" type="text/javascript"></wro:script>
+   	<script type="text/javascript" th:inline="javascript">
+    //<![CDATA[ 
+        window.Global=$.extend(true,{
+			contextPath:/*[[${contextPath}]]*/,	
+			themePath:/*[[${themePath}]]*/,	
+			statics:/*[[${statics}]]*/,			
+			iconPath:/*[[${iconPath}]]*/,
+			server:/*[[${server}]]*/,
+			designerRealPath:/*[[${designerRealPath}]]*/,
+			procId:/*[[${wfProc.procId}]]*/,
+			procName:/*[[${wfProc.procName}]]*/,
+			flowId:/*[[${flowId}]]*/,
+			uuid:/*[[${uuid}]]*/,
+		},window.Global);
+        if(!ORYX) var ORYX = {};
+		if(!ORYX.CONFIG) ORYX.CONFIG = {};
+        //ORYX.CONFIG.WEB_URL = Global.contextPath+"/wfdesigner/";//不需要的属性，在file.js引用
+        ORYX.CONFIG.ROOT_PATH = Global.contextPath+"/wfdesigner/";
+      	ORYX.PATH = ORYX.CONFIG.ROOT_PATH;
+      	ORYX.PROPS_PREFIX="oryx-";
+      	ORYX.BASE_FILE_PATH = Global.themePath+"/modules/workflow_designer/";
+      	ORYX.RootUrl = ORYX.CONFIG.ROOT_PATH;
+      	ORYX.BaseUrl = ORYX.CONFIG.ROOT_PATH;
+      	ORYX.CONFIG.convertor_jsonToXml=ORYX.CONFIG.ROOT_PATH+"convert/jsonToXml";
+      	ORYX.CONFIG.convertor_checkErrors=ORYX.CONFIG.ROOT_PATH+"convert/checkErrors";
+      	ORYX.CONFIG.SYNTAXCHECKER_URL =ORYX.CONFIG.ROOT_PATH+"syntaxcheck/";
+		ORYX.CONFIG.SELECT_ACTOR_WEB_URL = Global.contextPath+"/workflow/process/selectPostOrUser?isoutiframe=1&_inframe=1";     
+		ORYX.CONFIG.PROCESS_PROPS_CONFIG_WEB_URL = Global.contextPath+"/processConfig/process/processPropsConfig?isoutiframe=1&_inframe=1&procid="+Global.procId;     
+		ORYX.CONFIG.ACTIVITY_PROPS_CONFIG_WEB_URL = Global.contextPath+"/processConfig/process/activityPropsConfig?isoutiframe=1&_inframe=1&procid="+Global.procId;     
+    
+		ORYX.CONFIG.EVENT_PROCESS_PROPS_CHANGED="eventprocesspropschanged";
+		ORYX.CONFIG.EVENT_PROCESS_ACTIVITY_NAME_CHANGED="eventactivitynamechanged";
+		window.dialog_not_render_top=true;
+		ORYX.VIEW_INIT_PROCESS_JSON="{\"resourceId\":\"editor\",\"properties\":{\"id\":\""+Global.uuid+"\",\"workflow_started\":\"\",\"workflow_ended\":\"\",\"activity_started\":\"\",\"activity_execute\":\"\",\"activity_ended\":\"\",\"task_created\":\"\",\"task_claimed\":\"\",\"task_ended\":\"\",\"before_tasks_created\":\"\",\"processn\":\""+Global.procName+"\",\"documentation\":\"\"},\"stencil\":{\"id\":\"BPMNDiagram\"},\"childShapes\":[{\"resourceId\":\"_D9186EBF-9502-4510-BAAE-C660AB029D43\",\"properties\":{\"id\":\"\",\"name\":\"开始\",\"documentation\":\"\",\"bgcolor\":\"#7ff87f\",\"bordercolor\":\"#188b18\",\"fontcolor\":\"#000000\",\"fontsize\":\"\",\"origbgcolor\":\"#7ff87f\",\"origbordercolor\":\"#188b18\"},\"stencil\":{\"id\":\"StartNoneEvent\"},\"childShapes\":[],\"outgoing\":[{\"resourceId\":\"_6C3DFDFC-ED1D-4DB3-ACFE-462DFD84F5AF\"}],\"bounds\":{\"lowerRight\":{\"x\":327.249,\"y\":79},\"upperLeft\":{\"x\":293.249,\"y\":45}},\"dockers\":[]},{\"resourceId\":\"_6C3DFDFC-ED1D-4DB3-ACFE-462DFD84F5AF\",\"properties\":{\"id\":\"\",\"name\":\"\",\"documentation\":\"\",\"transition_taked\":\"\",\"conditiontype\":\"None\",\"conditionexpression\":\"\",\"userchoice\":\"\",\"userchoicerequired\":\"\",\"isimmediate\":\"\",\"showdiamondmarker\":\"\",\"bgcolor\":\"#546778\",\"origbgcolor\":\"#546778\",\"bordercolor\":\"#546778\",\"origbordercolor\":\"#546778\",\"fontcolor\":\"#000000\",\"fontsize\":\"\"},\"stencil\":{\"id\":\"SequenceFlow\"},\"childShapes\":[],\"outgoing\":[{\"resourceId\":\"_058003C5-A5BE-4DA0-A845-DB28AEAEA56D\"}],\"bounds\":{\"lowerRight\":{\"x\":310.4212960439465,\"y\":123.93039449499499},\"upperLeft\":{\"x\":310.2984695810535,\"y\":79.78143363000501}},\"dockers\":[{\"x\":17,\"y\":17},{\"x\":55.49800000000002,\"y\":27.501000000000005}],\"target\":{\"resourceId\":\"_058003C5-A5BE-4DA0-A845-DB28AEAEA56D\"}},{\"resourceId\":\"_058003C5-A5BE-4DA0-A845-DB28AEAEA56D\",\"properties\":{\"mielementvariable\":\"\",\"postids\":\"\",\"postnames\":\"\",\"isforcompensation\":\"\",\"type\":\"http://b3mn.org/stencilset/bpmn2.0#UserTask\",\"multipleinstance\":\"false\",\"miissequential\":\"\",\"micollection\":\"\",\"quickcandidates\":\"\",\"userchoiceactors\":\"\",\"tasktitle\":\"\",\"taskpriority\":\"\",\"taskexpiretime\":\"\",\"actorproperty\":\"\",\"candidates\":\"\",\"logic\":\"and\",\"actorlist\":\"\",\"userids\":\"\",\"usernames\":\"\",\"actorname\":\"\",\"actorbean\":\"\",\"micompletioncondition\":\"\",\"orgids\":\"\",\"orgnames\":\"\",\"baseactor\":\"\",\"roleids\":\"\",\"rolenames\":\"\",\"incomingactivitynames\":\"\",\"activitynames\":\"\",\"actorscript\":\"\",\"dutyids\":\"\",\"dutynames\":\"\",\"id\":\"\",\"name\":\"拟稿任务\",\"documentation\":\"\",\"bgcolor\":\"#cfe1f1\",\"origbgcolor\":\"#cfe1f1\",\"bordercolor\":\"#546778\",\"origbordercolor\":\"#546778\",\"fontcolor\":\"#000000\",\"fontsize\":\"\",\"activity_started\":\"\",\"activity_execute\":\"\",\"activity_ended\":\"\",\"task_created\":\"\",\"task_claimed\":\"\",\"task_ended\":\"\",\"before_tasks_created\":\"\",\"datainputset\":\"\",\"dataoutputset\":\"\",\"extensionproperties\":\"\"},\"stencil\":{\"id\":\"DraftTask\"},\"childShapes\":[],\"outgoing\":[],\"bounds\":{\"lowerRight\":{\"x\":365.49800000000005,\"y\":178.501},\"upperLeft\":{\"x\":255,\"y\":124}},\"dockers\":[]}],\"bounds\":{\"lowerRight\":{\"x\":1500,\"y\":1000},\"upperLeft\":{\"x\":0,\"y\":0}},\"stencilset\":{\"url\":\"bpmn2.0p1\",\"namespace\":\"http://b3mn.org/stencilset/bpmn2.0#\"},\"ssextensions\":[\"http://b3mn.org/stencilset/bpmn2.0p1#\"]}";
+		
+	//]]> 
+    </script>
+    <wro:script th:src="${contextPath}+'/wro/base_ex.js'" type="text/javascript"></wro:script>
+   	<wro:script th:src="${contextPath}+'/wro/plugins_i18n_'+${#objects.nullSafe(lang,'zh_CN')}+'.js'" type="text/javascript"></wro:script>
+    <script th:src="${themes.js('plugins/i18n.js')}" type="text/javascript"></script>
+    <wro:script th:src="${contextPath}+'/wro/wfdesigner_base.js'" type="text/javascript"></wro:script>
+    <wro:script th:src="${contextPath}+'/wro/wfdesigner_codemirror.js'" type="text/javascript"></wro:script>
+    
+    <!-- erdf schemas -->
+    <link rel="schema.dc" href="http://purl.org/dc/elements/1.1/"></link>
+    <link rel="schema.dcTerms" href="http://purl.org/dc/terms/"></link>
+    <link rel="schema.b3mn" href="http://b3mn.org"></link>
+    <link rel="schema.oryx" href="http://oryx-editor.org/"></link>
+    <link rel="schema.raziel" href="http://raziel.org/"></link>
+   
+    <wro:script th:src="${contextPath}+'/wro/wfdesigner_oryx.js'" type="text/javascript"></wro:script>
+    <wro:script th:src="${contextPath}+'/wro/wfdesigner_oryx_plugins.js'" type="text/javascript"></wro:script>
+    <wro:script th:src="${contextPath}+'/wro/plugins.js?version='+${config['Profile.App.Version']}" type="text/javascript"></wro:script>
+    <wro:script th:src="${contextPath}+'/wro/themes_metronic_common.js?version='+${config['Profile.App.Version']}" type="text/javascript"></wro:script>
+    
+    <script type="text/javascript" th:inline="javascript">
+  //<![CDATA[ 
+      ORYX.VERSION = "";
+      ORYX.LOCALE = "zh_cn";
+      
+      ORYX.CONFIG.SSET = "bpmn2.0p1";
+      ORYX.CONFIG.DEV = true;
+      if (ORYX.CONFIG.DEV) {
+        ORYX_LOGLEVEL = 4;
+      }
+      
+      ORYX.PREPROCESSING = "";
+     
+	      
+      params = window.location.search.toQueryParams();
+
+      if (params['profile'] === undefined) {
+        params['profile'] = 'jbpm';
+      }
+
+      ORYX.UUID = params['uuid'];
+      ORYX.PROFILE = params['profile'];
+        ORYX.ACTIVENODES = [];
+        ORYX.COMPLETEDNODES = [];
+        ORYX.READONLY = false;
+
+      ORYX.LOCAL_HISTORY_ENABLED = false;
+      ORYX.LOCAL_HISTORY_TIMEOUT = 60000;
+      
+      ORYX.PROCESS_SAVED = true;
+      ORYX.AUTOSAVE_ENABLED = false;
+
+      if (ORYX.UUID === undefined) {
+          ORYX.UUID = "_wfdesigner_";
+      }
+
+      ORYX.FlowId = Global.flowId;
+      
+      ORYX.CONFIG.UUID_AUTOSAVE_INTERVAL = 120000;
+	  ORYX.CONFIG.UUID_AUTOSAVE_DEFAULT = true;
+	  
+   	  ORYX._allPlugins=/*[[${allPlugins}]]*/[];	
+   	  ORYX._profilePlugins=/*[[${profilePlugins}]]*/[];
+   	  ORYX.__allPlugins = {};
+      jQuery.each(ORYX._allPlugins,function(i,p){
+    	  ORYX.__allPlugins[p.name] = p;
+      });
+      // install the current plugins
+      ORYX.availablePlugins = [];//
+      jQuery.each(ORYX._profilePlugins,function(i,pluginName){
+        var p = ORYX.__allPlugins[pluginName];
+        if (p) {
+          ORYX.availablePlugins.push(p);
+        } else {
+          ORYX.Log.error("缺少插件：" + pluginName);
+        }
+      });
+     
+      /**
+       * Method to load model or create new one
+       * (moved from editor handler)
+       */
+      window.onOryxResourcesLoaded = function() {
+      	var stencilset = ORYX.Utils.getParamFromUrl('stencilset') || ORYX.CONFIG.SSET;
+      	var editor_parameters = {
+      		id: ORYX.UUID,
+      		stencilset: {
+      			url: stencilset
+      		}
+      	};
+      	// finally open the editor:
+      	var editor = new ORYX.Editor(editor_parameters);
+          ORYX.EDITOR = editor;
+      };
+    //]]> 
+   </script>
+  </head>
+  <body id="jbpmdesigner" style="overflow:hidden;">
+    <div id="prompt"></div>
+    <div class="processdata" style="display:none"></div>
+  </body>
+</html>

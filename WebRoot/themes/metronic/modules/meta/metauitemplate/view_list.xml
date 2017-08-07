@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:xs="http://www.w3.org/2001/XMLSchema" autoWidth="true" 
+		columnReordering="false" 
+		entityName="MetauiTemplate" height="100%" 
+		id="grid_4475dfee-4006-48f4-8808-21b5fd6959fb" 
+		multiSelect="true" multiSelectKey="None" shrinkToFit="true">
+	<columns>
+		<column dataField="id" primaryKey="true" visible="false"/>
+		<column dataField="name" visible="false"/>
+		<column dataField="entityName" visible="false"/>
+		<column dataField="url" visible="false"/>
+		<column dataField="layoutType" visible="false"/>
+		<column dataField="isCustom" visible="false"/>
+		<column dataField="displayName" textAlign="Left" width="100"/>
+		<column dataField="status" textAlign="Left" width="40"/>
+		<column dataField="version" textAlign="Left" width="40"/>
+		<column dataField="lastModifiedBy" width="50"/>
+		<column dataField="lastModified" textAlign="Center" width="50"/>
+	</columns>
+ 	<toolBarSetting>
+        <button buttonIcon="main/button-add.png" cssClass="" isInMoreBtns="false" name="create" onClick="grid.addRecord"/>
+        <button buttonIcon="main/comment-edit.png" cssClass="" isInMoreBtns="false" name="edit" onClick="grid.editRecord"/>
+        <button buttonIcon="main/button-white-remove.png" cssClass="" isInMoreBtns="false" name="delete" onClick="grid.delRecord"/>
+        <button buttonIcon="main/button-load.png" cssClass="" isInMoreBtns="false" name="fresh" onClick="grid.refreshGrid" />
+        <button buttonIcon="main/search-add.png" cssClass="" isInMoreBtns="false" name="search" onClick="grid.advanceSearch"/>
+    </toolBarSetting>
+    <contextButtons>
+  		<button  buttonIcon="mini/icon_tool_022.gif"  cssClass=""   name="edit"  onClick="grid.editRecord" />
+  		<button  buttonIcon="mini/icon_tool_107.gif"  cssClass=""   name="publish"  onClick="system/metauiTemplate.publish"  />
+  		<button  buttonIcon="mini/icon_tool_026.gif"  cssClass=""   name="versions"  onClick="system/metauiTemplate.listVersions" />
+    	<button  buttonIcon="mini/icon_tool_060.gif"  cssClass=""   name="delete"  onClick="grid.delRecord" />
+    	<button  buttonIcon="mini/icon_tool_024.gif"  cssClass=""   name="delVersions"  onClick="system/metauiTemplate.delVersions"/>
+   </contextButtons>
+	<filter groupOp="and">
+		<filters/>
+		<rules/>
+	</filter>
+	<scriptBlock>
+		<![CDATA[
+		
+		]]>
+	</scriptBlock>
+	<orderby/>
+</grid>

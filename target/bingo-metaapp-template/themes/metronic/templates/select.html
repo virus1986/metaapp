@@ -1,0 +1,32 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:900px;">
+	<div class="ui-dialog-title" th:switch="${action}" th:inline="text">
+		[[#{common.select}]]<span th:text="${metaEntity.displayName}"></span>
+	</div>
+	<meta:grid grid="${grid}" entityName="${entityName}" />
+	<div class="selected-rows hide">
+  	</div>
+	<div class="ui-dialog-buttonset" >
+		<button type="button" class="btn purple saveBtn" th:text="#{common.sure}"></button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+	<script type="text/javascript" th:inline="javascript">
+//<![CDATA[ 
+;(function($){
+$(function(){
+	var gridId=/*[[${grid.id}]]*/;
+	var container=/*[[${viewId}]]*/;
+	var context="#"+container;
+	var mode=/*[[${mode}]]*/'single';
+	var $grid=$("#"+gridId);
+	var options={
+			viewId:container,
+			context:context,
+			grid:$grid,
+			mode:mode
+	};
+	Page.initSelectPage(options);
+});           
+}(jQuery)); 
+//]]> 
+</script>
+</div>

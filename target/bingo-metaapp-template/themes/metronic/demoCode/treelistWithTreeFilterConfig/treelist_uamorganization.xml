@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" type="doubleSearch" securityContext="manage" autoWidth="true" columnReordering="false" createUrl="~/user/create" dataUrl="~/entities/user/query_paged" deleteUrl="~/user/delete" editUrl="~/user/edit" entityName="user" height="100%" id="grid_721914d1-ec54-454d-85db-cc9da4cfc65a" multiSelect="true" multiSelectKey="None" shrinkToFit="true" view="treeList_UamOrganization" viewUrl="~/user/view" width="100%">
+    <addDialogSettings showType="pop-up"/>
+    <appearanceSettings alternateRowBackground="true" caption="用户管理" highlightRowsOnHover="true" rightToLeft="false" rowNumbersColumnWidth="25" scrollBarOffset="18" showFooter="false" showRowNumbers="true" shrinkToFit="true"/>
+    <columns>
+        <column dataField="id" editable="true" fixed="false" frozen="false" groupSummaryType="None" primaryKey="true" resizable="true" searchable="true" textAlign="Left" visible="false" width="0"/>
+        <column dataField="name" editable="true" fixed="false" frozen="false" groupSummaryType="None" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="110">
+            <titleFieldFormatter/>
+        </column>
+        <column dataField="orgId" editable="true" fixed="false" frozen="false" groupSummaryType="None" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="150"/>
+        <column dataField="mobile" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Center" visible="true" width="98"/>
+        <column dataField="status" editable="true" fixed="false" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Center" visible="true" width="50">
+	        <templateFormatter>
+				<template>
+				 	<![CDATA[
+				 		{{if status=="1"}}
+				 			<span class="label label-success">启用</span>
+				 		{{else}}
+				 			<span class="label label-warning">禁用</span>
+				 		{{/if}}
+				 	]]>
+			</template>
+			</templateFormatter>
+        </column>        
+        <column dataField="lastUpdatedDate" editable="true" fixed="true" frozen="false" primaryKey="false" resizable="true" searchable="true" textAlign="Left" visible="true" width="140"/>
+    	<column dataField="_operationColumn" text="操作" width="150" fixed="true" textAlign="Center" sortable="false" />
+    </columns>
+    <contextButtons>
+        <button buttonIcon="mini/icon_tool_022.gif" cssClass="" isInMoreBtns="true" name="edit" onClick="grid.editRecord" text="修改" toolTip="修改"/>
+        <button buttonIcon="mini/icon_tool_060.gif" cssClass="" isInMoreBtns="true" name="delete" onClick="grid.delRecord" text="删除" toolTip="删除"/>
+    </contextButtons>
+    <toolBarSetting>
+        <button isInMoreBtns="true" cssClass="" name="create" buttonIcon="main/button-add.png" onClick="grid.addRecord" text="新建" toolTip="新建"/>
+        <button isInMoreBtns="true" cssClass="" name="edit" buttonIcon="main/comment-edit.png" onClick="grid.editRecord" text="修改" toolTip="修改"/>
+        <button isInMoreBtns="true" cssClass="" name="delete" buttonIcon="main/button-white-remove.png" onClick="grid.delRecord" text="删除" toolTip="删除"/>
+        <button isInMoreBtns="true" cssClass="" name="fresh" buttonIcon="main/button-load.png" onClick="grid.refreshGrid" text="刷新" toolTip="刷新"/>
+        <button isInMoreBtns="true" cssClass="" name="search" buttonIcon="main/search-add.png" onClick="grid.advanceSearch" text="筛选" toolTip="筛选"/>
+        <button isInMoreBtns="false" cssClass="" name="privacyConfig" buttonIcon="main/stop2.png" onClick="system/passwordReset.privacyConfig" text="隐私"/>
+         <!--<button isInMoreBtns="false" cssClass="" name="passwordReset" buttonIcon="main/stop2.png" onClick="system/passwordReset.doReset" text="密码重置"/>-->
+        <button isInMoreBtns="false" cssClass="" name="passwordInit" buttonIcon="main/stop2.png" onClick="system/passwordReset.doInit" text="密码初始化"/>
+        <button isInMoreBtns="false" cssClass="" name="deviceUpdate" buttonIcon="main/stop2.png" onClick="system/passwordReset.deviceUpdate" text="推送更新"/>
+        <button isInMoreBtns="false" cssClass="" name="import"/>
+    </toolBarSetting>
+    <editDialogSettings showType="pop-up"/>
+    <filter groupOp="and">
+        <rules>
+            <rule field="isDeleted" op="eq" data="0"/>
+        </rules>
+        <filters/>
+    </filter>
+    <groupSettings collapseGroups="false"/>
+    <orderby>
+    	 <rule direction="Desc" field="lastUpdatedDate"/>
+    </orderby>
+    <quickSearch>
+        <column dataField="name"/>
+        <column dataField="loginId"/>
+    </quickSearch>
+    <joinEntities>
+        <entity name="UamOrganization" joinType="Left"/>
+    </joinEntities>
+    <scriptBlock/>
+    <treeGridSettings enabled="false"/>
+    <treeNavigationSettings onlyOne="true">
+	    <filter groupOp="and">
+	        <filters>
+	        </filters>
+	        <rules>
+	        	 <rule field="isDeleted" op="eq" data="0"/>
+	        </rules>
+	    </filter>
+	    <orderBy field="orderNo" direction="Asc"/>
+    </treeNavigationSettings>
+    <viewDialogSettings showType="pop-up"/>
+</grid>

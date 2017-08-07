@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" height="100%" multiSelect="true" multiSelectKey="None" shrinkToFit="true" 
+editUrl="~/entities/test/edit" 
+deleteUrl="~/entities/test/delete" 
+createUrl="~/entities/test/create" 
+dataUrl="~/entities/test/query_paged_by_datasource" 
+entityName="test" id="grid_007d43a2-5642-4f1b-9b47-f620e5d40969">
+    <columns>
+        <column width="30" primaryKey="true" visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="id"/>
+        <column width="100" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="name"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="100" dataField="WenBen"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="RiQi"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="wfprocinst.status" text="流程状态"/>
+    </columns>
+    <contextButtons>
+    </contextButtons>
+    <toolBarSetting>
+        <button name="fresh"/>
+        <button name="search"/>
+        <button name="export"/>
+    </toolBarSetting>
+    <joinEntities>
+    </joinEntities>
+    <filter groupOp="AND">
+        <filters>
+        </filters>
+        <rules>
+        	<rule data="@{env.User.id}" field="name" op=""/>
+        </rules>
+    </filter>
+    <orderby>
+    	<rule direction="Desc" field="name"/>
+    </orderby>
+    <quickSearch>
+        <column dataField="name"/>
+    </quickSearch>
+    <addDialogSettings/>
+    <editDialogSettings/>
+    <viewDialogSettings/>
+    <sqlGridDatasource sqlId="test.query"/>
+</grid>

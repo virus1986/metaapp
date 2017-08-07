@@ -1,0 +1,269 @@
+<div th:id="${viewId}" class="panel apply-panel">
+	<!-- <form class="form-horizontal" data-widget="validator" id="entityForm" th:action="${requestUrl}"
+				th:object="${entity}">
+				<div class="portlet box tea-green">
+					<div class="portlet-title">
+						<div class="caption">
+							<i class="icon-reorder"></i>基本信息
+						</div>
+					</div>
+					<div class="portlet-body form-bordered">
+						<table class="form-table col4-fluid">
+							<tbody>
+								<tr>
+									<th><label>环节表单:</label></th>
+									<td colspan="3">
+											<input meta:field="id" type="hidden"/>
+											<input meta:field="procId" type="hidden"/>
+											<input meta:field="actName" type="hidden"/>
+											<input meta:field="entityName" type="hidden"/>
+									<span class="inputpro-img input-append">
+											<input meta:field="formUrl" style="width: 400px;" />
+											<a href="javascript://" class="add-on btn select-workflow-form" ><i	class="icon-search"></i></a></span>
+									</td>
+								</tr>
+								<tr>
+									<th><label>不允许跳过:</label></th>
+									<td colspan="3">
+										<input meta:field="canNotSkip" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+	</form> -->
+	<div class="portlet box tea-green ex-attr-con">
+		<div class="portlet-title">
+			<div class="caption">
+				<i class="icon-reorder"></i>高级属性配置
+			</div>
+		</div>
+		<div class="portlet-body form-bordered container-fluid">
+			<table class="form-table form-bordered col4-fluid" th:with="freestyle=(${queryString['freestyle']=='true'})">
+				<tbody>
+				<tr th:if="${!freestyle}">
+                    <th>
+                      <label>默认抄送人:</label>
+                    </th>
+                    <td colspan="3">
+                      <span class="inputpro-img input-append" style="margin-bottom:0px;"> 
+						<input type="text" name="ccCandidatesText" style="width: 400px;"/>
+						<span class="add-on btn select-ccactor" > <i class=" icon-search"></i>
+						</span>
+						<input type="hidden" name="ccCandidates"/>
+					  </span>
+                      <span class="label label-info">设置当前环节默认抄送人，固定流环节有效</span>
+                    </td>
+                </tr>
+				<tr>
+                    <th>
+                      <label>是否用户参与环节:</label>
+                    </th>
+                    <td colspan="3">
+                      <label class="radio inline">
+				      	<input type="radio" name="isNeedUserSelectAct" value="1" th:disabled="${freestyle}"/>是
+            		  </label>
+                      <label class="radio inline">
+				      	<input type="radio" name="isNeedUserSelectAct" value="0" th:disabled="${freestyle}"/>否
+            		  </label>
+                      <span class="label label-info">需要用户选择下一环节，或下一步需要选人时，请勾选此项</span>
+                    </td>
+                </tr>
+				<tr>
+                    <th>
+                      <label>下一环节需要设人:</label>
+                    </th>
+                    <td colspan="3">
+                      <label class="radio inline">
+				      	<input type="radio" name="isNeedUserSelectActor" value="1" th:disabled="${freestyle}"/>是
+            		  </label>
+                      <label class="radio inline">
+				      	<input type="radio" name="isNeedUserSelectActor" value="0" th:disabled="${freestyle}"/>否
+            		  </label>
+                      <span class="label label-info">仅仅需要用户下一步需要选人时，请勾选此项，但不要勾选【是否用户参与环节】</span>
+                    </td>
+                </tr>
+				<tr>
+                    <th>
+                      <label>允许设置参与者:</label>
+                    </th>
+                    <td colspan="3">
+                      <label class="radio inline">
+				      	<input type="radio" name="userchoiceactors" value="1" th:disabled="${freestyle}"/>是
+            		  </label>
+                      <label class="radio inline">
+				      	<input type="radio" name="userchoiceactors" value="0" th:disabled="${freestyle}"/>否
+            		  </label>
+                      <span class="label label-info">当前环节如果需要流程上一步处理人设置参与者或者从候选设置参与者，请勾选此项</span>
+                    </td>
+                </tr>
+				<tr>
+                     <th>
+                       <label>是否会签:</label>
+                     </th>
+                     <td colspan="3">
+                       <label class="radio inline">
+				      	<input type="radio" name="isCountersign" value="1" th:disabled="${freestyle}"/>是
+            		   </label>
+                       <label class="radio inline">
+				      	<input type="radio" name="isCountersign" value="0" th:disabled="${freestyle}"/>否
+            		   </label>
+                       <span class="label label-info">需要用户选择部门会签，请勾选此项</span>
+                     </td>
+                </tr>
+				<tr>
+                     <th>
+                       <label>是否会签内部环节:</label>
+                     </th>
+                     <td colspan="3">
+                       <label class="radio inline">
+				      	<input type="radio" name="isContersignInner" value="1" th:disabled="${freestyle}"/>是
+            		   </label>
+                       <label class="radio inline">
+				      	<input type="radio" name="isContersignInner" value="0" th:disabled="${freestyle}"/>否
+            		   </label>
+                       <span class="label label-info">如果此环节在会签环节内部，请勾选此项</span>
+                     </td>
+                </tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<script th:inline="javascript">
+	//<![CDATA[ 
+	;(function($){
+		$(function(){
+			var context = /*[['#'+${viewId}]]*/;
+			var action = /*[[${action}]]*/;
+			var parentContext=/*[[${queryString['parentcontext']}]]*/;
+			Page.init(context);
+			//$(context).uiwidget();
+			function setFormUrl(res){
+				var entityName=res.entityName;
+				var name=res.name;
+				var url=res.url;
+				if(!url){
+					url="~/entities/"+entityName+"/form?view="+name;
+				}
+				$("[name=formUrl]",context).val(url);
+				$("[name=entityName]",context).val(res.entityName);
+			};
+			$(context).on("click",".select-workflow-form",function(){
+				$.openLink(Global.contextPath+"/entities/metauitemplate/select?view=select_workflow&converter=form_template_workflow&mode=single",{
+	        		showType:'pop-up'},function(resp){
+	        			if(resp&&resp[0]){
+	        				var res=resp[0];
+	        				setFormUrl(res);
+	        			}
+	        		});
+			});
+			var exAttrs=$("[tabId='base-props']","#"+parentContext).data("exAttrs");
+			var cAttrs=$("[tabId='base-props']","#"+parentContext).data("cAttrs");
+			function initAttr(attrName,initAttrs){
+				if(!$.isArray(attrName)){
+					attrName=[attrName];
+				}
+				$.each(attrName,function(i,name){
+					if(initAttrs[name]===true||initAttrs[name]==="true"){
+						$("[name="+name+"][value=1]",context).attr("checked","checked");
+					}else{
+						$("[name="+name+"][value=0]",context).attr("checked","checked");
+					}
+				});
+			};
+			function initAttr1(attrName,initAttrs){
+				if(!$.isArray(attrName)){
+					attrName=[attrName];
+				}
+				$.each(attrName,function(i,name){
+					if(initAttrs[name]){
+						var value=exAttrs[name];
+						$("[name="+name+"]",context).val(value);
+						if(name==='ccCandidates'){
+							var valueObj=JSON.parse(value);
+							$("[name="+name+"Text]",context).val(valueObj.description);
+						}
+					}
+				});
+			};
+			initAttr(["isNeedUserSelectAct","isCountersign","isContersignInner","userchoiceactors","isNeedUserSelectActor"],exAttrs);
+			initAttr(["userchoiceactors"],cAttrs);
+			initAttr1(['ccCandidates'],exAttrs);
+			$("[name=ccCandidatesText]",context).change(function(){
+				var self=$(this);
+				var idInput=$("[name=ccCandidates]",context);
+				var idValue=idInput.val();
+				var value=self.val();
+				if(!idValue){
+					jQuery.messageBox.warn({message:"请选择默认抄送人"});
+					return false;
+				}
+				var idInputValues=JSON.parse(idValue);
+				if(value){
+					idInputValues.description=value;
+					idInput.val(JSON.stringify(idInputValues));
+				}
+				return false;
+			});
+			$(".select-ccactor",context).click(function(){
+				var selectUserUrl=Global.contextPath+"/workflow/process/selectPostOrUser?hidename=dynamic,duty,post,dept";
+				var textInput=$("[name=ccCandidatesText]",context);
+				var idInput=$("[name=ccCandidates]",context);
+				$.openLink(selectUserUrl,function(users){
+					if(users){
+						var cActors=[],u=null,name=null,desc=[];
+						if(jQuery.isArray(users)){
+							for(var i=0;i<users.length;++i){
+								u=users[i];
+								name=u.description__;
+								desc.push(name);
+								if(u.actorType__==="user"){
+									cActors.push({id:u.id,name:name,type:"user"});
+								}else if(u.actorType__==="userrole"){
+									cActors.push({id:u.orgId+"."+u.roleId,name:name,type:"role"});
+								}
+							}
+						}else if(users.actorType__==="MultipleActor"){
+							var actorList=JSON.parse(users.actorList);
+							jQuery.each(actorList.candidates,function(i,a){
+								name=a.description;
+								desc.push(name);
+								if(a.bean==='userActorResolver'){
+									var userIds=a.userIds.split(",");
+									var userNames=a.userNames.split(",");
+									for(var i=0;i<userIds.length;++i){
+										cActors.push({id:userIds[i],name:name,type:"user"});
+									}
+								}else if(a.bean==='roleActorResolver'){
+									var orgIds=a.baseActor.orgIds.split(",");
+									var orgNames=a.baseActor.orgNames.split(",");
+									var roleIds=a.roleIds.split(",");
+									var roleNames=a.roleNames.split(",");
+									for(var i=0;i<orgIds.length;++i){
+										cActors.push({id:orgIds[i]+"."+roleIds[i],name:name,type:"role"});
+									}
+								}
+							});
+						}else{
+							return false;
+						}
+						var _desc=desc.join(",");
+						textInput.val(_desc);
+						var idInputValues={description:_desc,candidates:cActors};
+						idInput.val(JSON.stringify(idInputValues));
+					}
+				});
+			});
+		});
+	}(jQuery));   
+	//]]>
+	</script>
+</div>
+
+
+
+
+
+
+

@@ -1,0 +1,118 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width: 950px;min-height:500px;">
+	<div class="ui-dialog-title hide">
+		<span>流程属性设置</span>
+	</div>
+	
+	 <div class="tabbable tabbable-custom" id="multi-kind-select-tab" style="overflow: auto;">
+            <ul class="nav nav-tabs order-tab" style="margin-bottom: 10px;" th:with="hidename=${queryString['hidename']==null?'':queryString['hidename']}">
+              <li><a th:href="@{/entities/wfProc/form(id=${queryString['procid']},isoutiframe=${queryString['isoutiframe']})}" tabId="base-props">基本属性</a></li>
+              <li><a th:href="@{/processConfig/event/processEventsConfig(procId=${queryString['procid']},isoutiframe=${queryString['isoutiframe']})}" tabId="events">事件</a></li>
+              <li><a th:href="@{/entities/wfCommonOpinion/list(procId=${queryString['procid']},isoutiframe=${queryString['isoutiframe']})}" tabId="common-opinion">常用意见</a></li>
+              <li><a th:href="@{/entities/WfBusinessVarsConfig/list(procId=${queryString['procid']},isoutiframe=${queryString['isoutiframe']})}" tabId="proc-vars">流程变量</a></li>
+            </ul>
+	  </div>
+	<div class="ui-dialog-buttonset">
+		<button type="button" class="btn purple saveProps">
+             <span th:text="#{common.save}">
+             </span>
+             <i class="m-icon-swapright m-icon-white">
+             </i>
+           </button>
+           <button type="button" class="btn closeBtn" th:text="#{common.cancel}">
+           </button>
+	</div>
+<script type="text/javascript" th:inline="javascript">
+//<![CDATA[ 
+;(function($){
+  $(function(){
+	var context=/*[['#'+${viewId}]]*/;
+	var procId=/*[[${procId}]]*/;
+	var isOutIframe=/*[[${queryString['isoutiframe']}]]*/;
+	if(isOutIframe=='1'){
+		$(context).css({"height":"100%"})
+		$("#multi-kind-select-tab",context).css({"height":"100%"});
+	}
+	var dialogButtonPane=$(context).closest(".ui-dialog").find(".ui-dialog-buttonpane");
+	var tabButtons={};
+	$("#multi-kind-select-tab",context).tabs({
+		carousel : false,
+		cache:true,
+		ajaxOptions:{
+			cache:false
+		},
+		show:function(event,ui){
+			/* var key=context+$(ui.panel).attr("id");
+			$.each(tabButtons,function(index,item){
+				item.hide();
+			});
+			if(!tabButtons[key]){
+				if($(ui.panel).find(".ui-dialog-buttonset").children().length>0){
+					tabButtons[key]=$(ui.panel).find(".ui-dialog-buttonset");
+					dialogButtonPane.append(tabButtons[key]);
+				}
+			}
+			if(tabButtons[key]){
+				tabButtons[key].show();
+			} */
+		},
+		load:function(event,ui){
+			/* var key=context+$(ui.panel).attr("id");
+			$.each(tabButtons,function(index,item){
+				item.hide();
+			});
+			if(!tabButtons[key]){
+				tabButtons[key]=$(ui.panel).find(".ui-dialog-buttonset");
+				dialogButtonPane.append(tabButtons[key]);
+			}
+			tabButtons[key].show(); */
+		}
+	});
+	setTimeout(function(){
+		$(context).dialogResize();
+	},200);
+  
+  function saveProps(){
+		var baseForm=$("#base-props",context).find("form");
+		var wfProc=null;
+		$.formPost(baseForm.attr("action"),baseForm.toJson(),function(res){
+			wfProc=res;
+		},{async:false});
+		if(!wfProc){
+			return;
+		}
+		var eventsConfigTbody= $("#events",context).find(".events-table tbody");
+		var eventsConfigTrs= eventsConfigTbody.find("tr");
+		if(eventsConfigTbody.length){
+			var eventsConfig=[];
+			eventsConfigTrs.each(function(i,ec){
+				var id= $(ec).find("[name=id]").val();
+				var eventType= $(ec).find("[name=eventType]").val();
+				var eventOperation= $(ec).find("[name=eventOperation]").val();
+				var businessData= $(ec).data("businessData");
+				businessData=JSON.stringify(businessData);
+				eventsConfig.push({id:id,procId:procId,eventType:eventType,eventOperation:eventOperation,businessData:businessData});
+			});
+			var url=Global.contextPath+"/processConfig/event/processEventSave?procId="+procId;
+			$.restPost(url,eventsConfig,function(res){},{async:false});
+		}
+		var relVal={procName:wfProc.procName};
+		if(relVal){
+			return relVal;
+		}else{
+			return false;
+		}
+	};
+	$(".closeBtn",context).click(function(){
+		$(context).dialogClose(null);
+	});
+	$(".saveProps",context).click(function(){
+		var result=saveProps();
+		$(context).dialogClose(result);
+	});
+  }); 
+}(jQuery)); 
+  
+//]]> 
+</script>
+
+</div>

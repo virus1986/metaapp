@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <!-- 返回用户登录所用的信息：目前只需登录密码，如果有用户状态，请过滤掉非启用状态的用户 -->
+    <entry key="security.getUserLoginInfo">
+    <![CDATA[
+        select password from uam_USER where Login_Id = #loginId#
+    ]]>
+    </entry>
+    
+    <!-- 返回已登录用户所有信息，
+         必须字段：Id,Name
+         可选字段：Password,Email,MobilePhone,Sex,Age,Birthday 
+         其他字段：除上面字段外返回的额外也可以通过安全上下文的用户对象获取
+    -->
+    <entry key="security.getUserByLoginId">
+    <![CDATA[
+        select * from uam_USER where Login_Id = #loginId#
+    ]]>
+    </entry>
+
+    <!-- 返回用户所拥有的所有角色，参数：UserId，返回字段：Id,Name 
+    <entry key="security.getAllUserRoles">
+    <![CDATA[
+        SELECT ur.Role_ID AS Id, sr.Name
+        FROM   SEC_USER_Role ur 
+        INNER JOIN SEC_Role sr ON ur.Role_ID = sr.Id
+        WHERE  (ur.User_ID = #userId#)
+    ]]>
+    </entry>-->
+    <!-- 返回用户所拥有的所有角色，参数：UserId，返回字段：Id,Name -->
+    <entry key="security.getAllUserRoles">
+    <![CDATA[
+        SELECT ur.Role_ID AS Id, sr.Name
+        FROM   SEC_USER_Role ur 
+        INNER JOIN SEC_Role sr ON ur.Role_ID = sr.Id
+        WHERE  (ur.User_ID = #userId#)
+    ]]>
+    </entry>
+    
+    <!-- 返回所有动态角色 -->
+    <entry key="security.getAllRoles">
+    <![CDATA[
+        SELECT sr.ID AS Id, sr.Name,sr.Condition_Expr 
+        FROM SEC_Role  sr
+        WHERE Condition_Expr IS NOT NULL
+    ]]>
+    </entry>
+    
+	<!-- 返回所有Permission -->
+    <entry key="security.getAllPermissions">
+    <![CDATA[
+        SELECT code as Operation,name ,parent,url,Element_Id,IS_REFERENCE,REFERENCE,CREATED_BY as owner 
+        FROM SEC_Permission sp 
+    ]]>
+    </entry>
+
+    <!-- 返回用户所拥有的所有操作权限，参数：userId，userRoles:用户所有角色的字符串，多个以逗号隔开
+         返回字段：Operation,Name,Url,Rule,Priority,ElementId,Behaviour
+    
+    <entry key="security.getAllUserPermissions">
+    <![CDATA[
+        SELECT sp.code as Operation,sp.Name,sp.Url,pr.Rule,pr.Behaviour,pr.Priority,sp.Element_Id
+        FROM SEC_Role_Permission rp 
+                INNER JOIN SEC_Permission      sp ON rp.operation_id = sp.id 
+                LEFT  JOIN SEC_Permission_Rule pr ON rp.Rule_Id      = pr.id
+        WHERE rp.Role_ID in ($userRoles$)
+        order by pr.Priority asc
+    ]]>
+    </entry>-->
+    <!-- OVERRIDE SQL： 返回用户所拥有的所有操作权限，参数：userId，userRoles:用户所有角色的字符串，多个以逗号隔开
+         返回字段：Operation,Name,Url,Rule,Priority,ElementId,Behaviour
+    -->
+    <entry key="security.getAllUserPermissions">
+   <![CDATA[
+        SELECT sp.code as Operation,sp.Name,sp.Url,pr.Rule,pr.Behaviour,pr.Priority,sp.Element_Id,sp.IS_REFERENCE,sp.REFERENCE,sp.CREATED_BY as owner
+        FROM SEC_Role_Permission rp 
+                INNER JOIN SEC_Permission      sp ON rp.operation_id = sp.id 
+                LEFT  JOIN SEC_Permission_Rule pr ON rp.Rule_Id      = pr.id
+        WHERE rp.Role_ID in ($userRoles$)
+        order by pr.Priority asc
+    ]]>
+    </entry>
+
+    <!-- 返回系统注册的所有受控Url访问权限(Url必须以'/'开头），参数：无，
+         返回字段：Operation,Name,Url
+    -->
+    <entry key="security.getAllUrlPermissions">
+    <![CDATA[
+        SELECT Code as Operation,Name,Url
+        FROM SEC_Permission
+        WHERE Url LIKE '/%'
+    ]]>
+    </entry>
+</properties>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div class="panel apply-panel" style="min-width:450px;" th:id="${viewId}">
+  <form class="form-horizontal ajaxpost" data-widget="validator" id="entityForm" method="post" th:action="${requestUrl}"  >
+    <div class="table-dialog" style="min-height:250px">
+      <div class="ui-dialog-title" >删除设置</div>
+      <div class="ui-dialog-content container-fluid">
+        <div class="row-fluid">
+        	<div class="alert alert-info" style="margin: 10px">
+					<a class="close" data-dismiss="alert"> </a>
+					<p class="alert-heading" style="margin-bottom: 10px">
+					当前记录被
+					<span th:text="${entityNames}"></span>
+					表中的记录引用，请选择记录删除后，引用记录中对应字段值的处理方式：
+					</p>
+			</div>	
+			<div  style="margin: 10px">	
+           <table class="form-table form-bordered col2-fluid">
+           		<tr>
+                  <td>
+                  	<label class="radio inline"  style=" width: 60px; ">
+						<input type="radio"	id="actionType0" name="actionType"	value="0" />
+						同时删除表(<span th:text="${entityNames}"></span>)内相关记录
+					</label>
+                  </td>
+                </tr>   
+           		<tr>
+                  <td>
+                  	<label class="radio inline"  style=" width: 60px; ">
+						<input type="radio"	id="actionType1" name="actionType" checked="checked"	value="1" />
+						<span> 引用字体设置为空</span>
+					</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+	                 <label class="radio inline" for="actionType2"  style=" width: 60px; ">
+						<input type="radio"	id="actionType2" name="actionType" value="2" />
+						设置为:
+						<span>
+							<input type="text" data-widget="inputimg"  
+							 th:attr="data-selecturl=${contextPath+'/entities/'+metaEntity.name+'/select?mode=single'},data-entity=${metaEntity.name}" 
+							 data-options="{type:'class',src:'icon-search',title:'查询',event:{click:SelectForm.openSelectForm}}" 
+							 id="to_text" name="to_text" value="" />							
+							<input type="hidden" id="to" name="to" value="" />
+						</span>
+					</label>
+                  </td>
+                </tr>
+              </table>
+              </div>	
+        </div>
+      </div>     
+      <div class="ui-dialog-buttonset">
+        <button class="btn closeBtn" name="close" type="button" th:text="#{common.cancel}">
+		</button>
+		<button class="btn blue" id="btn" name="btn" type="button" >
+        	<span>确定</span>
+			<i class="m-icon-swapright m-icon-white"></i>
+		</button>
+      </div>
+    </div>
+  </form>
+  <script th:inline="javascript" type="text/javascript">
+//<![CDATA[ 
+    $(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var context = "#" + viewId;
+		var entityName=/*[[${metaEntity.name}]]*/;
+		var fromId=/*[[${id}]]*/;
+		var container = $('#' + viewId);
+		
+	
+		Page.init(container);
+		
+		$("#btn",context).click(function(){
+			var actionType=$("input[name='actionType']:checked").val();
+			var reVal={
+					actionType:actionType
+				};
+			if(actionType=="2"){
+				var to=$("#to",context).val();
+				if(to==""){
+					$.messageBox.error({message:"请设置迁移到哪个记录上!"});
+					return;
+				}
+				if(to==fromId){
+					$.messageBox.error({message:"待删除记录与被迁移的记录相同，请选择其它记录"});
+					return;
+				}
+				reVal.to=to;
+			}
+			$(context).dialogClose(reVal);
+			return;
+		});
+    });
+//]]>
+</script>
+</div>

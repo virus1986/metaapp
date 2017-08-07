@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" height="400" multiSelect="true" multiSelectKey="None" shrinkToFit="true"
+viewFunc="system/workflow.design"
+editUrl="~/entities/WfProc/edit?view=create" deleteUrl="~/entities/WfProc/delete" createUrl="~/entities/WfProc/create?view=create" dataUrl="~/entities/WfProc/query_paged" entityName="WfProc" id="grid_aa3d03db-b6d0-4e38-821b-55c5ed75105e">
+    <appearanceSettings caption="流程管理"/>
+    <columns>
+        <column width="30" primaryKey="true" visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="procId"/>
+        <column width="0" visible="false" dataField="entityName"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="90" dataField="procName"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Center" width="18" dataField="procDefId" text="流程定义">
+        <templateFormatter>
+		<template>
+	 	<![CDATA[
+	 		{{if procDefId}}<span class="badge green">&nbsp;</span>{{else}}<span class="badge red" title="请设计流程或关联已有流程定义">!</span>{{/if}}
+	 	]]>
+		</template>
+		</templateFormatter>
+        </column>
+        <column visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="procDefKey"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="procCatagoryId"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="60" dataField="standardConsuming"/>
+    </columns>
+    <customSettings>
+    	<entry>
+			<key>deleteConfirm</key>
+			<value><![CDATA[流程可能已经被服务引用，删除后会导致服务出错，请确认是否删除!]]></value>
+		</entry>
+    </customSettings>
+    <contextButtons>
+    	<button name="design"/>
+    	<button name="editForm"/>
+    	<button name="edit" text="属性"/>
+    	<button name="updateFormVersion"/>
+    	<button name="backup"/>
+    </contextButtons>
+    <toolBarSetting>
+        <button name="createFromTemplate"/>
+        <button name="design"/>
+    	<button name="editForm"/>
+    	<button name="edit" text="属性"/>
+    	<button name="updateFormVersion"/>
+        <button name="fresh"/>
+        <button name="delete"/>
+    </toolBarSetting>
+    <joinEntities>
+    </joinEntities>
+    <filter groupOp="AND">
+        <filters/>
+        <rules>
+            <rule data="1" field="WfProc.isLast" op="eq"/>
+        </rules>
+    </filter>
+    <orderby>
+    	<rule direction="Desc" field="createdTime"/>
+    </orderby>
+    <quickSearch searchColNum="3">
+   		<column dataField="procName"/>
+   		<column dataField="procDefKey"/>
+   		<column dataField="procDefId"/>
+    </quickSearch>
+    <addDialogSettings showType="pop-up"/>
+    <editDialogSettings showType="pop-up"/>
+    <viewDialogSettings showType="pop-up"/>
+</grid>

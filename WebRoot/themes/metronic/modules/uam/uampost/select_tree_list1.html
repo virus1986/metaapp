@@ -1,0 +1,87 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-height:400px;">
+<div class="ui-dialog-title hide">	
+	<span th:text="'选择岗位'"></span>
+</div>	
+<div>
+	<div class="row-fluid select-tree-list-con">
+	  <div class="span3" id="nav-tree-list" th:title="${relationEntityDisplayName+#messages.msg('common.tree')}" style="min-height:200px;height:100%;">
+	  	  <div class="list-tree"></div>
+	  </div>
+	  <div class="span9">
+	      <div class="container-fluid" th:attr="data-url=${requestUrl}" style="padding:0px;"  th:title="${sourceEntityDisplayName+#messages.msg('common.list')}">
+			<meta:grid id="'grid_'+${entityName}+'_'+${view}+'_'+${viewId}" entityName="${entityName}" view="'select_'+${treeListView}" />
+		  	<div class="selected-rows">
+		  	</div>
+		  </div>
+	  </div>
+	</div>
+	<!-- <div class="ui-dialog-buttonset">
+	<button type="button" class="btn saveBtn purple" th:text="#{common.save}"></button>
+	<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div> -->
+   <script type="text/javascript" th:inline="javascript">
+	//<![CDATA[ 
+;(function($){
+		$(function(){
+			var viewId = /*[[${viewId}]]*/;
+			var relationEntity = /*[[${relationEntity}]]*/;
+			var relationFieldName = /*[[${relationFieldName}]]*/;
+			var entityName = /*[[${entityName}]]*/;
+			var view = /*[[${view}]]*/;
+			var treeLabelField = /*[[${treeLabelField}]]*/;
+			//var _ref_entity = /*[[${_ref_entity}]]*/;
+			var relationEntityDisplayName = /*[[${relationEntityDisplayName}]]*/ ;
+			var sourceEntityDisplayName = /*[[${sourceEntityDisplayName}]]*/ ;
+			var treeUrl = /*[[@{/treemodels/entity/}]]*/;
+			var rootUrl = Global.contextPath;
+			var mode=/*[[${queryString['mode']}]]*/;
+			
+			var context = $("#"+viewId) ;
+			var gridId = 'grid_'+entityName+'_'+view+'_'+viewId ;
+			var $grid=$("#"+gridId);
+			
+			var recursiveQuery = /*[[@{'/entities/'+${relationEntity}+'/recursiveQuery/'}]]*/;
+			var treeLoadUrl=treeUrl+relationEntity+"/"+treeLabelField;
+			treeLoadUrl=Urls.appendParam(treeLoadUrl,"parent","parentId");
+			recursiveQuery=recursiveQuery+"?entityName="+relationEntity + "&relation=FK_Reference_12&onlyOne=true";
+			var options={viewId:viewId,grid:$grid,context:context,recursiveQuery:recursiveQuery,
+					treeLoadUrl:treeLoadUrl,
+					relationEntityDisplayName:relationEntityDisplayName,
+					sourceEntityDisplayName:sourceEntityDisplayName,
+					relationFieldName:relationFieldName,
+					select:true,mode:mode,selectedRow:{}};
+			Page.initTreelistPage(options);
+			
+			function getActor(){
+				if ($.isEmptyObject(options.selectedRow)){ 											
+					//$.messageBox.warning({message:i18n.t("common.selectRow")});
+					return false;
+				}
+				var reVal=new Array();
+				$.each(options.selectedRow,function(key,row){
+					var refRow=row.refRow;;
+					var description="";
+					description+=refRow.orgId+"的"+refRow.dutyId;
+					reVal.push($.extend({
+						actorType__:"post",
+						description__:description
+					},row));
+				});
+				return reVal;
+			};
+			$(context).closest("#actor-select-post").data("getActor",getActor);
+			$(".saveBtn",context).click(function(){
+				var reVal=getActor();
+				if(!reVal){
+					return false;
+				}
+				$(context).dialogClose(reVal);
+			});
+		});
+}(jQuery)); 
+
+		
+	//]]> 
+	</script>
+</div>
+</div>

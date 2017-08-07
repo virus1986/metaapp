@@ -1,0 +1,36 @@
+<div th:id="${viewId}" class="panel apply-panel">
+	<style type="text/css">
+		.approve-operations .radio input[type="radio"], .checkbox input[type="checkbox"] {
+			margin-left:0px;
+		}
+	</style>
+	<div class="portlet box slave tea-green">
+					<div class="portlet-title">
+						<div class="caption">
+							<i class="icon-reorder"></i>通过勾选启用和禁用某些操作
+						</div>
+						<div class="actions">
+							<!-- <a href="#" class="btn addRow green"><i class="icon-plus"></i> 添加</a> -->
+						</div>
+					</div>
+					<div class="portlet-body approve-operations">
+						<label class="checkbox"><input type="checkbox" th:checked="${not #strings.contains(notApproveFors,'submit')}" name="approveFor" value="submit"/>提交</label>
+		            	<label class="checkbox"><input type="checkbox" th:checked="${not #strings.contains(notApproveFors,'read')}" name="approveFor" value="read"/>已阅</label>
+						<label class="checkbox"><input type="checkbox" th:checked="${not #strings.contains(notApproveFors,'transfer')}" name="approveFor" value="transfer"/>转办</label>
+						<label class="checkbox"><input type="checkbox" th:checked="${not #strings.contains(notApproveFors,'circulate')}" name="approveFor" value="circulate"/>传阅</label>
+						<label class="checkbox"><input type="checkbox" th:checked="${not #strings.contains(notApproveFors,'remind')}" name="approveFor" value="remind"/>催办</label>
+						<label class="checkbox"><input type="checkbox" th:checked="${not #strings.contains(notApproveFors,'print')}" name="approveFor" value="print"/>打印</label>
+						<label class="checkbox"><input type="checkbox" th:checked="${not #strings.contains(notApproveFors,'finish')}" name="approveFor" value="finish"/>结束</label>
+						<label class="checkbox"><input type="checkbox" th:checked="${not #strings.contains(notApproveFors,'forceEnd')}" name="approveFor" value="forceEnd"/>作废</label>
+					</div>
+	</div>
+	<script th:inline="javascript">
+	//<![CDATA[ 
+;(function($){
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;
+	});
+}(jQuery)); 
+	//]]>
+	</script>
+</div>

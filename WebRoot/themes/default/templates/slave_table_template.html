@@ -1,0 +1,50 @@
+<table class="table table-bordered table-striped  table-condensed slave-table" data-widget="ui-slave-table"
+ th:attr="data-gen-row='add-row-template'+${slaveEntityName}">
+	<caption>
+		<div class="pull-right">
+			<button type="button" class="addRow btn btn-warning">
+				<i class="icon-white icon-plus-sign"></i><span th:text="${slaveOptions['addTitle']}"></span>
+			</button>
+		</div>
+	</caption>
+	<thead>
+		<tr>
+			<th style="display:none">
+			<input type="hidden" name="_slave_entity_name_" th:value='${slaveEntityName}'/>
+			</th>
+			<th th:each="col,colStat:${slaveTable['cols']}" th:text="${col.headerText}">
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="item,status:${entity['_slaves'][__${slaveEntityName}__]}" th:with="model=${item},prefix='_slaves[\''+${slaveEntityName}+'\']['+${status.index}+']'">
+			<td style="display:none">
+				<input th:each="hiddenCol,hiddenColStat:${slaveTable['hiddenCols']}" th:name="${prefix}+'[\''+${hiddenCol.dataField}+'\']'" th:value="${item[hiddenCol.dataField]}" type="hidden" />
+				<input th:name="${prefix}+'[\''+${slaveRefField}+'\']'" th:value="${slaveRefValue}" type="hidden" />
+			</td>
+			<td th:each="col,colStat:${slaveTable['cols']}" th:with="fieldName=${col.dataField}">
+				<input th:name="${prefix}+'[\''+${fieldName}+'\']'" meta:field="${fieldName}"/>
+			</td>
+			<td>
+			<a href="javascript://" class="delRow btn btn-danger"><i class="icon-white icon-remove"></i><span th:text="${slaveOptions['delTitle']}"></span>
+			</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<script type="text/js-tmpl" class="hidden" th:class="'add-row-template'+${slaveEntityName}">
+	<tr th:with="model=${slaveEntityModel},prefix='_slaves[\''+${slaveEntityName}+'\'][0]'">
+		<td style="display:none">
+			<input th:each="hiddenCol,hiddenColStat:${slaveTable['hiddenCols']}" th:name="${prefix}+'[\''+${hiddenCol.dataField}+'\']'" value="" type="hidden" />
+			<input th:name="${prefix}+'[\''+${slaveRefField}+'\']'" th:value="${slaveRefValue}" type="hidden" />
+		</td>
+		<td th:each="col,colStat:${slaveTable['cols']}" th:with="fieldName=${col.dataField}">
+			<input th:name="${prefix}+'[\''+${fieldName}+'\']'" meta:field="${fieldName}"/>
+		</td>
+		<td>
+		<a href="javascript://" class="delRow btn btn-danger"><i class="icon-white icon-remove"></i><span th:text="${slaveOptions['delTitle']}"></span>
+		</a>
+		</td>
+	</tr>
+</script>

@@ -1,0 +1,48 @@
+<div class="dataTables_wrapper form-inline portlet" th:attr="data-slave=${slaveEntityName}">
+	<table class="table table-bordered table-striped  table-condensed slave-table" data-widget="ui-slave-table"
+	 th:attr="data-gen-row='add-row-template'+${slaveEntityName},data-fields-names=${slaveFieldNames}" 
+	 data-options="{wrapper:'portlet'}">
+		<thead>
+			<tr>
+				<th style="display:none">
+				<input type="hidden" name="_slave_entity_name_" th:value='${slaveEntityName}'/>
+				</th>
+				<th th:each="col,colStat:${slaveTable['cols']}" th:text="${col.headerText}" th:style="'width:'+${col.width}+'%'">
+				</th>
+				<th th:if="${showOpers}">
+					<a href="javascript://" class="btn mini addRow green" th:if="${#maps.containsKey(slaveOptions,'addTitle') and action != 'VIEW'}"><i class="icon-plus"></i></a>			
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="item,status:${entity['_slaves'][__${slaveEntityName}__]}" th:with="model=${item},prefix='_slaves[\''+${slaveEntityName}+'\']['+${status.index}+']'">
+				<td style="display:none">
+					<input th:each="hiddenCol,hiddenColStat:${slaveTable['hiddenCols']}" th:name="${prefix}+'.'+${hiddenCol.dataField}" th:attr="data-primaryKey=${hiddenCol.primaryKey}" th:value="${item[hiddenCol.dataField]}" type="hidden" />
+					<input th:name="${prefix}+'.'+${slaveRefField}"  th:value="${slaveRefValue}" type="hidden" />
+				</td>
+				<td th:each="col,colStat:${slaveTable['cols']}" th:with="fieldName=${col.dataField}">
+					<input th:name="${prefix}+'.'+${fieldName}" th:attr="action=${action}" meta:field="${fieldName}" style="width:85%;"/>
+				</td>
+				<td th:if="${showOpers}">
+					<a href="javascript://" th:if="${#maps.containsKey(slaveOptions,'copyTitle') and action != 'VIEW'}"  class="btn mini green copyRow"><i class="icon-copy"></i> </a>
+					<a href="javascript://" th:if="${#maps.containsKey(slaveOptions,'delTitle') and action != 'VIEW'}" class="btn mini yellow delRow"><i class="icon-trash"></i> </a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<table th:class="'hide add-row-template'+${slaveEntityName}">
+		<tr th:with="model=${slaveEntityModel},prefix='_slaves[\''+${slaveEntityName}+'\'][0]'">
+			<td style="display:none">
+				<input th:each="hiddenCol,hiddenColStat:${slaveTable['hiddenCols']}" th:name="${prefix}+'.'+${hiddenCol.dataField}" th:attr="data-primaryKey=${hiddenCol.primaryKey}" value="" type="hidden" />
+				<input th:name="${prefix}+'.'+${slaveRefField}"  th:value="${slaveRefValue}" type="hidden" />
+			</td>
+			<td th:each="col,colStat:${slaveTable['cols']}" th:with="fieldName=${col.dataField}">
+				<input th:name="${prefix}+'.'+${fieldName}" th:attr="action=${action}" meta:field="${fieldName}" style="width:85%;"/>
+			</td>
+			<td>
+				<a th:if="${#maps.containsKey(slaveOptions,'copyTitle') and action != 'VIEW'}"  href="javascript://" class="btn mini green copyRow"><i class="icon-copy"></i> </a>
+				<a th:if="${#maps.containsKey(slaveOptions,'delTitle') and action != 'VIEW'}"  href="javascript://" class="btn mini yellow delRow"><i class="icon-trash"></i> </a>
+			</td>
+		</tr>
+	</table>
+</div>

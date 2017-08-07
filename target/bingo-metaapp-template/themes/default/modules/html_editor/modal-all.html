@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:meta="http://www.bingosoft.net">
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="pragma" content="no-cache" />
+	<meta http-equiv="cache-control" content="no-cache" />
+</head>
+<body>
+<div th:fragment="modal-all">
+	<div class="modal hide fade" role="dialog" id="editorModal">
+	  <div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	    <h3>富文本编辑</h3>
+	  </div>
+	  <div class="modal-body">
+	    <p>
+	      <textarea id="contenteditor"></textarea>
+	    </p>
+	  </div>
+	  <div class="modal-footer"> <a id="savecontent" class="btn btn-primary" data-dismiss="modal">保存</a> <a class="btn" data-dismiss="modal">关闭</a> </div>
+	</div>
+	<div class="modal hide fade" role="dialog" id="simpleEditorModal">
+	  <div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	    <h3>简单html编辑</h3>
+	  </div>
+	  <div class="modal-body">
+	    <p>
+	      <div id="simplecontenteditor"></div>
+	    </p>
+	  </div>
+	  <div class="modal-footer"> <a id="savesimplecontent" class="btn btn-primary" data-dismiss="modal">保存</a> <a class="btn" data-dismiss="modal">关闭</a> </div>
+	</div>
+	<div class="modal hide fade" role="dialog" id="downloadModal">
+	  <div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	    <h3>模板html</h3>
+	  </div>
+	  <div class="modal-body">
+	    <!-- <p>已在下面生成干净的HTML, 可以复制粘贴代码到你的项目.</p>
+	    <div class="btn-group">
+	      <button type="button" id="fluidPage" class="active btn btn-info"><i class="icon-fullscreen icon-white"></i> 自适应宽度</button>
+	      <button type="button" class="btn btn-info" id="fixedPage"><i class="icon-screenshot icon-white"></i> 固定宽度</button>
+	    </div>
+	    <br/>
+	    <br/> -->
+	    <!-- <p> -->
+	      <div id="downloadeditor"></div>
+	    <!-- </p> -->
+	  </div>
+	  <div class="modal-footer"> <a class="btn" data-dismiss="modal">关闭</a> </div>
+	</div>
+	<div class="modal hide fade" role="dialog" id="sourceModal">
+	  <div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	    <h3>可编辑源码</h3>
+	  </div>
+	  <div class="modal-body" style="overflow-y: hidden;">
+	    <p>如果你希望对别人的布局进行二次编辑, 请把可编辑源码粘贴在这里: </p>
+	    <p>
+	      <div id="sourceeditor"></div>
+	    </p>
+	  </div>
+	  <div class="modal-footer"> <a id="savesource" class="btn btn-primary" data-dismiss="modal">保存</a> <a class="btn" data-dismiss="modal">关闭</a> </div>
+	</div>
+	<div class="modal hide fade" role="dialog" id="scriptModal">
+	  <div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	    <h3>编辑脚本</h3>
+	  </div>
+	  <div class="modal-body">
+	    <p>
+	      <div id="scripteditor"></div>
+	    </p>
+	  </div>
+	  <div class="modal-footer"> <a id="savescript" class="btn btn-primary" data-dismiss="modal">确定</a> <a class="btn" data-dismiss="modal">关闭</a> </div>
+	</div>
+	<div class="modal hide fade" role="dialog" id="shareModal">
+	  <div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	    <h3>保存</h3>
+	  </div>
+	  <div class="modal-body">正在保存中。。。</div>
+	  <div class="modal-footer"> <a class="btn" data-dismiss="modal">关闭</a> </div>
+	</div>
+	<div class="modal hide fade" role="dialog" id="formAttrEditModal">
+	  <div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	    <h3>窗体基本属性</h3>
+	  </div>
+	  <div class="modal-body">
+	    <form class="form-horizontal" id="form-attr-edit-form">
+		  <div class="control-group">
+		    <label class="control-label">显示名称：</label>
+		    <div class="controls">
+		      <input type="text" id="displayName" name="displayName" th:value="${layout.displayName}" required="required"/>
+		    </div>
+		  </div>
+		  <div class="control-group">
+		    <label class="control-label">窗体类型：</label>
+		    <div class="controls">
+		        <label class="radio inline">
+					<input id="type_0" name="type"  th:checked="${layout.type!='partial'}" value="main"  type="radio" />
+					<span>主窗体</span>
+				</label><label class="radio inline">
+					<input id="type_1" name="type" th:checked="${layout.type=='partial'}" value="partial" type="radio" />
+					<span>局部窗体</span>
+				</label>
+		    </div>
+		  </div>
+		  <div class="control-group">
+		    <label class="control-label">窗体风格：</label>
+		    <div class="controls">
+		     	<label class="radio inline">
+					<input id="converter_0" name="converter" th:checked="${layout.converter!='form_template_tab'}"  value="form_template"  type="radio" />
+					<span>弹出窗口式</span>
+				</label><label class="radio inline">
+					<input id="converter_1" name="converter" th:checked="${layout.converter=='form_template_tab'}" value="form_template_tab" type="radio" />
+					<span>Tab中打开式</span>
+				</label>
+		    </div>
+		  </div>
+		</form>
+	  </div>
+	  <div class="modal-footer"> <a id="save-form-attr" class="btn btn-primary" data-dismiss="modal">确定</a> <a class="btn" data-dismiss="modal">关闭</a> </div>
+	</div>
+	<div class="modal hide fade" role="dialog" id="editTabModal">
+	  <div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	    <h3>编辑tab</h3>
+	  </div>
+	  <div class="modal-body">
+	  	<div class="accordion" id="accordion-edit-tab">
+	  	</div>
+	  </div>
+	  <div class="modal-footer"> <a class="btn" data-dismiss="modal">关闭</a> </div>
+	</div>
+	<div class="modal hide fade" role="dialog" id="addTabModal">
+	  <div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	    <h3>添加tab</h3>
+	  </div>
+	  <div class="modal-body">
+	    <form class="form-horizontal" id="add-tab-form">
+		  <div class="control-group">
+		    <label class="control-label">显示名称：</label>
+		    <div class="controls">
+		      <input type="text" name="text" required="required"/>
+		    </div>
+		  </div>
+		  <div class="control-group">
+		    <label class="control-label">地址：</label>
+		    <div class="controls">
+		      <input type="text" name="href" required="required"/>
+		      <span class="label badge-important">可用~代表应用上下文</span>
+		    </div>
+		  </div>
+		</form>
+	  </div>
+	  <div class="modal-footer"> <a id="add-tab" class="btn btn-primary" data-dismiss="modal">添加</a> <a class="btn" data-dismiss="modal">关闭</a> </div>
+	</div>
+	<div class="modal hide fade" role="dialog" id="relationConfigModal">
+	<div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	    <h3>关系启用和禁用</h3>
+	  </div>
+	  <div class="modal-body">
+	   	<label class="checkbox" th:attr="data-relation-name=${relationLink['relationName']}" th:each="relationLink:${relationLinks}">
+	      <input type="checkbox" th:value="${relationLink['relationName']}"/><span th:text="${relationLink['text']}"></span>
+	    </label>
+	  </div>
+	  <div class="modal-footer">
+	  	<a id="saveRelationSetup" class="btn btn-primary" data-dismiss="modal">确定</a>
+	  	<a class="btn" data-dismiss="modal">关闭</a> 
+	  </div>
+	</div>
+	<div class="modal hide fade" role="dialog" id="toolbarConfigModal">
+	<div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	    <h3>操作启用和禁用<span class="label badge-important">拖动可排序</span></h3>
+	  </div>
+	  <div class="modal-body">
+	   	<label class="checkbox" th:each="opt:${operations}">
+	      <input type="checkbox" th:attr="data-displayName=${opt.displayName},data-icon=${opt.icon}" th:value="${opt.mainFunc}"/><span th:text="${opt.displayName}"></span>
+	    </label>
+	    <span th:if="${operations.size()==0}"><span class="label label-info">提示：</span>没有可选的操作</span>
+	  </div>
+	  <div class="modal-footer">
+	  	<a id="saveToolbarSetup" class="btn btn-primary" data-dismiss="modal">确定</a>
+	  	<a class="btn" data-dismiss="modal">关闭</a> 
+	  </div>
+	</div>
+</div>
+</body>
+</html>
+
+

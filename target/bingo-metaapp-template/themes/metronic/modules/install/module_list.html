@@ -1,0 +1,77 @@
+<div th:id="${viewId}" style="min-width:600px;height:500px;">
+	<div class="ui-dialog-title hide">
+		<span>添加模块</span>
+	</div>
+	<div class="pluginModules" style="padding:10px 10px;">
+		<ul class="thumbnails" style="width:100%;">
+			<li class="pluginModuleLi" data-status="unselected" th:each="pluginModule:${pluginModules}" th:attr="data-name=${pluginModule.name}" style="width:100%;position:relative;">
+				<div href="javascript://" class="thumbnail" style="height: 100px;">
+                  <img class="pull-left pluginModuleImg" th:src="${themes.file('/plugins/__${pluginModule.icon}__')}"  style="width: 100px; height: 100px;display: inline;cursor: pointer;" title="选择模块"/>
+                  <div style="display:inline-block;width:450px;height:100px; margin-left:15px;overflow:hidden;">
+                  	<h3 th:text="${pluginModule.displayName}"></h3>
+                  	<p th:text="${pluginModule.description}"></p>
+                  </div>
+                </div>
+                <img class="statusImg" th:src="${themes.icon('mini/icon_tool_092.gif')}"  style='position:absolute;left:3px;top:3px;display:none;'/>
+			</li>
+		</ul>
+	</div>
+	<div class="ui-dialog-buttonset">
+		<button type="button" class="btn btn-primary installModules">安&nbsp;装</button>
+		<button type="button" class="btn closeBtn">取&nbsp;消</button>
+	</div>
+<script th:inline="javascript">
+//<![CDATA[
+$(function(){
+	var context = /*[['#'+${viewId}]]*/;	
+	
+	$(".installModules",context).click(function(){
+		var btnSelf=$(this);
+		var url=Global.contextPath+"/installer/install";
+		var modules=$(".pluginModuleLi",context);
+		var data=[];
+		if(modules&&modules.length>0){
+			for(var i=0;i<modules.length;++i){
+				var module=$(modules[i]);
+				var status=module.attr("data-status");
+				var name=module.attr("data-name");
+				if(status=="selected"){
+					data.push(name);
+				}
+			}
+			jQuery.restPost(url,data,function(response){
+				$(context).dialogClose(response);
+			},{beforeSend:function(xhr){
+				CommonUtil.showLoading(context,"模块安装中..");
+				btnSelf.attr("disabled","disabled");
+				btnSelf.addClass("disabled");
+			  },complete:function(xhr,textStatus){
+					CommonUtil.hiddenLoading();
+					btnSelf.removeAttr("disabled");
+					btnSelf.removeClass("disabled");
+			  }
+			});
+		}
+	});
+	$(".pluginModuleImg",context).click(function(){
+		var parentLi=$(this).closest("li.pluginModuleLi");
+		var parent=$(this).parent();
+		var status=parentLi.attr("data-status");
+		var statusImg=parentLi.find(".statusImg");
+		if(status=="unselected"){
+			parentLi.attr("data-status","selected");
+			statusImg.show();
+			parent.css({'border-color':'#007E00'});
+		}else{
+			parentLi.attr("data-status","unselected");
+			statusImg.hide();
+			parent.css({'border-color':'#ddd'});
+		}
+	});
+	$(".closeBtn",context).click(function(){
+		$(context).dialogClose();
+	});
+});
+//]]>
+</script>
+</div>

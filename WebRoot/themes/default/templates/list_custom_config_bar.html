@@ -1,0 +1,14 @@
+<div class="table-toolbar row-fluid"
+	style="display: none;">
+	<div class="table-toolbar-icon span12">
+		<ul>
+			<li th:each="btn,itStat:${operations}" 
+				class="table-img-icon" 
+				th:attr="data-func=${btn.mainFunc}"
+				th:id="'toolbar_'+${btn.name}">
+				<a href="javascript://" th:title="${btn.toolTip}">
+				<img th:src="${themes.icon(btn.icon)}" />
+				<span th:text="${btn.displayName}"></span></a></li>             
+		</ul>
+	</div>
+</div>

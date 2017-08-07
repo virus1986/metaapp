@@ -1,0 +1,136 @@
+<div th:id="${viewId}" class="panel apply-panel">
+<div class="ui-dialog-title hide">	
+	<span th:text="'选择角色'"></span>
+</div>	
+<div>
+	<div class="row-fluid">
+		<div class="span12">
+			<div style='padding:3px 0px 0px 5px;'>
+				<select name="deptActorType" class="deptActorType" style="border-color: blue;">
+					<option value="">--选择发送范围--</option>
+					<option value="deptContacter">部门接口人</option>
+					<option value="deptPrinciple">部门负责人</option>
+					<option value="deptAll">部门所有人</option>
+				</select>
+				<span class="alert-info" style="font-size:14px;">用来确定流程流传到某个部门时，由该部门的什么人处理</span>
+			</div>
+		</div>
+	</div>
+	<div class="row-fluid select-tree-list-con">
+	  <div class="span3" id="nav-tree-list" th:title="${relationEntityDisplayName+#messages.msg('common.tree')}">
+	  	  <div class="list-tree" style="min-height:200px;"></div>
+	  </div>
+	  <div class="span9">
+	      <div class="container-fluid" th:attr="data-url=${requestUrl}" style="padding:0px;"  th:title="${sourceEntityDisplayName+#messages.msg('common.list')}">
+			<meta:grid id="'grid_'+${entityName}+'_'+${view}+'_'+${viewId}" entityName="${entityName}" view="'select_'+${treeListView}" />
+		  	<div class="selected-rows">
+		  	</div>
+		  </div>
+	  </div>
+	</div>
+	<!-- <div class="ui-dialog-buttonset">
+	<button type="button" class="btn saveBtn purple" th:text="#{common.save}"></button>
+	<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div> -->
+   <script type="text/javascript" th:inline="javascript">
+	//<![CDATA[ 
+;(function($){
+		$(function(){
+			var viewId = /*[[${viewId}]]*/;
+			var relationEntity = /*[[${relationEntity}]]*/;
+			var relationFieldName = /*[[${relationFieldName}]]*/;
+			var entityName = /*[[${entityName}]]*/;
+			var view = /*[[${view}]]*/;
+			var treeLabelField = /*[[${treeLabelField}]]*/;
+			//var _ref_entity = /*[[${_ref_entity}]]*/;
+			var relationEntityDisplayName = /*[[${relationEntityDisplayName}]]*/ ;
+			var sourceEntityDisplayName = /*[[${sourceEntityDisplayName}]]*/ ;
+			var treeUrl = /*[[@{/treemodels/entity/}]]*/;
+			var rootUrl = Global.contextPath;
+			var mode=/*[[${queryString['mode']}]]*/;
+			
+			var context = $("#"+viewId) ;
+			var gridId = 'grid_'+entityName+'_'+view+'_'+viewId ;
+			var $grid=$("#"+gridId);
+			
+			var recursiveQuery = /*[[@{'/entities/'+${relationEntity}+'/recursiveQuery/'}]]*/;
+			var treeLoadUrl=treeUrl+relationEntity+"/"+treeLabelField;
+			treeLoadUrl=Urls.appendParam(treeLoadUrl,"parent","parentId");
+			recursiveQuery=recursiveQuery+"?entityName="+relationEntity + "&relation=FK_Reference_12&onlyOne=true";
+			var options={viewId:viewId,grid:$grid,context:context,recursiveQuery:recursiveQuery,
+					treeLoadUrl:treeLoadUrl,
+					relationFieldName:relationFieldName,
+					relationEntityDisplayName:relationEntityDisplayName,
+					sourceEntityDisplayName:sourceEntityDisplayName,
+					select:true,mode:mode,selectedRow:{}};
+			Page.initTreelistPage(options);
+			
+			function getActor(){
+				if ($.isEmptyObject(options.selectedRow)){ 											
+					//$.messageBox.warning({message:i18n.t("common.selectRow")});
+					return false;
+				}
+				var deptActorType=$("[name=deptActorType]",context).val();
+				if(!deptActorType){
+					$.messageBox.warning({message:"请选择部门发送范围!"});
+					//return false;
+					return -1;
+				}
+				var reVal=new Array();
+				if(deptActorType==="deptAll"){
+					$.each(options.selectedRow,function(key,row){
+							reVal.push($.extend({
+								actorType__:"dept",
+								description__:row.name,
+								id:row.id||row.orgId
+							},row));
+					});
+				}else if(deptActorType==="deptContacter"){
+					var tempActor={
+							actorType__:"scriptUser",
+							userScriptExpression:"",
+							description__:""
+						};
+					reVal.push(tempActor);
+					var desc=[],orgIds=[],orgNames=[];
+					$.each(options.selectedRow,function(key,row){
+						desc.push(row.name+"接口人");
+						orgIds.push(row.id||row.orgId);
+						orgNames.push(row.name);
+					});
+					tempActor.description__=desc.join(",");
+					tempActor.userScriptExpression="${BEANS.dynamicActorResolveService.deptContacter('"+orgIds.join(",")+"','"+orgNames.join(",")+"')}";
+				}else if(deptActorType==="deptPrinciple"){
+					var tempActor={
+							actorType__:"scriptUser",
+							userScriptExpression:"",
+							description__:""
+						};
+					reVal.push(tempActor);
+					var desc=[],orgIds=[],orgNames=[];
+					$.each(options.selectedRow,function(key,row){
+						desc.push(row.name+"负责人");
+						orgIds.push(row.id||row.orgId);
+						orgNames.push(row.name);
+					});
+					tempActor.description__=desc.join(",");
+					tempActor.userScriptExpression="${BEANS.dynamicActorResolveService.deptPrinciple('"+orgIds.join(",")+"')}";
+				}
+				return reVal;
+			};
+			$(context).closest("#actor-select-dept").data("getActor",getActor);
+			$(".saveBtn",context).click(function(){
+				var reVal=getActor();
+				if(!reVal){
+					return false;
+				}
+				$(context).dialogClose(reVal);
+			});
+		});
+}(jQuery)); 	
+
+		
+	//]]> 
+	</script>
+</div>
+</div>

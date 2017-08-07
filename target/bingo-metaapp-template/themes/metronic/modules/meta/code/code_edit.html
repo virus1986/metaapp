@@ -1,0 +1,71 @@
+<div id="codeEdit">
+<style>
+#codeContent {
+	width: 800px;
+	height: 520px;
+}
+</style>
+
+	<div class="codeOption">
+		<div class="row-fluid">
+			<div class="span6">
+				<div class="row-fluid">
+					<div class="span6">
+						<span th:text="#{codeEditor.themeTitle}"></span>
+						<strong>Eclipse</strong>	
+					</div>
+					<div class="span6">
+					</div>
+				</div>
+			</div>
+			<div class="span6">
+				<div class="row-fluid">
+					<div class="span6"></div>
+					<div class="span6"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="codeContent"></div>
+	
+	<div class="ui-dialog-buttonset">
+		<button type="button" class="btn purple saveCode" ><span th:text="#{common.save}"></span>
+					<i class="m-icon-swapright m-icon-white"></i></button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+<script th:inline="javascript">
+/*<![CDATA[*/
+$(function(){
+	var context = "#codeEdit";
+	var editor = null;
+	var code = /*[[${code}]]*/ "";
+	
+	function init(){
+		initEditor("codeContent");
+	}
+
+	$("button.saveCode", context).click(function(){
+		var code = editor.getValue();
+		jQuery.dialogReturnValue(code);
+		$(context).dialogClose();
+	});
+	
+	$("button.closeBtn", context).click(function(){
+		$(context).dialogClose();
+	});
+	
+	function initEditor(id){
+	    editor = ace.edit(id);
+	    editor.setTheme("ace/theme/eclipse");
+	    editor.getSession().setMode("ace/mode/javascript");
+	    editor.setValue(code);
+	    editor.clearSelection();
+	}
+	reqModule(["ace"],function(){
+		init();
+	});
+});
+/*]]>*/
+</script>
+</div>

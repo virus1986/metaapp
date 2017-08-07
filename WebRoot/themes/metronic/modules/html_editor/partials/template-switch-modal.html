@@ -1,0 +1,32 @@
+<div class="modal-header"> <a class="close" data-dismiss="modal">×</a>
+	<h3>选择模板</h3>
+	<div class="template-switch-modal-desc">切换模板后，页面字段和控件将会全部清空，仅仅包含空的模板，您将需要重新拖动字段或其他控件到页面，然后保存您的表单</div>
+</div>
+<div class="modal-body" ng-if="workflow">
+  <!--  <div class="template-switch-item" ng-click="switchTemplate('wfone')">
+   	<div class="item-header">单列式</div>
+   	<div class="item-desc">适合问答式，类似调查问卷形式的表单</div>
+   </div> -->
+   <div class="template-switch-item" ng-click="switchTemplate('wftwo')">
+   	<div class="item-header">两列式</div>
+   	<div class="item-desc">适合普通宽屏pc浏览</div>
+   </div>
+   <div class="template-switch-item" ng-click="switchTemplate('wfthree')">
+   	<div class="item-header">三列式</div>
+   	<div class="item-desc">适合普通宽屏pc浏览</div>
+   </div>
+</div>
+<div class="modal-body" ng-if="!workflow">
+   <div class="template-switch-item" ng-click="switchTemplate('popup')">
+   	<div class="item-header">弹出式</div>
+   	<div class="item-desc">适合普通宽屏pc浏览，以弹出框方式弹出的表单样式</div>
+   </div>
+   <div class="template-switch-item" ng-click="switchTemplate('tab')">
+   	<div class="item-header">tab式</div>
+   	<div class="item-desc">适合普通宽屏pc浏览，带有tab导航的表单样式</div>
+   </div>
+</div>
+<div class="modal-footer"> 
+	<a class="btn btn-primary" data-dismiss="modal">关闭</a> 
+</div>
+			

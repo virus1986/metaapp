@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>云应用平台安装向导</title>
+	<link rel="stylesheet" th:href="${themes.file('modules/install/style/style.css')}"/>
+   </head>
+<body>    
+	<div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+    		<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+          	</a>
+          	<a class="brand" href="index.html">
+                <img th:src="${themes.file('modules/install/style/logo.png')}" alt="logo" />
+            </a>
+		  	<div class="nav-collapse collapse">
+                <ul class="nav pull-right">
+                    <li><a href="javascript://">功能特性</a></li>
+                    <li><a href="http://developer.bingosoft.net/blog">博客</a></li>
+                    <li><a href="javascript://">联系我们</a></li>
+                </ul>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="box_sign">
+        <div class="container">
+            <div class="span12 box_wrapper">
+            	<div class="span12 head-info"><i class="i_loading"></i>云应用平台安装</div>
+                <div class="span12 box">
+                    <div>
+                        <div class="head">
+                            <h4>Step 1 of 4:数据库设置</h4>
+                        </div>
+                        <div class="alert alert-warning">
+						  	<i class="icon-info-sign"></i> 请设置应用的数据库信息：
+							</div>
+                        <div class="form">
+                            <form id="dsForm" action="init-meta" target="_self" method="get">
+                            	<table class="table table-condensed">
+                            	<tr th:if="${dsInfo['isTenantMode']}">
+                            		<th style="width:100px">数据库连接:</th>
+                            		<td>
+											<label class="radio">
+											   <input id="dsType1" name="dsType" type="radio" value="0"  th:checked="${dsInfo['dsType']=='0'}" />自动<br/>
+											   <span class="tip_info">由系统自动创建一个空白数据库，并初始化系统相关的表结构及基础数据。</span>
+											</label>
+											<label class="radio inline">
+											   <input id="dsType2" name="dsType" type="radio" value="1" th:checked="${dsInfo['dsType']!='0'}" />手工<br/>
+											    <span class="tip_info">由用户指定一个已有的数据库，系统将在该数据库内初始化系统相关的表结构及基础数据</span>
+											</label>
+                            		</td>
+                            	</tr>
+                            	<tr>
+                            		<th>服务器类型:</th>
+                            		<td><select name="datastoreType" id="datastoreType" th:readonly="${dsInfo['dsType']=='0'}">
+	                            		<option value="MySql" th:checked="${dsInfo['datastoreType']=='MySql'}">MySql</option>
+                            		</select></td>
+                            	</tr>
+                            	<tr>
+                            		<th>数据库连接:</th>
+                            		<td><input type="text" name="dbUrl" id="dbUrl" th:readonly="${dsInfo['dsType']=='0'}" th:value="${dsInfo['dbUrl']}" placeholder="database name"/><br/>
+                            		 <span class="tip_info">如:jdbc:mysql://127.0.0.1:3306/app_db</span>
+                            		</td>
+                            	</tr>
+                            	<tr>
+                            		<th>用户名:</th>
+                            		<td><input type="text" name="username" id="username" th:readonly="${dsInfo['dsType']=='0'}" th:value="${dsInfo['username']}" placeholder="account"/></td>
+                            	</tr>
+                            	<tr>
+                            		<th>密码:</th>
+                            		<td><input type="password" name="password" id="password" th:readonly="${dsInfo['dsType']=='0'}" th:value="${dsInfo['password']}"  placeholder="password"/></td>
+                            	</tr>
+                            	</table>
+                                <input type="button" class="btn btn-primary" id="next" value="下一步"/>
+                            </form>
+                        </div>
+                    	<div class="alert alert-info msg"  style="display:none">
+		                  	<a class="close" data-dismiss="alert">×</a>
+						  	<i class="icon-ok"></i> 系统数据初始化中，请稍等1～2分钟...
+						</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="footer">
+        <div class="container">
+            <hr />
+            <div class="row copyright">
+                <div class="span4">
+                    <h3>Relation</h3>
+                    <a href="javascript://" class="social fb">
+                        <i class="i_facebook"></i>
+                    </a>
+                    <a href="javascript://" class="social tw">
+                        <i class="i_twitter"></i>
+                    </a>
+                    <a href="javascript://" class="social yt">
+                        <i class="i_youtube"></i>
+                    </a>
+                </div>
+                <div class="span3 offset5 copy">
+                    <p>2012 - developer.bingosoft.net</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+	<script type="text/javascript" th:src="${themes.file('modules/install/scripts/jquery.js')}"></script>
+    <script type="text/javascript" th:src="${themes.file('modules/install/scripts/bootstrap.min.js')}"></script>
+	<script type="text/javascript" th:src="${themes.file('modules/install/scripts/theme.js')}"></script>
+	
+	<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	$(function(){
+		var defaultDsInfo=/*[[${dsInfo}]]*/;
+		var contextPath=/*[[${contextPath}]]*/"";
+		$("input[name=dsType]").change(function(){
+			var self=$(this);
+			if(self.val()=="0"){
+				$("#datastoreType").val(defaultDsInfo.datastoreType).attr("readonly","readonly");
+				$("#dbUrl").val(defaultDsInfo.dbUrl).attr("readonly","readonly");
+				$("#username").val(defaultDsInfo.username).attr("readonly","readonly");
+				$("#password").val(defaultDsInfo.password).attr("readonly","readonly");
+			}else{
+				$("input[type=text]","#dsForm").val("").removeAttr("readonly");
+				$("input[type=password]","#dsForm").val("").removeAttr("readonly");
+				$("#datastoreType").val("MySql").removeAttr("readonly");
+			}
+		});
+		
+		
+		$("#next").click(function(){
+			var self=$(this);
+			var data={
+					datastoreType:$("#datastoreType").val(),
+					dbUrl:$("#dbUrl").val(),
+					username:$("#username").val(),
+					password:$("#password").val(),
+					dsType:$("input[name=dsType]:checked").val()
+			};
+			if(data.dsType=="1"){
+				alert("手工方式暂未实现，请选择自动方式创建应用！");
+				return;
+			}
+			if(data.dbUrl.length<1){
+				$("#dbUrl").focus();
+				alert("请指定数据库连接串");
+			}
+			if(data.username.length<1 ||data.password.length<1){
+				$("#username").focus();
+				alert("请指定数据库访问名及密码");
+			}			
+			if(!confirm("将使用指定的数据库进行初始化，是否继续？")) return;
+			var requestParams={
+				url:contextPath+"/install/initialize-meta",
+				type:"Post",
+				data:data,
+				success:function(response) {
+					Loader.hideLoader();
+					$(".msg").removeClass("alert-info");
+					$(".msg").addClass("alert-success");
+					$(".msg").html("系统数据初始化成功。页面将自动跳转进入下一步！");
+					window.setTimeout(function(){
+						window.location.href=contextPath+"/install/init-app-info?_tname="+response;
+						/* if(data.dsType=="1"){
+							window.location.href=contextPath+"/install/init-app-info?_tname="+response;
+						}else{
+							window.location.href=contextPath+"/install/over?_tname="+response;
+						} */
+					},1000);
+				},
+				error:function(xhr, textStatus, errorThrown){
+					self.removeAttr("disabled");
+					$(".msg").removeClass("alert-info");
+					$(".msg").addClass("alert-error");
+					var error=eval("("+xhr.responseText+")");
+					$(".msg").html("系统数据初始化错误！"+error.message);
+				}
+			};
+			self.attr("disabled","disabled");
+			$(".msg").show();
+			$.ajax(requestParams);
+			Loader.showLoader();	
+		});
+		
+	});
+		/*]]>*/
+	</script>
+	
+</body>
+</html>

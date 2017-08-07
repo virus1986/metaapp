@@ -1,0 +1,183 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:1000px;min-height:400px;">
+<style type="text/css">
+.tmpl-con .procDefTmpl{
+	background-color:#d8d8d8;
+	padding:5px;
+	display: inline-block;
+	margin-right:5px;
+	margin-top:5px;
+}
+.tmpl-con .procDefTmpl.selected{
+	border:solid 2px #065E14 ;
+	background-color:#35aa47;
+	color:white;
+}
+.tmpl-con .procDefTmpl:hover{
+	cursor: pointer;
+	background-color:#35aa47;
+}
+.tmpl-con .tmpl-header{
+	border-bottom: 1px solid #ececec;
+	color:#1F4C9E;
+}
+.tmpl-con .imported-tmpl-header{
+	border-bottom: 1px solid #ececec;
+	color:#277721;
+}
+.tmpl-con .emptyTmplCon{
+	color:#5A60DA;
+	padding-left:13px;
+}
+.tmpl-con .importedProcDefTmpl{
+	padding:5px;
+	display: inline-block;
+	margin-right:5px;
+	margin-top:5px;
+	background-color: #CCE2BA;
+	color: #337339;
+}
+</style>
+	<div class="ui-dialog-title hide" th:switch="${action}">
+         <span> 从模版创建流程 </span>
+       </div>
+	<div class="container-fluid">
+			<table class="form-table form-bordered col4-fluid">
+				<tbody>
+					<tr>
+						<th><label><span class="required-star">*</span>选择流程模版:</label></th>
+						<td colspan="3" class="tmpl-con">
+							<div>
+								<div class="tmpl-header"><i class="icon-hand-right">空模板：&nbsp;</i>选择此类型模板，将只创建流程，如果需要发布为服务，可到【服务管理】新建服务</div>
+								<span class="procDefTmpl empty-proc-def" th:each="def:${procDefTmpls}" th:attr="data-id=${def['id']},data-name=${def['title']}" th:text="${def['title']}"></span>
+							</div>
+							<div>
+								<div class="tmpl-header" style="margin-top:5px;"><i class="icon-hand-right">内置流程：&nbsp;</i>可选择导入内置流程，可选择是否发布为服务，每个内置流程只可以导入一次</div>
+								<span class="procDefTmpl" th:each="def:${procTmpls}" th:attr="data-id=${def['id']},data-name=${def['name']}" th:text="${def['name']}"></span>
+								<span class="emptyTmplCon" th:if="${procTmpls.size()==0}">暂无可导入的内置流程</span>
+							</div>
+							<div th:if="${importedProcTmpls.size()>0}">
+								<div class="imported-tmpl-header" style="margin-top:5px;"><i class="icon-ok">已导入的内置流程</i></div>
+								<span class="importedProcDefTmpl" th:each="def:${importedProcTmpls}" th:attr="data-id=${def['id']},data-name=${def['name']}" th:text="${def['name']}"></span>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="tmpl-form-con">
+			</div>
+	</div>
+	<div class="ui-dialog-buttonset">
+              <button type="button" name="save" class="btn purple saveProcWithTmpl">
+                <span th:text="#{common.save}">
+                </span>
+                <i class="m-icon-swapright m-icon-white">
+                </i>
+              </button>
+              <button type="button" name="close" class="btn closeBtn" th:text="#{common.cancel}">
+              </button>
+            </div>
+
+	<script th:inline="javascript">
+	//<![CDATA[ 
+;(function($){
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;
+		Page.init(context);
+		
+		function publishAsService(){
+			return $("[name=publishAsService]",context).is(":checked");
+		};
+		function isEmptyTmpl(){
+			return $(".procDefTmpl.selected",context).hasClass("empty-proc-def");
+		};
+		var $saveBtn=$(".saveProcWithTmpl",context);
+		if($saveBtn.length===0){
+			$saveBtn=$(context).closest(".ui-dialog").find(".ui-dialog-buttonpane .saveProcWithTmpl");
+		}
+		$(".procDefTmpl",context).click(function(){
+			if($(this).hasClass("selected")){
+				return false;
+			}
+			$(".tmpl-con",context).find(".procDefTmpl").removeClass("selected");
+			$(this).addClass("selected");
+			var procModuleName=$(this).data("id");
+			var tmplCon=$(".tmpl-form-con",context);
+			if(tmplCon.length>0){
+				$saveBtn.prop("disabled",true);
+				var url="";
+				if(isEmptyTmpl()){
+					url=Global.contextPath+"/workflow/wfproc/loadEmptyProcessTmplForm";
+				}else{
+					url=Global.contextPath+"/workflow/wfproc/loadProcessTmplForm";
+					url=Urls.appendParam(url,"procModuleName",procModuleName);
+					url=Urls.appendParam(url,"publishAsService",publishAsService());
+				}
+				CommonLoader.loadData($(".tmpl-form-con",context),url,function(){
+					$saveBtn.prop("disabled",false);
+				});
+			}
+		});
+		$saveBtn.click(function(){
+			var selectedId=$(".procDefTmpl.selected",context).data("id");
+			if(!selectedId){
+				$.messageBox.warning({message:"请选择流程模版!"});
+				return;
+			}
+			var valInfo = $.validation.validate($("form:visible",context)) ;
+			if( valInfo.isError ) {
+				return false;
+			}
+			var url=Global.contextPath+"/workflow/wfproc/createFromTemplate";
+			var procJson=$("form.proc-entity",context).toJson()||{};
+			var esServiceJson=$("form.es-service-entity",context).toJson()||{};
+			if(procJson.firstStepActorsId){
+				procJson.firstStepActors=JSON.stringify({firstStepActorsId:procJson.firstStepActorsId,firstStepActorsText:procJson.firstStepActorsText});
+			}
+			var data={proc:procJson,procManager:procJson.user,publishAsService:false};
+			if(isEmptyTmpl()){
+				data.id=selectedId;
+			}else{
+				data.procModuleName=selectedId;
+			}
+			if(publishAsService()){
+				data.publishAsService=true;
+				data.esService=esServiceJson;
+			}
+			var btnSelf=$(this);
+			$.restPost(url,data,function(res){
+				if(res.success){
+					$(context).dialogClose(res);
+				}else{
+					$.messageBox.info({message:res.message});
+				}
+			},{button:btnSelf,context:context});
+		});
+		var $closeBtn=$(".closeBtn",context);
+		if($closeBtn.length===0){
+			$closeBtn=$(context).closest(".ui-dialog").find(".ui-dialog-buttonpane .closeBtn");
+		}
+		$closeBtn.click(function(){
+			$(context).dialogClose();
+		});
+		
+		$(context).on("click","[name=publishAsService]",function(){
+			if(publishAsService()){
+				$(".es-service-entity",context).show();
+			}else{
+				$(".es-service-entity",context).hide();
+			}
+			$(context).dialogResize();
+		});
+	
+	});
+}(jQuery)); 
+	//]]>
+	</script>
+</div>
+
+
+
+
+
+
+

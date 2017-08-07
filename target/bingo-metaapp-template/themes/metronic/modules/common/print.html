@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:substituteby="'/themes/'+${theme}+'/modules/common/statics'::head"></head>
+
+<body class="container-index">
+<style>
+html,body{
+	background-color: #fff!important;
+		font-size:12px;
+}
+ body *{  font-size:12px; }
+	.print-head{ text-align:center;}
+	.page-title{font-size: 16px;margin:0; text-align:center;}
+	.form-table th, .form-table td {padding: 0; height:12px; line-height:13px; padding-left:5px;}
+	.table{margin-bottom:0;}
+	select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+padding: 0 6px; border:0;}
+.input-append .add-on, .input-prepend .add-on {
+padding: 2px 5px;}
+.portlet {
+margin-bottom: 3px;
+}
+.portlet.box > .portlet-title {
+padding: 0px 10px 0px 10px;height: 27px;}
+.portlet > .portlet-title > .caption {padding-top:3px; margin-bottom:0;}
+.portlet > .portlet-title > .caption i {
+margin-top: 3px;}
+.portlet > .portlet-title > .actions > .btn {
+padding: 2px 10px;margin-top: -9px;}
+.input-append .add-on, .input-prepend .add-on { display:none;}
+th{white-space:nowrap}
+input{background:none;}
+.portlet.box > .portlet-body {
+	padding: 0px;
+}
+.m-top20 {
+margin-top: 0;
+}
+.portlet.box.tea-green {border:0!important;}
+.radio.inline, .checkbox.inline{ padding-top:0px;}
+.print-content{ margin-left:5px; margin-right:5px;}
+.form-bordered td:first-child, .form-bordered th:first-child{ border-left:solid 1px #e4e4e4;}
+.form-bordered th, .form-bordered td{ border-right:solid 1px #e4e4e4;}
+.no-print{ display:none;}
+.dateCell{ width:100px;}
+</style>
+<style media="print"> 
+	.Noprint{display:none;} 
+	.PageNext{page-break-after: always;}
+</style> 
+
+
+<div class="Noprint pull-right form-toolbar" style="position:fixed; right:10px">
+	<div class="todo workflow-btns">
+		<button onclick="window.print()" class="btn green table-toolbar-icon-item" title="打印">
+	  		<i class="icon-print"></i> <span> 打印</span>
+		</button>
+		<!--  
+		<button onclick="document.all.WebBrowser.ExecWB(6,6)" class="btn table-toolbar-icon-item" title="直接打印">
+		 	<i class="icon-user"></i> <span> 直接打印</span> 
+		</button>
+		<button onclick="document.all.WebBrowser.ExecWB(8,1)" class="btn table-toolbar-icon-item" title="页面设置">
+		 	<i class="icon-bookmark"></i> <span> 页面设置</span> 
+		</button> 
+		<button onclick="document.all.WebBrowser.ExecWB(7,1)" class="btn table-toolbar-icon-item" title="打印预览">
+		 	<i class="icon-print"></i> <span> 打印预览</span> 
+		</button>
+		-->
+	</div>
+</div>
+
+	<div th:substituteby="${contentPage}"></div>
+	<script	th:substituteby="'/themes/'+${theme}+'/modules/common/statics'::scripts"></script>
+<script>
+//<![CDATA[
+$(function(){
+	$("table").addClass("form-table");
+	if($(".borrowinfo").find('.borrow-row:not(.template)').length>0){
+		$(".borrowinfo").each(function(){
+			$(this).removeClass("Noprint");
+		});
+	}
+	var slaveTable = $("[data-widget=ui-slave-table]");
+	slaveTable.each(function(){
+		$(this).find("tr").each(function(){
+			$(this).find("th:last").remove();
+			$(this).find("td:last").remove();
+		});
+	});
+	var paydate = $("[name $= payDate]").closest("td");
+	paydate.css("width","15%");
+	var payType = $("[name $= payType_text]").closest("td");
+	payType.css("width","20%");
+	var printFlowHistory = $("div.print-flow-history");
+	
+	if(printFlowHistory){
+		
+		var $tr = printFlowHistory.find("thead").find("tr");
+		$tr.find("th").each(function(){
+			if($(this).html()=="开始时间" || $(this).html()=="处理时间"){
+				$(this).css("width","12%");
+			}else if($(this).html()=="处理人"){
+				$(this).css("width","10%");
+			}else if($(this).html()=="处理步骤"){
+				$(this).css("width","10%");
+			}else if($(this).html()=="处理意见"){
+				$(this).css("width","");
+			}
+		});
+	}
+	var businessFormAttachment = $("#businessFormAttachment");
+	if(businessFormAttachment){
+		if(businessFormAttachment.find(".attachment-con")){
+			var bdas = businessFormAttachment.find(".attachment-con").find("div");
+			if($.trim(businessFormAttachment.find(".attachment-con").html())==""){
+				businessFormAttachment.addClass("Noprint");
+			}
+		}
+	}
+	$(".page-title").find("span").each(function(){
+		$(this).css("font-size","20px");
+	});
+	var corpSelect = $("select#corporation");
+	var corps = "没有找到公司信息";
+	if(corpSelect){
+		var optionset = corpSelect.data("optionset");
+		try{
+			var ops = eval(optionset);
+			if($.isArray(ops)){
+				for(var i = 0; i < ops.length; i ++){
+					if(ops[i].value==corpSelect.data("value")){
+						corps = ops[i].name;
+						break;
+					}
+				}
+			}
+			corpSelect.closest("td").html(corps);
+		}catch(e){
+			
+		}
+	}
+	
+	
+	
+	setTimeout(function(){
+		window.print();
+	},1000);
+});
+//]]>
+</script>
+</body>
+</html>
+

@@ -1,0 +1,292 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:850px;">
+<style>
+<!--
+#createOperationTable tbody tr textarea{
+	height: 120px;
+	width: 500px;
+}
+-->
+</style>
+<form th:object="${entity}" id="createOperationForm" data-widget="validator" th:action="${requestUrl}"
+ method="post" class="form-horizontal ajaxpost">
+<div class="ui-dialog-content container-fluid">
+<table class="form-table form-bordered col4-fluid" id="createOperationTable">
+	<tbody>
+		<tr>
+			<th><label><meta:display-name field="displayname"/>:</label></th>
+			<td>
+				<input type="hidden" meta:field="id"/>
+				<input meta:field="displayName" class="input-large" th:placeholder="#{validation.string36}"
+					data-validator="required,length[1,36]"/>
+				<input type="hidden" meta:field="entityName"/>
+			</td>
+			<th><label><meta:display-name field="name"/>:</label></th>
+			<td th:switch="${action}">
+				<input th:case="'CREATE'" meta:field="name" class="input-large" th:placeholder="#{validation.autoByDisplayName}"
+					data-validator="required,name,length[1,36],func[chkNameDuplicate]"/>
+				<input th:case="'EDIT'" meta:field="name" class="input-large" th:placeholder="#{validation.autoByDisplayName}"/>
+			</td>
+		</tr>
+		
+		<tr>
+			<th><label><meta:display-name field="icon"/>:</label></th>
+			<td>
+			<input type="text" meta:field="icon"/>
+			</td>
+			<th><label><meta:display-name field="toolTip"/>:</label></th>
+			<td>
+			<input meta:field="toolTip" class="input-large" th:placeholder="#{validation.tipSpec}" 
+				data-validator="length[1,36]"/>
+			</td>
+		</tr>
+		
+		<tr>
+			<th><label><meta:display-name field="recordType"/>:</label></th>
+			<td colspan="1">
+				<select meta:field="recordType">
+				</select>
+			</td>
+			<th><label><meta:display-name field="enabled"/>:</label></th>
+			<td colspan="1">
+				<input meta:field="enabled" />
+			</td>
+		</tr>
+		<tr>
+			<th><label><meta:display-name field="scope"/>:</label></th>
+			<td colspan="3">
+				<select meta:field="scope">
+				</select>
+			</td>
+			
+		</tr>
+		
+		<tr>
+			<th><label th:text="#{uioperation.scriptType}+':'"></label></th>
+			<td colspan="3">
+			<div>
+				<label class="radio inline"> <input type="radio" name="useLib" value="true" th:checked="${entity[script]==null}"/> <span th:text="#{operation.selectScript}"></span></label> 
+				<label class="radio inline"> <input type="radio" name="useLib" value="false" th:checked="${entity[script]!=null}"/> <span th:text="#{operation.createScript}"></span>
+				</label>
+			</div>
+			</td>
+		</tr>
+		
+		<tr class="doUseLib">
+			<th><label><meta:display-name field="scriptLib"/>:</label></th>
+			<td colspan="3">
+				<select meta:field="scriptLib">
+					<option value="" th:text="#{common.optionNullText}"></option>
+				</select>
+				<button id="libEdit" class="btn btn-mini itemOperation" 
+					type="button" data-url="/scriptlib/create">
+					<i class="icon-edit"></i> <span th:text="#{common.edit}"></span></button>
+				<button id="libCreate" class="btn btn-mini itemOperation" 
+					type="button" data-url="/scriptlib/create">
+					<i class="icon-plus-sign"></i> <span th:text="#{common.create}"></span></button>
+			</td>
+		</tr>
+		
+		<tr class="doUseLib">
+			<th><label><meta:display-name field="mainFunc"/>:</label></th>
+			<td colspan="3">
+			<input meta:field="mainFunc" class="input-large" 
+				data-validator="length[1,100]"/>
+			</td>
+		</tr>
+
+		<tr class="notUseLib">
+			<th><label><meta:display-name field="script"/>:</label></th>
+			<td colspan="3">
+				<input meta:field="script"/>
+			</td>
+		</tr>
+		<tr>
+			<th><label th:text="#{security.permissionCode}+':'"></label></th>
+			<td colspan="3">
+				<select  name="permissionCode">
+					<option th:each="permission:${permissions}" th:selected="${permission.selected}" th:value="${permission.value}" th:text="${permission.text}"></option>
+				</select>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+	<div class="ui-dialog-buttonset">
+		<button th:if="${action} != 'VIEW'" type="submit" name="save"
+					class="btn purple" ><span th:text="#{common.save}"></span>
+					<i class="m-icon-swapright m-icon-white"></i>
+				</button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+</form>
+<script th:inline="javascript">
+//<![CDATA[ 
+$(function(){
+	var context = /*[['div#' + ${viewId}]]*/ "";
+	var action = /*[[${action}]]*/ "";
+	var entityDisplayName = /*[[${entityDisplayName}]]*/ "";
+	var operationName = /*[[${entity['displayName']}]]*/ "";
+	var lib = /*[[${entity['scriptLib']}]]*/ "";
+	var scriptLibs = /*[[${scriptLibs}]]*/ "";
+	var mainFunc=/*[[${entity['mainFunc']}]]*/ "";
+	
+	function init(){
+		
+		$("#displayName", context).focus();
+		//$("#iconImage", context).hide();
+		if(action == "CREATE"){
+			setCurrentTitle(context, i18n.t("uioperation.create.title",entityDisplayName));	
+			$("[name='displayName']", context).keyup(function(){
+				$("[name='name']", context).val($(this).toPinyin().replace(/\s*/g,''));
+			});
+			$(".notUseLib", context).hide();	
+		} else {
+			$("#name", context).attr("disabled", "disabled");
+			setCurrentTitle(context,i18n.t("uioperation.edit.title",entityDisplayName,operationName));
+			//var icon = /*[[""]]*/ "";
+			/* if(icon != ""){
+				$("#iconImage", context).show().attr("src", Global.iconPath + icon);
+			} */
+		/* 	if((mainFunc && )||){
+				$("[name=useLib][value=true]", context).prop("checked",false);
+				$("[name=useLib][value=false]", context).prop("checked", true);
+				$(".doUseLib", context).hide();
+			} else  */if(mainFunc && (!mainFunc.toLowerCase().startWith("operations/"))){
+				$("[name=useLib][value=true]", context).prop("checked", true);
+				$("[name=useLib][value=false]", context).prop("checked", false);
+				if(lib!=null && lib.length>0){
+					var scriptLib = lib.substring(0, lib.length - 2);
+					var shortMainFunc=mainFunc.substring(scriptLib.length);
+					$("[name=mainFunc]", context).val(shortMainFunc);
+				}
+				$(".notUseLib", context).hide();
+			}else{
+				$("[name=useLib][value=true]", context).prop("checked",false);
+				$("[name=useLib][value=false]", context).prop("checked", true);
+				$(".doUseLib", context).hide();
+			}
+		}
+
+		loadScriptLibs($("select#scriptLib", context), scriptLibs);
+		$("#scriptLib", context).val(lib);
+		reloadBtnStatus();
+		Page.init(context);
+	}
+	init();
+
+	$("#createOperationForm", context).data("beforeSerialize", function(){
+		
+		var useLib = $("[name=useLib]:checked", context).val();
+		if(useLib == "true"){
+			$("[name=script]", context).val("");
+			
+			var scriptLib = $("[name=scriptLib]", context).val();
+			var mainFunc = $("[name=mainFunc]", context).val();
+			scriptLib = scriptLib.substring(0, scriptLib.length - 2);
+			$("[name=mainFunc]", context).val(scriptLib + mainFunc);
+		} else {
+			$("[name=scriptLib], [name=mainFunc]", context).val("");
+		}
+	});
+	
+	function loadScriptLibs(select, scriptLibs){
+		select.empty();
+		var option = $("<option></option>").val("").text("——"+i18n.t("common.select")+"——");
+		select.append(option);
+		for(var i = 0; i < scriptLibs.length; i++){
+			var lib = scriptLibs[i];
+			var option = $("<option></option>").val(lib.name).html(lib.displayName)
+					.data("isSystem", lib.isSystem).data("id", lib.id);
+			select.append(option);
+		}
+		reloadBtnStatus();
+	}
+	
+	$("#scriptLib", context).change(function(){
+		reloadBtnStatus();
+	});
+	
+	$("input[name=useLib]", context).change(function(){
+		var val = $(this).val();
+		if(val == "true"){
+			$(".notUseLib", context).hide();			
+			$(".doUseLib", context).show();
+		} else {	
+			$(".notUseLib", context).show();
+			$(".doUseLib", context).hide();		
+		}
+	});
+	
+	function reloadBtnStatus(){
+		var val = $("[name='scriptLib']", context).val();
+		var selectOption=$("#scriptLib option:selected");
+		var isSystem = selectOption.data("isSystem");
+		if(val == ""){
+			$("button#libEdit", context).hide();
+		} else if(isSystem){
+			$("button#libEdit", context).show().html("<i class='icon-eye-open'></i>"+i18n.t("common.view")).attr("title", i18n.t("uioperation.scriptLibReadonly"));
+		} else {
+			$("button#libEdit", context).show().html("<i class='icon-edit'></i>"+i18n.t("common.edit")).removeAttr("title");
+		}
+	}
+	
+	$("button#libEdit", context).click(function(){
+		var url = Global.contextPath + $(this).data("url");
+		var id = $("#scriptLib option:selected").data("id");
+		var val = $("#scriptLib option:selected").val();
+		var isSystem = $("#scriptLib option:selected").data("isSystem");
+		url +=  "?id=" + id;
+		if(isSystem){
+			url = Global.contextPath + "/scriptlib/view" + "?id=" + val;
+		}
+		$.openLink(url, {width : 800}, function(response){
+			if(!isSystem) reloadLibName();
+		});
+	});
+	
+	$("button#libCreate", context).click(function(){
+		var url = Global.contextPath + $(this).data("url");
+		$.openLink(url, {width : 800}, function(response){
+			reloadLibName();
+		});
+	});
+	
+	function reloadLibName(){
+		var original = $("#scriptLib", context).val();
+		$.restGet(Global.contextPath + "/scriptlib/summary", null, function(resp){
+			if(resp != null){
+				var scriptLibs = resp;
+				loadScriptLibs($("select#scriptLib", context), scriptLibs);
+				$("#scriptLib", context).val(original);
+				reloadBtnStatus();
+			}
+		});
+	};
+});
+function chkNameDuplicate(caller){
+	var context = /*[['div#' + ${viewId}]]*/ "";
+	var action = /*[[${action}]]*/ "";
+	var entityName = /*[[${entityName}]]*/ "";
+	var name = $(caller, context).val();
+	var result = {isError:false,errorInfo:""};
+	if(action == "EDIT") return result;
+	$.ajax({
+		url		:	Global.contextPath + "/validation/operation_name_unique",
+		data	:	{
+						operation  : name,
+						entity:entityName
+					},
+		async	:	false,
+		success	:	function(data){
+						if (data == false) {
+							result = {isError:true,errorInfo:i18n.t("uioperation.nameAlreadyExist")};
+						} else {
+							result = {isError:false,errorInfo:""};
+						}
+					}
+	});
+	return result;
+};
+//]]> 
+</script>
+</div>

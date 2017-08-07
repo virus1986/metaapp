@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>在线流程设计器配置信息</comment>
+
+<entry key="wfModuleName">workflow_designer</entry>
+<entry key="pluginConfigPath">/js/Plugins/plugins.xml</entry>
+<entry key="stencilsetsConfigPath">/stencilsets</entry>
+<entry key="stencilpatternsPath">/defaults/patterns.json</entry>
+<entry key="themesConfigPath">/defaults/themes.json</entry>
+<entry key="profileBasePath">/profiles/</entry>
+<entry key="diagramViewerBasePath">/diagram-viewer/</entry>
+
+</properties>

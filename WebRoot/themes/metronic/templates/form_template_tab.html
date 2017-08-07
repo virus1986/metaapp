@@ -1,0 +1,75 @@
+<div class="container-fluid" th_:id="${viewId}">
+	<div>
+		<h3 class="page-title">
+			<span th:text="${layoutCtx.metaEntity.displayName}"></span> <small></small>
+		</h3>
+		<div class="pull-right form-toolbar">
+			<div class="btn-group">
+				<a th_:if="${action} != 'VIEW'"  id="saveBaseInfo" class="btn green table-toolbar-icon-item baseinfo"  href="javascript://">
+					<span th_:text="#{common.save}"> </span> 
+					<i th_:if="${action} == 'CREATE'"  class="icon-plus"></i>
+					<i th_:if="${action} == 'EDIT'"  class="icon-save"></i>
+				</a>					
+				<a th_:if="${action} == 'VIEW'"  class="refresh" id="btn blue table-toolbar-icon-item ReloadCurrentMainTab"  href="javascript://">
+					<span th_:text="#{common.refresh}"> </span> <i class="icon-refresh"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="tabbable tabbable-custom" data-widget="tab"	th_:id="'entity-tabs-' + ${viewId}">
+		<ul>
+			<li><a th_:href="'#tabs-baseform' + ${viewId}"	th_:text="#{common.baseInfo}">基本信息</a></li>
+			<meta_:relation model="${entity}">
+				<li th_:each="relationLink:${relationCtx.relationLinks}">
+					<a th_:href="${relationLink.url}" th_:text="${relationLink.text}"></a><span></span>
+				</li>
+			</meta_:relation>
+		</ul>
+		<div class="tab-content" th_:id="'tabs-baseform' + ${viewId}">
+			<form id="entityForm" th_:object="${entity}" th_:action="${requestUrl}" method="post" data-widget="validator" class="form-horizontal ajaxpost">
+				<div th:each="section:${layout.sections}" class="portlet box tea-green">
+					<div class="portlet-title">
+						<div class="caption">
+							<i class="icon-reorder"></i><span th:text="${section.name}"></span>
+						</div>
+						<div class="tools">
+							<a href="javascript:;" class="collapse"></a>
+							<!-- <a href="javascript:;" class="reload"></a> -->
+						</div>
+					</div>
+					<div class="portlet-body form-bordered">
+						<table th:each="section:${layout.sections}" th:classappend="'form-table col'+${section.colNum}*2+'-fluid'">
+							<tr th:each="row:${section.rows}"><meta:placeholder th:each="cell:${row}">
+								<th th:switch="${cell.contentType}">
+									<label th:case="'Control'"	th:text="${layoutCtx.fields[cell.content.dataFieldName].displayName}+'：'"></label>
+									<label th:case="'RefEntityControl'" th:text="${layoutCtx.relations[cell.content.relationName].displayName}+'：'"></label>
+									<label th:case="*" ></label>
+								</th>
+								<td th:switch="${cell.contentType}"	th:colspan="${cell.colspan}*2-1">
+									<input th:case="'Control'" 
+										th:attr="meta_:field=${cell.content.dataFieldName},__${cell.attrsString()}__" />
+									<input th:case="'RefEntityControl'" 
+											th:attr="meta_:field=${cell.content.dataFieldName},__${cell.attrsString()}__" />
+									<span  th:case="*" th:text="''">
+									</span>
+								</td></meta:placeholder></tr>
+							</table>
+					</div>	
+				</div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript"  th_:inline="javascript">
+	//<![CDATA[
+;(function($){	           
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var container = $('#' + viewId);
+		Page.init(container);
+	});
+}(jQuery)); 	
+	//]]>
+	</script>
+</div>
+

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" height="100%" multiSelect="true" multiSelectKey="None" shrinkToFit="true" editUrl="~/entities/CustomIdComponent/edit" deleteUrl="~/entities/CustomIdComponent/delete" createUrl="~/entities/CustomIdComponent/create" dataUrl="~/entities/CustomIdComponent/query_paged" entityName="CustomIdComponent" id="grid_25dffc5f-0261-4f99-9bef-cfb10fcc25f3">
+    <columns>
+        <column width="30" primaryKey="true" visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" dataField="id"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="name"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="type"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="belongTo"/>
+        <column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="80" dataField="order"/>
+    </columns>
+    <contextButtons>
+        <button buttonIcon="mini/icon_tool_022.gif" cssClass="" isInMoreBtns="true" name="edit" onClick="grid.editRecord"/>
+        <button buttonIcon="mini/icon_tool_060.gif" cssClass="" isInMoreBtns="true" name="delete" onClick="grid.delRecord"/>
+    </contextButtons>
+    <toolBarSetting>
+        <button isInMoreBtns="false" cssClass="" name="create" buttonIcon="main/button-add.png" onClick="grid.addRecord"/>
+        <button isInMoreBtns="false" cssClass="" name="edit" buttonIcon="main/comment-edit.png" onClick="grid.editRecord"/>
+        <button isInMoreBtns="false" cssClass="" name="delete" buttonIcon="main/button-white-remove.png" onClick="grid.delRecord"/>
+        <button isInMoreBtns="false" cssClass="" name="fresh" buttonIcon="main/button-load.png" onClick="grid.refreshGrid"/>
+        <button isInMoreBtns="false" cssClass="" name="search" buttonIcon="main/search-add.png" onClick="grid.advanceSearch"/>
+        <button isInMoreBtns="false" cssClass="" name="export" buttonIcon="main/file-send.png" onClick="grid.exportGrid"/>
+    </toolBarSetting>
+    <joinEntities>
+    </joinEntities>
+    <filter groupOp="AND">
+        <filters/>
+        <rules/>
+    </filter>
+    <orderby>
+        <rule direction="Asc" field="belongTo"/>
+        <rule direction="Asc" field="order"/>
+    </orderby>
+    <quickSearch searchColNum="4"/>
+    <addDialogSettings/>
+    <editDialogSettings/>
+    <viewDialogSettings/>
+</grid>

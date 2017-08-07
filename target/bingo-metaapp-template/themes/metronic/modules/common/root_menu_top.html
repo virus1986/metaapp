@@ -1,0 +1,9 @@
+<div th:fragment="rootmenu">
+	<li   th:each="menu : ${topSiteMap.menus}"   th:id="${menu.id} + '-navigator'"   th:class="${'nav-item '+menu.styleCode}" 
+		th:href="'#' + ${menu.id} + '-tree'"
+		 th:attr="data-url=${menu.submenuSource},data-id=${menu.id},data-cssStyle=${menu.cssStyle},data-code=${menu.code}">
+			<i  th:if="${!menu.icon.startsWith('icon-')}"   th:style="'background:url('+${themes.icon(menu.icon)}+') no-repeat center center'" ></i>
+			<i  th:if="${menu.icon.startsWith('icon-')}"  th:class="${menu.icon}"> </i>
+			<span th:text="${menu.text}">客户管理</span>
+	</li>
+</div>

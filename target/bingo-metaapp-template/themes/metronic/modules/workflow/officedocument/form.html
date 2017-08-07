@@ -1,0 +1,233 @@
+<div th:id="${viewId}" class="panel apply-panel " style="min-width: 850px;">
+	<form id="entityForm" th:object="${entity}" th:action="${requestUrl}"
+		method="post" data-widget="validator"	class="form-horizontal ajaxpost ">
+		<input type="hidden" meta:field="*{id}" />
+		<div class="table-dialog">
+			<div class="ui-dialog-title" th:switch="${action}">
+				<span th:case="'EDIT'"
+					th:text="#{common.edit}+${metaEntity.displayName}"></span> <span
+					th:case="'CREATE'"
+					th:text="#{common.create}+${metaEntity.displayName}"></span> <span
+					th:case="'VIEW'" th:text="#{common.view}+${metaEntity.displayName}"></span>
+				<span th:case="*" th:text="#{common.notExistAction}+${action}"></span>
+			</div>
+			<div class="ui-dialog-content container-fluid">
+				<table class="form-table form-bordered col4-fluid">
+					<tbody>
+						<tr>
+							<th><label>名称：</label></th>
+							<td colspan="1"><input meta:field="name" /></td>
+							<th><label>状态：</label></th>
+							<td colspan="1"><input meta:field="status" /></td>
+						</tr>
+						<tr>
+							<th><label>发布人：</label></th>
+							<td colspan="1"><input meta:field="PublishUser" /></td>
+							<th><label>发布部门：</label></th>
+							<td colspan="1"><input meta:field="PublishOrg"/></td>
+						</tr>
+						<tr class="">
+							<th><label>正文：</label></th>
+							<td colspan="1">
+								<span class="inputpro-img input-append">
+									<input meta:field="content" readonly="readonly"  style="width: 179px;"/><a href="javascript://"
+											 class="add-on btn content-edit" ><i class="icon-edit"></i></a>
+								</span>
+							</td>
+							<th><label>公开范围：</label></th>
+							<td colspan="1"><input meta:field="authType"/></td>
+						</tr>
+						<tr class="">
+							<th><label>备注：</label></th>
+							<td colspan="3"><input meta:field="Remarks"/></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="portlet box slave tea-green" data-slave="OfficeDocAuth" style="display:none">
+					<div class="portlet-title">
+						<div class="caption">
+							<i class="icon-reorder"></i><span>权限控制</span>
+						</div>
+						<div class="actions">
+							<a href="javascript://" class="btn addUser green"><i class="icon-user"></i> 用户</a>	
+							<a href="javascript://" class="btn addDept green"><i class="icon-group"></i> 部门</a>			
+						</div>
+					</div>
+					<div class="portlet-body">
+						<div class="dataTables_wrapper form-inline">
+							<input type="hidden" name="_slave_entity_name_" value="officedocauth" />
+							<table class="table table-bordered table-striped  table-condensed slave-table" >
+								<thead>
+									<tr>
+										<th width="15px"></th>
+										<th>名称</th>
+										<th width="80px">类型</th>										
+										<th width="50px">操作</th>
+									</tr>
+								</thead>
+								<tbody id="officeDocAuth">
+									
+								</tbody>
+							</table>			
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui-dialog-buttonset">
+				<button th:if="${action} != 'VIEW'" type="submit" name="save"
+					class="btn purple">
+					<span th:text="#{common.save}"></span> <i
+						class="m-icon-swapright m-icon-white"></i>
+				</button>
+				<button type="button" name="close" class="btn closeBtn"
+					th:text="(${action} != 'VIEW')?#{common.cancel} : #{common.close}">
+				</button>
+			</div>
+		</div>
+	</form>
+	<script id="officeDocAuthTemplate" type="text/x-jquery-tmpl">
+	{%each items%}
+		<tr class="slave-row">
+			<td>
+				{%if type=='dept'%}
+					<i class="icon-group"></i>
+				{%else%}
+					<i class="icon-user yellow"></i>
+				{%/if%}
+			</td>
+			<td>
+				<input type="hidden" name="_slaves['officedocauth'][${$index}].id" value="${id}"/>
+				<input type="hidden" name="_slaves['officedocauth'][${$index}].principal" value="${principal}"/>
+				<input type="hidden" name="_slaves['officedocauth'][${$index}].type" value="${type}"/>
+				<input type="hidden" name="_slaves['officedocauth'][${$index}].name" value="${name}"/>
+				${name}
+			</td>
+			<td>
+				${type}
+			</td>
+			<td>
+				<a href="javascript://" class="btn mini yellow delRow"><i class="icon-trash"></i> </a>
+			</td>
+		</tr>
+	{%/each%}
+	</script>
+	<script th:inline="javascript">
+		//<![CDATA[   
+		    $(function(){   
+		       var viewId=/*[[${viewId}]]*/;   
+		       var container=$('#' + viewId); 
+		       var authType=$("[name='authType']",container);
+		       var slaveContainer=$(".slave",container);
+		       
+		       //编辑正文
+		       $(".content-edit",container).click(function(){
+		    	   var $fileInput=$("#content",container);		       
+			       var url=Global.contextPath + "/workflow/process/doc?_inframe=1";
+			       url=Urls.appendParam(url,"filepath",$fileInput.val());
+			       url=Urls.appendDate(url);
+			       $.openLink(url, {
+			            	showType:'slide',
+							requestType : "GET"
+						}, function(res){
+							if(res){
+								$fileInput.val(res.serverFilePath);
+						}
+					});
+		       });
+		       //切换权限控制范围
+		       authType.on("change",function(event){
+		    	   var val=$(this).val();
+		    	   if(val=="1"){
+		    		   slaveContainer.show();  
+		    	   }else{
+		    		   slaveContainer.hide();
+		    	   }
+		       });
+		       
+		       //添加用户
+		       $(".addUser",container).click(function(){
+		    	   var url=Global.contextPath + "/entities/User/select?mode=multi";
+		    	   jQuery.openLink(url,{requestType : "GET"},function(){
+		   				var reVal=jQuery.dialogReturnValue();
+		   				if(!reVal) return;
+		   				var principals=[];
+		   				
+		   				$(reVal).each(function(){
+		   					principals.push({
+		   						id:"",
+		   						name:this.text,
+		   						principal:this.id,
+		   						type:"user"
+		   					})
+		   				}) ;
+		   				addAuth(principals);
+		   			});
+		       });
+		       
+		       //添加部门
+		       $(".addDept",container).click(function(){
+		    	   var url=Global.contextPath + "/entities/uamOrganization/select?mode=multi";
+		    	   jQuery.openLink(url,{requestType : "GET"},function(){
+		   				var reVal=jQuery.dialogReturnValue();
+		   				if(!reVal) return;
+		   				var principals=[];
+		   				
+		   				$(reVal).each(function(){
+		   					principals.push({
+		   						id:"",
+		   						name:this.text,
+		   						principal:this.id,
+		   						type:"dept"
+		   					})
+		   				}) ;
+		   				addAuth(principals);
+		   			});
+		       });
+		       
+		       //删除
+		      slaveContainer.on("click",".delRow",function(){
+		    	  var tr=$(this).closest("tr");
+		    	  tr.remove();
+		       });
+		       
+		      function addAuth(principals){
+		    	$('#officeDocAuth',container).append($('#officeDocAuthTemplate',container).tmpl({items:principals}));
+		    	$(".slave-row",container).each(function(j,t){
+   					var n=j;
+   					$(":input",$(t)).each(function(i,v){
+   						if($(v).attr("name")){
+   							var newName=$(v).attr("name").replace(/\[\d+\]/,"["+n+"]");
+   							$(v).attr("name",newName);
+   						}
+   					});
+   				});
+		      }
+		      
+		      if(authType.filter(":checked").val()=="1"){
+		    	  slaveContainer.show();
+		    	  var officeDocId=$("#id",container).val();
+		    	  if(officeDocId.length>0){
+		    	  	var filter='{"field":"officeDocumentId","op":"eq","data":"'+officeDocId+'"}';
+					jQuery.simpleRequest({
+						data:{
+							search:true,
+							filters:'{"groupOp":"OR","rules":['+filter+']}',
+							sidx:"type",
+							sord:"asc",
+						},
+						type: 'post',
+						url :Urls.appendDate(Global.contextPath + "/entities/OfficeDocAuth/query2"),
+						dataType :'json',
+						success :function(response){
+							if(!response || response.length<1) return;
+							addAuth(response);
+						}
+					});
+		    	 }
+		      }
+		      
+		      Page.init(container);  
+		    }); 
+		 //]]>
+	</script>
+</div>

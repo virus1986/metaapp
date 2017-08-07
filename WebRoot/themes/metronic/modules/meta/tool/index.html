@@ -1,0 +1,98 @@
+<div th:id="${viewId}" class="panel apply-panel"
+	style="min-width: 950px;">
+		<div class="table-dialog">
+			<div class="ui-dialog-title">
+			</div>
+			<div class="ui-dialog-content container-fluid">
+				<div class="row-fluid">
+					<div class="span12 form-right" data-spy="scroll"
+						data-target="#left-navbar">
+						<div>
+							<table class="form-table">
+								<caption th:text="#{tool.index.metadataRelative}"></caption>
+								<tr>
+									<th></th>
+									<td>
+										<div style="width: 600px; margin-top: 7px;">
+											<h3 th:text="#{tool.index.selectOperation}"></h3>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th th:text="#{tool.index.reloadComment}+':'"></th>
+									<td>
+										<button type="button" id="reloadComment" class="btn btn-success" th:text="#{tool.index.reloadCommentButton}"></button>
+										<div style=" margin-top: 7px;">
+											<span class="label-info2 br-block" th:text="#{tool.index.reloadCommentDesc}"></span>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th th:text="#{tool.index.advanceSearch}+':'"></th>
+									<td>
+										<button type="button" id="reloadSearchCache" class="btn btn-success" th:text="#{tool.index.advanceSearchButton}"></button>
+										<div style=" margin-top: 7px;">
+											<span class="label-info2 br-block" th:text="#{tool.index.advanceSearchDesc}"></span>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th th:text="#{tool.index.upgradeTable}+':'"></th>
+									<td>
+										<button type="button" id="upgradeTable" class="btn btn-success" th:text="#{tool.index.upgradeTableButton}"></button>
+										<div style=" margin-top: 7px;">
+											<span class="label-info2 br-block" th:text="#{tool.index.upgradeTableDesc}"></span>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui-dialog-buttonset">
+			</div>
+		</div>
+	<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var context = "#" + viewId;
+		function initPage(){
+		}
+		initPage();
+
+		$("#reloadRelation", context).click(function(){
+			var $tip = $(this, context);
+			$tip.text(i18n.t("tool.loading"));
+			$.restGet(Global.contextPath + "/metadata/tool/reloadRelation", null, function(data){
+				$tip.text(i18n.t("tool.relation.sum",data));
+			});
+		});
+		
+		$("#reloadComment", context).click(function(){
+			var $tip = $(this, context);
+			$tip.text(i18n.t("tool.loading"));
+			$.restGet(Global.contextPath + "/metadata/tool/reloadComment", null, function(data){
+				$tip.text(i18n.t("tool.commentToDisplayName"));
+			});
+		});
+		
+		$("#reloadSearchCache", context).click(function(){
+			var $tip = $(this, context);
+			$tip.text(i18n.t("tool.loading"));
+			$.restPost(Global.contextPath + "/advance_search/reloadCache", null, function(data){
+				$tip.text(i18n.t("tool.advanceSearch.reload.success"));
+			});
+		});
+		$("#upgradeTable", context).click(function(){
+			var $tip = $(this, context);
+			$tip.text(i18n.t("tool.generating"));
+			$.restGet(Global.contextPath + "/metadata/tool/upgradeUnexistedTables", null, function(data){
+				$tip.text(i18n.t("tool.updateTableFromMetaentity.success"));
+			});
+		});
+	});
+	/*]]>*/
+	</script>
+</div>

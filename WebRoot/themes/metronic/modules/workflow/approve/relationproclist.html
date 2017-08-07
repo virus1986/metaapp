@@ -1,0 +1,145 @@
+<div class="portlet-body" th:fragment="main">
+	<div class="portlet box tea-green" th:id="'relationprocinst'+${viewId}">
+		<div class="portlet-title">
+			<div class="caption">
+				<i class="icon-reorder"></i>相关附件<small></small>
+			</div>
+			<div class="actions" th:if="${type=='todo' or type=='draft'}">
+				<div class="btn-group" th:id="'add-attachment'+${viewId}" >
+					<span class="btn green table-toolbar-icon-item" th:id="'addAttachmentBrowseButton'+${viewId}">
+						<i class="icon-plus"></i>
+						<span>关联流程</span>
+					</span>
+				</div>				
+			</div>
+		</div>
+		<div class="dataTables_wrapper form-inline" >
+			<table class="table table-bordered table-striped  table-condensed" style="clear: both;">
+
+				<thead>
+					<tr>
+						<th>流程名称</th>
+						<th style="width:150px">创建人</th>
+						<th style="width:150px">创建时间</th>
+						<th style="width:100px" class="del_oper_th" >操作</th>
+					</tr>
+				</thead>
+
+				<tbody id="relateProcInstList">
+					
+				</tbody>
+			</table>
+			<script id="relateProctemp" type="text/x-jquery-tmpl">
+				<tr>
+					<td><label><a href="javascript:void(0);" class="viewProcInst" procInstId="${procInstId}" >${name}</a></label></td>
+					<td><label>${createName}</label></td>
+          		  	<td><label>${createTime}</label></td>
+					<td><label><a href='javascript:void(0);' class="del_oper_a" id="${id}"> 删 除 </a></label></td>
+				</tr>
+			</script>
+		</div>
+	</div>
+	<script type="text/javascript" th:inline="javascript">
+     //<![CDATA[
+          $(function(){
+        	var viewId=/*[[${viewId}]]*/;
+  			var container = $('#relationprocinst' + viewId);
+  			var formkey = /*[[${wfProc.entityName}]]*/;
+  			var invoId = /*[[${businessDataId}]]*/;
+			var proposerId=/*[[${proposerId}]]*/;
+			var currUserId = /*[[${user.id}]]*/;
+			if(proposerId && proposerId != currUserId){
+				$(".ui-dialog-buttonset",container).hide();
+				$(".del_oper_th",container).hide();
+				$(".del_oper_a",container).closest("td").hide();
+				$(".seal_",container).hide();
+			}
+			var queryUrl = Global.contextPath + "/relateProcinst/queryRelateProcInst";
+			queryUrl = Urls.appendParam(queryUrl,"formkey",formkey);
+			queryUrl = Urls.appendParam(queryUrl,"businessid",invoId);
+			jQuery.restGet(
+				queryUrl,
+				{},
+				function(response){
+					if(response){
+						$('#relateProctemp',container).tmpl(response).appendTo($("#relateProcInstList",container));
+					}
+
+				}
+			);
+  			$(".btn",container).click(function(){
+  				$.openLink(Global.contextPath + '/entities/WfProcInst/select?mode=multi', {width:1000}, function(re) {
+  					if(re && $.isArray(re) && re.length > 0) {
+  						var dataArr = [];
+						for(i in re){
+							var data = new Object();
+							data.name = re[i].title;
+							data.type = re[i].procName;
+							data.createId = re[i].starterId;
+							data.createName = re[i].starterName;
+							data.createTime = re[i].createTime;
+							data.procInstId = re[i].id;
+							data.businessId = invoId;
+							data.formKey = formkey;
+							dataArr.push(data);
+						}
+						jQuery.restPost(
+							Global.contextPath + "/relateProcinst/saveRelateProcInst",
+							dataArr,
+							function(response){
+								if(response && response.length == dataArr.length){
+									$('#relateProctemp',container).tmpl(response).appendTo($("#relateProcInstList",container));
+								}
+
+							}
+						);
+  					}
+  				});
+  			});
+
+			//删除功能函数
+  			$(container).on("click",".del_oper_a",function(){
+  				var btn = $(this);
+  				var id = btn.attr("id");
+  				$.messageBox.confirm({
+  					message: "确定移除该相关流程？",
+  					callback: function(re) {
+  						if(re) {
+  							jQuery.simpleRequest({
+  								type:'GET',dataType:'JSON',
+  								url:Global.contextPath + "/relateProcinst/deleteRelateProcInst?ids="+id,
+  								success:function(response){
+									if(response>=1){
+										btn.closest("tr").remove();
+									}
+  								}
+  							});
+  						}
+  					}
+  				});
+  			});
+			//点击进行查看相关流程功能函数
+			$(container).on("click",".viewProcInst",function(){
+				var proc = $(this);
+				var procInstId = proc.attr("procInstId");
+				if(procInstId){
+					var getTaskIdUrl=Global.contextPath+"/workflow/process/getTaskIdByInst?instId="+procInstId;
+					var approveUrl=Global.contextPath+"/workflow/process/approve?type=view";
+					$.restGet(getTaskIdUrl,function(taskId){
+						if(taskId){
+
+							approveUrl=Urls.appendParam(approveUrl,"taskId",taskId);
+							$.openLink(approveUrl,{
+								showType:"tab",
+								title:"阅读"
+							},function(){
+							});
+						}
+					});
+				}
+  			});
+
+          });
+     //]]>
+	</script>
+	</div>

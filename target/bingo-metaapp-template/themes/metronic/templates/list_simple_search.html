@@ -1,0 +1,32 @@
+<div class="container-fluid" style="padding:0px">
+	<div th:id="'toolbar_'+${jqgrid.id}"
+	class="table-toolbar toolbar toolbar-auto row-fluid simple-search-area">
+		<table th:object="${jqgrid}" class="form-horizontal">
+			<tbody>
+				<tr th:each="rowData:${simpleSearchLayout}">
+				<td th:each="rowCol,state:${rowData}">
+					<div th:if="${state.count}!=${state.size}" class="control-group" style="display:inline-table;">
+		              <label class="control-label grid-simple-search-label" th:with="displayName=${rowCol['fieldDisplayName']}" th:text="(${displayName!=''})?(${displayName}+'：'):''"></label>
+		              <div class="controls grid-simple-search-controls">
+		                <input id="${rowCol['id']}" meta:searchField="${rowCol['fieldName']}"/>
+		              </div>
+		            </div>
+					<div th:if="${state.count}==${state.size}" class="control-group" style="display:inline-table;">
+		              <label class="control-label grid-simple-search-label" th:with="displayName=${rowCol['fieldDisplayName']}" th:if="${rowCol['fieldName']!='btns'} and ${rowCol['fieldDisplayName']!=''}" th:text="(${displayName!=''})?(${displayName}+'：'):''"></label>
+		              <div class="controls grid-simple-search-controls">
+		                <div th:if="${rowCol['fieldName']!='btns'}">
+							<input id="${rowCol['id']}" meta:searchField="${rowCol['fieldName']}"/>
+						</div>
+						<div th:if="${rowCol['fieldName']=='btns'}" class="toolbar-btns">
+							<button type="button" class="btn green searchBtn" th:text="#{common.search}"></button>
+							<button type="button" class="btn resetBtn" th:text="#{common.reset}"></button>
+						</div>
+		              </div>
+		            </div>
+				</td>
+				</tr>
+			</tbody>
+		</table>
+		
+	</div>
+</div>

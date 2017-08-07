@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" autoWidth="true" columnReordering="false" createUrl="~/entities/WfUserRole/create" dataUrl="~/entities/WfUserRole/query_paged" deleteUrl="~/entities/WfUserRole/delete" editUrl="~/entities/WfUserRole/edit" entityName="WfUserRole" id="grid_6e54fd96-bb2b-45bc-884a-6bfba9884c50" isSwitchView="false" multiSelect="true" multiSelectKey="None" shrinkToFit="true" type="normal" view="associcate" width="100%">
+    <addDialogSettings caption="" showType="pop-up"/>
+    <appearanceSettings alternateRowBackground="true" caption="流程角色管理" highlightRowsOnHover="true" rightToLeft="false" rowNumbersColumnWidth="25" scrollBarOffset="18" showFooter="false" showRowNumbers="true" shrinkToFit="true"/>
+    <columns>
+        <column dataField="id" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="false" width="150"/>
+        <column dataField="roleId" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="80"/>
+        <column dataField="userId" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="80"/>
+        <column dataField="orgId" editable="true" fixed="false" frozen="false" groupSummaryType="None" resizable="true" searchable="true" textAlign="Left" visible="true" width="80"/>
+    </columns>
+    <contextButtons>
+        <button isInMoreBtns="false" cssClass="" name="create" buttonIcon="main/button-add.png" onClick="grid.addRecord"/>
+        <button isInMoreBtns="false" cssClass="" name="edit" buttonIcon="main/comment-edit.png" onClick="grid.editRecord"/>
+        <button isInMoreBtns="false" cssClass="" name="delete" buttonIcon="main/button-white-remove.png" onClick="grid.delRecord"/>
+        <button isInMoreBtns="false" cssClass="" name="fresh" buttonIcon="main/button-load.png" onClick="grid.refreshGrid"/>
+        <button isInMoreBtns="false" cssClass="" name="search" buttonIcon="main/search-add.png" onClick="grid.advanceSearch"/>
+        <button isInMoreBtns="false" cssClass="" name="export" buttonIcon="main/file-send.png" onClick="grid.exportGrid"/>
+    </contextButtons>
+    <customSettings/>
+    <toolBarSetting>
+        <button name="create" onClick="grid.addRecord"/>
+        <button name="delete"/>
+    </toolBarSetting>
+    <editDialogSettings caption="" showType="pop-up"/>
+    <filter groupOp="and">
+        <filters>
+        </filters>
+        <rules>
+        </rules>
+    </filter>
+    <groupSettings collapseGroups="false"/>
+    <orderby>
+        <rule direction="Asc" field="roleId"/>
+    </orderby>
+    <quickSearch searchColNum="4"/>
+    <joinEntities>
+    </joinEntities>
+    <scriptBlock/>
+    <treeGridSettings enabled="false"/>
+    <treeNavigationSettings onlyOne="false">
+	    <filter groupOp="and">
+	        <filters>
+	        </filters>
+	        <rules>
+	        </rules>
+	    </filter>
+	    <orderBy field="orderNo" direction="Asc"/>
+    </treeNavigationSettings>
+    <viewDialogSettings caption="" showType="pop-up"/>
+</grid>

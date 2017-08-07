@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div class="panel apply-panel" style="min-width:600px;height: 200px;" th:id="${viewId}">
+  <form class="form-horizontal ajaxpost" data-widget="validator" id="entityForm" method="post" >
+    <div class="table-dialog">
+      <div class="ui-dialog-title" th:text="#{tool.export.exportEntityDesc}"></div>
+      <div class="ui-dialog-content container-fluid">
+        <div class="row-fluid">
+          <div class="span12 form-right" data-spy="scroll" data-target="#left-navbar">
+            <div>
+              <table class="form-section form-table col4-fluid">
+                <tr>
+                  <th th:text="#{metadata.targetEntity}"></th>
+                  <td colspan="3">
+                  	<textarea name="entity" th:text="${entity}" style="height: 80px; width: 400px"></textarea><br/>
+                  	<span th:text="#{tool.export.targetEntityDesc}"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <th th:text="#{tool.export.exportFormat}"></th>
+                  <td colspan="3">
+                  	<label class="radio">
+                  		<input type="radio" name='format' value='xml' checked="checked"/>
+                  		<span th:text="#{tool.export.exportFormat.xml}"></span>
+                  	</label>
+                  	<label class="radio">
+                  		<input type="radio" name='format' value='java'/>
+                  		<span th:text="#{tool.export.exportFormat.java}"></span>
+                  	</label>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui-dialog-buttonset">
+        <button class="btn btn-primary" name="export" type="button" th:text="#{common.export}">
+					</button>
+        <button class="btn closeBtn" name="close" type="button" th:text="#{common.cancel}">
+					</button>
+      </div>
+    </div>
+  </form>
+  <script th:inline="javascript" type="text/javascript">
+//<![CDATA[ 
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var context='#' + viewId;
+		
+		$('[name=export]', context).click(function() {
+			var entity = $('[name=entity]', context).val();
+			if(!entity) return false;
+			var format = $('[name=format]:checked', context).val();
+			EntityUtil.exportEntity(entity, format);
+			$(context).dialogClose();
+			return false;
+		});
+		$('[name=close]', context).click(function() {
+			$(context).dialogClose();
+		});
+	});
+//]]></script>
+</div>

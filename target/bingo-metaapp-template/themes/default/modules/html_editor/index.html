@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="title" content="可视化表单布局"/>
+<meta name="description" content="可视化表单布局"/>
+<meta name="keywords" content="可视化,布局,系统"/>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<title>可视化表单布局</title>
+<link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png" th:href="${themes.modules('html_editor/img/apple-touch-icon-57-precomposed.png')}"/>
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png" th:href="${themes.modules('html_editor/img/apple-touch-icon-72-precomposed.png')}"/>
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png" th:href="${themes.modules('html_editor/img/apple-touch-icon-144-precomposed.png')}"/>
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png" th:href="${themes.modules('html_editor/img/apple-touch-icon-114-precomposed.png')}"/>
+<link rel="shortcut icon" href="img/favicon.png" th:href="${themes.modules('html_editor/img/favicon.png')}"/>
+
+<!-- Le styles -->
+<link href="css/bootstrap-combined.min.css" th:href="${themes.modules('html_editor/css/bootstrap-combined.min.css')}" rel="stylesheet"/>
+<link href="css/jquery-ui.css" th:href="${themes.modules('html_editor/css/jquery-ui.css')}" rel="stylesheet"/>
+<link href="css/layoutit.css" th:href="${themes.modules('html_editor/css/layoutit.css')}" rel="stylesheet"/>
+
+<script type="text/javascript" src="js/jquery-2.0.0.min.js" th:src="${themes.modules('html_editor/js/jquery-2.0.0.min.js')}"></script>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<script th:if="${ieVersion ge 6 and ieVersion le 8}" type="text/javascript" th:src="${themes.modules('html_editor/js/html5shiv.js')}"></script>
+<script th:if="${ieVersion ge 6 and ieVersion le 9}" type="text/javascript" th:src="${themes.modules('html_editor/js/jquery-1.7.2.min.js')}"></script>
+<script th:if="${ieVersion ge 6 and ieVersion le 9}" type="text/javascript" th:src="${themes.modules('html_editor/js/jquery.placeholder.1.3.min.js')}"></script>
+
+<script type="text/javascript" src="js/jquery-ui.min.js" th:src="${themes.modules('html_editor/js/jquery-ui.min.js')}"></script>
+<script type="text/javascript" src="js/bootstrap.min.js" th:src="${themes.modules('html_editor/js/bootstrap.min.js')}"></script>
+<script type="text/javascript" src="js/jquery.ui.touch-punch.min.js" th:src="${themes.modules('html_editor/js/jquery.ui.touch-punch.min.js')}"></script>
+<script type="text/javascript" src="js/jquery.htmlClean.js" th:src="${themes.modules('html_editor/js/jquery.htmlClean.js')}"></script>
+<script type="text/javascript" src="ckeditor/ckeditor.js" th:src="${themes.modules('html_editor/ckeditor/ckeditor.js')}"></script>
+<script type="text/javascript" src="ckeditor/config.js" th:src="${themes.modules('html_editor/ckeditor/config.js')}"></script>
+<!-- ace -->
+<script src="../../../../statics/scripts/plugins/ace/src-min-noconflict/ace.js"  
+			th:src="${themes.js('plugins/ace/src-min-noconflict/ace.js')}" 
+			type="text/javascript" charset="utf-8"></script>
+<script src="../../../../statics/scripts/plugins/jsrender.js"  th:src="${themes.js('plugins/jsrender.js')}"></script>
+<script type="text/javascript" src="js/scripts.js" th:src="${themes.modules('html_editor/js/scripts.js')}"></script>
+</head>
+
+<body style="min-height: 660px; cursor: auto;" class="edit">
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container-fluid">
+      <button data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar" type="button"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+      <a class="brand" href="#"><img src="img/favicon.png" th:src="${themes.modules('html_editor/img/favicon.png')}"/>表单设计<span class="label" th:text="${entityName}+':'+${layout.name}">BETA</span></a>
+      <div class="nav-collapse collapse">
+      	<ul class="nav" id="menu-layoutit">
+          <li class="divider-vertical"></li>
+          <li>
+            <!-- <div class="btn-group" data-toggle="buttons-radio">
+              <button type="button" id="edit" class="btn btn-primary active"><i class="icon-edit icon-white"></i>编辑</button>
+              <button type="button" class="btn btn-primary" id="devpreview"><i class="icon-eye-close icon-white"></i>布局编辑</button>
+              <button type="button" class="btn btn-primary" id="sourcepreview"><i class="icon-eye-open icon-white"></i>预览</button>
+            </div> -->
+            <div class="btn-group">
+              <button class="btn btn-success" role="button" data-toggle="modal" data-target="#shareModal"><i class="icon-share icon-white"></i>保存</button>
+              <button type="button" class="btn btn-primary" data-target="#downloadModal"  role="button" data-toggle="modal"><i class="icon-download-alt icon-white"></i>生成</button>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" id="toggleSourceAndDesigner"><i class="icon-list-alt icon-white"></i><span>源码</span></button>
+              <button type="button" class="btn btn-primary" data-target="#formAttrEditModal" role="button" data-toggle="modal"><i class="icon-edit icon-white"></i>表单属性</button>
+              <button type="button" class="btn btn-primary" data-target="#scriptModal" role="button" data-toggle="modal"><i class="icon-file icon-white"></i>脚本</button>
+            </div>
+            <div class="btn-group">
+              <button class="btn btn-danger" href="#clear" id="clear"><i class="icon-trash icon-white"></i>清空</button>
+			  <button class="btn btn-info" href="#undo" id="undo" ><i class="icon-arrow-left icon-white"></i>撤销</button>
+			  <button class="btn btn-info" href="#redo" id="redo" ><i class="icon-arrow-right icon-white"></i>重做</button>
+			</div>
+          </li>
+        </ul>
+        <ul class="nav pull-right">
+               	  <li>
+               	  <div class="btn-group">
+               	 <!--  <span><iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=dodgepudding&amp;repo=layoutit&amp;type=watch&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="80px" height="20px"></iframe></span>
+			      <span><iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=dodgepudding&amp;repo=layoutit&amp;type=fork&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="80px" height="20px"></iframe></span>
+			      --> </div>
+			      </li>
+          </ul>
+      </div>
+      <!--/.nav-collapse --> 
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="">
+      <div class="sidebar-nav">
+      	<ul class="nav nav-list accordion-group" th:include="'/themes/'+${theme}+'/modules/html_editor/formlayout'::formlayout">
+        </ul>
+        <ul class="nav nav-list accordion-group" th:include="'/themes/'+${theme}+'/modules/html_editor/formlayout-item'::formlayout-item">
+        </ul>
+        <ul class="nav nav-list accordion-group">
+          <li class="nav-header">
+          <div class="pull-right popover-info"><i class="icon-question-sign "></i>
+              <div class="popover fade right">
+                <div class="arrow"></div>
+                <h3 class="popover-title">功能</h3>
+                <div class="popover-content">表单中当前实体可用的字段，包括多对一关系字段和多对多关系。</div>
+              </div>
+            </div>
+          <i class="icon-plus icon-white"></i> 字段项 </li>
+          <li style="display: list-item;" class="boxes mute" id="elmComm">
+          	<div th:each="f:${metadataFields}" th:attr="data-field=${f['dataField']},data-label=${f['label']}+'：'" class="box box-element field-item"> 
+          		<div class="toolbar">
+	          		<a href="#close" class="remove label label-important"><i class="icon-remove icon-white"></i>删除</a> 
+	          		<span class="drag label"><i class="icon-move"></i>拖动</span>
+	          		<span class="configuration">
+	          			<button type="button" class="btn btn-mini" data-target="#simpleEditorModal" role="button" data-toggle="modal">编辑</button> 
+	          		</span>
+          		</div>
+	            <div class="preview" th:text="${f['label']}">姓名</div>
+	            <div class="view">
+					<input th:if="${f['type']=='0'}" th:attr="_meta:field=${f['dataField']}" th:placeholder="${f['label']}"/>
+					<input th:if="${f['type']=='1'}" th:attr="_meta:ref=${f['dataField']}" th:placeholder="${f['label']}"/>
+	            </div>
+            </div>
+          </li>
+        </ul>
+        <ul class="nav nav-list accordion-group" th:include="'/themes/'+${theme}+'/modules/html_editor/base-layout'::base-layout">
+        </ul>
+        <!-- <ul class="nav nav-list accordion-group" th:include="'/themes/'+${theme}+'/modules/html_editor/base-css'::base-css">
+        </ul>-->
+        <ul class="nav nav-list accordion-group" th:include="'/themes/'+${theme}+'/modules/html_editor/component'::component">
+        </ul>
+        <!--<ul class="nav nav-list accordion-group" th:include="'/themes/'+${theme}+'/modules/html_editor/inter-component'::inter-component">
+        </ul> -->
+        <ul class="nav nav-list accordion-group">
+			<li class="nav-header">
+				<div class="pull-right popover-info"><i class="icon-question-sign "></i>
+				   <div class="popover fade right">
+				     <div class="arrow"></div>
+				     <h3 class="popover-title">功能</h3>
+				     <div class="popover-content">一对多关系列表和多对多关系列表，可拖动到弹出式表单页，编辑表单时生效，如果添加，请在左侧<span class="label label-important">自动关系--》关系设置</span>禁用默认关系。</div>
+				   </div>
+				 </div>
+				 <i class="icon-plus icon-white"></i> 关系列表 
+			</li>
+			<li style="display: none;" class="boxes mute">
+				<div th:each="relation:${relationLinks}" th:attr="data-relation=${relation['relationName']}" class="box box-element relation-grid form-parallel-item"> 
+					<div class="toolbar">
+						<a href="#close" class="remove label label-important"><i class="icon-remove icon-white"></i>删除</a> 
+						<span class="drag label"><i class="icon-move"></i>拖动</span>
+						<span class="configuration">
+							<button type="button" class="btn btn-mini" data-target="#simpleEditorModal" role="button" data-toggle="modal">编辑</button> 
+						</span>
+					</div>
+				   <div class="preview" th:text="${relation[relationDisplayName]}"></div>
+				   <div class="view">
+				   		<div _th:if="${action=='EDIT'}" class="relation-grid-placeholder" th:attr="entityname=${relation['targetEntityName']},data-ref-field-name=${relation['refFieldName']},data-refto-field-name=${relation['reftoFieldName']},data-relation='::'+${relation['relationName']},data-sourceentity=${relation['sourceEntityName']}"  view="associate">
+				   			<h2 th:text="'关系列表：'+${relation[relationDisplayName]}"></h2>
+				   		</div>
+				   </div>
+				</div>
+			</li>
+        </ul>
+      </div>
+    </div>
+    <!--/span-->
+    <div style="min-height: 590px;" class="demo">
+    	<textarea style="display: none;" id="script"></textarea>
+    </div>
+    <div style="min-height: 590px;display: none;" id="edit-main-source" class="main-source">
+    </div>
+    <!--/span-->
+    <div id="download-layout">
+      <div class="container-fluid"></div>
+    </div>
+  </div>
+  <!--/row--> 
+</div>
+<!--/.fluid-container--> 
+<div th:include="'/themes/'+${theme}+'/modules/html_editor/modal-all'::modal-all">
+</div>
+<div th:include="'/themes/'+${theme}+'/modules/html_editor/js-tmpl'::tmpl">
+</div>
+<script th:inline="javascript">
+/*<![CDATA[*/
+$(document).ready(function() {
+	var contentCss=/*[[${themes.modules('html_editor/css/bootstrap-combined.min.css')}]]*/ "css/bootstrap-combined.min.css";
+	var formId=/*[[${formId}]]*/ "";
+	var ieVersion=/*[[${ieVersion}]]*/ "";
+	var entityName=/*[[${entityName}]]*/ "";
+	var layout=/*[[${layout}]]*/ {};
+	var layoutSaveUrl=/*[[@{/html_editor/layout_form}]]*/;
+	domReadyFunc({contentCss:contentCss,formId:formId,layout:layout,layoutSaveUrl:layoutSaveUrl});
+	if(ieVersion>=6 && ieVersion<=9){
+		$.Placeholder.init();
+	}
+});
+/*]]>*/
+</script>
+</body>
+</html>

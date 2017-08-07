@@ -1,0 +1,150 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width: 950px;min-height:500px;">
+	<div class="ui-dialog-title hide">
+		<span>环节属性设置</span>
+	</div>
+	 <div class="tabbable tabbable-custom" id="multi-kind-select-tab" style="overflow: auto;">
+            <ul class="nav nav-tabs order-tab" th:with="hidename=${queryString['hidename']==null?'':queryString['hidename']}">
+              <li><a th:href="@{/processConfig/activity/baseInfo(parentcontext=${viewId},procId=${procId},actName=${actName},isoutiframe=${queryString['isoutiframe']},freestyle=${proc.getFreestyle()})}" tabId="base-props">基本属性</a></li>
+              <li><a th:href="@{/processConfig/event/activityEventsConfig(procId=${procId},actName=${actName},isoutiframe=${queryString['isoutiframe']})}" tabId="events">事件</a></li>
+              <li th:if="${!proc.getFreestyle()}"><a th:href="@{/processConfig/activity/activityPermissionConfig(procId=${procId},actName=${actName},entityName=${entityName},isoutiframe=${queryString['isoutiframe']})}" tabId="permissions">表单权限</a></li>
+            </ul>
+	  </div>
+	  <div class="ui-dialog-buttonset">
+		 	<button type="button" class="btn purple saveProps">
+             <span th:text="#{common.save}">
+             </span>
+             <i class="m-icon-swapright m-icon-white">
+             </i>
+           </button>
+           <button type="button" class="btn closeBtn" th:text="#{common.cancel}">
+           </button>
+	  </div>
+<script type="text/javascript" th:inline="javascript">
+//<![CDATA[ 
+;(function($){
+	$(function(){
+		var context=/*[['#'+${viewId}]]*/;
+		var procId=/*[[${procId}]]*/;
+		var actName=/*[[${actName}]]*/;
+		var isOutIframe=/*[[${queryString['isoutiframe']}]]*/;
+		var args=jQuery.dialogAraguments();
+		var exAttrs=args.exAttrs;
+		var cAttrs=args.cAttrs;
+		$("[tabId='base-props']",context).data("exAttrs",exAttrs);
+		$("[tabId='base-props']",context).data("cAttrs",cAttrs);
+		if(isOutIframe=='1'){
+			$(context).css({"height":"100%"})
+			$("#multi-kind-select-tab",context).css({"height":"100%"});
+		}
+		var dialogButtonPane=$(context).closest(".ui-dialog").find(".ui-dialog-buttonpane");
+		var tabButtons={};
+		$("#multi-kind-select-tab",context).tabs({
+			carousel : false,
+			cache:true,
+			ajaxOptions:{
+				cache:false
+			},
+			show:function(event,ui){
+				
+			},
+			load:function(event,ui){
+				
+			}
+		});
+		setTimeout(function(){
+			$(context).dialogResize();
+		},200);
+		
+		function saveProps(){
+			var relVal={exAttrs:{},cAttrs:{}};
+			var actsConfig={actConfig:null,eventConfigs:null,procPermissions:null};
+			//set actConfig
+			var basePropsForm=$("#base-props",context).find("form");
+			var baseFormJson=null;
+			if(basePropsForm.length>0){
+				baseFormJson=basePropsForm.toJson();
+				if(baseFormJson.canNotSkip==="1"){
+					baseFormJson.canNotSkip=true;
+				}else{
+					baseFormJson.canNotSkip=false;
+				}
+			}
+			var exAttrs=$("#base-props",context).find(".ex-attr-con").toJson();
+			var exAttrsNames=["isNeedUserSelectAct","isCountersign","isContersignInner","isNeedUserSelectActor"];
+			var exAttrsNames1=["ccCandidates"];
+			var cAttrsNames=["userchoiceactors"];
+			$.each(exAttrsNames,function(i,name){
+				if(exAttrs[name]==="1"){
+					relVal.exAttrs[name]=true;
+				}else{
+					relVal.exAttrs[name]=false;
+				}
+			});
+			$.each(exAttrsNames1,function(i,name){
+				if(exAttrs[name]){
+					relVal.exAttrs[name]=exAttrs[name];
+				}else{
+					relVal.exAttrs[name]=false;
+				}
+			});
+			$.each(cAttrsNames,function(i,name){
+				if(exAttrs[name]==="1"){
+					relVal.cAttrs[name]=true;
+				}else{
+					relVal.cAttrs[name]=false;
+				}
+			});
+			if(baseFormJson){
+				actsConfig.actConfig=$.extend(baseFormJson,{procId:procId,actName:actName});
+			}
+			//set eventsConfig
+			var eventsConfigTbody= $("#events",context).find(".events-table tbody");
+			var eventsConfigTrs= eventsConfigTbody.find("tr");
+			var eventsConfig=[];
+			eventsConfigTrs.each(function(i,ec){
+				var id= $(ec).find("[name=id]").val();
+				var eventType= $(ec).find("[name=eventType]").val();
+				var eventOperation= $(ec).find("[name=eventOperation]").val();
+				var businessData= $(ec).data("businessData");
+				businessData=JSON.stringify(businessData);
+				eventsConfig.push({id:id,procId:procId,actName:actName,eventType:eventType,eventOperation:eventOperation,businessData:businessData});
+			});
+			if(eventsConfigTbody.length){//user clicked the tab
+				actsConfig.eventConfigs=eventsConfig;
+			}
+			var permissionsBtns=$("#permissions",context).find("#permissionHiddenBtn");
+			if(permissionsBtns.length){//user clicked the tab
+				var permissions=permissionsBtns.data("getPermissions").call(this);
+				actsConfig.procPermissions=permissions;
+			}
+			var url=Global.contextPath+"/processConfig/process/activityPropsConfig?procId="+procId+"&actName="+actName;
+			if(actsConfig.actConfig||actsConfig.eventConfigs||actsConfig.procPermissions){//post data if data has changed
+				$.restPost(url,actsConfig,function(res){
+					if(res){
+					}
+				},{async:false});
+			}
+			
+			if(relVal){
+				return relVal;
+			}else{
+				return false;
+			}
+		};
+		$(".closeBtn",context).click(function(){
+			$(context).dialogClose(null);
+		});
+		$(".saveProps",context).click(function(){
+			if($(".saveProps",context).data("clicked")){
+				return false;
+			}
+			$(".saveProps",context).data("clicked",true);
+			var result=saveProps();
+			$(context).dialogClose(result);
+		});
+	});  
+}(jQuery));                 
+//]]> 
+</script>
+
+</div>

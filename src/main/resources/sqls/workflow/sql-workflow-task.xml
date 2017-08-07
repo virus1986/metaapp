@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment></comment>
+
+	<!-- 统计我的待办任务列表(注意：这里就不加后续条件了，只加status!=10这条件，这个任务实体类已作了权限条件控制了)-->
+	<entry key="wf_task.totalPendingTask">
+		<![CDATA[
+			select count(1) from WfTask WfTask
+			where WfTask.status != 10
+			and WfTask.deleted = 0
+			
+		]]>
+	</entry>
+
+	<!-- 统计处理中的我发起的流程（处理中事项）列表  -->
+	<entry key="wf_task.totalDoingTask">
+		<![CDATA[
+			SELECT count(1) FROM WfProcInst WfProcInst 
+			WHERE WfProcInst.starterId = #userId# 
+			AND WfProcInst.status <> #status#
+		]]>
+	</entry>
+	
+	<!-- 统计待阅事项列表  -->
+	<entry key="wf_task.totalForReadingTask">
+		<![CDATA[
+			SELECT
+				COUNT (1)
+			FROM
+				wfNotify WfNotify
+			WHERE
+				WfNotify.status != 10
+				and WfNotify.deleted = 0
+			
+		]]>
+	</entry>
+	<entry key="business.getTaskIdByInstId">
+		<![CDATA[
+			select wt.id from wfTask wt 
+			where wt.procInstId=#instId#
+			order by wt.startTime desc,wt.seq DESC
+		]]>
+	</entry>
+</properties>

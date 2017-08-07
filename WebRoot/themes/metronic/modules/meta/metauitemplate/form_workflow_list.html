@@ -1,0 +1,37 @@
+<div th:attr="data-url=${requestUrl}"  th:id="${viewId}">
+	<div class="breadcrumbs" id="breadcrumbs">
+		<ul class="breadcrumb">		
+		</ul>
+	</div>
+	<div class="container-fluid m-top10">
+		<meta:grid id="'grid_'+${entityName}+'_'+${view}+'_'+${viewId}"  entityName="${entityName}" view="${view}"/>
+	</div>
+<script type="text/javascript" th:inline="javascript">
+//<![CDATA[ 
+;(function($){
+$(function(){
+	var gridId=/*[['grid_'+${entityName}+'_'+${view}+'_'+${viewId}]]*/;
+	var $grid=$("#"+gridId);
+	$grid.jqGrid("setGridParam",{
+		onBeforeDelete:function($grid){
+			var selectIds=$grid.jqGrid('getGridParam','selarrrow');
+			var sysIds=[];
+			for(var i=0;i<selectIds.length;++i){
+				var row=$grid.getRowData(selectIds[i]);
+				if(row.isCustom=="true"){
+					return true;
+				}
+				sysIds.push("["+row.displayName+"]");
+			}
+			if(sysIds.length>0){
+				$.messageBox.warning({message:sysIds.join(",")+i18n.t("form.deleteFailSystem")});
+				return false;
+			}
+			return true;
+		}
+	});
+});
+}(jQuery)); 
+//]]> 
+</script>
+</div>

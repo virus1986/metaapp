@@ -1,0 +1,37 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width: 450px;">
+	<form id="entityForm" th:object="${entity}" method="post" th:action="${requestUrl}"
+		data-widget="validator" class="form-horizontal ajaxpost">
+		
+			<div class="ui-dialog-content container-fluid ">
+				<table class="form-table form-bordered col2-fluid">
+						<tr>
+								<th><label>原始密码:</label></th>
+								<td><input type="password" id="oldpwd" name="oldPwd" data-validator="required"/></td>
+							</tr>
+							<tr>
+								<th><label>新密码:</label></th>
+								<td><input type="password" id="newpwd" name="newPwd" data-validator="required"/></td>
+							</tr>
+							<tr>
+								<th><label>确认密码:</label></th>
+								<td><input type="password" id="confirmpwd" name="confirmPwd" data-validator="required,equalToField[newPwd]" /></td>
+							</tr>
+				</table>
+			</div>
+			<div class="ui-dialog-buttonset">
+				<button th:if="${action} != 'VIEW'" type="submit" name="save"
+					class="btn purple" ><span th:text="#{common.save}"></span>
+					<i class="m-icon-swapright m-icon-white"></i>
+				</button>
+				<button type="button" name="close" class="btn closeBtn"
+					th:text="#{common.cancel}"></button>
+			</div>
+	</form>
+	<script type="text/javascript" th:inline="javascript">
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var container = $('#' + viewId);
+		Page.init(container);
+	});
+</script>
+</div>

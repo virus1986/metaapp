@@ -1,0 +1,270 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:730px;min-height:350px;">
+	<div class="ui-dialog-title">
+		<span>处理意见</span>
+	</div>
+	<div class="form-horizontal">
+	<div class="control-group" th:unless="${queryString[hideForward]=='true'}">
+		<label class="control-label"><span class="required-star">*</span>收件人:</label>
+		<div class="controls">
+			<span class="inputpro-img input-append" style="margin-bottom: 0px;">
+				<input type="text" name="candidatesText" required="required" style="width:540px"/> <span
+				class="add-on btn select-candidates-actor"> <i
+					class=" icon-search"></i>
+			</span>
+			</span> 
+			<label th:if="${queryString[canCountersign]}" class="checkbox" style="display: block;"> <input
+				name="contersignTag" type="checkbox" /> 每个收件人都要处理
+			</label>
+		</div>
+	</div>
+	<div class="control-group" th:if="${queryString[transfer]=='true'}">
+		<label class="control-label"><span class="required-star">*</span>收件人:</label>
+		<div class="controls">
+			<span class="inputpro-img input-append" style="margin-bottom: 0px;">
+				<input type="text" name="transferCandidatesText" required="required" style="width:540px"/> <span
+				class="add-on btn select-transfercandidates-actor"> <i
+					class=" icon-search"></i>
+			</span>
+			</span> 
+		</div>
+	</div>
+	<div class="control-group" th:if="${queryString[reject]=='true'}">
+		<label class="control-label"><span class="required-star">*</span>退回环节:</label>
+		<div class="controls">
+			<select class="reject-to-con" name="rejectToAct" style="width:580px;">
+				<option value="">--请选择退回环节--</option>
+				<option th:each="hisTask,stat:${historyTasks}"
+				 th:value="${hisTask.activityInstanceId}"
+				  th:text="${hisTask.title}+'['+${hisTask.assigneeName}+']'"></option>
+			</select>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">抄送人:</label>
+		<div class="controls">
+			<span th:if="${ccCandidatesDesc==null}" class="inputpro-img input-append" style="margin-bottom: 0px;">
+				<input type="text" name="ccCandidatesText" style="width:540px"/> <span
+				class="add-on btn select-ccCandidates-actor"> <i
+					class=" icon-search"></i>
+			</span>
+			</span>
+			<div th:if="${ccCandidatesDesc!=null}" th:text="${ccCandidatesDesc}" style="font-size: 14px;padding-top: 7px;"> 
+			</div>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><span th:unless="${queryString[flowType]=='finish' and queryString[contersignInner]=='0'}" class="required-star">*</span>处理意见:</label>
+		<div class="controls">
+			<div class="userCommentCon" style="position: relative;">
+				<!-- <button class="btn mini blue userCommentSelectHat" style="position: absolute;top:-1px;left:2px;">
+					<i class="icon-star">选择常用意见</i>
+				</button> -->
+				<div class="dropdown">
+					<button class="dropdown-toggle btn mini blue userCommentSelectHat" role="button" data-toggle="dropdown" style="position: absolute;top:-1px;left:2px;">
+						<i class="icon-star">选择常用意见</i>
+					</button>
+	                <ul class="selectForUserCommentVals dropdown-menu" role="menu" style="height:250px;overflow:auto;">
+	                  <li class="selectForUserCommentItem" role="presentation" style="max-width: 150px;" th:each="opi:${opinions}" th:attr="data-content=${opi['content']}"><a role="menuitem" tabindex="-1" href="javascript://" th:text="${opi['content']}"></a></li>
+	                </ul>
+	            </div>
+				<button class="btn mini tea-green addCommonOpinion" style="position: absolute;top:-1px;left:110px;">
+				  	<i class="icon-star-empty">设为常用意见</i>
+				</button>
+				<!-- <div class="pop-select hide">
+					<select name="selectForUserComment" style="position: absolute;left:75px;">
+						<option value="">选择常用意见</option>
+						<option th:each="opi:${opinions}" th:value="${opi['content']}" th:text="${opi['content']}"></option>
+					</select>
+				</div> -->
+				<textarea name="userComment" th:title="${queryString[contersignInner]}" th:if="${queryString[flowType]=='finish' and queryString[contersignInner]=='0'}" class="m-wrap bg-white" style="width: 566px;margin-top:10px;padding-top: 12px !important;" rows="13" placeholder="请输入处理意见"></textarea>
+				<textarea name="userComment" th:title="${queryString[contersignInner]}" th:unless="${queryString[flowType]=='finish' and queryString[contersignInner]=='0'}" required="required" class="m-wrap bg-white" style="width: 566px;margin-top:10px;padding-top: 12px !important;" rows="13" placeholder="请输入处理意见"></textarea>
+			</div>
+		</div>
+	</div>
+	</div>
+	<div class="ui-dialog-buttonset">
+        <button type="button" class="btn closeBtn">返回 </button>
+	 	<button type="button" class="btn blue saveParams">
+          <span>提交</span><i class="m-icon-swapright m-icon-white"></i>
+        </button>
+	</div>
+<script th:inline="javascript">
+//<![CDATA[
+;(function($){
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var context = $('#'+viewId);
+		var canSetForward=/*[[${queryString[canSetForward]}]]*/;
+		var transfer=/*[[${queryString[transfer]}]]*/;
+		var reject=/*[[${queryString[reject]}]]*/;
+		var flowTypeParam=/*[[${queryString[flowType]}]]*/;
+		var contersignInner=/*[[${queryString[contersignInner]}]]*/;
+		var opinions=/*[[${opinions}]]*/;
+		var args=jQuery.dialogAraguments()||{};
+		var replyActor=args.replyActor;//reply forwardCandidates
+		var flowType={countersign:"countersign",normal:"normal",finish:"finish"};
+		var result={sendToReadActors:null,forwardActors:null,userComment:null,flowType:flowType.normal};
+		
+		var $contersignTagInput=$("[name=contersignTag]",context);
+		var $contersignTag=$contersignTagInput.parent();
+		$contersignTag.hide();
+		
+		var opinionsMap={};
+		if(null!=opinions&&jQuery.isArray(opinions)){
+			jQuery.each(opinions,function(i,opt){
+				opinionsMap[opt.content]=true;
+			});
+		}
+		$(".closeBtn",context).click(function(){
+			$(context).dialogClose(null);
+		});
+		$(".saveParams",context).click(function(){
+			if(canSetForward==="true"&&!result.forwardActors){
+				$.messageBox.info({message:"请选择收件人！"})
+				return false;
+			}
+			if(transfer==="true"&&!result.transferActors){
+				$.messageBox.info({message:"请选择收件人！"})
+				return false;
+			}
+			result.rejectAct=$("[name=rejectToAct]",context).val();
+			if(reject==="true"&&!result.rejectAct){
+				$.messageBox.info({message:"请选择退回环节！"})
+				return false;
+			}
+			result.userComment=$("[name=userComment]",context).val();
+			if(!(flowTypeParam===flowType.finish && contersignInner=="0")){
+				if(!result.userComment){
+					$.messageBox.info({message:"请填写审批意见！"})
+					return false;
+				}
+			}
+			$(context).dialogClose(result);
+		});
+		reqModule(["module/workflow/workflow_utils"],function(WorkflowUtils){
+			var workflowUtils=WorkflowUtils.createNew();
+			var selectUser=workflowUtils.selectActors;
+			$(".select-ccCandidates-actor",context).click(function(){
+				var ccCandidatesInput=$("[name='ccCandidatesText']",context);
+				selectUser(function(actors){
+					if(jQuery.isArray(actors)){
+						var desc=[];
+						jQuery.each(actors,function(i,a){
+							desc.push(a.name);
+						});
+						ccCandidatesInput.val(desc.join(","));
+						result.sendToReadActors=actors;
+					}
+				},{dept:true,group:true});
+			});
+			$(".select-transfercandidates-actor",context).click(function(){
+				var transferCandidatesInput=$("[name='transferCandidatesText']",context);
+				selectUser(function(actors){
+					if(jQuery.isArray(actors)){
+						var desc=[];
+						jQuery.each(actors,function(i,a){
+							desc.push(a.name);
+						});
+						transferCandidatesInput.val(desc.join(","));
+						result.transferActors=actors;
+					}
+				});
+			});
+			$(".select-candidates-actor",context).click(function(){
+				var candidatesInput=$("[name='candidatesText']",context);
+				selectUser(function(actors){
+					if(jQuery.isArray(actors)){
+						if(actors.length>1){
+							$contersignTag.show();
+						}else{
+							$contersignTag.hide();
+						}
+						var desc=[];
+						jQuery.each(actors,function(i,a){
+							desc.push(a.name);
+						});
+						candidatesInput.val(desc.join(","));
+						result.forwardActors=actors;
+					}
+				},{dept:true,group:true});
+			});
+		});
+		if(canSetForward==="false"){
+			$(".select-candidates-actor",context).off("click");
+			$("[name='candidatesText']",context).attr("disabled","disabled");
+			if($.isArray(replyActor)){
+				$("[name='candidatesText']",context).val(replyActor[0].name);
+			}
+		}
+		$contersignTagInput.click(function(){
+			var isChecked=$(this).is(":checked");
+			result.flowType=isChecked?flowType.countersign:flowType.normal;
+		});
+		
+		var $approveContainer=$(context);
+		var selectForUserComment=$approveContainer.find("[name=selectForUserComment]");
+		var userCommentSelectHat=$approveContainer.find(".userCommentSelectHat");
+		var addCommonOpinion=$approveContainer.find(".addCommonOpinion");
+		/* userCommentSelectHat.click(function(){
+			selectForUserComment.parent().toggleClass("hide");
+		});
+		$(context).click(function(e){
+			var $t=$(e.target);
+			if(!($t.hasClass("userCommentSelectHat")||$t.parent().hasClass("userCommentSelectHat")||$t.parent().hasClass("pop-select"))){
+				selectForUserComment.parent().addClass("hide");
+			}
+		}); */
+		addCommonOpinion.click(function(){
+			var $commentInput=$approveContainer.find("[name=userComment]");
+			var userComment=$commentInput.val();
+			if(!userComment){
+				$.messageBox.warning({message:"待保存的意见不可为空!"});
+				return;
+			}
+			if(opinionsMap[userComment]){
+				$.messageBox.warning({message:"已经存在此常用意见了，请不要重复保存!"});
+				return;
+			}
+			var opinion={content:userComment};
+			var opinionSaveUrl=Global.contextPath+"/entities/wfCommonOpinion/edit";
+			$.ajax({
+				url:opinionSaveUrl,
+				data:opinion,
+				type:"POST",
+				success:function(data, textStatus, jqXHR){
+					opinionsMap[opinion.content]=true;
+					$.messageBox.info({message:"常用意见保存成功!"});
+				}
+			});
+			return false;
+		});
+		$(".selectForUserCommentItem",context).click(function(){
+			var userInput=$approveContainer.find("[name=userComment]");
+			var userComment=userInput.val();
+			var opinion=$(this).data("content");
+			if(!opinion){
+				return false;
+			}
+			if(!!userComment){
+				$.messageBox.confirm({
+					message:"替换或追加意见",
+					title:"选择意见添加方式",
+					cancelButton:"追加",
+					okButton:"替换",
+					callback:function(confirm){
+						if(confirm){
+							userInput.val(opinion);
+						}else{
+							userInput.val(userComment+"\n"+opinion);
+						}
+					}
+				});
+			}else{
+				userInput.val(opinion);
+			}
+		});
+	});
+}(jQuery)); 
+//]]>
+</script>
+</div>

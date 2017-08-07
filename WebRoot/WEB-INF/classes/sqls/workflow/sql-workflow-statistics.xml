@@ -1,0 +1,1530 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment></comment>
+
+	<!-- 统计流程定义发起的流程实例的数量和平均耗时 -->
+	<entry key="wf_statistics.getProcAvgDurationList">
+		<![CDATA[
+
+			  select 
+				  w3.proc_id,
+				  w3.proc_name,
+				  ifnull(w2.proc_inst_num,0) proc_inst_num, 
+				  ifnull(w2.avg_duration,0) avg_duration 
+			  from wf_proc w3
+			  left join
+			  (
+				select w1.proc_id,count(1) proc_inst_num, ceiling(AVG(w1.proc_duration)) avg_duration from
+				(
+					  select
+					  t3.proc_id,
+					  t2.id_,
+					  t2.duration_/60000.0 proc_duration
+					  from wf_proc_inst t2
+					  left join
+					  wf_proc t3
+					  on t3.proc_id = t2.business_type
+					  where t2.duration_ >= 0 
+						  and t2.status_ = 10 
+						  and t3.proc_id is not null
+						  {? and t3.proc_catagory_id = #procCategoryId# }
+						  {? and t2.start_time >= #startTime# }
+						  {? and t2.start_time <= #endTime# } 
+				) w1
+				group by w1.proc_id
+			  ) w2
+			  on w3.proc_id = w2.proc_id
+			  where w2.proc_inst_num > 0
+			   {?  or w3.proc_name like concat('%',#procName#,'%') }
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的数量和平均耗时 -->
+	<entry key="wf_statistics.getProcAvgDurationListCount">
+		<![CDATA[
+
+			  select count(1) 
+			  from wf_proc w3
+			  left join
+			  (
+				select w1.proc_id,count(1) proc_inst_num from
+				(
+					  select
+					  t3.proc_id,
+					  t2.id_,
+					  t2.duration_ proc_duration
+					  from wf_proc_inst t2
+					  left join
+					  wf_proc t3
+					  on t3.proc_id = t2.business_type
+					  where t2.duration_ >= 0 
+						  and t2.status_ = 10 
+						  and t3.proc_id is not null
+						  {? and t3.proc_catagory_id = #procCategoryId# }
+						  {? and t2.start_time >= #startTime# }
+						  {? and t2.start_time <= #endTime# } 
+				) w1
+				group by w1.proc_id
+			  ) w2
+			  on w3.proc_id = w2.proc_id
+			  where w2.proc_inst_num > 0
+			   {?  or w3.proc_name like concat('%',#procName#,'%') }
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义的各个环节的平均耗时 -->
+	<entry key="wf_statistics.getProcActivityEffective">
+		<![CDATA[
+		
+		select 
+		  w1.proc_id,
+		  w1.proc_name,
+		  w0.act_title,
+		  w0.avg_act_duration
+		  from wf_proc w1
+		  right join 
+		  (
+				  select
+				  t3.proc_id,
+				  t1.title_ act_title,
+				  ceiling(AVG(t1.duration_/60000.0)) avg_act_duration
+				  from wf_act_inst t1
+				  left join
+				  wf_proc_inst t2
+				  on t2.id_=t1.proc_inst_id
+				  left join
+				  wf_proc t3
+				  on t3.proc_id = t2.business_type
+				  where t1.duration_ > 0 
+						  and t1.status_ = 10 
+						  and t2.status_ = 10 
+						  and t3.proc_id is not null
+						  and t1.type_ = 'userTask' 
+			          {? and t3.proc_id = #procId# }
+					  {? and t2.start_time >= #startTime# }
+					  {? and t2.start_time <= #endTime# } 
+				  group by t3.proc_id, t1.title_
+			  ) w0
+			on w0.proc_id = w1.proc_id
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义的平均耗时, 以及大于平均耗时经验值的实例数量和小于的数量 -->
+	<entry key="wf_statistics.getProcDefExpDuration">
+		<![CDATA[
+
+		select 
+		  w1.proc_id,
+		  w1.proc_name,
+		  w2.avg_duration,
+		  w2.proc_inst_num,
+		  w2.smallthen,
+		  w2.bigthen
+		from wf_proc w1
+		right join
+		(
+			select 
+				w3.proc_id, 
+				ceiling(AVG(w3.proc_duration)) avg_duration, 
+				count(1) proc_inst_num,
+				SUM(w3.smallthen) smallthen,
+				SUM(w3.bigthen) bigthen
+			from
+			(
+			  select
+				  t3.proc_id,
+				  t2.id_ proc_inst_id,
+				  t2.duration_/60000.0 proc_duration,
+				  case when (t2.duration_/60000.0) < $expDuration$ then 1 else 0 end smallthen,
+				  case when (t2.duration_/60000.0) > $expDuration$ then 1 else 0 end bigthen
+			  from wf_proc_inst t2
+			  left join
+			  wf_proc t3
+			  on t3.proc_id = t2.business_type
+			  where t2.duration_ >= 0
+					  and t2.status_ = 10 
+					  and t3.proc_id is not null
+					  {? and t3.proc_id = #procId# }
+					  {? and t2.start_time >= #startTime# }
+					  {? and t2.start_time <= #endTime# } 
+			) w3
+			group by w3.proc_id
+		) w2
+		on w2.proc_id = w1.proc_id
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义的平均耗时, 以及大于平均耗时经验值的实例数量和小于的数量 -->
+	<entry key="wf_statistics.getProcDefExpDurationDetail">
+		<![CDATA[
+		
+		select 
+		  w1.proc_id,
+		  w1.proc_name,
+		  w3.proc_inst_id,
+		  w3.proc_inst_title,
+		  w3.status_,
+		  w3.starter_name,
+		  w3.starter_dept_name,
+		  w3.start_time,
+		  w3.proc_inst_duration
+		from wf_proc w1
+		right join
+		(
+		  select
+			  t3.proc_id,
+			  t2.id_ proc_inst_id,
+			  t2.title_ proc_inst_title,
+			  t2.status_,
+			  t2.starter_name,
+			  t2.starter_dept_name,
+			  t2.start_time,
+			  ceiling(t2.duration_/60000.0) proc_inst_duration
+		  from wf_proc_inst t2
+		  left join
+		  wf_proc t3
+		  on t3.proc_id = t2.business_type
+		  where t2.duration_ >= 0
+				  and t2.status_ = 10 
+				  and t3.proc_id is not null
+				  {? and t3.proc_id = #procId# }
+				  {? and t2.start_time >= #startTime# }
+				  {? and t2.start_time <= #endTime# } 
+				  {? and (t2.duration_/60000.0) > $expDuration$ }
+		) w3
+		on w3.proc_id = w1.proc_id
+			
+		]]>
+	</entry>
+	<!-- 统计流程定义的平均耗时, 以及大于平均耗时经验值的实例数量和小于的数量 -->
+	<entry key="wf_statistics.getProcDefExpDurationDetailCount">
+		<![CDATA[
+
+		  select count(1)
+		  from wf_proc_inst t2
+		  left join
+		  wf_proc t3
+		  on t3.proc_id = t2.business_type
+		  where t2.duration_ >= 0
+				  and t2.status_ = 10 
+				  and t3.proc_id is not null
+				  {? and t3.proc_id = #procId# }
+				  {? and t2.start_time >= #startTime# }
+				  {? and t2.start_time <= #endTime# } 
+				  {? and (t2.duration_/60000.0) > $expDuration$ }
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getProcTimeoutList">
+		<![CDATA[
+
+			  select 
+				  w3.proc_id,
+				  w3.proc_name,
+				  ifnull(w2.proc_inst_num,0) proc_inst_num, 
+				  ifnull(w2.avg_duration,0) avg_duration 
+			  from wf_proc w3
+			  left join
+			  (
+				select w1.proc_id,count(1) proc_inst_num, ceiling(AVG(w1.proc_duration)) avg_duration from
+				(
+					  select
+					  t3.proc_id,
+					  t2.id_,
+					  t2.duration_/60000.0 proc_duration
+					  from wf_proc_inst t2
+					  left join
+					  wf_proc t3
+					  on t3.proc_id = t2.business_type
+					  where t2.duration_ >= 0 
+						  and t2.status_ = 10 
+						  and t3.proc_id is not null
+						  {? and t3.proc_catagory_id = #procCategoryId# }
+						  {? and t2.start_time >= #startTime# }
+						  {? and t2.start_time <= #endTime# } 
+				) w1
+				group by w1.proc_id
+			  ) w2
+			  on w3.proc_id = w2.proc_id
+			  where w2.proc_inst_num > 0
+			   {?  or w3.proc_name like concat('%',#procName#,'%') }
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getThirdTimeOutList">
+		<![CDATA[
+		select
+		*
+		from
+		(
+			  select 
+				  w3.proc_id,
+				  w3.proc_name,
+				  w3.proc_stati_id,
+				  w4.stati_name,
+				  ifnull(w2.proc_inst_num,0) proc_inst_num, 
+				  ifnull(w2.avg_duration,0) avg_duration,
+				  w3.standard_consuming exp_duration,
+				  case when w3.standard_consuming>0 then (avg_duration - w3.standard_consuming)*100.0/w3.standard_consuming else 0 end duration_diff,
+				  out_num,
+				  case when w2.proc_inst_num>0 then out_num*100.0/w2.proc_inst_num else 0 end out_perc,
+				  out_duration,
+				  w2.return_num
+			  from wf_proc w3
+			  left join
+			  (
+				select w1.proc_id,count(1) proc_inst_num, 
+					ceiling(AVG(w1.avg_duration)) avg_duration,
+					SUM(bigthen) out_num,
+					case when SUM(bigthen) > 0 then ceiling(SUM(bigthentime)/SUM(bigthen)) else 0 end out_duration,
+					SUM(return_num) return_num
+				from
+				(
+					  select
+					  t3.proc_id,
+					  t2.id_,
+					  t2.duration_/60000.0 avg_duration,
+					  case when (t2.duration_/60000.0) > t3.standard_consuming then (t2.duration_/60000.0) - t3.standard_consuming  else 0 end bigthentime,
+					  case when (t2.duration_/60000.0) > t3.standard_consuming  then 1 else 0 end bigthen,
+				 (select COUNT(1) from wf_task t0
+				  where t0.proc_inst_id=t2.id_ 
+				  and (t0.type_=2 or t0.type_= 4)
+				  ) return_num
+					  from wf_proc_inst t2
+					  left join
+					  wf_proc t3
+					  on t3.proc_id = t2.business_type
+					  left join
+					  wf_proc_statistics t1
+					  on t3.proc_stati_id = t1.proc_stati_id
+					  where t2.duration_ >= 0 
+						  and t2.status_ = 10 
+				  		  and (t2.end_reason <> 9 or t2.end_reason is null)
+						  and t3.proc_id is not null
+						  {? and t3.proc_stati_id = #procStatiId# }
+						  {? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #proc_stati_parentid#) }
+						  {? and t2.start_time >= #startTime# }
+						  {? and t2.start_time <= #endTime# } 
+						  {? and t2.starter_dept_id in (select ID from uam_organization 
+							  where CODE like 
+							  (select CODE from uam_organization 
+							  where ID = #orgAreaId# )+'.%') }
+				) w1
+				group by w1.proc_id
+			  ) w2
+			  on w3.proc_id = w2.proc_id
+			  left join
+			  wf_proc_statistics w4
+			  on w3.proc_stati_id = w4.proc_stati_id
+			  where w2.proc_inst_num > 0
+				 {? and w3.proc_stati_id = #procStatiId# }
+		  ) w7 
+		  where 1=1
+		  	   {? and duration_diff >= #durationDiff# }
+			   {? and #isShowOut#='true' and out_perc >0 }
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getThirdTimeOutListCount">
+		<![CDATA[
+			  select 
+				  count(1)
+		from
+		(
+			  select 
+				  w3.proc_id,
+				  w3.proc_name,
+				  w3.proc_stati_id,
+				  w4.stati_name,
+				  ifnull(w2.proc_inst_num,0) proc_inst_num, 
+				  ifnull(w2.avg_duration,0) avg_duration,
+				  w3.standard_consuming exp_duration,
+				  case when w3.standard_consuming>0 then (avg_duration - w3.standard_consuming)*100.0/w3.standard_consuming else 0 end duration_diff,
+				  out_num,
+				  case when w2.proc_inst_num>0 then out_num*100.0/w2.proc_inst_num else 0 end out_perc,
+				  out_duration,
+				  w2.return_num
+			  from wf_proc w3
+			  left join
+			  (
+				select w1.proc_id,count(1) proc_inst_num, 
+					ceiling(AVG(w1.avg_duration)) avg_duration,
+					SUM(bigthen) out_num,
+					case when SUM(bigthen) > 0 then ceiling(SUM(bigthentime)/SUM(bigthen)) else 0 end out_duration,
+					SUM(return_num) return_num
+				from
+				(
+					  select
+					  t3.proc_id,
+					  t2.id_,
+					  t2.duration_/60000.0 avg_duration,
+					  case when (t2.duration_/60000.0) > t3.standard_consuming  then (t2.duration_/60000.0) - t3.standard_consuming  else 0 end bigthentime,
+					  case when (t2.duration_/60000.0) > t3.standard_consuming  then 1 else 0 end bigthen,
+				 (select COUNT(1) from wf_task t0
+				  where t0.proc_inst_id=t2.id_ 
+				  and (t0.type_=2 or t0.type_= 4)
+				  ) return_num
+					  from wf_proc_inst t2
+					  left join
+					  wf_proc t3
+					  on t3.proc_id = t2.business_type
+					  left join
+					  wf_proc_statistics t1
+					  on t3.proc_stati_id = t1.proc_stati_id
+					  where t2.duration_ >= 0 
+						  and t2.status_ = 10 
+				  		  and (t2.end_reason <> 9 or t2.end_reason is null)
+						  and t3.proc_id is not null
+						  {? and t3.proc_stati_id = #procStatiId# }
+						  {? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #proc_stati_parentid#) }
+						  {? and t2.start_time >= #startTime# }
+						  {? and t2.start_time <= #endTime# } 
+						  {? and t2.starter_dept_id in (select ID from uam_organization 
+							  where CODE like 
+							  (select CODE from uam_organization 
+							  where ID = #orgAreaId# )+'.%') }
+				) w1
+				group by w1.proc_id
+			  ) w2
+			  on w3.proc_id = w2.proc_id
+			  left join
+			  wf_proc_statistics w4
+			  on w3.proc_stati_id = w4.proc_stati_id
+			  where w2.proc_inst_num > 0
+			      {? and w3.proc_stati_id = #procStatiId# }
+		  ) w7 
+		  where 1=1
+		  	   {? and duration_diff >= #durationDiff# }
+			   {? and #isShowOut#='true' and out_perc >0 }
+
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getSecondTimeOutList">
+		<![CDATA[
+		select
+		    *
+		from
+		(
+			  select 
+				  w3.proc_stati_id,
+				  w3.stati_name,
+				  w3.parent_id,
+				  w4.stati_name parent_name,
+				  w3.exp_duration,
+				  ifnull(w2.avg_duration,0) avg_duration,
+				  case when w3.exp_duration>0 and w2.avg_duration>0 then (w2.avg_duration - w3.exp_duration)*100.0/w3.exp_duration else 0 end duration_diff,
+				  ifnull(w2.proc_num,0) proc_num,
+				  ifnull(w2.out_num,0) out_num,
+				  case when w2.proc_num>0 then w2.out_num*100.0/w2.proc_num  else 0 end out_perc,
+				  ifnull(w2.out_duration,0) out_duration
+			  from wf_proc_statistics w3
+			  left join
+			  (
+				  select w0.proc_stati_id,
+				    (select COUNT(*) from wf_proc where proc_stati_id = w0.proc_stati_id) proc_num,
+					ceiling(SUM(w0.avg_duration)/count(1)) avg_duration,
+					SUM(w0.out_num) out_num,
+					case when SUM(w0.out_num) > 0 then ceiling(SUM(w0.avg_duration)/SUM(w0.out_num)) else 0 end out_duration
+				  from
+				  (
+					select w1.proc_id,
+						w1.proc_stati_id,
+						count(1) proc_inst_num, 
+						ceiling(AVG(w1.avg_duration)) avg_duration,
+						case when SUM(bigthen) > 0 then 1 else 0 end out_num,
+						case when SUM(bigthen) > 0 then ceiling(SUM(bigthentime)/SUM(bigthen)) else 0 end out_duration
+					from
+					(
+						  select
+						  t3.proc_id,
+						  t3.proc_stati_id,
+						  t2.id_,
+						  t2.duration_/60000.0 avg_duration,
+						  case when (t2.duration_/60000.0) > t1.exp_duration then (t2.duration_/60000.0) - t1.exp_duration else 0 end bigthentime,
+						  case when (t2.duration_/60000.0) > t1.exp_duration then 1 else 0 end bigthen
+						  from wf_proc_inst t2
+						  left join
+						  wf_proc t3
+						  on t3.proc_id = t2.business_type
+						  left join
+						  wf_proc_statistics t1
+						  on t3.proc_stati_id = t1.proc_stati_id
+						  where t2.duration_ >= 0 
+							  and t2.status_ = 10 
+				  		      and (t2.end_reason <> 9 or t2.end_reason is null)
+							  and t3.proc_id is not null
+						  {? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #procStatiId#) }
+						  {? and t2.start_time >= #startTime# }
+						  {? and t2.start_time <= #endTime# } 
+						  {? and t2.starter_dept_id in (select ID from uam_organization 
+							  where CODE like 
+							  (select CODE from uam_organization 
+							  where ID = #orgAreaId# )+'.%') }
+					) w1
+					group by w1.proc_id,w1.proc_stati_id
+				  ) w0
+				  group by w0.proc_stati_id
+			  ) w2
+			  on w3.proc_stati_id = w2.proc_stati_id
+			  left join
+			  wf_proc_statistics w4
+			  on w3.parent_id = w4.proc_stati_id
+			  where w3.level_type = 2
+			      {? and w3.parent_id = #procStatiId# }
+		  ) w7 
+		  where 1=1
+		  	   {? and duration_diff >= #durationDiff# }
+			  
+		]]>
+	</entry>
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getSecondTimeOutListCount">
+		<![CDATA[
+
+			  select 
+				  count(1)
+		from
+		(
+			  select 
+				  w3.proc_stati_id,
+				  w3.stati_name,
+				  w3.parent_id,
+				  w4.stati_name parent_name,
+				  w3.exp_duration,
+				  ifnull(w2.avg_duration,0) avg_duration,
+				  case when w3.exp_duration>0 and w2.avg_duration>0 then (w2.avg_duration - w3.exp_duration)*100.0/w3.exp_duration else 0 end duration_diff,
+				  ifnull(w2.out_duration,0) out_duration
+			  from wf_proc_statistics w3
+			  left join
+			  (
+				  select w0.proc_stati_id,
+					ceiling(SUM(w0.avg_duration)/count(1)) avg_duration,
+					SUM(w0.out_num) out_num,
+					case when SUM(w0.out_num) > 0 then ceiling(SUM(w0.avg_duration)/SUM(w0.out_num)) else 0 end out_duration
+				  from
+				  (
+					select w1.proc_id,
+						w1.proc_stati_id,
+						count(1) proc_inst_num, 
+						ceiling(AVG(w1.avg_duration)) avg_duration,
+						case when SUM(bigthen) > 0 then 1 else 0 end out_num,
+						case when SUM(bigthen) > 0 then ceiling(SUM(bigthentime)/SUM(bigthen)) else 0 end out_duration
+					from
+					(
+						  select
+						  t3.proc_id,
+						  t3.proc_stati_id,
+						  t2.id_,
+						  t2.duration_/60000.0 avg_duration,
+						  case when (t2.duration_/60000.0) > t1.exp_duration then (t2.duration_/60000.0) - t1.exp_duration else 0 end bigthentime,
+						  case when (t2.duration_/60000.0) > t1.exp_duration then 1 else 0 end bigthen
+						  from wf_proc_inst t2
+						  left join
+						  wf_proc t3
+						  on t3.proc_id = t2.business_type
+						  left join
+						  wf_proc_statistics t1
+						  on t3.proc_stati_id = t1.proc_stati_id
+						  where t2.duration_ >= 0 
+							  and t2.status_ = 10 
+				  		      and (t2.end_reason <> 9 or t2.end_reason is null)
+							  and t3.proc_id is not null
+						  {? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #procStatiId#) }
+						  {? and t2.start_time >= #startTime# }
+						  {? and t2.start_time <= #endTime# } 
+						  {? and t2.starter_dept_id in (select ID from uam_organization 
+							  where CODE like 
+							  (select CODE from uam_organization 
+							  where ID = #orgAreaId# )+'.%') }
+					) w1
+					group by w1.proc_id,w1.proc_stati_id
+				  ) w0
+				  group by w0.proc_stati_id
+			  ) w2
+			  on w3.proc_stati_id = w2.proc_stati_id
+			  left join
+			  wf_proc_statistics w4
+			  on w3.parent_id = w4.proc_stati_id
+			  where w3.level_type = 2
+			      {? and w3.parent_id = #procStatiId# }
+		  ) w7 
+		  where 1=1
+		  	   {? and duration_diff >= #durationDiff# }
+			  
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getFirstTimeOutList">
+		<![CDATA[
+		select
+			*
+		from
+		(
+		  select 
+		    w6.proc_stati_id,
+		    w6.stati_name,
+		    ifnull(w5.second_num, 0) second_num,
+		    ifnull(w5.exp_duration, 0) exp_duration,
+		    ifnull(w5.avg_duration, 0) avg_duration,
+			case when w5.exp_duration>0 and w5.avg_duration>0 then (w5.avg_duration - w5.exp_duration)*100.0/w5.exp_duration else 0 end duration_diff,
+		    ifnull(w5.out_num, 0) out_num,
+            case when w5.second_num>0 then w5.out_num*100.0/w5.second_num  else 0 end out_perc,
+		    ifnull(w5.out_duration,0) out_duration
+		  from
+		  (
+			select
+			w4.parent_id,
+			COUNT(1) second_num,
+			ceiling(AVG(w4.exp_duration)) exp_duration,
+			ceiling(AVG(w4.avg_duration)) avg_duration,
+			SUM(w4.out_num) out_num,
+			case when SUM(w4.out_num) > 0 then ceiling(SUM(w4.out_duration)/SUM(w4.out_num)) else 0 end out_duration
+			from
+            (
+			  select 
+				  w3.proc_stati_id,
+				  w3.exp_duration,
+				  w3.parent_id,
+				  w2.avg_duration,
+				  w2.out_num,
+				  w2.out_duration
+			  from wf_proc_statistics w3
+			  left join
+			  (
+				  select w0.proc_stati_id,
+					ceiling(AVG(w0.avg_duration)) avg_duration,
+					case when SUM(w0.out_num) > 0 then 1 else 0 end out_num,
+					case when SUM(w0.out_num) > 0 then ceiling(SUM(w0.avg_duration)/SUM(w0.out_num)) else 0 end out_duration
+				  from
+				  (
+					select w1.proc_id,
+						w1.proc_stati_id,
+						count(1) proc_inst_num, 
+						ceiling(AVG(w1.avg_duration)) avg_duration,
+						case when SUM(bigthen) > 0 then 1 else 0 end out_num,
+						case when SUM(bigthen) > 0 then ceiling(SUM(bigthentime)/SUM(bigthen)) else 0 end out_duration
+					from
+					(
+						  select
+						  t3.proc_id,
+						  t3.proc_stati_id,
+						  t2.id_,
+						  t2.duration_/60000.0 avg_duration,
+						  case when (t2.duration_/60000.0) > t1.exp_duration then (t2.duration_/60000.0) - t1.exp_duration else 0 end bigthentime,
+						  case when (t2.duration_/60000.0) > t1.exp_duration then 1 else 0 end bigthen
+						  from wf_proc_inst t2
+						  left join
+						  wf_proc t3
+						  on t3.proc_id = t2.business_type
+						  left join
+						  wf_proc_statistics t1
+						  on t3.proc_stati_id = t1.proc_stati_id
+						  where t2.duration_ >= 0 
+							  and t2.status_ = 10 
+				  		      and (t2.end_reason <> 9 or t2.end_reason is null)
+							  and t3.proc_id is not null
+						  {? and t3.proc_stati_id in (#procStatiId#) }
+						  {? and t2.start_time >= #startTime# }
+						  {? and t2.start_time <= #endTime# } 		
+						  {? and t2.starter_dept_id in (select ID from uam_organization 
+							  where CODE like 
+							  (select CODE from uam_organization 
+							  where ID = #orgAreaId# )+'.%') }
+					) w1
+					group by w1.proc_id,w1.proc_stati_id
+				  ) w0
+				  group by w0.proc_stati_id
+			  ) w2
+			  on w3.proc_stati_id = w2.proc_stati_id
+			  where w3.level_type = 2
+			) w4
+			group by w4.parent_id
+		  ) w5
+	      right join
+	      wf_proc_statistics w6
+	      on w5.parent_id = w6.proc_stati_id
+		  where w6.level_type = 1
+		  ) w7 
+		  where 1=1
+		  	   {? and duration_diff >= #durationDiff# }
+		  
+
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getFirstTimeOutListCount">
+		<![CDATA[
+		
+	  select 
+	    count(1)
+	  from
+	  (
+		  select 
+		    w6.proc_stati_id,
+		    w6.stati_name,
+		    ifnull(w5.second_num, 0) second_num,
+		    ifnull(w5.exp_duration, 0) exp_duration,
+		    ifnull(w5.avg_duration, 0) avg_duration,
+			case when w5.exp_duration>0 and w5.avg_duration>0 then (w5.avg_duration - w5.exp_duration)*100.0/w5.exp_duration else 0 end duration_diff,
+		    ifnull(w5.out_num, 0) out_num,
+            case when w5.second_num>0 then w5.out_num*100.0/w5.second_num  else 0 end out_perc,
+		    ifnull(w5.out_duration,0) out_duration
+		  from
+		  (
+			select
+			w4.parent_id,
+			COUNT(1) second_num,
+			ceiling(AVG(w4.exp_duration)) exp_duration,
+			ceiling(AVG(w4.avg_duration)) avg_duration,
+			SUM(w4.out_num) out_num,
+			case when SUM(w4.out_num) > 0 then ceiling(SUM(w4.out_duration)/SUM(w4.out_num)) else 0 end out_duration
+			from
+            (
+			  select 
+				  w3.proc_stati_id,
+				  w3.exp_duration,
+				  w3.parent_id,
+				  w2.avg_duration,
+				  w2.out_num,
+				  w2.out_duration
+			  from wf_proc_statistics w3
+			  left join
+			  (
+				  select w0.proc_stati_id,
+					ceiling(AVG(w0.avg_duration)) avg_duration,
+					case when SUM(w0.out_num) > 0 then 1 else 0 end out_num,
+					case when SUM(w0.out_num) > 0 then ceiling(SUM(w0.avg_duration)/SUM(w0.out_num)) else 0 end out_duration
+				  from
+				  (
+					select w1.proc_id,
+						w1.proc_stati_id,
+						count(1) proc_inst_num, 
+						ceiling(AVG(w1.avg_duration)) avg_duration,
+						case when SUM(bigthen) > 0 then 1 else 0 end out_num,
+						case when SUM(bigthen) > 0 then ceiling(SUM(bigthentime)/SUM(bigthen)) else 0 end out_duration
+					from
+					(
+						  select
+						  t3.proc_id,
+						  t3.proc_stati_id,
+						  t2.id_,
+						  t2.duration_/60000.0 avg_duration,
+						  case when (t2.duration_/60000.0) > t1.exp_duration then (t2.duration_/60000.0) - t1.exp_duration else 0 end bigthentime,
+						  case when (t2.duration_/60000.0) > t1.exp_duration then 1 else 0 end bigthen
+						  from wf_proc_inst t2
+						  left join
+						  wf_proc t3
+						  on t3.proc_id = t2.business_type
+						  left join
+						  wf_proc_statistics t1
+						  on t3.proc_stati_id = t1.proc_stati_id
+						  where t2.duration_ >= 0 
+							  and t2.status_ = 10 
+				  		      and (t2.end_reason <> 9 or t2.end_reason is null)
+							  and t3.proc_id is not null
+						  {? and t3.proc_stati_id in (#procStatiId#) }
+						  {? and t2.start_time >= #startTime# }
+						  {? and t2.start_time <= #endTime# } 
+						  {? and t2.starter_dept_id in (select ID from uam_organization 
+							  where CODE like 
+							  (select CODE from uam_organization 
+							  where ID = #orgAreaId# )+'.%') }
+					) w1
+					group by w1.proc_id,w1.proc_stati_id
+				  ) w0
+				  group by w0.proc_stati_id
+			  ) w2
+			  on w3.proc_stati_id = w2.proc_stati_id
+			  where w3.level_type = 2
+			) w4
+			group by w4.parent_id
+		  ) w5
+	      right join
+	      wf_proc_statistics w6
+	      on w5.parent_id = w6.proc_stati_id
+		  where w6.level_type = 1
+		  ) w7 
+		  where 1=1
+		  	   {? and duration_diff >= #durationDiff# }
+
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getInstanceTimeOutList">
+		<![CDATA[
+		select
+		*
+		from
+		(
+			select
+				*,
+				case when w1.exp_duration > 0  then (w1.avg_duration - w1.exp_duration)*100.0/w1.exp_duration else 0 end duration_diff
+			from
+			(
+					select
+					  t2.id_,
+					  t2.title_,
+					  t3.proc_id,
+					  t3.proc_name,
+					  t2.starter_name,
+					  (SELECT FULLNAME
+  FROM uam_organization where parent is null and  (select CODE from uam_organization 
+							  where ID = t2.starter_dept_id) like CODE+'.%'
+					  ) starter_area,
+					  t2.starter_dept_name,
+					  t2.start_time,
+					  t2.end_time,
+					  t3.standard_consuming exp_duration,
+					  ceiling(t2.duration_/60000.0) avg_duration,
+				  (select COUNT(1) from wf_task t0
+				  where t0.proc_inst_id=t2.id_ 
+				  and (t0.type_=2 or t0.type_= 4)
+				  ) return_num
+					  from wf_proc_inst t2
+					  left join
+					  wf_proc t3
+					  on t3.proc_id = t2.business_type
+					  left join
+					  wf_proc_statistics t1
+					  on t3.proc_stati_id = t1.proc_stati_id
+					  where t2.duration_ >= 0 
+						  and t2.status_ = 10 
+				  		  and (t2.end_reason <> 9 or t2.end_reason is null)
+						  and t3.proc_id is not null
+						  {? and (select sum(case when (tt1.duration_/60000.0 > tt2.exp_duration) 
+								then 1 else 0 end) as out_num from wf_task tt1
+								left join uam_user uu1 on tt1.assignee_id=uu1.ID
+								left join wf_proc_dept_statistics tt2 on uu1.ORG_ID=tt2.dept_id
+								where tt1.proc_inst_id=t2.id_
+								and uu1.ORG_ID in(
+								select organizationId from wf_proc_s_unit_join_uam_organization 
+								where wfProcSUnitId=#wfProcSUnitId#))>0 }
+						  {? and t3.proc_id = #proc_id# }
+						  {? and (select case when (avg(duration_/60000.0)>$expDuration$) then 1 else 0 end from 
+wf_task where proc_inst_id=t2.id_ and  title_ = #actTitle# GROUP BY proc_inst_id)>=1}
+						  {? and (select case when (avg(t01.duration_/60000.0)>avg(t02.exp_duration)) then 1 else 0 end from wf_task t01
+						  		left join wf_proc_assignee_statistics t02 on t02.assignee_id= t01.assignee_id
+						  		where t01.proc_inst_id=t2.id_ and  t01.assignee_id=#assigneeId# GROUP BY t01.proc_inst_id)>=1}
+						  {? and (SELECT sum(ww.outnum) from (
+						  		(select case when (avg(t01.duration_/60000.0)>avg(t02.exp_duration)) then 1 else 0 end outnum from wf_task t01
+								left join uam_user u1 on u1.ID=t01.assignee_id
+								left join uam_organization u2 on u1.org_id=u2.id
+						  		left join wf_proc_dept_statistics t02 on u2.id= t02.dept_id
+						  		where t01.proc_inst_id=t2.id_ and  u2.id in ($actOrg$) GROUP BY t01.proc_inst_id,u2.id,t01.id_)) ww)>=1}
+						  {? and t3.proc_stati_id = #proc_stati_id# }
+						  {? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #proc_stati_parentid#) }
+						  {? and t2.start_time >= #startTime# }
+						  {? and t2.start_time <= #endTime# } 
+						  {? and t2.starter_dept_id in (select ID from uam_organization 
+							  where CODE like 
+							  (select CODE from uam_organization 
+							  where ID = #orgAreaId# )+'.%') }
+			) w1
+		  ) w7 
+		  where 1=1
+		  	   {? and duration_diff >= #durationDiff# }
+			   {? and #isShowOut#='true' and duration_diff >0 }
+			   {? and #isShowReject#='true' and return_num >0 }					
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getInstanceTimeOutListCount">
+		<![CDATA[
+				  select
+					  count(1)
+		from
+		(
+			select
+				*,
+				case when w1.exp_duration > 0  then (w1.avg_duration - w1.exp_duration)*100.0/w1.exp_duration else 0 end duration_diff
+			from
+			(
+					select
+					  t2.id_,
+					  t2.title_,
+					  t3.proc_id,
+					  t3.proc_name,
+					  t2.starter_name,
+					  (SELECT FULLNAME
+  FROM uam_organization where parent is null and  (select CODE from uam_organization 
+							  where ID = t2.starter_dept_id) like CODE+'.%'
+					  ) starter_area,
+					  t2.starter_dept_name,
+					  t2.start_time,
+					  t2.end_time,
+					  t3.standard_consuming exp_duration,
+					  ceiling(t2.duration_/60000.0) avg_duration,
+				  (select COUNT(1) from wf_task t0
+				  where t0.proc_inst_id=t2.id_ 
+				  and (t0.type_=2 or t0.type_= 4)
+				  ) return_num
+					  from wf_proc_inst t2
+					  left join
+					  wf_proc t3
+					  on t3.proc_id = t2.business_type
+					  left join
+					  wf_proc_statistics t1
+					  on t3.proc_stati_id = t1.proc_stati_id
+					  where t2.duration_ >= 0 
+						  and t2.status_ = 10 
+				  		  and (t2.end_reason <> 9 or t2.end_reason is null)
+						  and t3.proc_id is not null
+						  {? and (select sum(case when (tt1.duration_/60000.0 > tt2.exp_duration) 
+								then 1 else 0 end) as out_num from wf_task tt1
+								left join uam_user uu1 on tt1.assignee_id=uu1.ID
+								left join wf_proc_dept_statistics tt2 on uu1.ORG_ID=tt2.dept_id
+								where tt1.proc_inst_id=t2.id_
+								and uu1.ORG_ID in(
+								select organizationId from wf_proc_s_unit_join_uam_organization 
+								where wfProcSUnitId=#wfProcSUnitId#))>0 }
+						  {? and t3.proc_id = #proc_id# }
+						  {? and (select case when (avg(duration_/60000.0)>$expDuration$) then 1 else 0 end from 
+wf_task where proc_inst_id=t2.id_ and  title_ = #actTitle# GROUP BY proc_inst_id)>=1}
+						  {? and (select case when (avg(t01.duration_/60000.0)>avg(t02.exp_duration)) then 1 else 0 end from wf_task t01
+						  		left join wf_proc_assignee_statistics t02 on t02.assignee_id= t01.assignee_id
+						  		where t01.proc_inst_id=t2.id_ and  t01.assignee_id=#assigneeId# GROUP BY t01.proc_inst_id)>=1}
+						  {? and (SELECT sum(ww.outnum) from (
+						  		(select case when (avg(t01.duration_/60000.0)>avg(t02.exp_duration)) then 1 else 0 end outnum from wf_task t01
+								left join uam_user u1 on u1.ID=t01.assignee_id
+								left join uam_organization u2 on u1.org_id=u2.id
+						  		left join wf_proc_dept_statistics t02 on u2.id= t02.dept_id
+						  		where t01.proc_inst_id=t2.id_ and  u2.id in ($actOrg$) GROUP BY t01.proc_inst_id,u2.id,t01.id_)) ww)>=1}
+						  {? and t3.proc_stati_id = #proc_stati_id# }
+						  {? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #proc_stati_parentid#) }
+						  {? and t2.start_time >= #startTime# }
+						  {? and t2.start_time <= #endTime# } 
+						  {? and t2.starter_dept_id in (select ID from uam_organization 
+							  where CODE like 
+							  (select CODE from uam_organization 
+							  where ID = #orgAreaId# )+'.%') }
+			) w1
+		  ) w7 
+		  where 1=1
+		  	   {? and duration_diff >= #durationDiff# }
+			   {? and #isShowOut#='true' and duration_diff >0 }
+			   {? and #isShowReject#='true' and return_num >0 }					
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getActivityTimeOutList">
+		<![CDATA[
+		
+		  select 
+			  w1.proc_id proc_id,
+			  w1.proc_name proc_name,
+			  w1.proc_def_id proc_def_id,
+			  w0.act_title,
+			  w0.avg_duration
+		  from wf_proc w1
+		  right join 
+		  (
+			  select
+			  t3.proc_id,
+			  t1.title_ act_title,
+			  ceiling(AVG(t1.duration_/60000.0)) avg_duration
+			  from wf_act_inst t1
+			  left join
+				  wf_proc_inst t2
+				  on t2.id_=t1.proc_inst_id
+			  left join
+				  wf_proc t3
+				  on t3.proc_id=t2.business_type
+			  where t1.duration_ > 0 
+					  and t1.status_ = 10 
+					  and t2.status_ = 10 
+				      and (t2.end_reason <> 9 or t2.end_reason is null)
+					  and t1.type_ = 'userTask' 
+				  	  {? and t3.proc_id = #proc_id# }
+					  {? and t3.proc_stati_id = #proc_stati_id# }
+					  {? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #proc_stati_parentid#) }
+					  {? and t2.start_time >= #startTime# }
+					  {? and t2.start_time <= #endTime# } 
+						  {? and t2.starter_dept_id in (select ID from uam_organization 
+							  where CODE like 
+							  (select CODE from uam_organization 
+							  where ID = #orgAreaId# )+'.%') } 
+			  group by t3.proc_id, t1.title_
+		  ) w0
+		on w0.proc_id = w1.proc_id
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getActivityTimeOutListCount">
+		<![CDATA[
+
+		  select 
+			 count(1)
+		  from wf_proc w1
+		  right join 
+		  (
+			  select
+			  t3.proc_id,
+			  t1.title_ act_title,
+			  ceiling(AVG(t1.duration_/60000.0)) avg_duration
+			  from wf_act_inst t1
+			  left join
+				  wf_proc_inst t2
+				  on t2.id_=t1.proc_inst_id
+			  left join
+				  wf_proc t3
+				  on t3.proc_id=t2.business_type
+			  where t1.duration_ > 0 
+					  and t1.status_ = 10 
+					  and t2.status_ = 10 
+				      and (t2.end_reason <> 9 or t2.end_reason is null)
+					  and t1.type_ = 'userTask' 
+				  	  {? and t3.proc_id = #proc_id# }
+					  {? and t3.proc_stati_id = #proc_stati_id# }
+					  {? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #proc_stati_parentid#) }
+					  {? and t2.start_time >= #startTime# }
+					  {? and t2.start_time <= #endTime# } 
+						  {? and t2.starter_dept_id in (select ID from uam_organization 
+							  where CODE like 
+							  (select CODE from uam_organization 
+							  where ID = #orgAreaId# )+'.%') } 
+			  group by t3.proc_id, t1.title_
+		  ) w0
+		on w0.proc_id = w1.proc_id
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getTaskTimeOutList">
+		<![CDATA[
+
+		select
+			  *
+		from
+		(
+		  select 
+		  	  t0.act_title,
+			  t0.assignee_id,
+			  t0.assignee_name,
+			  u2.id assignee_dept_id,
+			  u2.name assignee_dept_name,
+			  t1.proc_def_id,
+			  ceiling(avg(t0.duration_/60000.0)) avg_duration
+		  from wf_task t0
+		  left join uam_user u1 on u1.id=t0.assignee_id
+		  left join uam_organization u2 on u2.id=u1.org_id
+		  left join wf_act_inst t1
+			  on t1.id_=t0.act_inst_id
+		  left join
+			  wf_proc_inst t2
+			  on t2.id_=t1.proc_inst_id
+		  left join
+			  wf_proc t3
+			  on t3.proc_id=t2.business_type
+		  where t0.duration_ > 0 
+				  and t0.status_ = 10 
+				  and t1.type_ = 'userTask' 
+				  and t2.status_ = 10 
+				  and (t2.end_reason <> 9 or t2.end_reason is null)
+				  {? and t1.title_ = #act_title# }
+				  	  {? and t3.proc_id = #proc_id# }
+					  {? and t3.proc_stati_id = #proc_stati_id# }
+					  {? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #proc_stati_parentid#) }
+				  {? and t2.start_time >= #startTime# }
+				  {? and t2.start_time <= #endTime# } 
+						  {? and t2.starter_dept_id in (select ID from uam_organization 
+							  where CODE like 
+							  (select CODE from uam_organization 
+							  where ID = #orgAreaId# )+'.%') }
+				  {? and t0.assignee_id in ($actUser$) }
+				  
+		  group by t1.proc_def_id,t0.act_title,t0.assignee_id,t0.assignee_name,u2.id,u2.name
+		  
+		  ) w7 
+		  where 1=1
+
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getTaskTimeOutListCount">
+		<![CDATA[
+		select
+			  count(1)
+		from
+		(
+		  select 
+		  	  t0.act_title,
+			  t0.assignee_id,
+			  t0.assignee_name,
+			  u2.id assignee_dept_id,
+			  u2.name assignee_dept_name,
+			  t1.proc_def_id,
+			  ceiling(avg(t0.duration_/60000.0)) avg_duration
+		  from wf_task t0
+		  left join uam_user u1 on u1.id=t0.assignee_id
+		  left join uam_organization u2 on u2.id=u1.org_id
+		  left join wf_act_inst t1
+			  on t1.id_=t0.act_inst_id
+		  left join
+			  wf_proc_inst t2
+			  on t2.id_=t1.proc_inst_id
+		  left join
+			  wf_proc t3
+			  on t3.proc_id=t2.business_type
+		  where t0.duration_ > 0 
+				  and t0.status_ = 10 
+				  and t1.type_ = 'userTask' 
+				  and t2.status_ = 10 
+				  and (t2.end_reason <> 9 or t2.end_reason is null)
+				  {? and t1.title_ = #act_title# }
+				  	  {? and t3.proc_id = #proc_id# }
+					  {? and t3.proc_stati_id = #proc_stati_id# }
+					  {? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #proc_stati_parentid#) }
+				  {? and t2.start_time >= #startTime# }
+				  {? and t2.start_time <= #endTime# } 
+						  {? and t2.starter_dept_id in (select ID from uam_organization 
+							  where CODE like 
+							  (select CODE from uam_organization 
+							  where ID = #orgAreaId# )+'.%') }
+				  {? and t0.assignee_id in ($actUser$) }
+				  
+		  group by t1.proc_def_id,t0.act_title,t0.assignee_id,t0.assignee_name,u2.id,u2.name
+		  
+		  ) w7 
+		  where 1=1
+
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getDeptTimeOutList">
+		<![CDATA[
+		select
+		*
+		from
+		(
+  select
+	w1.assignee_dept_id,
+	w1.assignee_dept_name,
+	w1.task_num,
+	w1.avg_duration,
+	w1.out_num,
+	w1.exp_duration,
+    (w1.avg_duration - w1.exp_duration)*100.0/w1.exp_duration duration_diff,
+    case when w1.task_num>0 then w1.out_num*100.0/w1.task_num  else 0 end out_perc,
+    case when w1.out_num>0 then ceiling(w1.out_duration/w1.out_num) else 0 end out_duration
+  from
+  (
+	select
+	  max(w0.assignee_dept_id) assignee_dept_id,
+	  max(w0.assignee_dept_name) assignee_dept_name,
+	  COUNT(1) task_num, 
+	  ceiling(avg(w0.duration_)) avg_duration,
+	  SUM(w0.out_num) out_num,
+	  SUM(w0.out_duration) out_duration,
+	  ceiling(avg(w0.exp_duration)) exp_duration
+	from
+	(
+		  select 
+			  t5.id assignee_dept_id,
+			  t5.name assignee_dept_name,
+			  t0.duration_/60000.0 duration_,
+			  t4.exp_duration,
+			  case when (t0.duration_/60000.0 > t4.exp_duration) then 1 else 0 end out_num,
+			  case when (t0.duration_/60000.0 > t4.exp_duration) then (t0.duration_/60000.0 - t4.exp_duration) else 0 end out_duration
+		  from wf_task t0
+		  left join wf_act_inst t1
+			  on t1.id_=t0.act_inst_id
+		  left join
+			  wf_proc_inst t2
+			  on t2.id_=t1.proc_inst_id
+		  left join
+			  wf_proc t3
+			  on t3.proc_id=t2.business_type
+		  left join uam_user u1 on u1.ID=t0.assignee_id
+		  left join uam_organization u2 on u1.org_id=u2.id
+		  left join wf_proc_dept_statistics t4 on u2.id=t4.dept_id
+		  left join wf_proc_s_unit t5 on 1=1 and t5.id in ($unitIds$)
+		  where t0.duration_ > 0 
+				  and t0.status_ = 10 
+				  and t2.status_ = 10 
+				  and (t2.end_reason <> 9 or t2.end_reason is null)
+				  and t1.type_ = 'userTask' 
+				  and u2.id in (select organizationId from wf_proc_s_unit_join_uam_organization where wfProcSUnitId=t5.id)
+				  {? and t1.title_ = #act_title# }
+			  	  {? and t3.proc_id = #proc_id# }
+				  {? and t3.proc_stati_id = #proc_stati_id# }
+				  {? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #proc_stati_parentid#) }
+				  {? and t2.start_time >= #startTime# }
+				  {? and t2.start_time <= #endTime# } 
+			 	  {? and t2.starter_dept_id in (select ID from uam_organization 
+				  where CODE like 
+				  (select CODE from uam_organization 
+				  where ID = #orgAreaId# )+'.%') }
+				  {? and u2.id in ($actOrg$) }
+	) w0
+	group by w0.assignee_dept_id,w0.assignee_dept_name
+  ) w1
+		 ) w7 
+		  where 1=1
+		  	   {? and duration_diff >= #durationDiff# }
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getDeptTimeOutListCount">
+		<![CDATA[
+
+  select
+	count(1)
+		from
+		(
+  select
+	w1.assignee_dept_id,
+	w1.assignee_dept_name,
+	w1.task_num,
+	w1.avg_duration,
+	w1.out_num,
+	w1.exp_duration,
+    (w1.avg_duration - w1.exp_duration)*100.0/w1.exp_duration duration_diff,
+    case when w1.task_num>0 then w1.out_num*100.0/w1.task_num  else 0 end out_perc,
+    case when w1.out_num>0 then ceiling(w1.out_duration/w1.out_num) else 0 end out_duration
+  from
+  (
+	select
+	  max(w0.assignee_dept_id) assignee_dept_id,
+	  max(w0.assignee_dept_name) assignee_dept_name,
+	  COUNT(1) task_num, 
+	  ceiling(avg(w0.duration_)) avg_duration,
+	  SUM(w0.out_num) out_num,
+	  SUM(w0.out_duration) out_duration,
+	  ceiling(avg(w0.exp_duration)) exp_duration
+	from
+	(
+		  select 
+			  t5.id assignee_dept_id,
+			  t5.name assignee_dept_name,
+			  t0.duration_/60000.0 duration_,
+			  t4.exp_duration,
+			  case when (t0.duration_/60000.0 > t4.exp_duration) then 1 else 0 end out_num,
+			  case when (t0.duration_/60000.0 > t4.exp_duration) then (t0.duration_/60000.0 - t4.exp_duration) else 0 end out_duration
+		  from wf_task t0
+		  left join wf_act_inst t1
+			  on t1.id_=t0.act_inst_id
+		  left join
+			  wf_proc_inst t2
+			  on t2.id_=t1.proc_inst_id
+		  left join
+			  wf_proc t3
+			  on t3.proc_id=t2.business_type
+		  left join uam_user u1 on u1.ID=t0.assignee_id
+		  left join uam_organization u2 on u1.org_id=u2.id
+		  left join wf_proc_dept_statistics t4 on u2.id=t4.dept_id
+		  left join wf_proc_s_unit t5 on 1=1 and t5.id in ($unitIds$)
+		  where t0.duration_ > 0 
+				  and t0.status_ = 10 
+				  and t2.status_ = 10 
+				  and (t2.end_reason <> 9 or t2.end_reason is null)
+				  and t1.type_ = 'userTask' 
+				  and u2.id in (select organizationId from wf_proc_s_unit_join_uam_organization where wfProcSUnitId=t5.id)
+				  {? and t1.title_ = #act_title# }
+			  	  {? and t3.proc_id = #proc_id# }
+				  {? and t3.proc_stati_id = #proc_stati_id# }
+				  {? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #proc_stati_parentid#) }
+				  {? and t2.start_time >= #startTime# }
+				  {? and t2.start_time <= #endTime# } 
+			 	  {? and t2.starter_dept_id in (select ID from uam_organization 
+				  where CODE like 
+				  (select CODE from uam_organization 
+				  where ID = #orgAreaId# )+'.%') }
+				  {? and u2.id in ($actOrg$) }
+	) w0
+	group by w0.assignee_dept_id,w0.assignee_dept_name
+  ) w1
+		 ) w7 
+		  where 1=1
+		  	   {? and duration_diff >= #durationDiff# }
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getWfProcStatistics">
+		<![CDATA[
+
+	 SELECT 
+		* 
+	 FROM
+	 	wf_proc_statistics 
+	 WHERE 1=1
+		  {? and parent_id = #parentId# }
+		  {? and level_type = #levelType# }
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getWfProcByStati">
+		<![CDATA[
+		
+	 SELECT 
+		proc_id,
+		proc_name
+	 FROM
+	 	wf_proc
+	 WHERE 1=1 
+		{? and proc_stati_id = #stati_id# }
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getWfProcOrgArea">
+		<![CDATA[
+			
+  SELECT ID
+      ,ORG_NUM
+      ,ORG_CODE
+      ,NAME
+      ,FULLNAME
+  FROM uam_organization
+  where company_id is null
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getWfProcTaskByActTitle">
+		<![CDATA[
+
+	  select
+	max(w1.proc_inst_id) inst_id,
+	max(w1.title_) act_title,
+	sum(w1.task_num) task_num,
+	sum(w1.out_num) out_num,
+    case when sum(w1.task_num)>0 then  sum(w1.out_num)*100.0/ sum(w1.task_num)  else 0 end out_perc,
+    case when  sum(w1.out_num)>0 then ceiling(sum(w1.out_duration)/ sum(w1.out_num)) else 0 end out_duration
+  from
+  (
+	select
+	  w0.proc_inst_id,
+	  w0.title_,
+	  COUNT(1) task_num, 
+	  SUM(w0.out_num) out_num,
+	  SUM(w0.out_duration) out_duration
+	from
+	(
+		  select 
+			  t1.proc_inst_id,
+			  t1.title_,
+			  t0.duration_/60000.0 duration_,
+			  case when (t0.duration_/60000.0 > $expDuration$) then 1 else 0 end out_num,
+			  case when (t0.duration_/60000.0 > $expDuration$) then (t0.duration_/60000.0 - $expDuration$) else 0 end out_duration
+		  from wf_task t0
+		  left join wf_act_inst t1
+			  on t1.id_=t0.act_inst_id
+		  left join
+			  wf_proc_inst t2
+			  on t2.id_=t1.proc_inst_id
+		  left join
+			  wf_proc t3
+			  on t3.proc_id=t2.business_type
+		  where t0.duration_ > 0 
+				  and t0.status_ = 10 
+				  and t2.status_ = 10 
+				  and (t2.end_reason <> 9 or t2.end_reason is null)
+				  and t1.type_ = 'userTask' 
+				  {? and t1.title_ = #act_title# }
+				  	  {? and t3.proc_id = #proc_id# }
+					  {? and t3.proc_stati_id = #proc_stati_id# }
+					  {? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #proc_stati_parentid#) }
+					  {? and t2.start_time >= #startTime# }
+				  	  {? and t2.start_time <= #endTime# } 
+	) w0
+	group by w0.proc_inst_id,w0.title_
+  ) w1
+			
+		]]>
+	</entry>
+
+	<!-- 统计流程定义发起的流程实例的一段时间的整体超时 -->
+	<entry key="wf_statistics.getWfProcTaskByProcId">
+		<![CDATA[
+
+	  select
+	max(w1.proc_def_id) proc_def_id,
+	max(w1.title_ ) act_title,
+	sum(w1.task_num) task_num,
+	sum(w1.out_num) out_num,
+    case when sum(w1.task_num)>0 then sum(w1.out_num)*100.0/sum(w1.task_num)  else 0 end out_perc,
+    case when sum(w1.out_num)>0 then ceiling(sum(w1.out_duration)/sum(w1.out_num)) else 0 end out_duration
+  from
+  (
+	select
+	  w0.proc_def_id,
+	  w0.title_,
+	  COUNT(1) task_num, 
+	  SUM(w0.out_num) out_num,
+	  SUM(w0.out_duration) out_duration
+	from
+	(
+		  select 
+			  t2.proc_def_id,
+			  t1.title_,
+			  t0.duration_/60000.0 duration_,
+			  case when (t0.duration_/60000.0 > $expDuration$) then 1 else 0 end out_num,
+			  case when (t0.duration_/60000.0 > $expDuration$) then (t0.duration_/60000.0 - $expDuration$) else 0 end out_duration
+		  from wf_task t0
+		  left join wf_act_inst t1
+			  on t1.id_=t0.act_inst_id
+		  left join
+			  wf_proc_inst t2
+			  on t2.id_=t1.proc_inst_id
+		  left join
+			  wf_proc t3
+			  on t3.proc_id=t2.business_type
+		  where t0.duration_ > 0 
+				  and t0.status_ = 10 
+				  and t2.status_ = 10 
+				  and (t2.end_reason <> 9 or t2.end_reason is null)
+				  and t1.type_ = 'userTask' 
+				    {? and t0.assignee_id = #assignee_id# }
+					{? and t1.title_ = #act_title# }
+					{? and t2.business_type = #proc_id# }
+					{? and t2.proc_def_id = #proc_def_id# }
+					{? and t3.proc_id = #proc_id# }
+					{? and t3.proc_stati_id = #proc_stati_id# }
+					{? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #proc_stati_parentid#) }
+					{? and t2.start_time >= #startTime# }
+				    {? and t2.start_time <= #endTime# } 
+	) w0
+	group by w0.proc_def_id,w0.title_
+  ) w1
+			
+		]]>
+	</entry>
+	<!-- 统计处理人的一段时间的整体超时 -->
+	<entry key="wf_statistics.getWfProcTaskAssignee">
+		<![CDATA[
+	   select 
+	   w0.assignee_id,
+	   w0.assignee_name,	   
+	   w0.assignee_dept_id,
+	   w0.assignee_dept_name,
+	   w0.avg_duration avg_duration,
+	   w1.exp_duration exp_duration,
+	   w0.task_num task_num,
+	   w0.out_num out_num,
+	   w0.out_duration out_duration,
+	   (w0.avg_duration-w1.exp_duration)*100.0/w1.exp_duration duration_diff,
+	   w0.out_num*100.0/w0.task_num out_perc
+	   from (
+		   select 
+		   t0.assignee_id,
+		   t0.assignee_name,    
+	   	   u2.id assignee_dept_id,
+	       u2.name assignee_dept_name,
+		   ceiling(avg(t0.duration_/60000.0)) avg_duration,
+	  	   COUNT(1) task_num, 
+	       SUM( case when (t0.duration_/60000.0 > t4.exp_duration) then 1 else 0 end ) out_num,
+		   AVG( case when (t0.duration_/60000.0 > t4.exp_duration) then (t0.duration_/60000.0 - t4.exp_duration) else 0 end ) out_duration
+	       from wf_task t0
+				   left join uam_user u1 on u1.id=t0.assignee_id
+				   left join uam_organization u2 on u2.id=u1.org_id
+				   left join wf_proc_inst t2 on t0.proc_inst_id=t2.id_
+				   left join wf_proc t3 on t3.proc_id = t2.business_type
+				   left join wf_proc_assignee_statistics t4 on t4.assignee_id=t0.assignee_id
+				   where 
+				   t0.duration_ > 0 
+				   and t2.duration_ > 0 
+				   and t2.status_ = 10 
+			 	   and (t2.end_reason <> 9 or t2.end_reason is null)
+				   and t3.proc_id is not null
+					{? and t2.proc_def_id = #proc_def_id# }
+					{? and t3.proc_id = #proc_id# }
+					{? and t3.proc_stati_id = #proc_stati_id# }
+					{? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #proc_stati_parentid#) }
+					{? and t2.start_time >= #startTime# }
+				    {? and t2.start_time <= #endTime# } 
+					{? and t2.starter_dept_id in (select ID from uam_organization 
+							  where CODE like  (select CODE from uam_organization  where ID = #orgAreaId# )+'.%') }
+				   {? and t0.assignee_id in ($actUser$) }
+				   group by t0.assignee_id,t0.assignee_name,u2.id,u2.name  
+		) w0
+		left join wf_proc_assignee_statistics w1 on w0.assignee_id=w1.assignee_id
+		]]>
+	</entry>
+<!-- 统计处理人的一段时间的整体超时 -->
+	<entry key="wf_statistics.getWfProcTaskAssigneeCount">
+		<![CDATA[
+	select
+			  count(1)
+		from
+		(
+		select 
+	   w0.assignee_id,
+	   w0.assignee_name,	   
+	   w0.assignee_dept_id,
+	   w0.assignee_dept_name,
+	   w0.avg_duration avg_duration,
+	   w0.task_num task_num,
+	   w0.out_num out_num,
+	   w0.out_duration out_duration,
+	   (w0.avg_duration-w1.exp_duration)*100.0/w1.exp_duration duration_diff,
+	   w0.out_num*100.0/w0.task_num out_perc
+	   from  (
+		   select 
+		   t0.assignee_id,
+		   t0.assignee_name,    
+	   	   u2.id assignee_dept_id,
+	       u2.name assignee_dept_name,
+		   ceiling(avg(t0.duration_/60000.0)) avg_duration,
+	  	   COUNT(1) task_num, 
+	       SUM( case when (t0.duration_/60000.0 > t4.exp_duration) then 1 else 0 end ) out_num,
+		   AVG( case when (t0.duration_/60000.0 > t4.exp_duration) then (t0.duration_/60000.0 - t4.exp_duration) else 0 end ) out_duration
+	       from wf_task t0
+				   left join uam_user u1 on u1.id=t0.assignee_id
+				   left join uam_organization u2 on u2.id=u1.org_id
+				   left join wf_proc_inst t2 on t0.proc_inst_id=t2.id_
+				   left join wf_proc t3 on t3.proc_id = t2.business_type
+				   left join wf_proc_assignee_statistics t4 on t4.assignee_id=t0.assignee_id
+				   where 
+				   t0.duration_ > 0 
+				   and t2.duration_ > 0 
+				   and t2.status_ = 10 
+			 	   and (t2.end_reason <> 9 or t2.end_reason is null)
+				   and t3.proc_id is not null
+					{? and t2.proc_def_id = #proc_def_id# }
+					{? and t3.proc_id = #proc_id# }
+					{? and t3.proc_stati_id = #proc_stati_id# }
+					{? and t3.proc_stati_id in (select proc_stati_id from wf_proc_statistics where parent_id = #proc_stati_parentid#) }
+					{? and t2.start_time >= #startTime# }
+				    {? and t2.start_time <= #endTime# } 
+					{? and t2.starter_dept_id in (select ID from uam_organization 
+							  where CODE like  (select CODE from uam_organization  where ID = #orgAreaId# )+'.%') }
+				   {? and t0.assignee_id in ($actUser$) }
+				   group by t0.assignee_id,t0.assignee_name,u2.id,u2.name  
+		) w0
+		left join wf_proc_assignee_statistics w1 on w0.assignee_id=w1.assignee_id
+		) w7
+]]>
+	</entry>
+</properties>

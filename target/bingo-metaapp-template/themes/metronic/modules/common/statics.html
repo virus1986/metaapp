@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:meta="http://www.bingosoft.net">
+<head th:fragment="head">
+    <meta charset="utf-8"/>
+    <title th:text="${config != null?config['Profile.App.Title']:#messages.msg('master.notSetup')}"></title>
+	<link rel="apple-touch-icon-precomposed" th:href="${themes.statics('images/cloud.jpg')}" />
+	<link rel="apple-touch-icon-precomposed" sizes="72x72"  th:href="${themes.statics('images/cloud.jpg')}"/>
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" th:href="${themes.statics('images/cloud.jpg')}" />
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" th:href="${themes.statics('images/cloud.jpg')}" />
+	<link rel="shortcut icon" th:href="${themes.statics('images/cloud.jpg')}" />
+	
+	<meta http-equiv="pragma" content="no-cache" />
+	<meta http-equiv="cache-control" content="no-cache" />
+
+    <!-- 插件CSS -->
+    <wro:link th:href="${contextPath}+'/wro/plugins_css.css'"  rel="stylesheet" type="text/css"/>
+	<!-- 默认 -->
+    <wro:link th:if="${ieVersion le 0 or ieVersion ge 9}"  th:href="${contextPath}+'/wro/themes_'+${theme}+'_'+${skin}+'.css'" rel="stylesheet" type="text/css"/>
+    <!-- IE6~8 -->
+    <wro:link th:if="${ieVersion le 9 and ieVersion ge 6}" th:href="${contextPath}+'/wro/themes_'+${theme}+'_'+${skin}+'_ie8.css'" rel="stylesheet" type="text/css"/>
+    <script th:src="${contextPath}+'/JavaScriptServlet'" type="text/javascript"></script>
+	<!-- 基础JS -->
+	<wro:script th:src="${contextPath}+'/wro/base.js'" type="text/javascript"></wro:script>
+	<script type="text/javascript" th:inline="javascript">
+		window.Global=$.extend(true,{
+			contextPath:/*[[${contextPath}]]*/,	
+			themePath:/*[[${themePath}]]*/,	
+			statics:/*[[${statics}]]*/,			
+			iconPath:/*[[${iconPath}]]*/,
+			server:/*[[${server}]]*/,
+		},window.Global);
+		Global.wfDesignerDiagramViewPath=Global.contextPath+'/workflow/diagram/show';
+		window.UEDITOR_HOME_URL=Global.contextPath+"/statics/scripts/plugins/ueditor/";
+	</script>
+	<wro:script th:src="${contextPath}+'/wro/base_ex.js'" type="text/javascript"></wro:script>
+	<script th:src="${themes.js('plugins/i18n.js')}" type="text/javascript"></script>
+	
+	<!--[if lt IE 9]>
+	  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+</head>
+<body id="user-master">
+
+	<!-- 页脚 -->
+	<div th:fragment="footer" class="user-footer" style="vertical-align: middle;display: inline-block;">
+		Copyright © 2002-2012  <img
+			src="../../Statics/images/cloud.jpg" /> Powered By Bingosoft<br />
+		ICP备案编号：粤ICP备05028607号-2<br />
+	</div>
+
+	<div th:fragment="scripts"  style="display: none">
+		<!-- 插件脚本 -->
+		<script th:src="${themes.css('plugins/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js')}"	type="text/javascript"></script>
+		<script src="plugins/jquery-slimscroll/jquery.slimscroll.min.js" 
+		   	  	th:src="${themes.css('plugins/jquery-slimscroll/jquery.slimscroll.min.js')}"  type="text/javascript"></script>
+		<wro:script th:src="${contextPath}+'/wro/plugins_i18n_'+${#objects.nullSafe(lang,'zh_CN')}+'.js'" type="text/javascript"></wro:script>
+		<wro:script th:src="${contextPath}+'/wro/plugins.js?version='+${config['Profile.App.Version']}" type="text/javascript"></wro:script>
+		
+		<script th:src="${themes.js('plugins/calendar/WdatePicker.js')}" type="text/javascript"></script>
+		<wro:script th:src="${contextPath}+'/wro/plugins_big.js'" type="text/javascript"></wro:script>
+		
+		<!-- 当前主题自定义脚本 -->
+		<wro:script th:src="${contextPath}+'/wro/themes_'+${theme}+'_common.js?version='+${config['Profile.App.Version']}"  type="text/javascript"></wro:script>		
+		<wro:script th:src="${contextPath}+'/wro/themes_'+${theme}+'.js?version='+${config['Profile.App.Version']}"  type="text/javascript"></wro:script>		
+		<script th:src="${themes.css('scripts/app.js')}" type="text/javascript"></script>
+	
+		<script type="text/javascript">
+		/* (function() {
+            ace.require(["ace/config"], function(aceconfig) {
+            	var basePath=Global.contextPath+"/statics/scripts/plugins/ace/src-min-noconflict";
+            	aceconfig.set("basePath",basePath);
+            	// aceconfig.set("workerPath",basePath);
+            	//aceconfig.set("modePath",basePath);
+            	//aceconfig.set("themePath",basePath); 
+            });
+        })(); */
+		</script>
+	</div>
+</body>
+</html>

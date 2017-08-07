@@ -1,0 +1,99 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:600px;min-height:290px;">
+<style type="text/css">
+	.select-block .select-item {
+		width: 95%;
+		height: 145px;
+		margin: 5px auto;
+		background-color: #4d90fe;
+		color: white;
+		cursor: pointer;
+		border:2px solid #4d90fe;
+	}
+	.select-block .select-item.selected{
+		border: 2px solid #1d943b;
+		background-color: #35aa47;
+	}
+	.select-block .select-item .select-title {
+		width:80%;
+		display: inline-block;
+		font-size: 16px;
+		line-height:38px;
+		color: white;
+		padding:8px 5px;
+	}
+	.select-block .select-item .select-desc{
+		font-size: 12px;
+		line-height:20px;
+		padding-left:40px;
+		color:white;
+	}
+	.select-block .select-item:hover {
+		border:2px solid #1d943b;
+	}
+</style>
+	<div class="ui-dialog-title hide">
+			<span>选择创建流程方式</span>
+		</div>
+
+		<div class="form-horizontal">
+			<div class="select-block">
+				<div class="select-item" data-id="createFromTemplate">
+					<div class="select-title"><i class="m-icon-big-swapright m-icon-white"></i>从模版创建(自由流)</div>
+					<div class="select-desc">
+					目前内置两种模板<br/>
+					1 空模板: 选择此类型模板，将只创建流程，如果需要发布为服务，可到【服务管理】新建服务<br/>
+					2 内置流程：可选择导入内置流程，可选择是否发布为服务，每个内置流程只可以导入一次
+					</div>
+				</div>
+				<!-- <div class="select-item" data-id="createNew">
+					<div class="select-title">创建新流程定义</div>
+					<div class="select-desc">如果流程定义已经存在，你可以通过选择已有定义创建流程，注意的是如果多个流程选择同一个定义，修改其中一个定义，其他也会被修改</div>
+				</div> -->
+				<div class="select-item" data-id="createFromWizard">
+					<div class="select-title"><i class="m-icon-big-swapright m-icon-white"></i>根据向导创建流程定义(固定流)</div>
+					<div class="select-desc">引导式的向导页面，帮你创建流程</div>
+				</div>
+			</div>
+		</div>
+		<div class="ui-dialog-buttonset">
+		 	<button type="button" class="btn purple selectCreateMethod">
+             <span th:text="#{common.sure}">
+             </span>
+             <i class="m-icon-swapright m-icon-white">
+             </i>
+           </button>
+           <button type="button" class="btn closeBtn" th:text="#{common.cancel}">
+           </button>
+		</div>
+	<script th:inline="javascript">
+	//<![CDATA[ 
+;(function($){
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;
+		$(".select-item",context).click(function(){
+			$(this).addClass("selected").siblings().removeClass("selected");
+		});
+		$(".closeBtn",context).click(function(){
+			$(context).dialogClose(null);
+		});
+		$(".selectCreateMethod",context).click(function(){
+			var $t = $(".select-item.selected",context);
+			if(!$t.length){
+				$.messageBox.info({message:"请选择创建方式"});
+				return false;
+			}
+			var id = $t.data('id');
+			$(context).dialogClose(id);
+		});
+	});
+}(jQuery)); 
+	//]]>
+	</script>
+</div>
+
+
+
+
+
+
+

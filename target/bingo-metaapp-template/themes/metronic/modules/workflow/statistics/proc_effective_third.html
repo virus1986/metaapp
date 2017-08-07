@@ -1,0 +1,531 @@
+<div th:id="${viewId}">
+
+	<div data-widget="validator"
+		class="table-toolbar toolbar toolbar-auto row-fluid simple-search-area"
+		th:id="'toolbar_grid_procEffectiveThird'" style="">
+		<table>
+			<tbody>
+				<tr>
+					<td><label>流程分类:</label></td>
+					<td><input id="procStatiId" type="text" onclick="showMenu3()"
+						th:value="${procStatiName}" th:attr="t-value=${procStatiId}" /></td>
+					<td><label class="control-label ">区域：</label></td>
+					<td><input id="idOrgArea" name="orgArea" type="text"
+						onclick="showOrgMenu3()" th:value="${orgAreaName}"
+						th:attr="t-value=${orgAreaId}" /></td>
+					<td><label class="control-label ">差异超时百分比：</label></td>
+					<td><input type="text" id="idDurationDiff"
+						class="input input-medium input-text-template val-location focus-location"
+						data-validator="length[1, 100]" data-operator="cn"
+						name="durationDiff" th:value="${durationDiff}"> </input>
+						<input type="hidden" id="idIsShowOut"  name="isShowOut" th:value="${isShowOut}"> </input>
+						</td>
+				</tr>
+				<tr>
+					<td><label class="control-label ">开始日期：</label></td>
+					<td><input id="idStartTime"
+						class="Wdate input date-template input-medium val-location focus-location"
+						type="text" data-widget="calendar"
+						data-options="{'isShowWeek':false,'dateFmt':'yyyy-MM-dd'}"
+						data-operator="gt" name="startTime" th:value="${defStartTime}"></input>
+					</td>
+					<td><label class="control-label ">结束日期：</label></td>
+					<td><input id="idEndTime"
+						class="Wdate input date-template input-medium val-location focus-location"
+						type="text" data-widget="calendar"
+						data-options="{'isShowWeek':false,'dateFmt':'yyyy-MM-dd'}"
+						data-operator="gt" data-validator="bigThen" name="endTime"
+						th:value="${defEndTime}"> </input></td>
+					<td colspan="2">
+						<div class="toolbar-btns">
+							<button id="btnSearchData" type="button"
+								class="btn green searchBtn" onClick="doThirdSearch();">查询</button>
+							<button id="btnResetSearch" type="button" class="btn resetBtn"
+								onClick="doThirdReset();">重置</button>
+								<button type="button" class="btn btn-success export-excel" >
+									导出成Excel
+								</button>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<table th:id="${'grid_procDefEffective_'+viewId}"></table>
+	<div th:id="${'grid_procDefEffective_pager_'+viewId}"></div>
+
+	<div id="menuContent" class="menuContent"
+		style="display: none; position: absolute;">
+		<ul th:id="${'treeProc_'+viewId}" class="ztree"
+			style="margin-top: 0; width: 160px;"></ul>
+	</div>
+
+	<div id="menuOrgContent" class="menuContent"
+		style="display: none; position: absolute;">
+		<ul th:id="${'treeOrg_'+viewId}" class="ztree"
+			style="margin-top: 0; width: 160px;"></ul>
+	</div>
+
+	<script th:inline="javascript">
+	//<![CDATA[ 
+	
+	var contextThird = /*[['#'+${viewId}]]*/;
+	           
+	var gridId3= /*[['#grid_procDefEffective_'+${viewId}]]*/;
+	var gridPagerId3= /*[['#grid_procDefEffective_pager_'+${viewId}]]*/;
+
+	var treeOrg3= /*[['treeOrg_'+${viewId}]]*/;
+	var treeProc3= /*[['treeProc_'+${viewId}]]*/;
+	
+	function showMenu3() {
+
+		var cityObj = $("#procStatiId",contextThird);
+		var cityOffset = $("#procStatiId",contextThird).offset();
+		$("#menuContent",contextThird).css({left:cityOffset.left + "px", top:cityOffset.top + cityObj.outerHeight() + "px"}).slideDown("fast");
+
+		$("body").bind("mousedown", onBodyDown3);
+	}
+	function hideMenu3() {
+		$("#menuContent",contextThird).fadeOut("fast");
+		$("body").unbind("mousedown", onBodyDown3);
+	}
+	function onBodyDown3(event) {
+		if (!(event.target.id == "menuBtn" || event.target.id == "menuContent" || $(event.target).parents("#menuContent").length>0)) {
+			hideMenu3();
+		}
+	}
+
+	function showOrgMenu3() {
+
+		var cityObj = $("#idOrgArea",contextThird);
+		var cityOffset = $("#idOrgArea",contextThird).offset();
+		$("#menuOrgContent",contextThird).css({left:cityOffset.left + "px", top:cityOffset.top + cityObj.outerHeight() + "px"}).slideDown("fast");
+
+		$("body").bind("mousedown", onOrgBodyDown3);
+	}
+	function hideOrgMenu3() {
+		$("#menuOrgContent",contextThird).fadeOut("fast");
+		$("body").unbind("mousedown", onOrgBodyDown3);
+	}
+	function onOrgBodyDown3(event) {
+		if (!(event.target.id == "menuBtn" || event.target.id == "menuOrgContent" || $(event.target).parents("#menuOrgContent").length>0)) {
+			hideOrgMenu3();
+		}
+	}
+	$(function(){
+		
+		contextThird = /*[['#'+${viewId}]]*/;
+		
+		Page.init(contextThird);
+		
+		$('.export-excel', contextThird).click(function() {	
+			var parm="proc_stati_name="+(!!$("#procStatiName",contextThird).val() ?$("#procStatiName",contextThird).val():"");
+			parm+="&proc_stati_id="+ (!!$("#procStatiId",contextThird).attr("t-value") ?$("#procStatiId",contextThird).attr("t-value"):"");
+			parm+="&orgAreaId="+ (!!$("#idOrgArea",contextThird).attr("t-value") ?$("#idOrgArea",contextThird).attr("t-value"):"");						
+			parm+="&durationDiff="+ (!!$("#idDurationDiff",contextThird).val() ?$("#idDurationDiff",contextThird).val():"");
+			parm+="&isShowOut="+ (!!$("#idIsShowOut",contextThird).val() ?$("#idIsShowOut",contextThird).val():"");
+			parm+="&startTime="+ (!!$("#idStartTime",contextThird).val() ?$("#idStartTime",contextThird).val():"");
+			parm+="&endTime="+ (!!$("#idEndTime",contextThird).val() ?$("#idEndTime",contextThird).val():"");
+			parm+="&page=1&rows=99999&sidx=avg_duration&sord=desc&isExport=true";
+			var url = Global.contextPath +"/workflow/statistics/exportEffectiveThirdPaged?"+parm;
+			window.location.assign(url);
+			return;
+		});
+		
+		function funcDuration (cellval, unit) {
+     		if (!$.isNumeric(cellval)) {
+     			return cellval;
+     		}
+     		var secondsSum = cellval;
+     		var numyears = Math.floor(secondsSum / 525600);
+     		var numdays = Math.floor((secondsSum % 525600) / 1440);
+     		var numhours = Math.floor(((secondsSum % 525600) % 1440) / 60);
+     		var numminutes = Math
+     				.floor((((secondsSum % 525600) % 1440) % 60));
+     		var numseconds = 0;//(((secondsSum % 525600) % 1440) % 60);
+     		var years = numyears ? numyears + "年" : "", days = numdays ? numdays
+     				+ "天" : "", hours = numhours ? numhours + "小时" : "", minutes = numminutes ? numminutes
+     				+ "分钟"
+     				: "", seconds = numseconds ? numseconds + "秒" : "";
+     		if (unit == "d") {
+     			cellval = (years + days) ? (years + days) : "1天";
+     		} else if (unit == "m") {
+     			if(!(years + days + hours) && minutes==0)
+     				cellval = "0";
+     			else
+     				cellval = (years + days + hours + minutes) 
+     		} else if (unit == "h") {
+     			cellval = (years + days + hours) ? (years + days + hours) : "小于1小时";
+     		} else {
+     			cellval = (years + days + hours + minutes + seconds) ? (years
+     					+ days + hours + minutes + seconds) : "1秒";
+     		}
+     		return cellval;
+     	}
+
+		function intFormatter(cellvalue, options, rowObject){
+			return funcDuration(cellvalue, "m");
+		};
+
+		var colName = ["三级流程ID","三级流程名","二级流程ID","所属二级流程名","流程单据数","标准工时","平均实际工时","平均工时差异","超时数量","超时占比","平均超时时间","驳回次数","操作"]
+		var gridUrl= Global.contextPath+"/workflow/statistics/procEffectiveThirdPaged";
+		$(gridId3,contextThird).jqGrid({
+			url : gridUrl,
+			mtype : 'POST',
+			datatype : 'json',
+			postData: {
+				proc_stati_name: function () { return $("#procStatiName",contextThird).val(); },
+				proc_stati_id: function () {  
+					res = $("#procStatiId",contextThird).attr("t-value"); 
+					return (!!res ?res:""); 
+				},
+				orgAreaId: function () { 
+					res = $("#idOrgArea",contextThird).attr("t-value"); 
+					return (!!res ?res:""); 
+				},			
+				durationDiff: function () { return $("#idDurationDiff",contextThird).val(); },
+				isShowOut: function () { return $("#idIsShowOut",contextThird).val(); },				
+				startTime: function () { return $("#idStartTime",contextThird).val(); },
+				endTime: function () { return $("#idEndTime",contextThird).val(); }
+			},
+			page : 1,
+			rowNum : 10,
+			rownumbers : true,
+			multiselect : false,
+			multiboxonly: true,
+			loadonce: false,
+			pager:gridPagerId3,
+		   	sortname: 'avg_duration',
+		    sortorder: "desc",
+			rowList : [ 10, 20, 50, 80, 100 ],
+			colNames : colName,
+			jsonReader : {
+				id : "name",
+				repeatitems : false
+			},
+			shrinkToFit :true,
+			prmNames : {
+				id : "name",
+				search: "search"
+			},
+			toolbar: [true, 'top'],
+			headertitles: true,
+			altRows: true,
+			autowidth : true,
+			height:"100%",
+			colModel : [{name:'proc_id',index:'proc_id',width:100,key:true,hidden: true},
+						{name:'proc_name',index:'proc_name', width:250, sorttype:'string'},
+						{name:'proc_stati_id',index:'pr；oc_stati_id', width:100, sorttype:'integer',hidden: true},
+						{name:'stati_name',index:'stati_name', width:120, sorttype:'string'},
+						{name:'proc_inst_num',index:'proc_inst_num', width:70, sorttype:'integer'},
+						{name:'exp_duration',index:'exp_duration', width:60, sorttype:"number", formatter:intFormatter},
+						{name:'avg_duration',index:'avg_duration', width:120, sorttype:"number", formatter:intFormatter},
+						{name:'duration_diff',index:'duration_diff', width:80, sorttype:"number"},
+						{name:'out_num',index:'out_num', width:70, sorttype:'integer'},
+						{name:'out_perc',index:'out_perc', width:70, sorttype:"number"},
+						{name:'out_duration',index:'out_duration', width:120, sorttype:"number", formatter:intFormatter},
+						{name:'return_num',index:'return_num', width:70, sorttype:"number"},
+						{name:'act',index:'act', width:200,sortable:false}
+						],
+			searchDialogOptions : {
+				multipleSearch : true,
+				"recreateForm" : true,
+				"height" : 400,
+				"width" : 700,
+				"left" : 350,
+				"top" : 100
+			},
+			gridComplete:function(){
+				Page.gridComplete.call(this);
+				
+				var datas = jQuery(gridId3, contextThird).jqGrid('getRowData');
+				
+				var sTime = $("#idStartTime",contextThird).val();
+				var eTime = $("#idEndTime",contextThird).val();
+				for(var i=0;i < datas.length;i++){
+					var cl = datas[i];
+					
+					var be1 = "<button type='button' class='btn green'";
+					var be2 = " data-proc_id='"+cl.proc_id +"'";
+					be2  +=" data-proc_name='"+cl.proc_name +"'";
+					if(sTime){
+						be2  +=" data-starttime='"+sTime +"'"
+					}
+					if(eTime){
+						be2  +=" data-endtime='"+eTime +"'"
+					}
+					
+					var func1 = " onclick='javascript:onViewThird3Effective(this)'";
+					var func2 = " onclick='javascript:onViewActivity3Effective(this)''";
+					var func3 = " onclick='javascript:onViewTask3Effective(this)'";
+					var func4 = " onclick='javascript:onViewDept3Effective(this)'";
+
+// 					var be0="<button type='button' class='btn green searchBtn'"+be2+func1+" title=''>明细</button>";
+// 					be0+="<div class='btn-group'><button class='btn dropdown-toggle green' data-toggle='dropdown'> ";
+// 					be0+="    <i class='icon-angle-down'></i>";
+// 					be0+="</button>";
+// 					be0+="<ul class='dropdown-menu pull-right table-toolbar-icon search-ul'>";
+// 					be0+="	<li class='table-toolbar-icon-item'>";
+// 					be0+="		<a href='javascript://' title=''"+be2+func2+">";
+// 					be0+="			  <span>节点统计</span>";
+// 					be0+="		</a>";
+// 					be0+="	</li>";
+// 					be0+="	<li class='table-toolbar-icon-item'>";
+// 					be0+="	<a href='javascript://' title=''"+be2+func3+">";
+// 					be0+="		  <span>处理人统计</span>";
+// 					be0+="	</a>";
+// 					be0+="</li>";
+// 					be0+="   <li class='table-toolbar-icon-item'>";
+// 					be0+="   <a href='javascript://' title=''"+be2+func4+">";
+// 					be0+="	     <span>处理部门统计</span>";
+// 					be0+="   </a>";
+// 					be0+="</li>";
+// 				    be0+="</ul></div>";
+					
+				    var btn1= ">明细</button>";
+				    var btn2= ">环节</button>";
+				    var btn3= ">人</button>";
+				    var btn4= ">部门</button>";
+				    
+				    var be = be1+be2+func1+btn1+"&nbsp;";
+				    be += be1+be2+func2+btn2+"&nbsp;";
+				    be += be1+be2+func3+btn3;
+				    //be +="&nbsp;";
+				    //be += be1+be2+func4+btn4;
+				    
+					var be_out =  "<a href='#' "+be2+" data-is_show_out='true' onclick='javascript:onViewThird3Effective(this)'>"+cl.out_num+"</a>";
+					var be_reject =  "<a href='#' "+be2+" data-is_show_reject='true' onclick='javascript:onViewThird3Effective(this)'>"+cl.return_num+"</a>";
+					
+					jQuery(gridId3, contextThird).jqGrid('setRowData', cl.proc_id, {act:be,out_num:be_out,return_num:be_reject});
+				}	
+				
+/* 				var $grid=$(gridId3);
+				$("input[name=btMultiSearch]",contextThird).off("click");
+				$("input[name=btMultiSearch]",contextThird).click(function(){
+					var searchString=$("input[name=searchString]",contextThird).val();
+					var rules=[{"field":"displayName","op":"cn","data":searchString},{"field":"name","op":"cn","data":searchString}];
+					setTimeout(function(){
+						$grid.multiFieldsQuickSearch(rules,'OR');
+					},300);
+				}); */
+			}
+		}).navGrid(gridPagerId3,{
+			"add" : false,
+			"cloneToTop" : false,
+			"del" : false,
+			"edit" : false,
+			"position" : "left",
+			"refresh" : false,
+			"search" : false,
+			"view" : false,
+			"toggle" : false
+		}).bindKeys().initCustom();
+
+		var procSetting = {
+			view: {
+				dblClickExpand: true
+			},
+			async: {
+				enable: true,
+				url: Global.contextPath+"/workflow/statistics/wfProcStatistics",
+				autoParam:["id", "name=n", "level=lv"],
+				otherParam:{"maxLevel":2},
+				dataFilter: filter
+			},
+			callback: {
+				beforeClick: beforeClick,
+				onClick: onClick
+			}
+		};
+		
+		function filter(treeId, parentNode, childNodes) {
+			if (!childNodes) return null;
+			for (var i=0, l=childNodes.length; i<l; i++) {
+				childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
+			}
+			return childNodes;
+		}
+
+		function beforeClick(treeId, treeNode) {
+			var check = (treeNode.checked);
+			//if (!check) alert("只能选择城市...");
+// 			if (!check) {
+// 					var zTree = $.fn.zTree.getZTreeObj(treeProc3);
+// 				zTree.expandNode(treeNode);
+// 			}
+			return check;
+		}
+		
+		function onClick(e, treeId, treeNode) {
+				var zTree = $.fn.zTree.getZTreeObj(treeProc3),
+			nodes = zTree.getSelectedNodes(),
+			v = "";
+			ids = "";
+			nodes.sort(function compare(a,b){return a.id-b.id;});
+			for (var i=0, l=nodes.length; i<l; i++) {
+				v += nodes[i].name + ",";
+				ids += nodes[i].level +":"+nodes[i].id+",";
+			}
+			if (v.length > 0 ) v = v.substring(0, v.length-1);
+			if (ids.length > 0 ) ids = ids.substring(0, ids.length-1);
+			
+			var cityObj = $("#procStatiId",contextThird);
+			cityObj.attr("value", v);
+			cityObj.attr("t-value", ids);
+			//alert(cityObj.attr("t-value"))
+
+			var check = (treeNode.checked);
+			if (check) {
+				hideMenu3();
+			}
+		}
+		
+		var orgSetting = {
+				view: {
+					dblClickExpand: false
+				},
+				async: {
+					enable: true,
+					url: Global.contextPath+"/workflow/statistics/wfProcOrgArea",
+					autoParam:["id", "name=n", "level=lv"],
+					otherParam:{"maxLevel":1	}
+				},
+				callback: {
+					onClick: onOrgClick
+				}
+			};
+			
+			function filterOrg(treeId, parentNode, childNodes) {
+				if (!childNodes) return null;
+				for (var i=0, l=childNodes.length; i<l; i++) {
+					childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
+				}
+				return childNodes;
+			}
+
+			function beforeOrgClick(treeId, treeNode) {
+				var check = (treeNode && !treeNode.isParent);
+				//if (!check) alert("只能选择城市...");
+				if (!check) {
+					var zTree = $.fn.zTree.getZTreeObj(treeOrg3);
+					zTree.expandNode(treeNode);
+				}
+				return check;
+			}
+			
+			function onOrgClick(e, treeId, treeNode) {
+
+				var zTree = $.fn.zTree.getZTreeObj(treeOrg3),
+				nodes = zTree.getSelectedNodes(),
+				v = "";
+				ids = "";
+				nodes.sort(function compare(a,b){return a.id-b.id;});
+				for (var i=0, l=nodes.length; i<l; i++) {
+					v += nodes[i].name + ",";
+					ids += nodes[i].id+",";
+				}
+				if (v.length > 0 ) v = v.substring(0, v.length-1);
+				if (ids.length > 0 ) ids = ids.substring(0, ids.length-1);
+				
+				var cityObj = $("#idOrgArea",contextThird);
+				cityObj.attr("value", v);
+				cityObj.attr("t-value", ids);
+				//alert(cityObj.attr("t-value"))
+				
+				hideOrgMenu3();
+			}
+
+		$.fn.zTree.init($("#"+treeProc3,contextThird), procSetting);
+		$.fn.zTree.init($("#"+treeOrg3,contextThird), orgSetting);
+	});
+
+	function doThirdSearch (){
+		jQuery(gridId3,contextThird).trigger("reloadGrid", [{page: 1}]);
+	}
+	function doThirdReset (){
+
+		$("#procStatiId",contextThird).attr("t-value","");
+		$("#procStatiId",contextThird).val("");
+		$("#idOrgArea",contextThird).val("");
+		$("#idOrgArea",contextThird).attr("t-value","");
+		$("#idDurationDiff",contextThird).val("");
+		$("#idStartTime",contextThird).val("");
+		$("#idEndTime",contextThird).val("");
+
+		jQuery(gridId3,contextThird).trigger("reloadGrid", [{page: 1}]);
+	}
+	function onViewThird3Effective (ctrl){
+		var param = "proc_id="+"2:"+$(ctrl).attr('data-proc_id');
+		param+= "&proc_name="+encodeURIComponent($(ctrl).attr('data-proc_name'));
+		var orgId=$("#idOrgArea",contextThird).attr("t-value");
+		param+= "&orgAreaId="+ (!!orgId?orgId:"");
+		param+= "&orgAreaName="+encodeURIComponent($("#idOrgArea",contextThird).val());
+		param+= "&durationDiff="+$("#idDurationDiff",contextThird).val();
+		if($(ctrl).attr('data-starttime')){
+			param+= "&startTime="+$(ctrl).attr('data-starttime');
+		}
+		if($(ctrl).attr('data-endtime')){
+			param+= "&endTime="+ $(ctrl).attr('data-endtime');
+		}
+		if($(ctrl).attr('data-is_show_out')){
+			param+= "&isShowOut="+ $(ctrl).attr('data-is_show_out');
+		}
+		if($(ctrl).attr('data-is_show_reject')){
+			param+= "&isShowReject="+ $(ctrl).attr('data-is_show_reject');
+		}
+	
+		var url = Global.contextPath + "/workflow/statistics/procEffectiveInstance?"+param;
+		$.openLink(url,{showType:'tab',title:'单据汇总统计分析'},function(){});
+	}
+	function onViewActivity3Effective (ctrl){
+		var param = "proc_id="+"2:"+$(ctrl).attr('data-proc_id');
+		param+= "&proc_name="+encodeURIComponent($(ctrl).attr('data-proc_name'));
+		var orgId=$("#idOrgArea",contextThird).attr("t-value");
+		param+= "&orgAreaId="+ (!!orgId?orgId:"");
+		param+= "&orgAreaName="+encodeURIComponent($("#idOrgArea",contextThird).val());
+		param+= "&durationDiff="+$("#idDurationDiff",contextThird).val();
+		if($(ctrl).attr('data-starttime')){
+			param+= "&startTime="+$(ctrl).attr('data-starttime');
+		}
+		if($(ctrl).attr('data-endtime')){
+			param+= "&endTime="+ $(ctrl).attr('data-endtime');
+		}
+		var url = Global.contextPath + "/workflow/statistics/procEffectiveActivity?"+param;
+		$.openLink(url,{showType:'tab',title:'环节汇总统计分析'},function(){});
+	}
+	function onViewTask3Effective (ctrl){
+		var param = "proc_id="+"2:"+$(ctrl).attr('data-proc_id');
+		param+= "&proc_name="+encodeURIComponent($(ctrl).attr('data-proc_name'));
+		var orgId=$("#idOrgArea",contextThird).attr("t-value");
+		param+= "&orgAreaId="+ (!!orgId?orgId:"");
+		param+= "&orgAreaName="+encodeURIComponent($("#idOrgArea",contextThird).val());
+		param+= "&durationDiff="+$("#idDurationDiff",contextThird).val();
+		if($(ctrl).attr('data-starttime')){
+			param+= "&startTime="+$(ctrl).attr('data-starttime');
+		}
+		if($(ctrl).attr('data-endtime')){
+			param+= "&endTime="+ $(ctrl).attr('data-endtime');
+		}
+		var url = Global.contextPath + "/workflow/statistics/procEffectiveTask?"+param;
+		$.openLink(url,{showType:'tab',title:'处理人汇总统计分析'},function(){});
+	}
+	function onViewDept3Effective (ctrl){
+		var param = "proc_id="+"2:"+$(ctrl).attr('data-proc_id');
+		param+= "&proc_name="+encodeURIComponent($(ctrl).attr('data-proc_name'));
+		var orgId=$("#idOrgArea",contextThird).attr("t-value");
+		param+= "&orgAreaId="+ (!!orgId?orgId:"");
+		param+= "&orgAreaName="+encodeURIComponent($("#idOrgArea",contextThird).val());
+		param+= "&durationDiff="+$("#idDurationDiff",contextThird).val();
+		if($(ctrl).attr('data-starttime')){
+			param+= "&startTime="+$(ctrl).attr('data-starttime');
+		}
+		if($(ctrl).attr('data-endtime')){
+			param+= "&endTime="+ $(ctrl).attr('data-endtime');
+		}
+		var url = Global.contextPath + "/workflow/statistics/procEffectiveDept?"+param;
+		$.openLink(url,{showType:'tab',title:'处理部门汇总统计分析'},function(){});
+	}
+	//]]>
+	</script>
+</div>

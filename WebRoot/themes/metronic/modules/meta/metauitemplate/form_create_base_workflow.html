@@ -1,0 +1,165 @@
+<div th:id="${viewId}" class="panel apply-panel workflow-form-select-entity" style="width:900px;height:300px;position: relative;">
+	<style type="text/css">
+		.workflow-form-select-entity ul.token-input-list-facebook{
+			width:222px;
+		}
+		.workflow-form-select-entity .token-input-dropdown-facebook ul{
+			height:200px;
+			overflow:auto;
+		}
+		.input-withprefix{width:165px;}
+	</style>
+	<form id="createFormForm" class="form-horizontal" data-widget="validator">
+	<div class="ui-dialog-title ">
+		<span>创建流程表单</span>
+	</div>
+	<div class="ui-dialog-content container-fluid ">
+		<table class="form-table form-bordered col4-fluid">
+			<tbody>
+				<tr>
+					<th><label>关联实体配置:</label></th>
+					<td colspan="3">
+					<label class="radio inline">
+					<input type="radio" name="entity-config" value="auto-create" checked="checked"/><span>自动创建</span>
+					</label>
+					<label class="radio inline">
+					<input type="radio" name="entity-config" value="select-has"/><span>选择已有</span></label>
+					</td>
+				</tr>
+				<tr class="select-has hide">
+					<th><label>选择关联实体:</label></th>
+					<td colspan="3">
+						<input type="hidden" name="converter" value="form_template_workflow"/>
+						<input type="text" name="entityName" value="" data-validator="length[1,32]"/>
+						<span class="label label-info" style="margin-left:5px;">表单关联的实体名称，输入实体名称可搜索</span>
+					</td>
+				</tr>
+				<tr class="auto-create">
+					<th><label><span class="required-star">*</span>实体显示名称:</label></th>
+					<td colspan="3">
+						<input type="text" name="entity-displayName" class="input-large" data-validator="length[1,50]"/>
+						<span class="label label-info">表单关联实体显示给用户看的中文名称</span>
+					</td>
+				</tr>
+				<tr class="auto-create">
+					<th><label><span class="required-star">*</span>实体名称:</label></th>
+					<td colspan="3">
+						<span th:if="${saas}" th:text="${ecode}+'_'"></span>
+						<input type="text" name="entity-entityName" th:class="${saas}?'input-withprefix':'input-large'" data-validator="length[1,32],letterStart,func[entityNameUnique]"/>
+						<span class="label label-info">表单关联实体名</span>
+					</td>
+				</tr>
+				<tr>
+					<th><label>表单显示名称:</label></th>
+					<td colspan="3">
+						<input name="displayName" type="text" value="" class="input-large" data-validator="required,length[1,50]"/>
+						<span class="label label-info">表单显示给用户看的中文名称</span>
+					</td>
+				</tr>
+				<tr>
+					<th><label>表单名称:</label></th>
+					<td colspan="3">
+						<input type="text" name="name" class="input-large" data-validator="required,length[1,32],name"/>
+						<span class="label label-info">表单内部使用的英文名称，一般取有意义的单词或拼音</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="ui-dialog-buttonset">
+		<button th:if="${action} != 'VIEW'" type="button" name="save"
+			class="btn purple saveEntityForm" ><span>保存并发布表单</span>
+			<i class="m-icon-swapright m-icon-white"></i>
+		</button>
+		<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+	</form>
+	
+	<script th:inline="javascript">
+	//<![CDATA[
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;		
+		var action = /*[[${action}]]*/;
+		var url=Global.contextPath+"/metadata/uitemplate/form_create_base?publish=1";
+		Page.init(context);
+		$("input[name=entityName]",context).tokenInput(Global.contextPath+"/metadata/entity/query_all", {
+			method:"POST",
+            theme: "facebook",
+            tokenLimit:1,
+            tokenValue:'id',
+            minChars:1,
+            hintText:"请输入实体名或显示名",
+            searchingText:"查询中...",
+            noResultsText:"没有搜索到实体",
+            container:$(context),
+            hideSideButton:true
+        });
+		$("[name='entity-displayName']", context).keyup(
+			function() {
+				$("[name='entity-entityName']", context).val($(this).toPinyin().replace(/\s*/g, ''));
+			}
+		);
+		$("[name='displayName']", context).keyup(
+			function() {
+				$("[name='name']", context).val($(this).toPinyin().replace(/\s*/g, ''));
+			}
+		);
+		$("[name='entity-config']",context).change(function(){
+			var v=$("[name='entity-config']:checked",context).val();
+			if(v==="auto-create"){
+				$(".auto-create",context).show();
+				$(".select-has",context).hide();
+			}else{
+				$(".select-has",context).show();
+				$(".auto-create",context).hide();
+			}
+		});
+		$(".saveEntityForm", context).click(function(){
+			var valInfo = $.validation.validate("#createFormForm") ;
+			if( valInfo.isError ) {
+				return false;
+			}
+			var btn=$(this);
+			function doSave(){
+				btn.attr("disabled","disabled").addClass("disabled");
+				var data=$("#createFormForm", context).toJson();
+				jQuery.restPost(url,data,function(response){
+					jQuery.dialogReturnValue(response);
+					$(context).dialogClose();
+				});
+			};
+			var entity=$("[name='entityName']",context).val();
+			var entityDisplayName=$("[name='entity-displayName']",context).val();
+			var entityName=$("[name='entity-entityName']",context).val();
+			var v=$("[name='entity-config']:checked",context).val();
+			var entityCreateUrl=Global.contextPath+"/metadata/entity/create";
+			if(v==="auto-create"){
+				if(!entityDisplayName){
+					$.messageBox.warning({message:"请填写关联实体显示名称!"});
+					return false;
+				}
+				if(!entityName){
+					$.messageBox.warning({message:"请填写关联实体名称!"});
+					return false;
+				}
+				btn.attr("disabled","disabled").addClass("disabled");
+				$.restPost(entityCreateUrl,{name:entityName,displayName:entityDisplayName},function(entityRes){
+					if(entityRes){
+						$("[name='entityName']",context).val(entityRes.name);
+						doSave();
+					}
+				});
+			}else{
+				if(!entity){
+					$.messageBox.warning({message:"请选择关联实体!"});
+					return false;
+				}else{
+					doSave();
+				}
+			}
+			
+		});		
+	});
+	//]]>	
+	</script>
+</div>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div class="panel apply-panel" style="min-width:950px;" th:id="${viewId}">
+  <form class="form-horizontal ajaxpost" data-widget="validator"
+    id="entityForm" method="post" th:action="${requestUrl}" th:object="${entity}">
+    <input meta:field="*{id}" type="hidden"/>
+    <div class="table-dialog">
+      <div class="ui-dialog-title" th:switch="${action}">
+        <span th:case="'EDIT'" th:text="#{common.edit}+${metaEntity.displayName}"/>
+        <span th:case="'CREATE'" th:text="#{common.create}+${metaEntity.displayName}"/>
+        <span th:case="'VIEW'" th:text="#{common.view}+${metaEntity.displayName}"/>
+        <span th:case="*" th:text="#{common.notExistAction}+${action}"/>
+      </div>
+      <div class="ui-dialog-content container-fluid">
+        <div class="row-fluid">
+          <div class="span2 form-left">
+            <div class="dialog-menu" id="left-navbar"/>
+            <meta:relation view-container=".form-right"/>
+          </div>
+          <div class="span10 form-right" data-spy="scroll" data-target="#left-navbar">
+            <div>
+              <table class="form-section form-table col4-fluid">
+                <caption>
+                  <span th:text="#{changelog.caption}"></span>
+                </caption>
+                <tr th:if="${action} != 'VIEW'">
+                  <th>
+                    <label><meta:display-name field="entityName"/>:</label>
+                  </th>
+                  <td colspan="1">
+                    <input  meta:field="entityName"/>
+                  </td>
+                  <th>
+                    <label><meta:display-name field="recordId"/>:</label>
+                  </th>
+                  <td colspan="1">
+                    <input  meta:field="recordId"/>
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    <label><meta:display-name field="operator"/>:</label>
+                  </th>
+                  <td colspan="1">
+                    <input  meta:field="operator"/>
+                  </td>
+                  <th>
+                    <label><meta:display-name field="changeTime"/>:</label>
+                  </th>
+                  <td colspan="1">
+                    <input  meta:field="changeTime"/>
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    <label><meta:display-name field="reason"/>:</label>
+                  </th>
+                  <td colspan="3">
+                    <input  meta:field="reason"/>
+                  </td>
+                </tr>
+              </table>
+              <div th:if="${action} == 'VIEW'" id="div-log">
+              	<meta:grid id="grid_embed" entityName="DataChangeLogItem" view="emb" logid="${id}"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui-dialog-buttonset">
+        <button class="btn btn-primary" name="save"
+          th:if="${action} != 'VIEW'" type="submit" th:text="#{common.save}">
+					</button>
+        <button class="btn closeBtn" name="close"
+          th:text="(${action} != 'VIEW')? #{common.cancel} : #{common.close}" type="button">
+					</button>
+      </div>
+    </div>
+  </form>
+  <script th:inline="javascript" type="text/javascript">
+//<![CDATA[ 
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var container = $('#' + viewId);
+		Page.init(container);
+		window.setTimeout(function(){
+			$("#grid_embed",context).jqGrid("setGridHeight",160).jqGrid("setGridWidth",$("#div-log").width()-20);
+		},200);
+	});
+//]]></script>
+</div>

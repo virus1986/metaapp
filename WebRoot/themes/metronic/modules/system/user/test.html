@@ -1,0 +1,115 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:950px;">
+<div>
+	<!-- 
+	<button id="org" >同步组织</button>
+	<button id="duty" >同步职务</button>
+	<button id="post" >同步岗位</button>
+	<button id="user" >同步用户</button>
+	<button id="userpost" >同步用户岗位</button>
+	<button id="wftask" >已办事项</button>
+	<button id="wfnotify" >待阅事项</button>
+	<button id="importLogistics" >导入后勤加工预算</button>
+	 -->
+	<button id="copyEntity" >复制实体</button>
+	
+	<div id="data"></div>
+	<hr/>
+</div>
+<script type="text/javascript" th:inline="javascript">
+//<![CDATA[
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var container = $('#' + viewId);
+		Page.init(container);
+		//导入后勤加工预算
+		$("#importLogistics",container).on("click",function(){
+			$.post(Global.contextPath + "/importbudget/importLogistics",
+				{},
+				function(response){
+					$("#data",container).html(response);
+				});
+		});
+		//复制实体
+		$("#copyEntity",container).on("click",function(){
+			$.post(Global.contextPath + "/sync/test",
+				{},
+				function(response){
+					$("#data",container).html(response.id);
+				});
+		});
+		//已办
+		$("#wftask",container).on("click",function(){
+			$.post(Global.contextPath + "/oaserviceinterface/WfTask/query",
+				{
+					data:{},
+					search:true,
+					rows:20,
+					page:2,
+					sidx:"endTime",
+					sord:"asc",
+					filters:'{"groupOp":"AND","rules":[{"field":"WfTask.status","op":"eq","data":"10"},{"field":"WfTask.deleted","op":"eq","data":"0"},{"field":"WfTask.assigneeId","op":"eq","data":"e0964345-6f3c-4ea0-9df4-05787ca95c64"} ],"groups":[]}'
+				},
+				function(response){
+					$("#data",container).html(response);
+				});
+		});
+		//待阅
+		$("#wfnotify",container).on("click",function(){
+			$.post(Global.contextPath + "/oaserviceinterface/WfNotify/query",
+				{
+					data:{},
+					search:true,
+					rows:20,
+					page:1,
+					sidx:"endTime",
+					sord:"asc",
+					filters:'{"groupOp":"AND","rules":[{"field":"WfNotify.status","op":"ne","data":"10"},{"field":"WfNotify.assigneeId","op":"eq","data":"e0964345-6f3c-4ea0-9df4-05787ca95c64"},{"field":"WfNotify.deleted","op":"eq","data":"0"}	],"groups":[]}'
+				},
+				function(response){
+					$("#data",container).html(response);
+				});
+		});
+		$("#org",container).on("click",function(){
+			$.post(Global.contextPath + "/sync/syncorg",
+				{
+				},
+				function(response){
+					$("#data",container).html(response);
+				});
+		});
+		$("#duty",container).on("click",function(){
+			$.post(Global.contextPath + "/sync/syncduty",
+				{
+				},
+				function(response){
+					$("#data",container).html(response);
+				});
+		});
+		$("#post",container).on("click",function(){
+			$.post(Global.contextPath + "/sync/syncpost",
+				{
+				},
+				function(response){
+					$("#data",container).html(response);
+				});
+		});
+		$("#user",container).on("click",function(){
+			$.post(Global.contextPath + "/sync/syncuser",
+				{
+				},
+				function(response){
+					$("#data",container).html(response);
+				});
+		});
+		$("#userpost",container).on("click",function(){
+			$.post(Global.contextPath + "/sync/syncuserpost",
+				{
+				},
+				function(response){
+					$("#data",container).html(response);
+				});
+		});
+	});
+//]]>
+</script>
+</div>

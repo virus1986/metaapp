@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>工作流配置信息</comment>
+
+<entry key="Workflow.Consts.deptContacterId">ae3945da-8125-4c89-9bee-12d478d2334b</entry>
+<entry key="Workflow.Consts.deptContacterName">部门接口人</entry>
+<entry key="Workflow.Consts.deptContacterCode">co-ordinator</entry>
+<entry key="Workflow.Entity.Post">UamPost</entry>
+<entry key="Workflow.Entity.Duty">UamDuty</entry>
+<entry key="Workflow.Entity.UserPost">UamUserPost</entry>
+<entry key="Workflow.Entity.Organization">UamOrganization</entry>
+<entry key="Workflow.Entity.Organization.IdName">id</entry>
+<entry key="Workflow.Entity.User">User</entry>
+<entry key="Workflow.ApproveEndpoint">http://localhost/app/workflow/process/approve</entry>
+<!-- 以/开头代表应用上下文根，如/themes/{theme}/modules/workflow/wfproc/tmpl，{theme}代表当前主题参数-->
+<entry key="Workflow.procModuleBasePath">/proc_tmpls</entry>
+
+</properties>

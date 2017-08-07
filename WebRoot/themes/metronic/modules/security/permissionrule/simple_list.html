@@ -1,0 +1,51 @@
+<div th:id="${viewId}" class="panel apply-panel">
+
+<table class="form-table">
+	<caption><span th:text="${#messages.msg('security.permissionRule.ruleListCaption',operationName)}"></span>
+		<a class="editOperationRules" href="javascript://" style="margin-left:20px;padding:3px;"><img th:src="${themes.icon('led-icons/page_white_text.png')}"/><span th:text="#{security.permissionRule.editTitle}"></span></a>
+	</caption>
+	<tbody>
+		<tr>
+			<td>
+				<label class="radio" th:each="rule:${entityOperationRules}">
+				  <input type="radio" name="ruleId" th:value="${rule.id}"/>
+				  <span th:text="${rule.name}"></span>
+				</label>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<script th:inline="javascript">
+//<![CDATA[ 
+	var viewId=/*[[${viewId}]]*/;
+	var operationId=/*[[${operationId}]]*/;
+	var operationName=/*[[${operationName}]]*/;
+	var entity=/*[[${entity}]]*/;
+	var context = "#"+viewId;
+	
+	$(".editOperationRules",context).click(function(){
+		var ruleEditUrl=Global.contextPath+"/entities/permissionrule/list?operationId="+operationId+"&operationName="+operationName;
+		var _container=$(context).parent(".permissionDetail");
+		$.openLink(ruleEditUrl,{width:800,title:i18n.t("permissionRule.editList.title",operationName)},function(){
+  			var ruleSelectUrl=Global.contextPath+"/sec/entity_permission/rule/select?operationId="+operationId+"&operationName="+operationName+"&entity="+entity;
+  			consolelog(_container);
+  			$.openLink(ruleSelectUrl,{showType:"div",target:_container},function(res){
+  			});
+		});
+	});
+	
+	$("[name=ruleId]",context).click(function(){
+		var checked=$(this).attr("checked");
+		if(checked=="checked"){
+			window._entityOperationRules[operationId]=$(this).val();
+		}
+	});
+	if(window._entityOperationRules[operationId]){
+		$("[name=ruleId][value="+window._entityOperationRules[operationId]+"]",context).attr("checked","checked");
+	}else{
+		$("[name=ruleId]:eq(0)",context).attr("checked","checked");
+	}
+	window._entityOperationRules[operationId]=$("[name=ruleId]:checked",context).val();
+//]]> 
+</script>
+</div>

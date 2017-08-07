@@ -1,0 +1,36 @@
+<div class="portlet box slave tea-green">
+	<div class="portlet-title">
+		<div class="caption">
+			<i class="icon-reorder"></i>流程环节配置
+		</div>
+		<div class="actions">
+			<button href="#" class="addRow green"><i class="icon-plus"></i> Add</button>
+			<button class="yellow" href="#"> 
+				<i class="icon-cogs"></i> Tools <i class="icon-angle-down"></i>
+			</button>
+		</div>
+	</div>
+	<div class="portlet-body">
+		<div class="dataTables_wrapper form-inline">
+			<table class="table table-condensed" >
+				<thead>
+				<tr>
+					<th ng-repeat="col in data.gridCols">{{col.displayName}}</th>
+					<th >操作</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="i in [1,2]">
+					<td ng-repeat="col in data.gridCols">
+						<!-- <input ng-style='data.style' type="text" placeholder="{{col.displayName}}"/> -->
+					</td>
+					<td>
+						<a href="javascript://" class="delRow btn-danger"><i class="icon-white icon-remove"></i><span>删除列</span>
+						</a>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

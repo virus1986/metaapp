@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>share template</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<h4>
+		高级查询输入控件。
+		使用"输入控件名-template"类包围整个输入控件。
+		使用"focus-location"类标明可以让外部JS使用"元素.focus()"集中焦点的元素。
+		使用"val-location"类标明可以让外部JS使用“元素.val()”返回输入控件值的元素。
+		使用"data-initFunc"属性在最外层控件元素上标注初始化函数，如果控件需要初始化的话。
+			"data-initFunc"接收两个参数，分别是$elem和field。$elem当前控件元素的jquery包装，field包含当前字段的一些信息。
+	</h4>
+
+	<!-- 文本 -->
+	<div th:fragment="input-text">
+		<input th:if="${searchFieldContext==null}" type="text" name="value"  class="input input-small input-text-template val-location focus-location" 
+			data-validator="required,length[1, 100]"/>
+		<input th:if="${searchFieldContext!=null}" type="text" th:attr="data-operator=${searchFieldContext.operator}" th:name="${searchFieldContext.fieldName}"  class="input input-medium input-text-template val-location focus-location" 
+			data-validator="length[1, 100]"/>
+			
+	</div>
+	
+	<!-- 数字 -->
+	<div th:fragment="input-number">
+		<input th:if="${searchFieldContext==null}" type="text" name="value" class="input input-small input-number-template val-location focus-location" 
+			data-validator="required,length[1, 100],pattern[double]"/>
+		<input th:if="${searchFieldContext!=null}" type="text" th:attr="data-operator=${searchFieldContext.operator}" th:name="${searchFieldContext.fieldName}" class="input input-medium input-number-template val-location focus-location" 
+			data-validator="length[1, 100],pattern[double]"/>
+	</div>
+		
+	<!-- 是否 -->
+	<div th:fragment="select-boolean">
+		<select th:if="${searchFieldContext==null}" name="value" class="input input-small select-boolean-template val-location focus-location"
+			 data-validator="required">
+			<option value="1" th:text="#{common.yes}"></option>
+			<option value="0" th:text="#{common.no}"></option>
+		</select>
+		<select th:if="${searchFieldContext!=null}" th:attr="data-operator=${searchFieldContext.operator}" th:name="${searchFieldContext.fieldName}" class="input input-medium select-boolean-template val-location focus-location"
+			 >
+			<option value="1" th:text="#{common.yes}"></option>
+			<option value="0" th:text="#{common.no}"></option>
+		</select>
+	</div>
+		
+	<!-- 选项集 -->
+	<div th:fragment="select">
+		<select th:if="${searchFieldContext==null}" name="value" class="input input-small select-template val-location focus-location"
+			data-initFunc='AdvanceSearch.initSelect' data-validator="required">
+		</select>
+		<select th:if="${searchFieldContext!=null}" th:attr="data-operator=${searchFieldContext.operator}" th:name="${searchFieldContext.fieldName}" class="input input-medium select-template val-location focus-location"
+			 >
+			<option value="" th:text="#{common.optionNullText}"></option>
+			<option th:each="option:${searchFieldContext.options}" th:text="${option.name}" th:value="${option.value}" ></option>
+		</select>
+	</div>
+	
+	<!-- 引用data-title-field=${fieldCtx.refObjTitleField}, -->
+	<div th:fragment="lookup">
+		<input class="input input-medium" type="text" data-widget="inputimg" th:id="${searchFieldContext.fieldName}+'_text'" th:name="${searchFieldContext.fieldName}+'_text'"
+				th:attr="data-entity=${searchFieldContext.metaRelation.getTargetEntity().getName()},
+				data-selecturl=${searchFieldContext.refObjSelectUrl},
+				data-queryurl=${searchFieldContext.refObjQueryUrl}"
+				data-options="{type:'class',src:'icon-search',title:'Query',event:{click:SelectForm.openSelectForm}}"		
+		 />
+		<input type="hidden" th:id="${searchFieldContext.fieldName}"
+			th:name="${searchFieldContext.fieldName}"
+			th:attr="data-entity=${searchFieldContext.metaRelation.getTargetEntity().getName()}" />
+	</div>
+		
+	<!-- 日期 -->
+	<div th:fragment="date">
+		<input th:if="${searchFieldContext==null}" class="input date-template input-small val-location focus-location" type="text"
+			data-initFunc='AdvanceSearch.initDate' data-validator="required"/>
+		<input th:if="${searchFieldContext!=null}" th:attr="data-operator=${searchFieldContext.operator}" th:name="${searchFieldContext.fieldName}" class="Wdate input date-template input-medium val-location focus-location" type="text"
+			data-widget="calendar" data-options="{'isShowWeek':true,'dateFmt':'yyyy-MM-dd'}" />
+	</div>	
+	<div th:fragment="date-year">
+		<input th:if="${searchFieldContext==null}" class="input date-template input-small val-location focus-location" type="text"
+			data-initFunc='AdvanceSearch.initDate' data-validator="required"/>
+		<input th:if="${searchFieldContext!=null}" th:attr="data-operator=${searchFieldContext.operator}" th:name="${searchFieldContext.fieldName}" class="Wdate input date-template input-medium val-location focus-location" type="text"
+			data-widget="calendar" data-options="{'isShowWeek':false,'dateFmt':'yyyy'}" />
+	</div>	
+	
+	<!-- 日期时间 -->
+	<div th:fragment="datetime">
+		<input th:if="${searchFieldContext==null}" class="input input-medium datetime-template val-location focus-location" type="text"
+			data-initFunc='AdvanceSearch.initDatetime' data-validator="required"/>
+		<input th:if="${searchFieldContext!=null}" th:attr="data-operator=${searchFieldContext.operator}" th:name="${searchFieldContext.fieldName}" class="Wdate input input-medium datetime-template val-location focus-location" type="text"
+			data-widget="calendar" data-options="{'isShowWeek':true,'dateFmt':'yyyy-MM-dd HH:mm:ss'}"/>
+	</div>
+	<!-- 空白 -->
+	<div th:fragment="padding"></div>
+</body>
+</html>

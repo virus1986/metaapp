@@ -1,0 +1,139 @@
+<div>
+	<div th:fragment="html">
+	<style>
+	.searchSaverItem {
+	position: relative;
+	}
+	.searchSaverItem .removeSearch {
+	display: inline;
+	position: absolute;
+	right: -6px;
+	top: 0px;
+	background-color: transparent;
+	}
+	.searchSaverItem .removeSearch:hover {
+	background-color: transparent;
+	}
+	ul.search-ul {
+	min-width: 300px;
+	}
+	</style>
+		<button type="button" class="btn green searchBtn">查询</button>
+		<button class="btn dropdown-toggle green" data-toggle="dropdown"> <i class="icon-angle-down"></i>
+		</button>
+		<ul class="dropdown-menu pull-right table-toolbar-icon search-ul">
+			<li class="table-toolbar-icon-item saveSearchBtn">
+				<a href="javascript://" title="">
+				<i class="icon-heart"></i><span>保存当前查询条件</span>
+				</a>
+			</li>
+			<li class="divider searchItemDivider"></li>
+			<li class="table-toolbar-icon-item searchSaverItem"
+				th:id="${saver['id']}"
+				th:each="saver:${searchSavers}" th:attr="data-json=${saver['searchJson']}">
+				<a href="javascript://" th:title="${saver['name']}" class="searchLink">
+				<i class="icon-zoom-in"></i><span th:text="${saver['name']}"></span>
+				</a>
+				<a href="javascript://" title="删除此条常用查询" class="removeSearch">
+					<i class="icon-remove"></i>
+				</a>
+			</li>
+			<li th:class="${#arrays.isEmpty(searchSavers)}? 'table-toolbar-icon-item emptySearch' : 'table-toolbar-icon-item emptySearch hide'">
+				<a href="javascript://">
+				<span>
+				<i class="icon-info-sign"></i>暂无常用查询条件。
+				</span>
+				</a>
+			</li>
+			<li class="table-toolbar-icon-item searchSaverItem template hide">
+				<a href="javascript://" title="点击进行查询" class="searchLink">
+				<i class="icon-zoom-in"></i><span></span>
+				</a>
+				<a href="javascript://" title="删除此条常用查询" class="removeSearch">
+					<i class="icon-remove"></i>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<div th:fragment="js">
+	<script th:inline="javascript">
+	//<![CDATA[ 
+;(function($){
+	$(function() {
+		var context = /*[['#' + ${viewId}]]*/;
+		$(context).on('click', '.searchSaverItem', function() {
+			var $t = $(this), json = $t.attr('data-json');
+			if(json) {
+				var saver = JSON.parse(json);
+				if(!$.isEmptyObject(saver)) {
+					$('.table-toolbar input').val('');
+					for(var field in saver) {
+						var val = saver[field];
+						field = field.replace(/\./g,"\\.");
+						$('.table-toolbar [name=' + field + ']', context).val(val);
+					}
+					$('.searchBtn', context).click();
+				}
+			}
+		});
+		$(context).on('click', '.saveSearchBtn', function() {
+			var searchJson = {}, display = [];
+			$('input', context + " .table-toolbar").each(function() {
+				var $t = $(this), val = $t.val();
+				if(val) {
+					var name = $t.attr('name');
+					searchJson[name] = val;
+					var disp = $t.parents('.control-group').find('label').text();
+					//if($t.is('select')) {
+					//	val = $t.find('[value=' + val + ']').text();
+					//}
+					display.push(disp + val);
+				}
+			});
+			if(!$.isEmptyObject(searchJson)) {
+				$.post(Global.contextPath + '/entities/searchsaver/form', {
+					view: 'wftask, wfprocinst',
+					name: display.join(" | "),
+					searchJson: JSON.stringify(searchJson)
+				}, function(re) {
+					if(re) {
+						var clone = $('.searchSaverItem.template', context)
+										.clone(true).removeClass('template');
+						clone.attr('data-json', re.searchJson);
+						clone.attr('id', re.id);
+						clone.find('span').text(re.name);
+						clone.find('.searchLink').attr('title', re.name);
+						$('.searchItemDivider', context).after(clone);
+						clone.show('slow');
+						$('.emptySearch', context).hide('slow');
+					}
+				});
+			} else {
+				$.messageBox.warning({message: "当前没有可保存的查询条件！"});
+			}
+			return false;
+		});
+		$(context).on('click', '.removeSearch', function() {
+			var $t = $(this), id = $t.parent().attr('id');
+			if(id) {
+				$.post(Global.contextPath + '/entities/searchsaver/delete', {
+					id: id
+				}, function(re) {
+					if(re) {
+						$t.parents('.searchSaverItem').hide('slow', function() {
+							var l = $('.searchSaverItem:not(.template):visible', context).length;
+							if(l == 0) {
+								$('.emptySearch', context).show('slow');
+							}
+						});
+					}
+				});
+			}
+			return false;
+		});
+	});
+}(jQuery)); 
+	//]]>
+	</script>
+	</div>
+</div>

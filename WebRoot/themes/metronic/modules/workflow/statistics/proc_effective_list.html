@@ -1,0 +1,226 @@
+<div th:id="${viewId}">
+	<div class="breadcrumbs" id="breadcrumbs">
+		<ul class="breadcrumb">		
+		</ul>
+	</div>
+	<div class="container-fluid m-top10">
+	<div data-widget="validator"
+		class="table-toolbar toolbar toolbar-auto row-fluid simple-search-area"
+		th:id="'toolbar_grid_procDefEffective'" style="">
+		<table>
+			<tbody>
+				<tr>
+					<td><label class="control-label ">流程分类：</label></td>
+					<td><input id="idProcCategoryId" name="procCategoryId"
+						meta:field="procCatagoryId" entity-name="wfproc" action="EDIT" /></td>
+					<td><label class="control-label ">流程名称：</label></td>
+					<td><input type="text" id="idProcName"
+						class="input input-medium input-text-template val-location focus-location"
+						data-validator="length[1, 100]" data-operator="cn" name="procName">
+						</input></td>
+					<td><label class="control-label ">开始日期：</label></td>
+					<td><input id="idStartTime"
+						class="Wdate input date-template input-medium val-location focus-location"
+						type="text" data-widget="calendar"
+						data-options="{'isShowWeek':false,'dateFmt':'yyyy-MM-dd'}"
+						data-operator="gt" name="startTime" th:value="${defStartTime}"></input>
+					</td>
+					<td><label class="control-label ">结束日期：</label></td>
+					<td><input id="idEndTime"
+						class="Wdate input date-template input-medium val-location focus-location"
+						type="text" data-widget="calendar"
+						data-options="{'isShowWeek':false,'dateFmt':'yyyy-MM-dd'}"
+						data-operator="gt" data-validator="bigThen" name="endTime"
+						th:value="${defEndTime}"> </input></td>
+					<td>
+						<div class="toolbar-btns">
+							<button id="btnSearchData" type="button"
+								class="btn green searchBtn" onClick="doSearch();">查询</button>
+							<button id="btnResetSearch" type="button" class="btn resetBtn"
+								onClick="doReset();">重置</button>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	</div>
+
+	<table th:id="${'grid_procDefEffective_'+viewId}"></table>
+	<div th:id="${'grid_procDefEffective_pager_'+viewId}"></div>
+
+	<script th:inline="javascript">
+	//<![CDATA[ 
+	           
+	var gridId= /*[['#grid_procDefEffective_'+${viewId}]]*/;
+	var gridPagerId= /*[['#grid_procDefEffective_pager_'+${viewId}]]*/;
+		
+	$(function(){
+	
+		var context = /*[['#'+${viewId}]]*/;
+		
+		Page.init(context);
+
+		var col1="流程ID";
+		var col2="流程名称";
+		var col3="流程单据数";
+		var col4="平均耗时（小时）";
+		var col5="操作";
+		
+		function funcDuration (cellval, unit) {
+     		if (!$.isNumeric(cellval)) {
+     			return cellval;
+     		}
+     		var secondsSum = cellval;
+     		var numyears = Math.floor(secondsSum / 525600);
+     		var numdays = Math.floor((secondsSum % 525600) / 1440);
+     		var numhours = Math.floor(((secondsSum % 525600) % 1440) / 60);
+     		var numminutes = Math
+     				.floor((((secondsSum % 525600) % 1440) % 60));
+     		var numseconds = 0;//(((secondsSum % 525600) % 1440) % 60);
+     		var years = numyears ? numyears + "年" : "", days = numdays ? numdays
+     				+ "天" : "", hours = numhours ? numhours + "小时" : "", minutes = numminutes ? numminutes
+     				+ "分钟"
+     				: "", seconds = numseconds ? numseconds + "秒" : "";
+     		if (unit == "d") {
+     			cellval = (years + days) ? (years + days) : "1天";
+     		} else if (unit == "m") {
+     			if(!(years + days + hours))
+     				cellval = "小于1小时";
+     			else
+     				cellval = (years + days + hours + minutes) 
+     		} else if (unit == "h") {
+     			cellval = (years + days + hours) ? (years + days + hours) : "小于1小时";
+     		} else {
+     			cellval = (years + days + hours + minutes + seconds) ? (years
+     					+ days + hours + minutes + seconds) : "1秒";
+     		}
+     		return cellval;
+     	}
+
+		function intFormatter(cellvalue, options, rowObject){
+			return funcDuration(cellvalue, "m");
+		};
+		var gridUrl= Global.contextPath+"/workflow/statistics/procEffectiveListPaged";
+		$(gridId).jqGrid({
+			url : gridUrl,
+			mtype : 'POST',
+			datatype : 'json',
+			postData: {
+				procCategoryId: function () { return $("#idProcCategoryId>#procCategoryId").val(); },
+				procName: function () { return $("#idProcName").val(); },
+				startTime: function () { return $("#idStartTime").val(); },
+				endTime: function () { return $("#idEndTime").val(); }
+			},
+			page : 1,
+			rowNum : 10,
+			rownumbers : true,
+			multiselect : false,
+			multiboxonly: true,
+			loadonce: false,
+			pager:gridPagerId,
+		   	sortname: 'avg_duration',
+		    sortorder: "desc",
+			rowList : [ 10, 20, 50, 80, 100 ],
+			colNames : [col1,col2,col3,col4,col5],
+			jsonReader : {
+				id : "name",
+				repeatitems : false
+			},
+			shrinkToFit :true,
+			prmNames : {
+				id : "name",
+				search: "search"
+			},
+			toolbar: [true, 'top'],
+			headertitles: true,
+			altRows: true,
+			autowidth : true,
+			height:"100%",
+			colModel : [{name:'proc_id',index:'proc_id',width:160,key:true,hidden: true},
+			{name:'proc_name',index:'proc_name', width:200, sorttype:'string'},
+			{name:'proc_inst_num',index:'proc_inst_num', width:100, sorttype:'integer'},
+			{name:'avg_duration',index:'avg_duration', width:100, sorttype:"number", formatter:intFormatter},
+			{name:'act',index:'act', width:60,sortable:false}
+			],
+			searchDialogOptions : {
+				multipleSearch : true,
+				"recreateForm" : true,
+				"height" : 400,
+				"width" : 700,
+				"left" : 350,
+				"top" : 100
+			},
+			gridComplete:function(){
+				Page.gridComplete.call(this);
+				
+				var datas = jQuery(gridId).jqGrid('getRowData');
+				
+				var sTime = $("#idStartTime").val();
+				var eTime = $("#idEndTime").val();
+				for(var i=0;i < datas.length;i++){
+					var cl = datas[i];
+					be = "<button type='button' class='btn green'"
+						 +" data-procid='"+cl.proc_id +"'";
+					if(sTime){
+						be  +=" data-starttime='"+sTime +"'"
+					}
+					if(eTime){
+						be  +=" data-endtime='"+eTime +"'"
+					}
+					be  +="onclick='javascript:onViewActivityEffective(this)'>明细</button>";
+					
+					jQuery(gridId).jqGrid('setRowData', cl.proc_id, {act:be});
+				}	
+				
+/* 				var $grid=$(gridId);
+				$("input[name=btMultiSearch]",context).off("click");
+				$("input[name=btMultiSearch]",context).click(function(){
+					var searchString=$("input[name=searchString]",context).val();
+					var rules=[{"field":"displayName","op":"cn","data":searchString},{"field":"name","op":"cn","data":searchString}];
+					setTimeout(function(){
+						$grid.multiFieldsQuickSearch(rules,'OR');
+					},300);
+				}); */
+			}
+		}).navGrid(gridPagerId,{
+			"add" : false,
+			"cloneToTop" : false,
+			"del" : false,
+			"edit" : false,
+			"position" : "left",
+			"refresh" : false,
+			"search" : false,
+			"view" : false,
+			"toggle" : false
+		}).bindKeys().initCustom();
+				
+	});
+
+	function doSearch (){
+		jQuery(gridId).trigger("reloadGrid", [{page: 1}]);
+	}
+	function doReset (){
+		
+		$("#idProcCategoryId>#procCategoryId").val("");
+		$("#idProcCategoryId #procCategoryId_text").val("")	
+		$("#idProcName").val("");
+		$("#idStartTime").val("");
+		 $("#idEndTime").val("");
+		 
+		jQuery(gridId).trigger("reloadGrid", [{page: 1}]);
+	}
+	function onViewActivityEffective (ctrl){
+		var param = "procId="+$(ctrl).attr('data-procid');
+		if($(ctrl).attr('data-starttime')){
+			param+= "&startTime="+$(ctrl).attr('data-starttime');
+		}
+		if($(ctrl).attr('data-endtime')){
+			param+= "&endTime="+ $(ctrl).attr('data-endtime');
+		}
+		var url = Global.contextPath + "/workflow/statistics/procEffective?"+param;
+		$.openLink(url,{showType:'tab',title:'环节效率分析'},function(){});
+	}
+	//]]>
+	</script>
+</div>

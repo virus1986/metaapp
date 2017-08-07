@@ -1,0 +1,83 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width: 1000px;">
+<div class="ui-dialog-title hide">	
+	<span th:text="'选择用户'"></span>
+</div>	
+<div>
+	<div class="row-fluid select-tree-list-con">
+	  <div class="span3" id="nav-tree-list" th:title="${'\u7EC4\u7EC7'+#messages.msg('common.tree')}">
+	  	  <div class="list-tree" style="min-height:200px;"></div>
+	  </div>
+	  <div class="span9">
+	      <div class="container-fluid m-top10" th:attr="data-url=${requestUrl}" style="padding:0px;"  th:title="${'\u7528\u6237'+#messages.msg('common.list')}">
+			<meta:grid id="'grid_'+${entityName}+'_'+${view}+'_'+${viewId}" entityName="${entityName}" view="select_treelist_uamorganization" />
+		  	<div class="selected-rows">
+		  	</div>
+		  </div>
+	  </div>
+	</div>
+	<div class="ui-dialog-buttonset">
+	<button type="button" class="btn saveBtn purple" th:text="#{common.save}"></button>
+	<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+	</div>
+   <script type="text/javascript" th:inline="javascript">
+	//<![CDATA[
+;(function($){
+		$(function(){
+			var viewId = /*[[${viewId}]]*/;
+			var relationEntity = 'uamorganization';
+			var relationFieldName = 'orgId';
+			var entityName = /*[[${entityName}]]*/;
+			var view = /*[[${view}]]*/;
+			var mode=/*[[${queryString['mode']}]]*/;
+			var treeLabelField = 'name';
+			//var _ref_entity = null;
+			var relationEntityDisplayName = '\u7EC4\u7EC7';
+			var sourceEntityDisplayName = '\u7528\u6237';
+			var treeUrl = Global.contextPath+'/treemodels/entity/';
+			var rootUrl = Global.contextPath;
+			
+			var context = $("#"+viewId) ;
+			var gridId = 'grid_'+entityName+'_'+view+'_'+viewId ;
+			var $grid=$("#"+gridId);
+			
+			var recursiveQuery = Global.contextPath+'/entities/uamorganization/recursiveQuery/';
+			var treeLoadUrl=treeUrl+relationEntity+"/"+treeLabelField;
+			treeLoadUrl=Urls.appendParam(treeLoadUrl,"parent","parentId");
+			recursiveQuery=recursiveQuery+"?entityName="+relationEntity + "&relation=FK_Reference_12";
+			var options={viewId:viewId,grid:$grid,context:context,recursiveQuery:recursiveQuery,
+					treeLoadUrl:treeLoadUrl,
+					relationFieldName:relationFieldName,
+					relationEntityDisplayName:relationEntityDisplayName,
+					sourceEntityDisplayName:sourceEntityDisplayName,
+					select:true,mode:mode,selectedRow:{}};
+			Page.initTreelistPage(options);			
+			
+			$(".saveBtn",context).click(function(){
+				if ($.isEmptyObject(options.selectedRow)){ 											
+					$.messageBox.warning({message:i18n.t("common.selectRow")});
+					return;
+				}
+				var reVal=new Array();
+				$.each(options.selectedRow,function(key,row){
+					var refRow=row.refRow;
+					var description="";
+					description+=refRow.orgId+"的"+refRow.name;
+					reVal.push($.extend({
+						actorType__:"user",
+						description__:description,
+						id:row.id,
+						text:row.name
+					},row));
+				});
+				$(context).dialogClose(reVal);
+			});
+			//$grid.jqGrid("setGridHeight",(Page.getDialogHeightByViewObj(context)-248)+"px");
+		});
+}(jQuery)); 
+	        
+
+		
+	//]]> 
+	</script>
+</div>
+</div>

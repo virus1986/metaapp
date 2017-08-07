@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:meta="http://thymeleafexamples">
+
+<head>
+<title>share template</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<div th:fragment="autofieldbody1" th:object="${entity}">
+			<meta:placeholder th:each="field:${metaEntity.fields}">
+				<div th:text="${field.displayName}"></div>
+				<div><input type="text"  meta:field="*{__${field.name}__}" /></div>
+			</meta:placeholder>
+	</div>
+
+
+	<div th:fragment="fieldsLayout"  class="form-section" th:with="section=${layout.sections[0]}">
+		<input th:each="hiddenField:${layout.hiddenFields}"  type="hidden"  meta:field="*{__${hiddenField}__}" />
+		<table th:if="${#lists.size(section.rows)>0}"  th:classappend="'form-table col'+${section.colNum}*2+'-fluid'">
+		<caption th:text="${section.name}"></caption>
+			<tr th:each="row:${section.rows}">
+				<meta:placeholder th:each="cell:${row}" >
+					<th th:switch="${cell.contentType}" >
+						<label th:case="'Control'"  >
+							<span th:text="${layoutCtx.fields[cell.content.dataFieldName].displayName}" ></span>：
+						</label>
+						<label th:case="'RefEntityControl'">
+							<span th:text="${layoutCtx.relations[cell.content.relationName].displayName}" ></span>：
+						</label>
+						<label th:case="'*'"  th:text="${cell.content}">&nbsp;</label>
+					</th>
+					<td th:switch="${cell.contentType}" th:colspan="${cell.colspan}*2-1">
+						<input th:case="'Control'"   meta:field="*{__${cell.content.dataFieldName}__}"/>
+						<input th:case="'RefEntityControl'" meta:ref="*{__${cell.content.refEntityName}__::__${cell.content.relationName}__}" />
+						<span th:case="'*'"  th:text="${cell.content}">&nbsp;</span>
+					</td>
+				</meta:placeholder>
+			</tr>
+		</table>
+	</div>
+
+	<div th:fragment="autosearchfieldbody" th:with="section=${layout.sections[0]}" >
+		<table th:classappend="'form-table col'+${section.colNum}*2+'-fluid'">
+			<tr th:each="row,rowStat:${section.rows}">
+				<meta:placeholder th:each="cell:${row}" >
+					<meta:placeholder th:switch="${cell.contentType}" >
+						<th th:case="'Control'">
+							<label th:text="${layoutCtx.fields[cell.content.dataFieldName].displayName}+'：'" ></label>
+						</th>
+						<td th:case="'*'" >
+							<label  th:text="${cell.content}">&nbsp;</label>
+						</td>
+					</meta:placeholder>
+					<td th:switch="${cell.contentType}" th:colspan="${cell.colspan}*2-1">
+						<input th:case="'Control'"   meta:autoinput="${layoutCtx.fields[cell.content.dataFieldName]}"/>
+						<span th:case="'*'"  th:text="${cell.content}">&nbsp;</span>
+					</td>
+				</meta:placeholder>
+				<td colspan="1" nowrap="nowrap" th:if="${rowStat.first}" th:rowspan="${#lists.size(section.rows)}">
+					<div class="pull-right">
+					<button type="button" onclick="Actions.reloadList()" class="btn" th:text="#{common.search}">
+					</button>
+					<button type="reset" class="btn" th:text="#{common.reset}">
+					</button>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

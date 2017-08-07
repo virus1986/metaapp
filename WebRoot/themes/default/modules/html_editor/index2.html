@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="title" content="可视化表单布局" />
+<meta name="description" content="可视化表单布局" />
+<meta name="keywords" content="可视化,布局,系统" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<title>可视化表单布局</title>
+<link rel="apple-touch-icon-precomposed"
+	href="img/apple-touch-icon-57-precomposed.png"
+	th:href="${themes.modules('html_editor/img/apple-touch-icon-57-precomposed.png')}" />
+<link rel="apple-touch-icon-precomposed" sizes="72x72"
+	href="img/apple-touch-icon-72-precomposed.png"
+	th:href="${themes.modules('html_editor/img/apple-touch-icon-72-precomposed.png')}" />
+<link rel="apple-touch-icon-precomposed" sizes="144x144"
+	href="img/apple-touch-icon-144-precomposed.png"
+	th:href="${themes.modules('html_editor/img/apple-touch-icon-144-precomposed.png')}" />
+<link rel="apple-touch-icon-precomposed" sizes="114x114"
+	href="img/apple-touch-icon-114-precomposed.png"
+	th:href="${themes.modules('html_editor/img/apple-touch-icon-114-precomposed.png')}" />
+<link rel="shortcut icon" href="img/favicon.png"
+	th:href="${themes.modules('html_editor/img/favicon.png')}" />
+
+<!-- Le styles -->
+<link href="css/bootstrap-combined.min.css" rel="stylesheet"
+	th:href="${themes.modules('html_editor/css/bootstrap-combined.min.css')}" />
+<link rel="stylesheet" href="css/font-awesome.min.css"
+	th:href="${themes.modules('html_editor/css/font-awesome.min.css')}" />
+<!--[if IE 7]>
+  <link rel="stylesheet" href="assets/css/font-awesome-ie7.min.css" />
+<![endif]-->
+
+<!--page specific plugin styles-->
+<link href="css/jquery-ui.css" rel="stylesheet"
+	th:href="${themes.modules('html_editor/css/jquery-ui.css')}" />
+
+<!--fonts
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" />
+-->
+<!--ace styles-->
+<link rel="stylesheet" href="css/designer.min.css"
+	th:href="${themes.modules('html_editor/css/designer.min.css')}" />
+<link rel="stylesheet" href="css/designer-responsive.min.css"
+	th:href="${themes.modules('html_editor/css/designer-responsive.min.css')}" />
+<link rel="stylesheet" href="css/designer-skins.min.css"
+	th:href="${themes.modules('html_editor/css/designer-skins.min.css')}" />
+<!--[if lte IE 8]>
+  <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
+<![endif]-->
+<link rel="stylesheet" href="css/editor.css"
+	th:href="${themes.modules('html_editor/css/editor.css')}" />
+
+<!-- angular-loader -->
+<script type="text/javascript" src="js/lib/angular-loader.min.js"
+	th:src="${themes.modules('html_editor/js/lib/angular-loader.js')}"></script>
+<script type="text/javascript" src="js/lib/jquery-2.0.3.min.js"
+	th:src="${themes.modules('html_editor/js/lib/jquery-2.0.3.min.js')}"></script>
+<script type="text/javascript" src="js/lib/js-inherit.js"
+	th:src="${themes.modules('html_editor/js/lib/js-inherit.js')}"></script>
+</head>
+<body ng-controller="pageController" class="navbar-fixed">
+
+	<div class="navbar navbar-fixed-top" ng-controller="navbarController"
+		th:attr="ng-include=${''''+themes.modules('html_editor/partials/navbar.html')+''''}">
+	</div>
+
+	<div class="main-container container-fluid">
+		<a class="menu-toggler" id="menu-toggler" href="#"> <span
+			class="menu-text"></span>
+		</a>
+
+		<div class="sidebar fixed" ng-class="{'menu-min':menuMini}"
+			id="sidebar" ng-controller="sideBarController"
+			th:attr="ng-include=${''''+themes.modules('html_editor/partials/sidebar.html')+''''}">
+		</div>
+
+		<div class="main-content">
+			<!-- breadcrumbs -->
+			<div class="breadcrumbs breadcrumbs-fixed" style="display: none;" id="breadcrumbs"
+				pd-editor="editor">
+				<div class="well well-sm" style="margin-bottom: 0px;padding:0px 0px 0px 20px">
+					<i class="icon-edit"></i> <span class="green smaller lighter">请选择要编辑的元素！</span>
+				</div>
+			</div>
+
+			<div id="edit-page-designer" class="page-content"
+				style="height: 500px;margin-top:40px" pd-container="dd"
+				ng-class="{'hide':ui.editSource}">
+
+				<!-- <h2 pd-bin="pdTitle">dsfsdfsdfdsfdsf</h2>
+				<h2 pd-bin="pdTitle">111</h2>
+				<h2 pd-bin="pdTitle">222</h2>
+
+				<table width="500px" border="1">
+					<tr>
+						<td>33234</td>
+						<td>sdfsdf</td>
+					</tr>
+					<tr>
+						<td>33234</td>
+						<td>
+							<table width="500px" border="1">
+								<tr>
+									<td>33234</td>
+									<td>sdfsdf</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+
+				<div class='i-wrapper'>
+					<div class='i-content'>
+						<span>ddd</span>
+					</div>
+				</div>
+
+
+				<div>
+					dkfjkds<span>span</span>dkfjfkdsjfkjd
+				</div>
+				<ul>
+					<li>1djdjjjjjjjj</li>
+					<li>2djdjjjjjjjj</li>
+				</ul>
+				<div pd-layout="">
+					<div>dkfjkdsjfkdsjfkjd</div>
+					<div>dkfjkdsjfkdsjfkjd</div>
+				</div>
+				<div pd-layout="form_poupup">
+					<div>form_poupup_inner</div>
+					<div>form_poupup_inner</div>
+				</div>
+				<div>dkfjkdsjfkdsjfkjd</div>
+				<div>dkfjkdsjfkdsjfkjd</div> -->
+			</div>
+			<!--/.page-content-->
+			<div id="edit-main-source" ng-class="{'hide':!ui.editSource}">
+				<div id="designerSourceContentEditor" ace-value="designer.designerSourceContent" ui-ace="" style="min-height: 590px;"></div>
+			</div>
+			<div th:attr="ng-include=${''''+themes.modules('html_editor/partials/form-attrs.html')+''''}" id="formAttrEditModal" class="modal hide fade" role="dialog">
+			</div>
+			<div th:attr="ng-include=${''''+themes.modules('html_editor/partials/script-editor.html')+''''}" class="modal hide fade" role="dialog" id="scriptModal">
+			</div>
+			<div th:attr="ng-include=${''''+themes.modules('html_editor/partials/preview-form.html')+''''}" class="modal hide fade" role="dialog" id="previewFormModal">
+			</div>
+		</div>
+		<!--/.main-content-->
+	</div>
+	<!--/.main-container-->
+	<div id="myHelperHolder"></div>
+	<div pd-focus-frame="focus"></div>
+
+
+	<!-- <a href="#" id="btn-scroll-up"
+		class="btn-scroll-up btn btn-small btn-inverse"> <i
+		class="icon-double-angle-up icon-only bigger-110"></i>
+	</a> -->
+	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<script th:if="${ieVersion ge 6 and ieVersion le 8}"
+		type="text/javascript"
+		th:src="${themes.modules('html_editor/js/lib/html5shiv.js')}"></script>
+	<script th:if="${ieVersion ge 6 and ieVersion le 9}"
+		type="text/javascript"
+		th:src="${themes.modules('html_editor/js/lib/jquery-1.7.2.min.js')}"></script>
+	<script th:if="${ieVersion ge 6 and ieVersion le 9}"
+		type="text/javascript"
+		th:src="${themes.modules('html_editor/js/lib/jquery.placeholder.1.3.min.js')}"></script>
+
+	<script type="text/javascript" src="js/lib/jquery-ui.min.js"
+		th:src="${themes.modules('html_editor/js/lib/jquery-ui.min.js')}"></script>
+	<script type="text/javascript" src="js/lib/bootstrap.min.js"
+		th:src="${themes.modules('html_editor/js/lib/bootstrap.min.js')}"></script>
+	<script type="text/javascript"
+		src="js/lib/jquery.ui.touch-punch.min.js"
+		th:src="${themes.modules('html_editor/js/lib/jquery.ui.touch-punch.min.js')}"></script>
+	<script type="text/javascript" src="js/lib/jquery.htmlClean.js"
+		th:src="${themes.modules('html_editor/js/lib/jquery.htmlClean.js')}"></script>
+	<script type="text/javascript" src="js/lib/jquery.removeClass.js"
+		th:src="${themes.modules('html_editor/js/lib/jquery.removeClass.js')}"></script>
+	<script type="text/javascript" src="js/lib/jsrender.js"
+		th:src="${themes.modules('html_editor/js/lib/jsrender.js')}"></script>
+	<script type="text/javascript" src="ckeditor/ckeditor.js"
+		th:src="${themes.modules('html_editor/ckeditor/ckeditor.js')}"></script>
+	<script type="text/javascript" src="ckeditor/config.js"
+		th:src="${themes.modules('html_editor/ckeditor/config.js')}"></script>
+
+	<!-- ace_editor -->
+	<script
+		src="../../../../statics/scripts/plugins/ace/src-min-noconflict/ace.js"
+		th:src="${themes.js('plugins/ace/src-min-noconflict/ace.js')}"
+		type="text/javascript" charset="utf-8"></script>
+
+	<script type="text/javascript" th:inline="javascript">
+window.Global=$.extend(true,{
+	contextPath:/*[[${contextPath}]]*/,	
+	themePath:/*[[${themePath}]]*/,	
+	statics:/*[[${statics}]]*/,			
+	iconPath:/*[[${iconPath}]]*/,
+	server:/*[[${server}]]*/,
+	formId:/*[[${formId}]]*/,
+	entityName:/*[[${entityName}]]*/,
+},window.Global);
+</script>
+
+	<!-- design app -->
+	<script data-main="js/loader" src="js/lib/require.js"
+		th:attr="data-main=${themes.modules('html_editor/js/loader.js')}"
+		th:src="${themes.modules('html_editor/js/lib/require.js')}"></script>
+</body>
+</html>

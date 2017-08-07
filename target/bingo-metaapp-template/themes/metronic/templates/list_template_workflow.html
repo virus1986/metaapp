@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<grid autoWidth="true" columnReordering="false"	
+	th:attr="dataUrl='~/entities/'+${metaEntity.name}+'/query_paged',
+	createUrl='~/workflow/form/'+${metaEntity.name}+'?action=CREATE'+'&amp;procId='+${queryString[procid]},
+	deleteUrl='~/entities/'+${metaEntity.name}+'/delete',
+	editUrl='~/workflow/form/'+${metaEntity.name}+'?action=EDIT'+'&amp;procId='+${queryString[procid]},
+	viewUrl='~/workflow/form/'+${metaEntity.name}+'?action=VIEW'+'&amp;procId='+${queryString[procid]},
+	entityName=${metaEntity.name}" 		
+	th:id="'grid_'+${viewId}" 
+	height="100%" multiSelect="true" multiSelectKey="None" 	shrinkToFit="true" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <columns>
+    <column th:each="metaField:${idFields}"
+		th:attr="dataField=${metaField.name}"
+		width="30" primaryKey="true" visible="false" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left"  />
+	<column th:each="metaField:${titleFields}"
+		th:attr="dataField=${metaField.name}"
+		width="300" visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left"  />
+	<column th:each="metaField:${otherFields}"
+		th:if="${metaField.isDisplay() and(metaField.fieldType!=null and not(metaField.fieldType.name=='MultiPhoto' or metaField.fieldType.name=='MultiUpload' or metaField.fieldType.name=='Upload' or metaField.fieldType.name=='Photo'))}"
+		th:attr="dataField=${metaField.name}, 
+		width=${metaField.length*0.6 &gt;400?400:(metaField.length*0.6 &lt;80?80:(metaField.length*3/5))}"
+		visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left"  />
+	<column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="250" dataField="wfprocinst.proposerName" text="发起人"/>
+	<column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="300" dataField="wfprocinst.startTime" text="发起时间"/>
+	<column visible="true" editable="true" fixed="false" frozen="false" resizable="true" searchable="true" textAlign="Left" width="150" dataField="wfprocinst.status" text="流程状态"/>
+   </columns>
+  <contextButtons>
+        <button name="edit"/>
+        <button name="delete"/>
+   </contextButtons>
+   <toolBarSetting>
+        <button name="create"/>
+        <button name="edit"/>
+        <button name="delete"/>
+        <button name="search"/>
+        <button name="config"/>
+        <button name="fresh"/>
+        <button name="import"/>
+        <button name="export"/>
+  </toolBarSetting>
+  <joinEntities>
+        <entity name="wfprocinst" alias="wfprocinst" th:attr="joinExpression='left join wfprocinst wfprocinst on wfprocinst.businessId='+${metaEntity.name}+'.id'"/>
+  </joinEntities>
+  <filter groupOp="AND">
+       <filters/>
+       <rules/>
+   </filter>
+  <orderby>
+  	<rule th:if="${metaEntity.findField('createdTime')!=null}" direction="Desc" field="createdTime"/>
+  </orderby>
+  <quickSearch>
+  	<column th:each="metaField:${titleFields}"
+		th:attr="dataField=${metaField.name}" />
+  </quickSearch>
+</grid>

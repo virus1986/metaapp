@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>通用配置信息</comment>
+
+<!--系统当前模式.开发环境：develop；产品环境：product-->
+<entry key="Profile.System.Mode">develop</entry>
+<!--系统登录模式，local：本地登录-->
+<entry key="Profile.Security.Login_Mode">local</entry>
+<!--导航数据获取模式-->
+<entry key="portal.navigator.mode">db</entry>
+<!--当前icon读取路径，相对当前主题-->
+<entry key="Resource.icon.path">statics/images/icons/</entry>
+<!--当前系统脚本读取路径，相对当前主题-->
+<entry key="Resource.script.path">statics/scripts/system/</entry>
+<!--应用运行模式，tenant：多租户模式，single：单应用模式-->
+<entry key="MultiTenant.Run.Mode">single</entry>
+<!--密码加盐-->
+<entry key="passwordEncoder.saltText">cr@bc.cn</entry>
+<!--默认系统用户，可有多个用逗号隔开，此用户必须在系统用户表存在-->
+<entry key="default.administrator">admin,admin2</entry>
+
+<!-- 所有以Profile.App开头的entry都是用户可修改的非开发依赖信息，如应用名称、footer的copyright信息等等，统一配在下面
+	   如果在数据库的meta_app表中有相同key的entry时，以数据库的为准 -->
+<!--财务流程分类Id-->
+<entry key="Profile.Financial.Catagory.Id">0000</entry>
+<!--当前应用名称-->
+<entry key="Profile.App.Title">元数据开发平台</entry>
+<!--当前应用的版本信息-->
+<entry key="Profile.App.Version">V1_1_0</entry>
+<!-- 版权信息 -->
+<entry key="Profile.App.Copyright">品高软件 版权所有 2012 (c) All Rights Reserved</entry>
+<!-- Banner图片url
+<entry key="Profile.App.Banner">/skins/default/module/baseframe/images/bg-header.jpg</entry> -->
+<!--当前系统主题-->
+<entry key="Profile.App.Theme">metronic</entry>
+<!--当前系统风格:default,metro-->
+<entry key="Profile.App.Skin">metronic</entry>
+<!-- UAM系统地址
+<entry key="Uam.Root.Url">https://co3.gz-mstc.com:8080/uam</entry> -->
+<!-- 元数据视图文件夹 -->
+<entry key="View.Meta.Modules.Folder">meta</entry>
+<!-- 系统视图文件夹 -->
+<entry key="View.System.Modules.Folder">system</entry>
+
+<!-- sso config
+<entry key="SSO.BASE.ENDPOINT">http://localhost/sso</entry>
+<entry key="SSO.DIRECT.BASE.ENDPOINT">http://localhost/sso</entry>
+<entry key="ACCESSTOKEN.1.CHECK.ENDPOINT">http://localhost/sso/oauth/1/checktoken</entry>
+<entry key="ACCESSTOKEN.2.CHECK.ENDPOINT">http://localhost/sso/oauth/2/checktoken</entry>-->
+
+
+<!--linktest    -->
+<entry key="SSO.BASE.ENDPOINT">http://localhost:8080/sso</entry>
+<entry key="SSO.DIRECT.BASE.ENDPOINT">http://localhost:8080/sso</entry>
+<entry key="ACCESSTOKEN.1.CHECK.ENDPOINT">http://localhost:8080/sso/oauth/1/checktoken</entry>
+<entry key="ACCESSTOKEN.2.CHECK.ENDPOINT">http://localhost:8080/sso/oauth/2/checktoken</entry>
+
+<!--200-->
+    <!--<entry key="SSO.BASE.ENDPOINT">http://10.201.76.200:8088/sso</entry>-->
+    <!--<entry key="SSO.DIRECT.BASE.ENDPOINT">http://10.201.76.200:8088/sso</entry>-->
+    <!--<entry key="ACCESSTOKEN.1.CHECK.ENDPOINT">http://10.201.76.200:8088/sso/oauth/1/checktoken</entry>-->
+    <!--<entry key="ACCESSTOKEN.2.CHECK.ENDPOINT">http://10.201.76.200:8088/sso/oauth/2/checktoken</entry>-->
+
+
+</properties>

@@ -1,0 +1,17 @@
+<div>
+	<div ng-if="!data.inTab" class="tab-content overflow-visible" style="padding:3px">
+			<h4 class="smaller lighter blue">
+				<i class="icon-list"></i> 关联信息			
+			</h4>
+			<ul class="item-list ui-sortable">
+				<li ng-class="{true:'item-default clearfix',false:'item-green clearfix'}[disabled(rl.relationName)]"  ng-repeat="rl in data.relationLinks"  name="{{rl.relationName}}">
+					<a href="javascript://"><i ng-class="{true:'icon-off',false:'icon-ok green'}[disabled(rl.relationName)]"></i> {{rl.relationDisplayName}}</a>
+				</li>
+			</ul>
+	</div>	
+	<ul title="自动关系" ng-if="data.inTab" class="nav nav-tabs">
+		<li ng-repeat="rl in data.relationLinks"  name="{{rl.relationName}}">
+			<a href="javascript://"><i ng-class="{true:'icon-off',false:'icon-ok green'}[disabled(rl.relationName)]"></i>{{rl.relationDisplayName}}</a>
+		</li>
+	</ul>
+</div>

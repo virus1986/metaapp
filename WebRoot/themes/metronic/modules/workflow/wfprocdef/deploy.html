@@ -1,0 +1,73 @@
+<div th:id="${viewId}" class="panel apply-panel">
+	<div class="table-dialog">
+		<div class="ui-dialog-title">
+		部署新流程
+		</div>
+		<div class="tabbable" id="deploy-tabs" style="padding: 0 10px 0 10px;">
+		  <ul class="nav nav-tabs">
+		    <li class="active"><a th:href="'#'+${viewId}+'tab2'" data-toggle="tab">上传流程定义</a></li>
+		    <li><a th:href="'#'+${viewId}+'tab1'" data-toggle="tab">选择流程定义</a></li>
+		  </ul>
+		  <div class="tab-content">
+		    <div class="tab-pane active" th:id="${viewId}+'tab2'">
+		    	<div data-widget="upload" data-useFileserver="true" th:attr="data-maxSize=10, data-fileSuffix='bpmn'" 
+				class="input-prepend input-append" style="line-height: 25px;height: 25px;">
+					<div class="input-append">
+					  	<div class="add-on progress progress-info progress-striped" style="width: 156px;margin-bottom:0px;float:left;">
+						  <div class="bar" style="width: 0%;height:18px;line-height: 18px;position:relative;"></div>
+						</div>
+						<span class="uploadfile add-on" th:inline="text">
+							<i class="icon-plus-sign"></i>
+							[[#{common.browse}]]
+						</span>
+					</div>
+					<input class="value-input" type="hidden" name="uploadProcDef"/>
+				</div>
+		    </div>
+		    <div class="tab-pane" th:id="${viewId}+'tab1'">
+		    	<select name="selectProcDef">
+		    		<option value="" th:text="#{common.optionNullText}"></option>
+		    		<option th:each="bpmnF:${bpmnFiles}" th:value="${bpmnF.key}" th:text="${bpmnF.value}"></option>
+		    	</select>
+		    </div>
+		  </div>
+		</div>
+		<div class="ui-dialog-buttonset">
+			<button type="submit" class="btn purple deploy" th:text="#{workflow.deploy}"></button>
+			<button type="button" class="btn closeBtn" th:text="#{common.close}"></button>
+		</div>
+	</div>
+<script th:inline="javascript">
+//<![CDATA[ 
+$(function(){
+	var context = /*[['#'+${viewId}]]*/;
+	var bpmnFileTabId=/*[[${viewId}+'tab1']]*/;
+	$(".deploy",context).click(function(){
+		var bpmnFile=!$("#"+bpmnFileTabId).is(":hidden");
+		var path=Global.contextPath+"/workflow/definition/deploy";
+		var resourceUrl;
+		if(bpmnFile){
+			resourceUrl=$("[name='selectProcDef']",context).val();
+		}else{
+			resourceUrl=$("[name=uploadProcDef]",context).data("filePath");
+		}
+		if(resourceUrl){
+			//path=Urls.appendParam(path,"resourceUrl",encodeURIComponent(resourceUrl));
+			$.restPost(path,{resourceUrl:resourceUrl},function(res){
+				if(res){
+					$(context).dialogClose(res);
+				}
+			});
+		}
+	});
+	$("[name=uploadProcDef]",context).on("FileUploaded",function(e,up, file,resp,container){
+		$(this).data("filePath",resp.filePath);
+	});
+	$(".closeBtn",context).click(function(){
+		$(context).dialogClose();
+	});
+});
+//]]>
+</script>
+
+</div>

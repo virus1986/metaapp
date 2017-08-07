@@ -1,0 +1,77 @@
+<div th:id="${viewId}" class="panel apply-panel" style="width:800px;">
+	<div class="ui-dialog-title hide">
+		<span th:text="#{common.copy}+#{metadata.view}"></span>
+	</div>
+	<form id="copyViewForm" th:object="${layout}" data-widget="validator" th:action="${requestUrl}" method="post" class="form-horizontal ajaxpost">
+		<table class="form-table">
+			<tbody>
+				<tr>
+					<th style="width:80px;"><label><meta:display-name field="metauitemplate.displayName"/>:</label></th>
+					<td>
+						<input meta:field="entityName" type="hidden" />
+						<input meta:field="displayName"/>
+					</td>
+					<th><label><meta:display-name field="metauitemplate.name"/>:</label></th>
+					<td>
+						<input meta:field="name"  class="input-large" th:attr="data-validator='required,length[1,36]'"/>
+					</td>
+				</tr>
+				<tr>
+					<th><label><meta:display-name field="metauitemplate.url"/>:</label></th>
+					<td colspan="3">
+						<input style="width:95%;" meta:field="url" disabled="true" class="input-large" th:attr="data-validator='required,length[1,350]'"/>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="ui-dialog-buttonset">
+			<button type="button" class="btn btn-primary copyEntityView" th:text="#{common.save}"></button>
+			<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+		</div>
+	</form>
+	
+	<script th:inline="javascript">
+	//<![CDATA[
+	var context = /*[['#'+${viewId}]]*/;
+	$(function(){
+		var entityName = /*[[${layout.entityName}]]*/;
+		
+		
+		Form.init(context,"#copyViewForm");
+		
+		$("[name='name']", context).keyup(function(){
+			var name=$(this).val();
+			$("[name='url']", context).val("~/entities/"+entityName.toLowerCase()+"/list?view="+name);
+		});
+		$("[name='url']", context).val("~/entities/"+entityName.toLowerCase()+"/list?view="+$("[name='name']", context).val());
+		$(".copyEntityView", context).click(function(){
+			var valInfo = $.validation.validate("#copyViewForm") ;
+			if( valInfo.isError ) {
+				return false;
+			}
+			$(this).attr("disabled","disabled");
+			$(this).addClass("disabled");
+			var url=$("#copyViewForm", context).attr("action");
+			var data=$("#copyViewForm", context).toJson();
+			var btnSelf=$(this);
+			jQuery.restPost(url,data,function(response){
+				jQuery.dialogReturnValue(response);
+				$(context).dialogClose();
+			},{beforeSend:function(xhr){
+					CommonUtil.showLoading(context,i18n.t("common.processing"));
+					btnSelf.attr("disabled","disabled");
+					btnSelf.addClass("disabled");
+				  },complete:function(xhr,textStatus){
+						CommonUtil.hiddenLoading();
+						btnSelf.removeAttr("disabled");
+						btnSelf.removeClass("disabled");
+				  }
+			});
+		});
+		
+
+		
+	});
+	//]]>	
+	</script>
+</div>

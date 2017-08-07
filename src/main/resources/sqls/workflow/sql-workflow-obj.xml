@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment></comment>
+	<entry key="wf.obj.getUserOrgByUserId">
+		<![CDATA[
+			select org.id,org.name,org.higherOrgId,org.parentId,org.principal from user suser inner join uamorganization org
+			on suser.orgId=org.id
+			where suser.id=:userId
+		]]>
+	</entry>
+	<entry key="wf.obj.getUserCompanyByUserId">
+		<![CDATA[
+			select org.id,org.name from user suser inner join uamorganization org
+			on suser.companyId=org.id
+			where suser.id=:userId
+		]]>
+	</entry>
+	<entry key="wf.obj.getUserCompanyOrgByOrgName">
+		<![CDATA[
+			select org.id,org.name from uamorganization org
+			where org.companyId in(select suser.companyId 
+				from user suser where suser.id=:userId)
+			and org.name in (:orgNames)
+		]]>
+	</entry>
+	<entry key="wf.obj.getUserCompanyByfinancialOrgId">
+		<![CDATA[			
+			select org.id,org.name from uamorganization org 
+			where org.id in (
+			select top 1 companyId from uamorganization where costOrgNum in (
+			select deptcode from NcBdDeptdoc where pkDeptdoc=:financialOrgId))
+		]]>
+	</entry>
+	<entry key="wf.obj.getProcNameByInstId">
+		<![CDATA[
+			select wfproc.procName,wfprocinst.id as instId from wfproc wfproc,wfprocinst wfprocinst where
+			wfproc.procId= wfprocinst.businessType and wfprocinst.id in(:instIds)
+		]]>
+	</entry>
+	<entry key="wf.obj.getTaskByActTitle">
+		<![CDATA[
+			select top 1 wfTask.assigneeId,wfTask.assigneeDeptId,wfTask.id from wfTask wfTask where wfTask.procInstId=:procInstId
+			and wfTask.actTitle=:actTitle and wfTask.status=10
+			and wfTask.assigneeId is not null
+			order by wfTask.startTime desc
+		]]>
+	</entry>
+	<entry key="wf.obj.getHigherOrgPrincipleByAssigneeId">
+		<![CDATA[
+			select org2.principal from uamorganization org2 where org2.id in(
+				select org1.higherOrgId from uamorganization org1,user usr where org1.id=usr.orgId
+				and usr.id=:assigneeId
+			)
+		]]>
+	</entry>
+	<entry key="wf.obj.getHigherOrgPrincipleByOrgId">
+		<![CDATA[
+			select org2.principal from uamorganization org2 where org2.id in(
+				select org1.higherOrgId from uamorganization org1 where org1.id=:orgId and org1.id!=org1.higherOrgId
+			)
+		]]>
+	</entry>
+	<entry key="wf.obj.getOrgPrincipleByAssigneeId">
+		<![CDATA[
+				select org1.principal from uamorganization org1,user usr where org1.id=usr.orgId
+				and usr.id=:assigneeId
+		]]>
+	</entry>
+	<entry key="wf.obj.getOrgPrincipleByOrgId">
+		<![CDATA[
+				select org1.principal from uamorganization org1 where org1.id=:orgId
+		]]>
+	</entry>
+	<entry key="wf.obj.getHigherOrgByProposer">
+		<![CDATA[
+				select org1.higherOrgId from uamorganization org1,user usr where org1.id=usr.orgId
+				and usr.id=:userId and org1.id!=org1.higherOrgId
+		]]>
+	</entry>
+	<entry key="wf.obj.getHigherOrgByOrg">
+		<![CDATA[
+				select org1.higherOrgId from uamorganization org1 where org1.id=:orgId and org1.id!=org1.higherOrgId
+		]]>
+	</entry>
+	<entry key="wf.obj.isPrincipleHasDuty">
+		<![CDATA[
+				select uampost.* from uamUserPost uamuserpost,uampost uampost
+				where uampost.id=uamuserpost.postId
+				and uamuserpost.userId=:userId
+				and uampost.dutyId=:dutyId
+		]]>
+	</entry>
+	<entry key="wf.obj.isPrincipleHasRole">
+		<![CDATA[
+				select role.*,wfuserrole.orgId from WfUserRole wfuserrole,Role role
+				where role.id=wfuserrole.roleId
+				and wfuserrole.userId=:userId
+				and wfuserrole.roleId=:roleId
+		]]>
+	</entry>
+	<entry key="wf.obj.queryProxyTasks">
+		<![CDATA[
+				select wfTask.id,wfTask.title,
+				wfTask.actTitle,wfTask.assigneeId,wfTask.assigneeName,
+				wfTask.startTime,wfTask.duration,wfTask.endTime,
+				wfTask.procInstId,
+				wfProcInst.title as procInstTitle,
+				wfProcInst.businessType as procId,
+				wfProcInst.formKey,
+				wfProcInst.starterId,
+				wfProcInst.starterName
+				from wfTask wfTask,wfProcInst wfProcInst
+				where wfTask.procInstId=wfProcInst.id
+				and wfTask.deleted=0
+				and wfTask.status !=10
+				and ($proxyQuery$)
+				{? and wfProcInst.title=#title#}
+				{? and wfProcInst.startTime>#startTime# and wfProcInst.startTime<=#endTime#}
+				{? and wfProcInst.proposerDeptName=#proposerDeptName#}
+				{? and wfProcInst.proposerName=#proposerName#}
+				{? and wfProcInst.procDefId in($procDefId$)}
+				order by WfTask.startTime desc
+		]]>
+	</entry>
+	<entry key="wf.obj.claimTaskByAdminForAssignee">
+		<![CDATA[
+				update wfTask set assigneeId=:assigneeId,assigneeName=:assigneeName,assigneeDeptId=:assigneeDeptId,assigneeDeptName=:assigneeDeptName where id=:taskId
+		]]>
+	</entry>
+	<entry key="wf.obj.claimTaskByAdminForAgent">
+		<![CDATA[
+				update wfTask set agentId=:agentId,agentName=:agentName,agentDeptId=:agentDeptId,agentDeptName=:agentDeptName where id=:taskId
+		]]>
+	</entry>
+	<entry key="wf.obj.entityHasCustomIdComponent">
+		<![CDATA[
+		select count(1) from CustomIdComponent cic where cic.type=3 and  cic.length=:length and cic.belongTo in(select ci.id from CustomId ci where ci.code=:code)
+		]]>
+	</entry>
+	<entry key="wf.obj.updateWfProcInstStarter">
+		<![CDATA[
+		update WfProcInst set starterId=:id, starterName=:name, starterDeptId=:orgId, starterDeptName=:orgName,
+		 proposerId=:id, proposerName=:name, proposerDeptId=:orgId, proposerDeptName=:orgName where id=:instId
+		]]>
+	</entry>
+	
+	<entry key="wf.obj.getAllAvailableProcs">
+		<![CDATA[
+		select * from WfProc where isLast=1 and procDefId is not null 
+		order by procOrder asc
+		]]>
+	</entry>
+</properties>

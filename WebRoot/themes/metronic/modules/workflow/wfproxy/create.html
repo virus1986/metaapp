@@ -1,0 +1,119 @@
+<div th:id="${viewId}" class="panel apply-panel ng-scope"
+	style="min-width: 1000px;">
+	<form id="entityForm" method="post" data-widget="validator" class="form-horizontal ajaxpost">
+		<div class="table-dialog">
+			<div class="ui-dialog-title" th:switch="${action}">
+				<span>新建委托</span> 
+			</div>
+			<div class="ui-dialog-content container-fluid">
+			<div class="row-fluid">
+			<div class="span4">
+				<div id="procTree" style="height:500px;overflow: auto;"></div>
+			</div>
+			<div class="span8">
+				<table class="form-table form-bordered">
+					<tbody>
+						<tr>
+							<th><label>被委托人:</label></th>
+							<td>
+							<div class="inputpro-img input-append big-tokeninput">
+								<input name="agentId" type="text"/>							
+							</div>
+							</td>
+						</tr>
+						<tr>
+							<th><label>开始日期:</label></th>
+							<td><input meta:field="startDate" entity-name="wfproxy"/></td>
+						</tr>
+						<tr>
+							<th><label>结束日期:</label></th>
+							<td><input meta:field="endDate" entity-name="wfproxy"/></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			</div>
+			</div>
+			<div class="ui-dialog-buttonset">
+				<button type="button" name="save" class="btn purple saveProxy">
+					<span th:text="#{common.save}"></span> <i
+						class="m-icon-swapright m-icon-white"></i>
+				</button>
+				<button type="button" name="close" class="btn closeBtn">
+				取消
+				</button>
+			</div>
+		</div>
+	</form>
+	<script th:inline="javascript">
+		//<![CDATA[
+		$(function(){   
+			var viewId=/*[[${viewId}]]*/;   
+			var requestUrl=/*[[${requestUrl}]]*/;   
+			var context=$('#' + viewId); 
+			Page.init(context);
+			var queryUrl=Global.contextPath+"/entities/user/select?mode=multi";			
+			$("[name=agentId]",context).tokenInput(queryUrl,{
+				hintText:false,
+				queryParam:"keyword",
+				selectUrl:queryUrl,
+				theme: "facebook",
+				preventDuplicates: true,
+				onAdd:function(addItem){
+				},
+				onDelete:function(tokenData){
+				}
+			}) ; 
+			
+			var procTreeUrl=Global.contextPath+"/proxytask/proxy/procs";
+			CommonLoader.loadData($("#procTree",context),procTreeUrl,function(){
+			});
+			$(".saveProxy",context).click(function(){
+				var valInfo = $.validation.validate($("#entityForm",context)) ;
+				if( valInfo.isError ) {
+					return false;
+				}
+				var btnSelf=$(this);
+				var savedTokens=$("[name=agentId]",context).data("tokenInputObject").getTokens();
+				var procs=[];
+				$("[name=procItem]:checked",context).each(function(){
+					var procId=$(this).val();
+					procs.push(procId);
+				});
+				var startDate=$("[name=startDate]",context).val()+" 00:00:00";
+				var endDate=$("[name=endDate]",context).val()+" 23:59:59";
+				if(endDate<=startDate){
+					$.messageBox.warning({message:"结束时间必须大于开始时间!"});
+					return false;
+				}
+				var proxies=[];
+				if(!savedTokens.length){
+					$.messageBox.warning({message:"请选择被委托人!"});
+					return false;
+				}
+				if(!procs.length){
+					$.messageBox.warning({message:"请选择委托流程!"});
+					return false;
+				}
+				$.each(savedTokens,function(i,item){
+					$.each(procs,function(j,jitem){
+						proxies.push({startDate:startDate,endDate:endDate,agentId:item.id,agentName:item.name,procId:jitem});
+					});
+				});
+				jQuery.restPost(requestUrl,{proxies:proxies},function(response){
+					$(context).dialogClose(response);
+				},{beforeSend:function(xhr){
+					CommonUtil.showLoading(context,i18n.t("common.processing"));
+					btnSelf.attr("disabled","disabled");
+					btnSelf.addClass("disabled");
+				  },complete:function(xhr,textStatus){
+						CommonUtil.hiddenLoading();
+						btnSelf.removeAttr("disabled");
+						btnSelf.removeClass("disabled");
+				  }
+				});
+			});
+		}); 
+		//]]>
+	</script>
+</div>

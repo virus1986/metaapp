@@ -1,0 +1,28 @@
+<div th:id="${viewId}" class="panel apply-panel">
+	<div class="print-content">
+		<div class="print-head"></div>
+		<div class="print-form"></div>
+		<div class="print-flow-history m-top20"></div>
+	</div>
+	<script type="text/javascript" th:inline="javascript">
+//<![CDATA[ 
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var container = $('#' + viewId);
+		var openerViewId=/*[[${queryString['_viewid']}]]*/;
+		var openerContainer=$('#' + openerViewId,window.opener.document);
+		
+		$(".print-head",container).html($(".page-title",openerContainer)[0].outerHTML);
+		$("small",".print-head").remove();
+		//
+		var formHtml=$("#businessFormContainer",openerContainer)[0].outerHTML.replace(/<script.*?>(.|[\n])*?<\/script>/ig, '');
+		$(".print-form",container).html(formHtml);
+		var attachmentHtml=$("#businessFormAttachment",openerContainer)[0].outerHTML.replace(/<script.*?>(.|[\n])*?<\/script>/ig, '');
+		attachmentHtml=attachmentHtml.replace(/(<a.*?>)|(<\/a>)/ig, '');
+		$(".print-form",container).append(attachmentHtml);
+		$(".print-flow-history",container).html($("#flowHistoryContainer .portlet ",openerContainer)[0].outerHTML);
+		
+	});
+//]]> 
+</script>
+</div>

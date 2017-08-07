@@ -1,0 +1,34 @@
+<div  th:id="${viewId}" >
+	<div class="breadcrumbs" id="breadcrumbs">
+		<ul class="breadcrumb">		
+		</ul>
+	</div>
+	<div class="container-fluid m-top10">
+		<meta:grid entityName="uampost" view="list" id="'grid_uampost_'+${viewId}"/>
+	</div>
+<script type="text/javascript" th:inline="javascript">
+//<![CDATA[ 
+	$(function() {
+		var viewId=/*[[${viewId}]]*/;
+		var context="#"+viewId;
+		var $grid=$("#grid_uampost_"+viewId);
+		var entity=/*[[${entity}]]*/;
+		
+		var imageRoot=Global.themePath+"/statics/images/icons/mini";
+		$grid.jqGrid("setGridParam",
+				{exContextMenu:	[{type: "splitLine" },
+			    	{text: "用户",icon:imageRoot+"/icon_tool_043.gif",   action: function(){
+			    		var id=$grid.jqGrid('getGridParam','selrow');
+			    		var row=$grid.getRowData(id);
+			    		var assignUsersUrl=Global.contextPath+"/entities/user/associate";
+			    		$.openLink(Urls.urlParam(assignUsersUrl,[{key:"_ref_entity",value:"uampost"},{key:"_ref_val",value:id}]),{width:800,height:500},function(res){
+			    			consolelog(res);
+			    		});
+			    	}}
+			    ]}
+		);
+		
+	}); 
+	//]]>
+	</script>
+</div>

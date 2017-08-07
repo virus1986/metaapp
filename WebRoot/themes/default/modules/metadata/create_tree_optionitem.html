@@ -1,0 +1,84 @@
+<div th:id="${viewId}" class="panel apply-panel" style="width:600px;">
+<form id="createTreeOptionItemForm" data-widget="validator" th:action="${requestUrl}">
+<table class="form-table">
+<tbody>
+	<tr >
+	<td style="vertical-align: top;">
+		<table class="form-table">
+			<tbody>
+				<tr>
+					<th><label th:text="#{common.tag}+':'"></label></th>
+					<td>
+						<input type="text" name="name" class="input-large" 
+							th:placeholder="#{validation.string36}"
+							data-validator="required,length[1,36]"/>
+					</td>
+				</tr>
+				<tr>
+					<th><label th:text="#{common.value}+':'"></label></th>
+					<td>
+					<input type="text"  name="value"  class="input-large" 
+						th:placeholder="#{validation.string36Unique}" data-validator="required,length[1,36]"/>
+					</td>
+				</tr>
+				<tr>
+				<th><label th:text="#{common.description}+':'"></label></th>
+					<td>
+					<textarea name="description" class="shortArea" 
+					 	data-validator="length[0,1000]"
+						th:placeholder="#{optionset.summarySpec}"/>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	
+	</td>
+	</tr>
+</tbody>
+</table>
+<div class="ui-dialog-buttonset">
+	<button type="button" class="btn btn-primary saveOptionItem" th:text="#{common.save}"></button>
+	<button type="button" class="btn closeBtn" th:text="#{common.cancel}"></button>
+</div>
+</form>
+<script th:inline="javascript">
+//<![CDATA[
+     $(function() {
+    	 var context=/*[['#'+${viewId}]]*/;
+    	 var args = jQuery.dialogAraguments() ;
+    	 var action=args.action;
+    	 var flatOptions=args.flatOptions;
+    	 var userData=args.userData||{};
+    	 var initValue=null;
+    	 if(action=="edit"){
+    		 //$('[name=name]').attr("disabled","disabled");
+    		 $('[name=name]').val(userData.name);
+    		 $('[name=value]').val(userData.value);
+    		 initValue=userData.value;
+    		 $('[name=description]').val(userData.description);
+    	 }
+    	 Form.init(context,"#createTreeOptionItemForm");
+    	
+    	 $(".saveOptionItem",context).click(function(){
+    		 var valInfo = $.validation.validate(context+" #createTreeOptionItemForm") ;
+   			 if( valInfo.isError ) {
+   			 	return false;
+   			 }
+    		 var data=$("#createTreeOptionItemForm", context).toJson();
+    		 if(action=="edit" && initValue===data.value){
+    			 $(context).dialogClose(data);
+    			 return;
+    		 }
+    		 if(flatOptions[data.value]){
+    			 $.messageBox.error({message:i18n.t("optionset.option.valueMustUnique",data.value)});
+    			 return;
+    		 }
+    		 $(context).dialogClose(data);
+    	 });
+    	 $(".closeBtn",context).click(function(){
+    		 $(context).dialogClose();
+    	 });
+     });
+//]]>
+</script>
+</div>

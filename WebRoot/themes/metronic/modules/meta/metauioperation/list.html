@@ -1,0 +1,37 @@
+<div th:attr="data-url=${requestUrl}"  th:id="${viewId}">
+	<div class="breadcrumbs" id="breadcrumbs">
+		<ul class="breadcrumb">		
+		</ul>
+	</div>
+	<div class="container-fluid m-top10">
+		<meta:grid grid="${grid}"  entityName="${entityName}" id="'grid_'+${entityName}+'_'+${viewId}"/>
+	</div>
+<script type="text/javascript" th:inline="javascript">
+//<![CDATA[ 
+	$(function() {
+		var gridId=/*[[${grid.id}]]*/;
+		var $grid=$("#"+gridId);
+		var MetauiOperation = "MetauiOperation";
+		var entity=/*[[${entity}]]*/;
+		$grid.jqGrid("setGridParam",{
+			onBeforeDelete:function($grid){
+				if(entity == MetauiOperation) return true;
+				var selectIds=$grid.jqGrid('getGridParam','selarrrow');
+				var sysIds=[];
+				for(var i=0;i<selectIds.length;++i){
+					var row=$grid.getRowData(selectIds[i]);
+					if(row.isDefault == "true"){
+						sysIds.push(selectIds[i]);
+					}
+				}
+				if(sysIds.length>0){
+					$.messageBox.warning({message:i18n.t("uioperation.delete.defaultError")});
+					return false;
+				}
+				return true;
+			}
+		});
+	}); 
+	//]]>
+	</script>
+</div>

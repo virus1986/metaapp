@@ -1,0 +1,35 @@
+<!-- 导航 -->
+<div class="header">
+	<div class="logo">
+		<a href="/index.html"></a>
+	</div>
+	<div class="nav">
+		<ul>
+			<li><a href="/#page2">功能</a></li>
+			<li><a href="/price.html">购买</a></li>
+			<li><a href="/#page5">客户</a></li>
+			<li><a href="/#page6">下载</a></li>
+			<li><a href="##">帮助</a></li>
+		</ul>
+	</div>
+	<div class="navigation">
+		<ul>
+			<li><a href="./register"><img
+					th:src="${contextPath}+'/themes/metronic/modules/install/images/btn-reg2.png'" /></a></li>
+			<li><a href="/webos"><img
+					th:src="${contextPath}+'/themes/metronic/modules/install/images/btn-login2.png'" /></a></li>
+		</ul>
+	</div>
+</div>
+<!-- 正文 -->
+<div class="register-wrapper">
+	<div class="main-body" style="height: 500px;">
+		<div class="main-header">
+			<h2>帐号提示</h2>
+		</div>
+		<div class="login-group modify-warn" style="background: transparent;">
+			<i class='icon-remove-sign'></i><span th:text="${relMsg}">无效的访问地址！</span>
+		</div>
+	</div>
+</div>
+

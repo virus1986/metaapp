@@ -1,0 +1,314 @@
+﻿<div th:id="${viewId}" style="min-width:1000px;min-height:400px;" class="workflow-diagram-con">
+	<wro:link th:href="${contextPath}+'/wro/wfdesigner_diagram_css.css'"  rel="stylesheet" type="text/css"/>
+	<wro:script th:src="${contextPath}+'/wro/wfdesigner_diagram_js.js'" type="text/javascript"></wro:script>
+	<div th:if="${queryString[setupAct]=='1'}" class="ui-dialog-title hide" th:with="justsetactor=${queryString['justsetactor']}">
+		<span th:if="${justsetactor=='1'}">设置下面环节的参与者</span>
+		<span th:unless="${justsetactor=='1'}">设置下一环节</span>
+	</div>
+	<div th:if="${queryString[selectAct]=='1'||queryString[selectAct]=='true'}" class="ui-dialog-title hide">
+		<span>选择环节</span>
+	</div>
+	<div class="wrapper">
+		<div th:id="'diagram-info-con'+${viewId}" style="padding:5px;border-bottom:1px solid #ececec;background: transparent;">
+			<div style="display:inline-block;width:50px;height:10px;background-color:#84E080;"></div><span>&nbsp;已处理&nbsp;&nbsp;</span>
+			<div style="display:inline-block;width:50px;height:10px;background-color:#F0C86C;"></div><span>&nbsp;正在处理&nbsp;&nbsp;</span>
+			<div style="display:inline-block;width:50px;height:10px;background-color:#F5F5F5;"></div><span>&nbsp;未处理</span>
+			<label style="display:inline-block;margin-left:80px;">当前环节：</label><div style="display:inline-block;color:#FF5A00;" class="act-info"></div>
+		</div>
+		<div th:id="'pb1'+${viewId}" style="display:none;">
+		</div>
+		<div th:id="'overlayBox'+${viewId}">
+			<div th:id="'diagramBreadCrumbs'+${viewId}" class="diagramBreadCrumbs"
+				onmousedown="return false" onselectstart="return false"
+				style="display: none;"></div>
+			<div th:id="'diagramHolder'+${viewId}" class="diagramHolder"></div>
+			<div th:id="'diagramInfo'+${viewId}" class="diagram-info"></div>
+		</div>
+	</div>
+	
+	<script th:id="'actInstanceInfoTpml'+${viewId}" type="text/x-jsrender">
+	<![CDATA[
+	<div style="max-height:200px;overflow-y:auto;font-size:12px;">
+	<table cellspacing="0" class="table table-striped">
+		<thead>
+			<tr>
+				<th style="width:100px;font-size:12px;">处理人</th>
+				<th style="width:100px;font-size:12px;">处理人部门</th>
+				<th style="width:120px;font-size:12px;">接收时间</th>
+				<th style="width:120px;font-size:12px;">处理时间</th>
+				<th style="width:80px;font-size:12px;">耗时</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{for taskInfos}}
+				{{if taskInfosLengthBiggerThanOne}}<tr><td colspan="5">实例id：{{>instId}}</td></tr>{{/if}}
+				{{for tasks}}
+				<tr>
+					<td>{{:userName}}</td>
+					<td>{{:userDeptName}}</td>
+					<td>{{:startTime}}</td>
+					<td>{{:endTime}}</td>
+					<td>{{:duration}}</td>
+				</tr>
+				{{/for}}
+			{{/for}}
+		</tbody>
+	</table>
+	</div>
+	]]>
+	</script>
+	<script th:inline="javascript">
+	//<![CDATA[
+;(function($){
+	$(function(){
+		var viewId=/*[[${viewId}]]*/;
+		var context=/*[['#'+${viewId}]]*/;
+		var flowId=/*[[${queryString['flowId']}]]*/;
+		var flowKey=/*[[${queryString['flowKey']}]]*/;
+		var instId=/*[[${queryString['instId']}]]*/;
+		//是否显示环节的白色背景  1为显示, 其他值不显示
+		var drawshadow = /*[[${queryString['shadow']}]]*/;
+		//是否是流程的流转示意图  1为流转图, 其他值为流程定义图
+		var flowtrack = /*[[${queryString['istrack']}]]*/;
+		//是否使用自定义主题
+		var usetheme = /*[[${queryString['usetheme']}]]*/;
+		//表示是否需要选择环节
+		var selectAct = /*[[${queryString['selectAct']}]]*/;
+		//表示是否来自流程发起时选环节或者设置环节参与者
+		var setupAct = /*[[${queryString['setupAct']}]]*/;
+		//流程环节和迁移信息的HTML的id和html字典缓存
+		var flowInfoHtml = {};
+		if (drawshadow&& (drawshadow == "1" || drawshadow == "true"))
+			Canvas_IsDrawShadow = true;
+		if (flowtrack&& (flowtrack == "1" || flowtrack == "true"))
+			Canvas_IsFlowTrack = true;
+		if (usetheme&& (usetheme == "1" || usetheme == "true"))
+			Canvas_useCustomTheme = true;
+		if (selectAct == "1" || selectAct == "true") {
+			selectAct = true;
+		}
+		if(Canvas_IsFlowTrack&&(!selectAct)){
+			ProcessDiagramCanvas.handlerChains=ProcessDiagramCanvas.handlerChains||[];
+			ProcessDiagramCanvas.handlerChains.push({
+				params:{},
+				func:function(set, x, y, width, height, type,params){
+					var that=this;
+					var contextObject = that.getConextObject();
+					var id=contextObject.id;
+					if (!($.inArray(id, Canvas_HighlightsData.historyActivities) > -1)){
+						return;
+					}
+					var overlay=params.overlay;
+					if(type === "task"){
+						jQuery(overlay.node).each(function(){
+							var $overlay=$(this);
+							$overlay.qtip({
+								overwrite : false,
+								prerender : true,
+								content : {
+									text : '',
+									title : {
+										text : '详细信息',
+										button : '关闭'
+									}
+								},
+								position : {
+									container:$(context),
+									target :   $overlay,
+									my : 'top left',
+									at : 'bottom left'
+								},
+								style : {
+									classes : 'qtip-shadow qtip-rounded qtip-light'
+								},
+								show : false,
+								hide : {
+									event : "unfocus",
+									fixed : false
+								}
+							});
+						}); 
+					}
+				}
+			});
+   	   	}
+		var diagramInfoConId='diagram-info-con'+viewId;
+		var diagramHolderId="diagramHolder"+viewId;
+		var diagramInfoId = "diagramInfo"+viewId;
+		
+		var ProcessDiagramGenerator=ProcessDiagramGeneratorFactory.createNew();
+		
+		var processBar = new $.ProgressBar({
+			boundingBox : '#pb1'+viewId,
+			label : 'Progressbar!',
+			on : {
+				complete : function() {
+					console.log("Progress Bar COMPLETE");
+					this.set('label', 'complete!');
+					if (instId) {
+						ProcessDiagramGenerator.drawHighLights(instId);
+					}
+				},
+				valueChange : function(e) {
+					this.set('label', e.newVal + '%');
+				}
+			},
+			value : 0
+		});
+		var opts = ProcessDiagramGenerator.options;
+		opts.diagramBreadCrumbsId = "diagramBreadCrumbs"+viewId;
+		opts.diagramHolderId = diagramHolderId;
+		opts.diagramInfoId = diagramInfoId;
+		opts.processBar=processBar;
+		opts.flowInfoHtml=flowInfoHtml;
+
+		opts.flowTmpls = $.templates({
+			actInstanceInfoTpml : $("#actInstanceInfoTpml"+viewId).html().replace(/<!\[CDATA\[/g, "").replace(/\]\]>/g, "")
+		});
+		opts.on={};
+		if(Canvas_IsFlowTrack&&(!setupAct)){
+			opts.on={
+					click : function(canvas, element, contextObject,ProcessDiagramGenerator) {
+						var mouseEvent = this;
+						if (contextObject.getProperty("type") == "callActivity") {
+							var processDefinitonKey = contextObject.getProperty("processDefinitonKey");
+							var processDefinitons = contextObject.getProperty("processDefinitons");
+							var processDefiniton = processDefinitons[0];
+							// Load processDefinition
+							ProcessDiagramGenerator.drawDiagram(processDefiniton.flowId);
+						}
+					},
+					rightClick : function(canvas, element, contextObject,ProcessDiagramGenerator) {
+						var mouseEvent = this;
+					},
+					over : function(canvas, element, contextObject, isConnector,ProcessDiagramGenerator) {
+						var flowInfoHtml= ProcessDiagramGenerator.options.flowInfoHtml;
+						var mouseEvent = this;
+						if (isConnector) {
+							return; // 迁移不需要详细信息
+						}
+						// 此处用于显示每个节点的信息，如果不需要可以删除
+						var graph = jQuery(element[0]);
+
+						var api = graph.qtip("api");
+						if(!api){
+							return;
+						}
+						var previousPoint = null;
+
+						var curHtml = "";
+						var curTitle = "["+contextObject.instanceInfo.name+"]处理轨迹";
+
+						if (flowInfoHtml[contextObject.id]) {
+							curHtml = flowInfoHtml[contextObject.id];
+						}else {
+							if (contextObject.instanceInfo) {
+								if (contextObject.instanceInfo.taskInfos) {
+									contextObject.taskInfos=[];
+									jQuery.each(contextObject.instanceInfo.taskInfos,function(key,taskInfo){
+										contextObject.taskInfos.push({instId:key,tasks:taskInfo});
+										jQuery.each(taskInfo,function(i,val){
+											if (val.endTime && val.endTime.length > 0) {
+												val.duration = ProcessDiagramGenerator.funcDuration(val.duration, "m");
+											} else {
+												var startDate = new Date(Date.parse(val.startTime));
+												var now = new Date();
+												var dura = now - startDate;
+												val.duration = ProcessDiagramGenerator.funcDuration(parseInt(dura), "m");
+											}
+										});
+									});
+									contextObject.taskInfosLengthBiggerThanOne=contextObject.taskInfos.length>1?true:false;
+									curHtml = ProcessDiagramGenerator.options.flowTmpls.render.actInstanceInfoTpml(contextObject);
+									flowInfoHtml[contextObject.id] = curHtml;
+								}
+							}
+						}
+
+						$("#"+diagramInfoId).hide();
+
+						// If we weren't passed the item object, hide the tooltip
+						// and remove cached point data
+						if (!element) {
+							api.cache.point = false;
+							return api.hide();
+						}
+
+						previousPoint = api.cache.point;
+						if (previousPoint !== element.id) {
+							api.cache.point = element.id;
+
+							api.set('content.text', curHtml);
+							api.set('content.title', curTitle);
+
+							api.show();
+
+							api.elements.tooltip.stop(1, 1);
+						} else {
+							if (!$("#" + api._id).is(":visible")) {
+								api.show();
+							}
+						}
+					},
+					out : function(canvas, element, contextObject,ProcessDiagramGenerator) {
+						
+					}
+				};
+		}
+		if (selectAct) {
+			opts.on = {
+				click : function(canvas, element,contextObject) {
+						jQuery(context).dialogClose(contextObject);
+						return false;
+				}
+			};
+		}
+
+		var baseUrl = Global.contextPath;
+		ActivitiRest.options = {
+			processInstanceHighLightsUrl : baseUrl+ "/wfdesigner/diagram-layout",
+			processDefinitionUrl : baseUrl+ "/wfdesigner/diagram-layout",
+			processDefinitionByKeyUrl : baseUrl+ "/wfdesigner/diagram-layout"
+		};
+		if (instId) {
+			ProcessDiagramGenerator.afterShow=function(){
+				 
+			};
+			ProcessDiagramGenerator.beforeShow=function(processDefinitionDiagramLayout){
+				var canvasHighLights = processDefinitionDiagramLayout.canvasHighLights||{};
+				var activities=canvasHighLights.activities;
+				if(!activities){
+					return;
+				}
+				var currentActs=[];
+				jQuery.each(activities,function(index,actId){
+					for ( var i in processDefinitionDiagramLayout.activityInstances) {
+						if (i == actId) {
+							var instanceInfo = processDefinitionDiagramLayout.activityInstances[actId];
+							if("subProcess"===instanceInfo.type){
+								continue;
+							}
+							currentActs.push(instanceInfo.name);
+							break;
+						}
+					}
+				});
+				if(currentActs.length===0){
+					jQuery("#"+diagramInfoConId+" .act-info",context).prev("label").hide();
+					jQuery("#"+diagramInfoConId+" .act-info",context).css({"margin-left":"80px"}).text("本次协作已结束");
+				}else{
+					jQuery("#"+diagramInfoConId+" .act-info",context).text(currentActs.join(";"));
+				}
+			};
+			ProcessDiagramGenerator.drawDiagramByInstanceId(instId);
+		} else if (flowId) {
+			jQuery("#"+diagramInfoConId).hide();
+			ProcessDiagramGenerator.drawDiagram(flowId);
+		} else {
+			$.messageBox.info({message:"instId(flowId) parameter is required"});
+		}
+	});
+}(jQuery)); 
+	//]]>
+	</script>
+</div>

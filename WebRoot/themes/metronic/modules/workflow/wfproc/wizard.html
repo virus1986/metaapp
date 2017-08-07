@@ -1,0 +1,336 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:1000px;">
+	<div class="container-fluid m-top10">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="portlet box" th:id="'form_wizard_'+${viewId}">
+				<div class="portlet-title" style="padding-bottom:6px;">
+					<div class="caption" style="font-size:22px; color:#69aa46;">
+						<i class="icon-reorder"></i> 新建流程
+					</div>
+				</div>
+				<div class="portlet-body form" style="border:solid 1px #eee;border-top:none">
+					<form id="entityForm" method="post" th:action="${requestUrl}" th:object="${entity}" data-widget="validator">
+						<input meta:field="procId" type="hidden"/>
+						<input meta:field="*{id}" type="hidden" />
+						<input name="id" type="hidden"/>
+						<div class="form-wizard">
+							<div class="navbar steps">
+								<div class="navbar-inner">
+									<ul class="row-fluid">
+										<li class="span3">
+											<a th:href="'#basic_info_'+${viewId}" data-toggle="tab" class="step ">
+											<span class="number">1</span>
+											<span class="desc"><i class="icon-ok"></i> 基本信息</span>   
+											</a>
+										</li>
+										<li class="span3">
+											<a th:href="'#form_info_'+${viewId}" data-toggle="tab" class="step">
+											<span class="number">2</span>
+											<span class="desc"><i class="icon-ok"></i> 配置表单</span>   
+											</a>
+										</li>
+										<li class="span3">
+											<a th:href="'#proc_info_'+${viewId}" data-toggle="tab" class="step active">
+											<span class="number">3</span>
+											<span class="desc"><i class="icon-ok"></i> 配置流程</span>   
+											</a>
+										</li>
+										<li class="span3">
+											<a th:href="'#confirm_info_'+${viewId}" data-toggle="tab" class="step">
+												<span class="number">4</span>
+												<span class="desc"><i class="icon-ok"></i> 确认</span>   
+											</a> 
+										</li>
+									</ul>
+									<div id="bar" class="progress progress-warn progress-striped">
+										<div class="bar">
+									</div>
+								</div>
+							</div>
+							</div>
+							
+							<div class="tab-content">
+								<div class="tab-pane-content tab-pane active" th:id="'basic_info_'+${viewId}" data-validate-func="basicInfoValidate">
+									<div class="row-fluid">
+										<div class="span2">
+											<span><span class="required-star">*</span>流程名称：</span>
+										</div>
+										<div class="span3"><input meta:field="procName"/></div>
+									</div>
+									<div class="row-fluid">
+										<div class="span2">
+											<span><span class="required-star">*</span>流程分类：</span>
+										</div>
+										<div class="span3"><input meta:field="procCatagoryId"/></div>
+										<div class="span2">
+											<span>业务管理员：</span>
+										</div>
+										<div class="span3 proc-manager-con"><input meta:ref="user::user"/></div>
+									</div>
+									<!-- <div class="row-fluid">
+										<div class="span2">
+											<span>图标：</span>
+										</div>
+										<div class="span3"><input meta:field="icon" data-setNames="font-awesome" /></div>
+										<div class="span2">
+											<span>背景色：</span>
+										</div>
+										<div class="span3"><input meta:field="bgColor" /></div>
+									</div> -->
+								</div>
+								<div class="tab-pane-content tab-pane" th:id="'form_info_'+${viewId}" data-validate-func="formInfoValidate">
+									<div class="row-fluid">
+										<div class="span2"><span class="required-star">*</span>流程表单:</div>
+										<div class="span8">
+											<span class="inputpro-img input-append">
+											<input meta:field="formUrl" style="width: 400px;" data-uneditable="true"/>
+											<a href="javascript://" class="add-on btn select-workflow-form" ><i	class="icon-search"></i></a>
+											<a hef="javascript://" title="新建表单" class="add-on btn create-workflow-form" style="width:18px;padding:4px;"><i class="icon-plus"></i></a>
+											<a href="javascript://" title="设计表单" class="add-on btn edit-workflow-form" style="width:18px;padding:4px;"><i class="icon-edit"></i></a>
+											<input meta:field="entityName" type="hidden" />
+											</span>
+										</div>
+									</div>
+									<div class="row-fluid">
+										<div class="span2">流程标题定义:</div>
+										<div class="span8">
+											<textarea maxlength="150" meta:field="procTitleDef" style="width:427px;"></textarea>
+											<div style="margin-top:1px;">
+											<span style="font-style: italic;color: blue;">通用变量：</span><select class="select-def-exp" name="select-common-def-exp" style="width:80px;">
+												<option value="">--选择--</option>
+												<option value="{公司}">公司</option>
+												<option value="{部门}">部门</option>
+												<option value="{申请人}">申请人</option>
+												<option value="{原始标题}">原始标题</option>
+												<option value="{流程名称}">流程名称</option>
+												<option value="{seq:5}">自增序列(可设长度)</option>
+												<option value="{date:yyyyMMdd}">日期时间(可设格式)</option>
+												<option value="{yyyy}">当前年(如:2014)</option>
+												<option value="{mm}">当前月(如:03)</option>
+												<option value="{dd}">当前日(如:12)</option>
+											</select>
+											<span style="font-style: italic;color: blue;">表单变量：</span><select class="select-def-exp" name="select-formfield-def-exp" style="width:80px;">
+												<option value="">--选择--</option>
+											</select>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane-content tab-pane" th:id="'proc_info_'+${viewId}" data-validate-func="procInfoValidate">
+									<div class="row-fluid">
+										<div class="span2"><span class="required-star">*</span>流程图:</div>
+										<div class="span8">
+											<input name="procDefKey" type="text" style="width:427px"
+												th:value="${entity['procDefKey']}" 
+												data-options="{type:'class',src:'icon-search',title:'Query',event:{click:SelectForm.selectField}}"
+												data-selecturl="/entities/wfprocdef/select"
+												data-selectfield="key" data-validator="required" data-uneditable="true"/>
+											<a href="javascript://" title="设计流程" class="add-on btn design-workflow" style="width:18px;padding:4px;margin-bottom:10px;"><i class="icon-edit"></i></a>					
+											<input name="procDefId" type="hidden" data-validator="required"/>
+											<!-- <span class="label label-info" style="margin-bottom:10px;">设计流程</span> -->
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane-content tab-pane" th:id="'confirm_info_'+${viewId}" data-validate-func="confirmInfoValidate">
+									<!-- <div class="row-fluid">
+										<div class="span2">启用正文:</div>
+										<div class="span4"><input meta:field="enableDoc" /></div>
+									</div>
+									<div class="row-fluid">
+										<div class="span2">启用流程关联:</div>
+										<div class="span4"><input meta:field="enableReWf" /></div>
+									</div> -->
+									<div class="row-fluid">
+										<div class="span2">审批模板:</div>
+										<div class="span4"><input meta:field="container" /></div>
+									</div>
+								</div>
+							</div>
+							<div class="form-actions clearfix">
+								<a href="javascript:;" class="btn button-previous">
+									<i class="m-icon-swapleft"></i> 上一步 
+								</a>
+								<a href="javascript:;" class="btn blue button-next">
+									下一步 <i class="m-icon-swapright m-icon-white"></i>
+								</a>
+								<a href="javascript:;" class="btn green button-submit hide">
+									完成 <i class="m-icon-swapright m-icon-white"></i>
+								</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+	<style type="text/css">
+	.form-actions .button-previous{
+		display:inline-block;
+	}
+	.tab-content .tab-pane-content{
+		height: 240px;
+	}
+	.tip-error{
+		border-color:rgb(255, 76, 76) !important;
+	}
+	.tip-success{
+		border-color:rgb(105, 255, 68) !important;
+	}
+	</style>
+	<script th:inline="javascript">
+	//<![CDATA[ 
+;(function($){
+	$(function(){
+		var viewId = /*[[${viewId}]]*/;
+		var container = $("#"+viewId);
+		var baseContainer = $('#basic_info_'+viewId,container);
+		var formContainer = $('#form_info_'+viewId,container);
+		var procContainer = $('#proc_info_'+viewId,container);
+		var confirmContainer = $('#confirm_info_'+viewId,container);
+		var formWizard = '#form_wizard_'+viewId;
+		var preBtn = $(".button-previous",formWizard).css({display:"none"});
+		var nextBtn = $(".button-next",formWizard);
+		var submitBtn = $(".button-submit",formWizard);
+		var $form = $("form",container);
+		var validator = {
+			basicInfoValidate:function(){
+				var valInfo = $.validation.validate(baseContainer) ;
+				if( valInfo.isError ) {
+					return false;
+				}
+				return true;
+			},
+			formInfoValidate:function(){
+				var valInfo = $.validation.validate(formContainer) ;
+				if( valInfo.isError ) {
+					return false;
+				}
+				var id=$("input[name=procId]",container).val();
+				if(!id){
+					jQuery.formPost($form.attr("action"),$form.toJson(),function(res){
+						if(res){
+							$("input[name=procId]",container).val(res.id);
+							$("input[name=id]",container).val(res.id);
+						}
+					},{async:false});
+				}
+				return true;
+			},
+			procInfoValidate:function(){
+				var valInfo = $.validation.validate(procContainer) ;
+				if( valInfo.isError ) {
+					return false;
+				}
+				return true;
+			},
+			confirmInfoValidate:function(){
+				return true;
+			},
+			validateForm:function(){
+				var valInfo = $.validation.validate($form) ;
+				if( valInfo.isError ) {
+					return false;
+				}
+				return true;
+			}
+		};
+		var _option = {
+			onTabClick : function(tab, navigation, index){
+                return false;
+			},
+			onNext : function (tab, navigation, index){
+				var $context = $($(tab).find('a').attr('href'),formWizard);
+				var func = $context.attr('data-validate-func');
+				var isOk = validator[func]();
+				if(isOk){
+					var procId = $("#procId",container);
+					if(index==3){
+						submitBtn.show();
+						nextBtn.hide();
+						preBtn.show();
+					}else{
+						nextBtn.show();
+						preBtn.show();
+						submitBtn.hide();
+					}
+				}
+				return isOk;
+			},
+			onPrevious : function (tab, navigation, index) {
+				var procId = $("#procId",container);
+				if(index==0){
+					preBtn.hide();
+				}
+				nextBtn.show();
+				submitBtn.hide();
+			}
+		};
+		FormWizard.init(formWizard,_option);
+		//第一个页面初始化脚本
+		var basicInputs = baseContainer.find("input:not(input[name=user],#token-input-user),textarea,select");
+		
+		//$("#procTitleDef",baseContainer).val("{申请人}_{流程名称}({date:yyyyMMdd})");
+		var context = /*[['#'+${viewId}]]*/;
+		var userId = /*[[${user.id}]]*/;
+		var userName = /*[[${user.name}]]*/;
+		var userjson=null;
+		if(userId){
+			userjson={id:userId,name:userName};
+		}
+		$(context).uiwidget() ;
+		var _options={
+			context:context,
+			action:"CREATE",
+			userjson:userjson
+		};
+		reqModule(["module/workflow/wfproc_manager"],function(WfprocManager){
+			var wfprocManager=WfprocManager.createNew(_options);
+		});
+		$.each(basicInputs,function(index,input){
+			var $input = $(input);
+			$input.blur(function(){
+				if($input.val()==""){
+					$input.removeClass("tip-success");
+					$input.addClass("tip-error");
+				}else{
+					$input.removeClass("tip-error");
+					$input.addClass("tip-success");
+				}
+			});
+		});
+		submitBtn.click(function(){
+			var isOk = validator.validateForm();
+			var url=Global.contextPath+"/entities/wfproc/edit?id="+$("input[name=procId]",container).val();
+			if(isOk){
+				jQuery.formPost(url,$form.toJson(),function(res){
+					TabUtils.closeTab();
+					TabUtils.reloadTabGrid();
+				});
+			}else{
+				$.messageBox.warning({message:'请填写完整流程的基本信息'});
+			}
+		});
+		//第二步初始化脚本
+		var formInputs = formContainer.find("input");
+		$.each(formInputs,function(index,input){
+			var $input = $(input);
+			$input.blur(function(){
+				if($input.val()==""){
+					$input.removeClass("tip-success");
+					$input.addClass("tip-error");
+				}else{
+					$input.removeClass("tip-error");
+					$input.addClass("tip-success");
+				}
+			});
+		});
+		//第三步初始化脚本
+		setTimeout(function(){
+				$("[name=procDefKey]",procContainer).parent().append($(".design-workflow",procContainer));
+		},100);
+	});
+}(jQuery)); 
+	//]]>
+	</script>
+</div>

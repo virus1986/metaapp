@@ -1,0 +1,32 @@
+var $validatorConfigConfig={
+		equalToField:"輸入值與相關信息不相符",
+		url:"網址輸入不正確",
+		qq:"QQ號碼輸入不正確（非零開頭的四位以上的數字）",
+		telephone:"電話號碼輸入不正確",
+		mobile:"手機號碼輸入不正確",
+		zip:"郵政編碼輸入不正確",
+		email:"郵箱地址輸入不正確",
+		date:"日期輸入格式不正確（YYYY-MM-DD）",
+		identity:"身份證輸入不正確",
+		money:"金額格式輸入不正確",
+		integer:"輸入值必須是正整數",
+		double:"輸入值必須是數值",
+		digit:"只能輸入數字",
+		noSpecialCaracters:"不允許輸入字母和數字之外的特殊字符",
+		letter:"只允許輸入英文",
+		chinese:"只允許輸入中文",
+		name:"字母下劃線開頭，允許數字字母下劃線"
+};
+var $validationConfig={
+		spellingError:"驗證器拼寫有誤",
+		required:"該輸入項必填",
+		radioRequired:"該選項為必選項",
+		checkboxRequired:"必須選擇一個選項",
+		selectRequired:"該選擇項必選",
+		regexNotDefined:"正則表達式:{0}沒有定義，請檢查拼寫是否正確",
+		lengthInfo:"當前輸入長度為{0}[輸入長度必須在{1}和{2}之間,中文長度為2]",
+		scopeInfo:"必須選擇{0}到{1}選項",
+		numScopeInfo:"輸入的值必須在{0}到{1}之間",
+		errorInfo:"錯誤信息",
+		notDefined:"未定義！"
+};

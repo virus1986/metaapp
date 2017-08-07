@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<options xmlns="http://schemas.bingosoft.net/metabase/metadata"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://schemas.bingosoft.net/metabase/metadata http://schemas.bingosoft.net/metabase/1.0/metadata.xsd">
+
+	<option-set name="City"  display-name="城市" is-system="false" >
+		<item name="广州" value="gz" />
+		<item name="深圳" value="sz" is-default="true"/>
+		<item name="佛山" value="fs" >
+		</item>
+	</option-set>
+
+	<option-set name="Color"  display-name="颜色" is-system="false">
+		<item name="蓝色" value="blue" is-default="true"/>
+		<item name="黄色" value="yellow" />
+		<item name="紫色" value="purple" >
+		</item>
+		<item name="绿色" value="green" />
+		<item name="红色" value="red" />
+	</option-set>
+
+	<option-set name="LinkOpenType" >
+		<item name="新Tab中" value="tab"/>
+		<item name="当前Tab" value="cur-tab"/>
+		<item name="新窗口" value="win" is-default="true"/>
+	</option-set>
+
+	<option-set name="是否">
+		<item name="是" value="1" is-default="true"/>
+		<item name="否" value="0"/>
+	</option-set>
+
+	<option-set name="sex" display-name="性别" is-system="false">
+		<item name="未设置" value="U"/>
+		<item name="男" value="M" is-default="true"/>
+		<item name="女" value="F"/>
+	</option-set>
+	
+	<option-set name="status" display-name="状态" is-system="false">
+		<item name="启用" value="enabled" is-default="true"/>
+		<item name="禁用" value="disabled"/>
+	</option-set>
+	
+	<option-set name="region" kind="Tree">
+		<item name="北京市" value="beijing"/>
+		<item name="广东省" value="guangdong">
+			<item name="广州市" value="guangzhou">
+				<item name="天河区" value="tianhe"/>
+				<item name="花都区" value="huadu"/>
+			</item>
+			<item name="深圳市" value="shenzhen"/>
+		</item>
+		<item name="福建省" value="fujian"/>
+		<item name="澳门" value="aomen"/>
+	</option-set>
+	
+		
+</options>

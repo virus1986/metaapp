@@ -1,0 +1,14 @@
+<div class="wrapper-error">
+	<div class="error-img">
+    	<div class="img-404"></div>
+        <p th:text="#{error.title404}"></p>
+    </div>
+	<div class="error-info">
+    	<h2 th:text="#{error.info404}"></h2>
+    	<p th:text="${#httpServletRequest.getAttribute('javax.servlet.error.request_uri')}" style="color:red;font-size: 15px;font-weight: bold;"></p>
+        <p><strong th:text="#{error.youCan}+':'"></strong><br/>
+        	<span th:text="'1: '+#{error.directAccess}"></span> <a href="javascript://" th:href="@{/}" th:text="#{error.homepage}"></a><br/>
+            <span th:text="'2: '+#{error.tryOtherPages}"></span>
+        </p>
+	</div>					
+</div>

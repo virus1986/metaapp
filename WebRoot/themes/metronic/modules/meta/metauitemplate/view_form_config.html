@@ -1,0 +1,132 @@
+<div th:id="${viewId}" class="panel apply-panel" style="min-width:700px;">
+	<div class="ui-dialog-title hide">
+		<span th:text="#{view.custom.formConfig}"></span>
+	</div>
+	<form id="formUrlConfigId" data-widget="validator"  class="form-horizontal">
+		<table class="form-table form-bordered col2-fluid" id="ex-section1">
+			<tr>
+				<th>
+					<label th:text="#{common.create}+#{metadata.form}+':'"></label>
+				</th>
+				<td >
+					<span class="input-append">
+						<input name="create" type="text" class="input input-xlarge" data-validator="required"/>
+						<span class="add-on btn select-form"><i class="icon-search"></i></span>
+					</span>
+					<select name="createShowType" class="input-small">
+						<option value="pop-up" th:text="#{form.style.popup}"></option>
+						<option value="tab" th:text="#{form.style.tab}"></option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<label th:text="#{common.edit}+#{metadata.form}+':'"></label>
+				</th>
+				<td >
+					<span class="input-append">
+						<input name="edit" type="text" class="input input-xlarge" data-validator="required"/>
+						<span class="add-on btn select-form"><i class="icon-search"></i></span>
+					</span>
+					<select name="editShowType" class="input-small">
+						<option value="pop-up" th:text="#{form.style.popup}"></option>
+						<option value="tab" th:text="#{form.style.tab}"></option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<label th:text="#{common.view}+#{metadata.form}+':'"></label>
+				</th>
+				<td >
+					<span class="input-append">
+						<input name="view" type="text" class="input input-xlarge" data-validator="required"/>
+						<span class="add-on btn select-form"><i class="icon-search"></i></span>
+					</span>
+					<select name="viewShowType" class="input-small">
+						<option value="pop-up" th:text="#{form.style.popup}"></option>
+						<option value="tab" th:text="#{form.style.tab}"></option>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</form>
+	<div class="ui-dialog-buttonset">
+		<button type="button" class="btn purple saveXmlConfig" >
+			<span th:text="#{common.save}"></span>
+			<i class="m-icon-swapright m-icon-white"></i>
+		</button>
+		<button type="button" class="btn closButton" th:text="#{common.cancel}"></button>
+	</div>
+	
+	<script th:inline="javascript">
+	//<![CDATA[
+	
+	$(function(){
+		var context = /*[['#'+${viewId}]]*/;
+		var selectFormUrl = /*[[@{/metadata/uitemplate/selectForm(entity=${entity})}]]*/ "";
+		
+		var args = jQuery.dialogAraguments() ;
+		var customBtnMap = args.customBtnMap||{} ;
+		var toolbars = args.toolbars ;
+		var viewJsonConfig= args.viewJsonConfig;
+
+		$(toolbars||[]).each(function(){
+			if( this == 'create' || this == 'edit' ){
+				$("[name='"+this+"']",context).attr("data-validator","required").uiwidget() ;
+			}
+		}) ;
+		
+		function initPage(){
+		   $("[name='create']",context).val( (customBtnMap['create']||{url:""})['url'] ) ;
+		   $("[name='edit']",context).val( (customBtnMap['edit']||{url:""})['url'] ) ;
+		   $("[name='view']",context).val( (customBtnMap['view']||{url:""})['url'] ) ;
+		   $("[name='createShowType']", context).val(viewJsonConfig.addDialogSettings._showType);
+		   $("[name='editShowType']", context).val(viewJsonConfig.editDialogSettings._showType);
+		   $("[name='viewShowType']", context).val(viewJsonConfig.viewDialogSettings._showType);
+		}
+		
+		$(".select-form", context).click(function(){
+			var $self = $(this), actionType = $self.siblings("input").attr('name');
+			$.openLink(selectFormUrl, {
+				width :800,
+				height: 600,
+				title : i18n.t("form.select.title"),
+				data: {
+					actionType: actionType
+				},
+				requestType : "GET"
+				}, function(res) {
+					var url = res;
+					if(url){
+						$self.siblings("input").val(url);	
+					}
+				});
+		});
+		
+		Page.init(context);
+		initPage();
+		
+		$(".saveXmlConfig", context).click(function(){
+			var valInfo = $.validation.validate("#viewXmlConfigForm") ;
+			if( valInfo.isError ) {
+				return false;
+			}
+			$(this).attr("disabled","disabled");
+			$(this).addClass("disabled");
+			$(context).dialogClose({
+				create:$("[name='create']",context).val(),
+				edit:$("[name='edit']",context).val(),
+				view:$("[name='view']",context).val(),
+				createShowType:$("[name='createShowType']",context).val(),
+				editShowType:$("[name='editShowType']",context).val(),
+				viewShowType:$("[name='viewShowType']",context).val(),
+			});
+		});
+		$(".closButton", context).click(function(){
+			$(context).dialogClose(null);
+		});
+	});
+	//]]>	
+	</script>
+</div>

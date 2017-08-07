@@ -1,0 +1,117 @@
+<div th:id="${viewId}" class="newsPage">
+	<div class="wrapper">
+		<!-- 导航 -->
+		<div class="header">
+			<div class="logo">
+				<a href="/index.html"></a>
+			</div>
+			<div class="nav">
+				<ul>
+					<li><a href="/#page2">功能</a></li>
+					<li><a href="/price.html">购买</a></li>
+					<li><a href="/#page5">客户</a></li>
+					<li><a href="/#page6">下载</a></li>
+					<li><a href="##">帮助</a></li>
+				</ul>
+			</div>
+			<div class="navigation">
+            	<ul>
+                    <li><a href="/webos"><img th:src="${contextPath}+'/themes/metronic/modules/install/images/btn-login2.png'"/></a></li>
+                </ul>
+            </div>
+		</div>
+		
+		<!-- 正文注册 -->
+		<div class="register-wrapper">
+			<div class="main-body">
+				<div class="main-header">
+					<h2>注册</h2>
+				</div>
+				<div class="main-content">
+					<form>												
+						<div style="margin-bottom: 0px;" class="login-group"><label><em>*</em>帐号</label>
+							<div class="group-text first">
+								<span>admin@</span><input type="text" name="enterpriseCode" id="enterpriseCode" data-validator="required"/>
+								<p class="point-info">后缀用于企业员工登录, 建议使用企业英文名称</p>
+							</div>
+						</div>
+                        <div class="login-group">
+							<label for=""><em>*</em>密码</label>
+							<div class="group-text">
+								<input type="password" name="password" id="password" style="display: block;"/>
+								<div class="txt-tips">
+									<span>1~16个字符，区分大小写</span>
+								</div>
+								<div id="mobilePwdStatus" class="pswState" style="display: none;">
+									<span class="s1">弱</span>
+									<span class="s2">中等</span>
+									<span class="s3">强</span>
+								</div>
+							</div>
+						</div>
+                        <div class="login-group">
+							<label for=""><em>*</em>重复密码</label>
+							<div class="group-text">
+								<input type="password" name="chk_psd" id="chk_psd"/>
+							</div>
+						</div>
+                        <div class="login-group">
+							<label for=""><em>*</em>公司名称</label>
+							<div class="group-text">
+								<input type="text" name="enterpriseName" id="enterpriseName"/>
+							</div>
+						</div>
+                        <div class="login-group">
+							<label for=""><em>*</em>联系人</label>
+							<div class="group-text">
+								<input type="text" name="contact" id="contact"/>
+							</div>
+						</div>
+                        <div class="login-group">
+							<label for=""><em>*</em>联系电话</label>
+							<div class="group-text">
+								<input type="text" name="phone" id="phone"/>
+							</div>
+						</div>
+                        <div class="login-group">
+							<label for=""><em>*</em>企业邮箱</label>
+							<div class="group-text">
+								<input type="text" name="email" id="email"/>
+							</div>
+						</div>
+                        <div class="login-group">
+							<label for=""><em>*</em>邀请码</label>
+							<div class="group-text" style="width: 400px;">
+								<input type="text" style="width: 200px;margin: 0;float: left;margin-right: 15px;" name="invitationCode" id="invitationCode"/>
+								<div class="code_loading" style="display:none;padding:7px 0px;">
+		               				<img alt="" style="margin-left: 5px;" th:src="${contextPath}+'/themes/metronic/modules/install/images/loader.gif'"/>
+		               				<span class="tip_warn">检测中</span>
+		               			</div>
+		               			<div class="code_info" style="padding:7px 0px;display:none;">
+		               				<i class="icon-remove"></i>
+		               				<span class="tip_warn" >无效的邀请码</span>
+		               			</div>
+							</div>
+						</div>						
+						<p class="clause"><input type="checkbox" id="agree"/>我已经详细阅读并完全同意<a href="/agreement.html" target="_blank">Link服务条款</a></p>
+						<p class="submit"><button type="button" id="submits">提交注册</button>已有帐号,<a href="/webos">登录</a></p>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+		<!-- 脚部 -->
+		<div class="footer">
+			<div class="footer-content">
+				<P>
+					<a href="/about.html">关于我们</a>
+					<a href="/cooperation.html">渠道合作</a>
+					<a href="/contact.html">联系我们</a>
+				</P>
+				<P>Copyright © 2013-2014&nbsp;Bingosoft.All&nbsp;Rights&nbsp;Reserved</P>
+			</div>
+		</div>
+	</div>
+	</div>
+	
+
