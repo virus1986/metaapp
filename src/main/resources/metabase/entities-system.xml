@@ -35,7 +35,7 @@
                     <item name="未设置" value="0"/>
                 </options>
             </field>
-            <field column="rank" data-type="Integer" is-display="true" display-for="{list:true,form:false}" display-name="用户级别" display-order="11" field-type="Integer" unique="false" name="rank" nullable="true" sql-type="integer" summary="用户级别" is-system="true"/>
+            <field column="rank1" data-type="Integer" is-display="true" display-for="{list:true,form:false}" display-name="用户级别" display-order="11" field-type="Integer" unique="false" name="rank" nullable="true" sql-type="integer" summary="用户级别" is-system="true"/>
             <field column="email" data-type="String" is-display="true" display-name="邮件" display-order="12" field-type="SingleLineText" unique="false" name="email" nullable="true" sql-type="varchar" summary="邮件" is-system="true"/>
             <field column="mobile" length="255" data-type="String" is-display="true" display-for="{form:true,list:true}" display-name="手机1" display-order="13" field-type="SingleLineText" unique="false" name="mobilePhone" nullable="true" sql-type="varchar" summary="手机" is-system="true">
                 <field-type-params>
