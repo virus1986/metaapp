@@ -34,10 +34,10 @@
 	    <filter groupOp="and">
 	        <filters>
 	        </filters>
-	        <rules>
-	        	 <rule field="isDeleted" op="eq" data="0"/>
-	        	 <rule field="SCode" op="nu" />
-	        </rules>
+<!--	        <rules>-->
+<!--	        	 <rule field="isDeleted" op="eq" data="0"/>-->
+<!--	        	 <rule field="SCode" op="nu" />-->
+<!--	        </rules>-->
 	    </filter>
 	    <orderBy field="orderNo" direction="Asc"/>
     </treeNavigationSettings>
